@@ -102,7 +102,7 @@ dependencies:
   flutter_lints: ^6.0.0
   google_fonts: ^8.0.0
   json_rpc_2: ^4.0.0
-  stack_trace: ^1.12.1
+  stack_trace: ^1.11.1
   web: ^1.1.1
   qr_flutter: ^4.1.0
   mobile_scanner: ^7.1.4
