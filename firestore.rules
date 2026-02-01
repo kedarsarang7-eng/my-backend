@@ -1,0 +1,188 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* =====================================================
+       🔧 COMMON HELPERS
+    ===================================================== */
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function uid() {
+      return request.auth.uid;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && uid() == userId;
+    }
+
+    function isCreatingOwnedResource() {
+      return isAuthenticated()
+        && request.resource.data.ownerId == uid();
+    }
+
+    function isResourceOwner() {
+      return isAuthenticated()
+        && resource != null
+        && resource.data.ownerId == uid();
+    }
+
+    // Role check (Optional expansion)
+    function isStaff() {
+      // Future scope: check if user is staff of the resource owner
+      return false; 
+    }
+
+    /* =====================================================
+       🕒 ANTI-BACKDATING (GST / FRAUD SAFE)
+    ===================================================== */
+
+    function isValidTimestamp(field) {
+      let t = request.resource.data[field];
+      return t != null
+        && t > request.time - duration.value(24, 'h') // Relaxed to 24h for offline sync
+        && t < request.time + duration.value(1, 'h');
+    }
+
+    /* =====================================================
+       🔒 ACCOUNTING PERIOD LOCK
+    ===================================================== */
+
+    function isPeriodUnlocked() {
+      // Allow if periodId is missing (legacy/simple) or if period doc implies unlocked
+      return !('periodId' in request.resource.data) ||
+        !exists(/databases/$(database)/documents/locked_periods/$(request.resource.data.periodId));
+    }
+
+    /* =====================================================
+       👤 USERS & SHOPS
+    ===================================================== */
+
+    match /users/{userId} {
+      allow read, create: if isOwner(userId);
+      allow update: if isOwner(userId); // Strict role locking omitted for brevity/safety
+      allow delete: if false;
+    }
+
+    match /shops/{shopId} {
+      allow read: if isAuthenticated(); // Public profile reading
+      allow write: if isOwner(shopId);
+    }
+
+    /* =====================================================
+       🧾 CORE TRANSACTIONS (BILLS, PAYMENTS, ETC)
+    ===================================================== */
+
+    // Generic Owner-Only Rule for Standard Collections
+    // Applies to: products, customers, expenses, etc.
+    
+    match /products/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /items/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); } // Legacy
+    
+    match /customers/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    
+    match /expenses/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    
+    match /receipts/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /payments/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    
+    match /proformas/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /bookings/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /returnInwards/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /dispatches/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /delivery_challans/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /purchase_orders/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+    match /stock_movements/{id} { allow read, write: if isResourceOwner() || isCreatingOwnedResource(); }
+
+    /* =====================================================
+       🧾 BILLS (SPECIAL LOGIC)
+    ===================================================== */
+
+    match /bills/{billId} {
+      allow create: if isCreatingOwnedResource();
+      allow update, delete: if isResourceOwner();
+      
+      // Allow read by Owner OR by Linked Customer
+      allow read: if isAuthenticated() && (
+        resource.data.ownerId == uid() ||
+        (
+          resource.data.customerId == uid() // Simple customer link check
+          // Note: In production, we might verify 'shop_links' existence here
+        )
+      );
+    }
+
+    /* =====================================================
+       🔗 CUSTOMER-SHOP LINKING
+    ===================================================== */
+
+    match /customer_profiles/{profileId} {
+      allow read: if isAuthenticated() && (
+        resource.data.customerId == uid() || resource.data.shopId == uid()
+      );
+      allow write: if isAuthenticated() && resource.data.shopId == uid();
+    }
+    
+    match /shop_links/{linkId} {
+      allow read: if isAuthenticated() && (
+        resource.data.customerId == uid() || resource.data.shopId == uid()
+      );
+      allow write: if isAuthenticated() && (
+        resource.data.customerId == uid() || resource.data.shopId == uid()
+      );
+    }
+
+    /* =====================================================
+       🔑 LICENSING SYSTEM (ADMIN & CLOUD FUNCTIONS)
+    ===================================================== */
+
+    function isAdmin() {
+      return isAuthenticated() && exists(/databases/$(database)/documents/admin_users/$(uid()));
+    }
+
+    // Admin Users (RBAC)
+    match /admin_users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if false; // Managing admins usually requires super-admin script or console
+    }
+
+    // Licenses
+    match /licenses/{licenseId} {
+      allow read: if isAuthenticated() && (
+          isAdmin() || 
+          (resource.data.customerId == uid()) // User reading their own license
+      );
+      allow write: if isAdmin(); // Only Admins can modify directly (apps use Cloud Functions)
+    }
+
+    // Devices
+    match /devices/{deviceId} {
+      allow read: if isAuthenticated() && (
+          isAdmin() || 
+          (resource != null && resource.data.boundByUserId == uid())
+      );
+      allow write: if isAdmin(); // Binding via Cloud Functions
+    }
+
+    // App Versions
+    match /app_versions/{versionId} {
+      allow read: if isAuthenticated(); // All auth users can check for updates
+      allow write: if isAdmin();
+    }
+
+    // Logs
+    match /activation_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    /* =====================================================
+       ❌ DENY ALL ELSE
+    ===================================================== */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

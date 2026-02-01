@@ -1,0 +1,175 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+    
+    function hasValidTimestamp() {
+      return request.time == request.resource.data.updatedAt || 
+             (request.time > request.resource.data.createdAt);
+    }
+    
+    function validateCustomerRecord() {
+      let data = request.resource.data;
+      return data.size() > 0 &&
+             'id' in data &&
+             'encryptedData' in data &&
+             'encryptedHash' in data &&
+             'encryption' in data &&
+             data.encryption == 'AES-256-CBC' &&
+             'timestamp' in data;
+    }
+    
+    function validateBillRecord() {
+      let data = request.resource.data;
+      return data.size() > 0 &&
+             'id' in data &&
+             'encryptedData' in data &&
+             'encryptedHash' in data &&
+             'encryption' in data &&
+             data.encryption == 'AES-256-CBC' &&
+             'timestamp' in data;
+    }
+    
+    function validateBillItemRecord() {
+      let data = request.resource.data;
+      return data.size() > 0 &&
+             'id' in data &&
+             'billId' in data &&
+             'timestamp' in data;
+    }
+    
+    // Root-level security
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Customers collection - Owner-based row-level security
+    match /customers/{customerId} {
+      allow read: if isAuthenticated() && 
+                     (isOwner(resource.data.ownerId) || isAdmin());
+      
+      allow create: if isAuthenticated() &&
+                       isAdmin() &&
+                       validateCustomerRecord() &&
+                       request.resource.data.ownerId == request.auth.uid;
+      
+      allow update: if isAuthenticated() &&
+                       (isOwner(resource.data.ownerId) || isAdmin()) &&
+                       validateCustomerRecord() &&
+                       request.resource.data.ownerId == resource.data.ownerId;
+      
+      allow delete: if isAuthenticated() &&
+                       isAdmin() &&
+                       isOwner(resource.data.ownerId);
+    }
+    
+    // Bills collection - Owner-based row-level security
+    match /bills/{billId} {
+      allow read: if isAuthenticated() &&
+                     (isOwner(resource.data.ownerId) || isAdmin());
+      
+      allow create: if isAuthenticated() &&
+                       isAdmin() &&
+                       validateBillRecord() &&
+                       request.resource.data.ownerId == request.auth.uid;
+      
+      allow update: if isAuthenticated() &&
+                       (isOwner(resource.data.ownerId) || isAdmin()) &&
+                       validateBillRecord() &&
+                       request.resource.data.ownerId == resource.data.ownerId;
+      
+      allow delete: if isAuthenticated() &&
+                       isAdmin() &&
+                       isOwner(resource.data.ownerId);
+      
+      // Bill items subcollection
+      match /items/{itemId} {
+        allow read: if isAuthenticated() &&
+                       (isOwner(get(/databases/$(database)/documents/bills/$(billId)).data.ownerId) || 
+                        isAdmin());
+        
+        allow create: if isAuthenticated() &&
+                         isAdmin() &&
+                         validateBillItemRecord();
+        
+        allow update: if isAuthenticated() &&
+                         isAdmin() &&
+                         validateBillItemRecord();
+        
+        allow delete: if isAuthenticated() &&
+                         isAdmin();
+      }
+    }
+    
+    // Backup collection - Critical: Owner-based access only
+    match /backups/{backupId} {
+      allow read: if isAuthenticated() &&
+                     isOwner(resource.data.ownerId);
+      
+      allow create: if isAuthenticated() &&
+                       request.resource.data.ownerId == request.auth.uid &&
+                       'timestamp' in request.resource.data;
+      
+      allow update: if isAuthenticated() &&
+                       isOwner(resource.data.ownerId);
+      
+      allow delete: if isAuthenticated() &&
+                       isOwner(resource.data.ownerId);
+    }
+    
+    // Audit logs collection - Admin only
+    match /audit_logs/{logId} {
+      allow read: if isAuthenticated() && isAdmin();
+      
+      allow create: if isAuthenticated() &&
+                       isAdmin() &&
+                       request.resource.data.ownerId == request.auth.uid &&
+                       'action' in request.resource.data &&
+                       'timestamp' in request.resource.data;
+      
+      allow update, delete: if false; // Immutable audit logs
+    }
+    
+    // Security logs collection - Admin only
+    match /security_logs/{logId} {
+      allow read: if isAuthenticated() && isAdmin();
+      
+      allow create: if isAuthenticated() &&
+                       isAdmin() &&
+                       'event' in request.resource.data &&
+                       'severity' in request.resource.data &&
+                       'timestamp' in request.resource.data;
+      
+      allow update, delete: if false; // Immutable security logs
+    }
+    
+    // User profiles collection - Owner-based access
+    match /users/{userId} {
+      allow read: if isAuthenticated() &&
+                     (isOwner(userId) || isAdmin());
+      
+      allow create: if isAuthenticated() &&
+                       isOwner(userId);
+      
+      allow update: if isAuthenticated() &&
+                       (isOwner(userId) && 
+                        !('admin' in request.resource.data.diff(resource.data).affectedKeys()) ||
+                        isAdmin());
+      
+      allow delete: if false; // Prevent user deletion
+    }
+    
+  }
+}
