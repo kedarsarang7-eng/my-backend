@@ -9,9 +9,7 @@ class GstinValidator {
   );
 
   /// PAN pattern (10 characters within GSTIN)
-  static final RegExp panPattern = RegExp(
-    r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$',
-  );
+  static final RegExp panPattern = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$');
 
   /// Validates GSTIN format
   static ValidationResult validateGstin(String? gstin) {

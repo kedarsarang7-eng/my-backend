@@ -139,7 +139,9 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error saving: $e'), backgroundColor: Colors.red),
+            content: Text('Error saving: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -184,16 +186,17 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
               subtitle: 'Choose signature image',
               onTap: () async {
                 Navigator.pop(context);
-                final bytes =
-                    await _signatureManager.pickSignatureFromGallery();
+                final bytes = await _signatureManager
+                    .pickSignatureFromGallery();
                 if (bytes != null) {
                   final saved = await _signatureManager.saveSignature(bytes);
                   if (saved && mounted) {
                     setState(() => _signatureBytes = bytes);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Signature saved!'),
-                          backgroundColor: Colors.green),
+                        content: Text('Signature saved!'),
+                        backgroundColor: Colors.green,
+                      ),
                     );
                   }
                 }
@@ -213,8 +216,9 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                     setState(() => _signatureBytes = bytes);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Signature saved!'),
-                          backgroundColor: Colors.green),
+                        content: Text('Signature saved!'),
+                        backgroundColor: Colors.green,
+                      ),
                     );
                   }
                 }
@@ -304,27 +308,30 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                       if (state == null || state.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Please draw your signature')),
+                            content: Text('Please draw your signature'),
+                          ),
                         );
                         return;
                       }
 
-                      final bytes =
-                          await _signatureManager.convertDrawingToImage(
-                        state.strokes,
-                        Size(MediaQuery.of(context).size.width - 64, 180),
-                      );
+                      final bytes = await _signatureManager
+                          .convertDrawingToImage(
+                            state.strokes,
+                            Size(MediaQuery.of(context).size.width - 64, 180),
+                          );
 
                       if (bytes != null) {
-                        final saved =
-                            await _signatureManager.saveSignature(bytes);
+                        final saved = await _signatureManager.saveSignature(
+                          bytes,
+                        );
                         if (saved && mounted) {
                           setState(() => _signatureBytes = bytes);
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Signature saved!'),
-                                backgroundColor: Colors.green),
+                              content: Text('Signature saved!'),
+                              backgroundColor: Colors.green,
+                            ),
                           );
                         }
                       }
@@ -332,8 +339,10 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E3A8A),
                     ),
-                    child: const Text('Save Signature',
-                        style: TextStyle(color: Colors.white)),
+                    child: const Text(
+                      'Save Signature',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -395,10 +404,7 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                   ],
                 ),
               ),
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey.shade400,
-              ),
+              Icon(Icons.chevron_right, color: Colors.grey.shade400),
             ],
           ),
         ),
@@ -412,8 +418,9 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
     final isDark = theme.isDark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: Text(
           'Invoice Settings',
@@ -598,12 +605,17 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                               color: const Color(0xFF1E3A8A).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.language_rounded,
-                                color: Color(0xFF1E3A8A)),
+                            child: const Icon(
+                              Icons.language_rounded,
+                              color: Color(0xFF1E3A8A),
+                            ),
                           ),
-                          title: Text('Invoice Language',
-                              style: GoogleFonts.outfit(
-                                  fontWeight: FontWeight.w500)),
+                          title: Text(
+                            'Invoice Language',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           subtitle: Text(_getLanguageName(_selectedLanguage)),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: _showLanguageSelector,
@@ -619,14 +631,20 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                               color: Colors.green.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.percent_rounded,
-                                color: Colors.green),
+                            child: const Icon(
+                              Icons.percent_rounded,
+                              color: Colors.green,
+                            ),
                           ),
-                          title: Text('Show Tax on Invoice',
-                              style: GoogleFonts.outfit(
-                                  fontWeight: FontWeight.w500)),
-                          subtitle:
-                              const Text('Display tax column and amounts'),
+                          title: Text(
+                            'Show Tax on Invoice',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: const Text(
+                            'Display tax column and amounts',
+                          ),
                           value: _showTax,
                           onChanged: (v) => setState(() => _showTax = v),
                         ),
@@ -641,12 +659,17 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                               color: Colors.orange.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.receipt_rounded,
-                                color: Colors.orange),
+                            child: const Icon(
+                              Icons.receipt_rounded,
+                              color: Colors.orange,
+                            ),
                           ),
-                          title: Text('GST Registered',
-                              style: GoogleFonts.outfit(
-                                  fontWeight: FontWeight.w500)),
+                          title: Text(
+                            'GST Registered',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           subtitle: const Text('Generate Tax Invoice header'),
                           value: _isGstBill,
                           onChanged: (v) => setState(() => _isGstBill = v),
@@ -668,9 +691,10 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                              color: isDark
-                                  ? Colors.white24
-                                  : Colors.grey.shade300),
+                            color: isDark
+                                ? Colors.white24
+                                : Colors.grey.shade300,
+                          ),
                         ),
                         filled: true,
                         fillColor: isDark
@@ -678,7 +702,8 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
                             : Colors.grey.shade50,
                       ),
                       style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87),
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -735,24 +760,28 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
         controller: controller,
         keyboardType: keyboardType,
         maxLines: maxLines,
-        textCapitalization:
-            isCaps ? TextCapitalization.characters : TextCapitalization.words,
+        textCapitalization: isCaps
+            ? TextCapitalization.characters
+            : TextCapitalization.words,
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon, color: isDark ? Colors.white54 : Colors.grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-                color: isDark ? Colors.white24 : Colors.grey.shade300),
+              color: isDark ? Colors.white24 : Colors.grey.shade300,
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-                color: isDark ? Colors.white24 : Colors.grey.shade300),
+              color: isDark ? Colors.white24 : Colors.grey.shade300,
+            ),
           ),
           filled: true,
-          fillColor:
-              isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50,
+          fillColor: isDark
+              ? Colors.white.withOpacity(0.05)
+              : Colors.grey.shade50,
         ),
         style: TextStyle(color: isDark ? Colors.white : Colors.black87),
       ),
@@ -826,8 +855,10 @@ class _InvoiceSettingsScreenState extends ConsumerState<InvoiceSettingsScreen> {
 
                   return ListTile(
                     leading: isSelected
-                        ? const Icon(Icons.check_circle,
-                            color: Color(0xFF1E3A8A))
+                        ? const Icon(
+                            Icons.check_circle,
+                            color: Color(0xFF1E3A8A),
+                          )
                         : const Icon(Icons.circle_outlined, color: Colors.grey),
                     title: Text(_getLanguageName(lang)),
                     onTap: () {

@@ -15,11 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// User's intended login role
-enum AuthIntent {
-  vendor,
-  customer,
-  none,
-}
+enum AuthIntent { vendor, customer, none }
 
 /// Result of role validation against intent
 enum RoleValidationResult {
@@ -92,8 +88,8 @@ class AuthIntentService {
     final value = intent == AuthIntent.vendor
         ? 'vendor'
         : intent == AuthIntent.customer
-            ? 'customer'
-            : '';
+        ? 'customer'
+        : '';
 
     await _prefs!.setString(_intentKey, value);
     _cachedIntent = intent;

@@ -44,7 +44,8 @@ extension BillModelMapper on db.Bill {
   BillSource _parseSource(String source) {
     try {
       return BillSource.values.firstWhere(
-          (e) => e.toString().split('.').last.toUpperCase() == source);
+        (e) => e.toString().split('.').last.toUpperCase() == source,
+      );
     } catch (_) {
       return BillSource.manual;
     }

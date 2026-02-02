@@ -55,8 +55,9 @@ class _BillsListScreenState extends State<BillsListScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(FuturisticColors.primary),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  FuturisticColors.primary,
+                ),
               ),
             );
           }
@@ -84,8 +85,9 @@ class _BillsListScreenState extends State<BillsListScreen> {
   PreferredSizeWidget _buildPremiumAppBar(BuildContext context, bool isDark) {
     return AppBar(
       elevation: 0,
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       title: Row(
         children: [
           Container(
@@ -95,8 +97,11 @@ class _BillsListScreenState extends State<BillsListScreen> {
               borderRadius: BorderRadius.circular(AppBorderRadius.md),
               boxShadow: AppShadows.glowShadow(FuturisticColors.primary),
             ),
-            child:
-                const Icon(Icons.receipt_long, color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.receipt_long,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Text(
@@ -116,8 +121,9 @@ class _BillsListScreenState extends State<BillsListScreen> {
           decoration: BoxDecoration(
             color: FuturisticColors.secondary.withOpacity(0.15),
             borderRadius: BorderRadius.circular(AppBorderRadius.md),
-            border:
-                Border.all(color: FuturisticColors.secondary.withOpacity(0.3)),
+            border: Border.all(
+              color: FuturisticColors.secondary.withOpacity(0.3),
+            ),
           ),
           child: IconButton(
             icon: Icon(Icons.filter_list, color: FuturisticColors.secondary),
@@ -175,7 +181,8 @@ class _BillsListScreenState extends State<BillsListScreen> {
       case 'PENDING':
         statusColor = FuturisticColors.warning;
         statusGradient = const LinearGradient(
-            colors: [Color(0xFFFFD600), Color(0xFFFF9800)]);
+          colors: [Color(0xFFFFD600), Color(0xFFFF9800)],
+        );
         break;
       case 'PARTIAL':
         statusColor = FuturisticColors.accent2;
@@ -187,14 +194,13 @@ class _BillsListScreenState extends State<BillsListScreen> {
     }
 
     return ModernCard(
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => BillDetailScreen(bill: bill),
-          ),
+          MaterialPageRoute(builder: (_) => BillDetailScreen(bill: bill)),
         );
       },
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -298,8 +304,11 @@ class _BillsListScreenState extends State<BillsListScreen> {
               padding: const EdgeInsets.only(top: AppSpacing.sm),
               child: Row(
                 children: [
-                  Icon(Icons.sync_problem,
-                      size: 14, color: FuturisticColors.warning),
+                  Icon(
+                    Icons.sync_problem,
+                    size: 14,
+                    color: FuturisticColors.warning,
+                  ),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
                     'Pending Sync',

@@ -41,8 +41,9 @@ class _DispatchNoteScreenState extends ConsumerState<DispatchNoteScreen>
     final ownerId = sl<SessionManager>().ownerId ?? '';
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: const Text('Dispatch Notes'),
         backgroundColor: Colors.transparent,
@@ -93,7 +94,9 @@ class _DispatchNoteScreenState extends ConsumerState<DispatchNoteScreen>
   }
 
   Future<void> _handleStatusChange(
-      String dispatchId, DispatchStatus newStatus) async {
+    String dispatchId,
+    DispatchStatus newStatus,
+  ) async {
     final ownerId = sl<SessionManager>().ownerId!;
 
     String? receiverName;
@@ -161,9 +164,7 @@ class _DispatchNoteScreenState extends ConsumerState<DispatchNoteScreen>
   void _showAddDispatchSheet(BuildContext context, String ownerId) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => _AddDispatchScreen(ownerId: ownerId),
-      ),
+      MaterialPageRoute(builder: (_) => _AddDispatchScreen(ownerId: ownerId)),
     );
   }
 }
@@ -190,16 +191,20 @@ class _DispatchListView extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final dispatches =
-            snapshot.data!.where((d) => statuses.contains(d.status)).toList();
+        final dispatches = snapshot.data!
+            .where((d) => statuses.contains(d.status))
+            .toList();
 
         if (dispatches.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.local_shipping_outlined,
-                    size: 64, color: Colors.grey[400]),
+                Icon(
+                  Icons.local_shipping_outlined,
+                  size: 64,
+                  color: Colors.grey[400],
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'No dispatches in this category',
@@ -287,8 +292,11 @@ class _DispatchCard extends StatelessWidget {
                       color: _getStatusColor().withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(_getStatusIcon(),
-                        color: _getStatusColor(), size: 20),
+                    child: Icon(
+                      _getStatusIcon(),
+                      color: _getStatusColor(),
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(
@@ -313,8 +321,10 @@ class _DispatchCard extends StatelessWidget {
                 ],
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _getStatusColor().withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
@@ -339,8 +349,9 @@ class _DispatchCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Bill: ${dispatch.billNumber}',
-                style:
-                    TextStyle(color: isDark ? Colors.white54 : Colors.black45),
+                style: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.black45,
+                ),
               ),
             ],
           ),
@@ -357,8 +368,11 @@ class _DispatchCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.local_shipping,
-                      size: 20, color: Colors.blue),
+                  const Icon(
+                    Icons.local_shipping,
+                    size: 20,
+                    color: Colors.blue,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -368,15 +382,17 @@ class _DispatchCard extends StatelessWidget {
                           Text(
                             'Vehicle: ${dispatch.vehicleNumber}',
                             style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500),
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         if (dispatch.driverName.isNotEmpty)
                           Text(
                             'Driver: ${dispatch.driverName}',
                             style: TextStyle(
-                                color: isDark ? Colors.white54 : Colors.black45,
-                                fontSize: 12),
+                              color: isDark ? Colors.white54 : Colors.black45,
+                              fontSize: 12,
+                            ),
                           ),
                       ],
                     ),
@@ -392,7 +408,8 @@ class _DispatchCard extends StatelessWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Could not launch dialer')),
+                                content: Text('Could not launch dialer'),
+                              ),
                             );
                           }
                         }
@@ -413,7 +430,8 @@ class _DispatchCard extends StatelessWidget {
                 child: Text(
                   dispatch.deliveryAddress,
                   style: TextStyle(
-                      color: isDark ? Colors.white54 : Colors.black45),
+                    color: isDark ? Colors.white54 : Colors.black45,
+                  ),
                 ),
               ),
             ],
@@ -424,7 +442,9 @@ class _DispatchCard extends StatelessWidget {
           Text(
             '${dispatch.items.length} items to deliver',
             style: TextStyle(
-                color: isDark ? Colors.white38 : Colors.black38, fontSize: 12),
+              color: isDark ? Colors.white38 : Colors.black38,
+              fontSize: 12,
+            ),
           ),
           const Divider(height: 24),
 
@@ -448,14 +468,17 @@ class _DispatchCard extends StatelessWidget {
                         Text(
                           'Delivered on ${dateFormat.format(dispatch.deliveredAt!)}',
                           style: const TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.w500),
+                            color: Colors.green,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         if (dispatch.receiverName != null)
                           Text(
                             'Received by: ${dispatch.receiverName}',
                             style: TextStyle(
-                                color: isDark ? Colors.white54 : Colors.black45,
-                                fontSize: 12),
+                              color: isDark ? Colors.white54 : Colors.black45,
+                              fontSize: 12,
+                            ),
                           ),
                       ],
                     ),
@@ -489,8 +512,9 @@ class _DispatchCard extends StatelessWidget {
                           onStatusChange(dispatch.id, DispatchStatus.returned),
                       icon: const Icon(Icons.undo, size: 18),
                       label: const Text('Return'),
-                      style:
-                          OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton.icon(
@@ -554,8 +578,9 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
     final isDark = theme.isDark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: const Text('Create Dispatch Note'),
         backgroundColor: Colors.transparent,
@@ -601,8 +626,10 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                       child: _selectedBill != null
                           ? Row(
                               children: [
-                                const Icon(Icons.receipt_long,
-                                    color: Colors.blue),
+                                const Icon(
+                                  Icons.receipt_long,
+                                  color: Colors.blue,
+                                ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
@@ -621,9 +648,10 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                                       Text(
                                         _selectedBill!.customerName,
                                         style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white54
-                                                : Colors.black45),
+                                          color: isDark
+                                              ? Colors.white54
+                                              : Colors.black45,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -631,8 +659,9 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                                 Text(
                                   '${_dispatchItems.length} items',
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.teal),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.teal,
+                                  ),
                                 ),
                               ],
                             )
@@ -674,7 +703,8 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                       prefixIcon: const Icon(Icons.local_shipping),
                       hintText: 'MH-12-AB-1234',
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -687,7 +717,8 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                             labelText: 'Driver Name',
                             prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -700,7 +731,8 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                             labelText: 'Driver Phone',
                             prefixIcon: const Icon(Icons.phone),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -735,7 +767,8 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                         child: Icon(Icons.location_on),
                       ),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     validator: (val) =>
                         val?.isEmpty == true ? 'Address required' : null,
@@ -754,7 +787,8 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                   labelText: 'Dispatch Notes (optional)',
                   hintText: 'Special instructions, handling notes, etc.',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
@@ -771,7 +805,8 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
                 child: _isSaving
                     ? const CircularProgressIndicator(color: Colors.white)
@@ -780,8 +815,10 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                         children: [
                           const Icon(Icons.local_shipping),
                           const SizedBox(width: 8),
-                          const Text('Create Dispatch Note',
-                              style: TextStyle(fontSize: 18)),
+                          const Text(
+                            'Create Dispatch Note',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ],
                       ),
               ),
@@ -845,8 +882,10 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
                               color: Colors.teal.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child:
-                                const Icon(Icons.receipt, color: Colors.teal),
+                            child: const Icon(
+                              Icons.receipt,
+                              color: Colors.teal,
+                            ),
                           ),
                           title: Text(
                             bill.invoiceNumber,
@@ -876,12 +915,14 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
 
         // Convert bill items to dispatch items
         _dispatchItems = selected.items
-            .map((item) => DispatchItem(
-                  itemId: item.productId,
-                  itemName: item.productName,
-                  quantity: item.quantity,
-                  unit: item.unit,
-                ))
+            .map(
+              (item) => DispatchItem(
+                itemId: item.productId,
+                itemName: item.productName,
+                quantity: item.quantity,
+                unit: item.unit,
+              ),
+            )
             .toList();
 
         // Pre-fill address if available
@@ -920,8 +961,9 @@ class _AddDispatchScreenState extends ConsumerState<_AddDispatchScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Dispatch note created!'),
-              backgroundColor: Colors.green),
+            content: Text('Dispatch note created!'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.pop(context, true);
       }

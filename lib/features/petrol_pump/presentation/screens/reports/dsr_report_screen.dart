@@ -37,8 +37,11 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
       final tankService = sl<TankService>();
 
       // Get all shifts for the selected date
-      final dayStart =
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+      final dayStart = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+      );
       final dayEnd = dayStart.add(const Duration(days: 1));
 
       final shifts = await shiftService.getShiftsForDateRange(dayStart, dayEnd);
@@ -68,23 +71,29 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
 
       // Get DayBook entry for opening stock
       final dayBookService = sl<DayBookService>();
-      final ownerId =
-          sl<AppDatabase>().toString().hashCode.toString(); // Simplified owner
+      final ownerId = sl<AppDatabase>()
+          .toString()
+          .hashCode
+          .toString(); // Simplified owner
       DayBookEntry? dayBookEntry;
       try {
-        dayBookEntry =
-            await dayBookService.getOrCreateEntry(ownerId, _selectedDate);
+        dayBookEntry = await dayBookService.getOrCreateEntry(
+          ownerId,
+          _selectedDate,
+        );
       } catch (_) {
         // DayBook entry may not exist yet
       }
 
       // Get purchases for the day
       final db = sl<AppDatabase>();
-      final purchases = await (db.select(db.purchaseOrders)
-            ..where((p) =>
-                p.purchaseDate.isBetweenValues(dayStart, dayEnd) &
-                p.deletedAt.isNull()))
-          .get();
+      final purchases =
+          await (db.select(db.purchaseOrders)..where(
+                (p) =>
+                    p.purchaseDate.isBetweenValues(dayStart, dayEnd) &
+                    p.deletedAt.isNull(),
+              ))
+              .get();
 
       // Calculate total purchases
       double totalPurchaseAmount = 0;
@@ -131,9 +140,9 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading DSR: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading DSR: $e')));
       }
     }
   }
@@ -161,17 +170,14 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
             icon: const Icon(Icons.calendar_today),
             onPressed: _selectDate,
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadDsrData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadDsrData),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _dsrData == null
-              ? const Center(child: Text('No data available'))
-              : _buildDsrContent(),
+          ? const Center(child: Text('No data available'))
+          : _buildDsrContent(),
     );
   }
 
@@ -195,7 +201,9 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
                   Text(
                     'Date: ${dateFormat.format(data.date)}',
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     '${data.shifts.length} Shifts',
@@ -214,14 +222,19 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Sales Summary',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Sales Summary',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   const Divider(),
-                  _buildSummaryRow('Total Sales',
-                      '₹${data.totalSalesAmount.toStringAsFixed(2)}'),
-                  _buildSummaryRow('Total Litres Sold',
-                      '${data.totalLitresSold.toStringAsFixed(2)} L'),
+                  _buildSummaryRow(
+                    'Total Sales',
+                    '₹${data.totalSalesAmount.toStringAsFixed(2)}',
+                  ),
+                  _buildSummaryRow(
+                    'Total Litres Sold',
+                    '${data.totalLitresSold.toStringAsFixed(2)} L',
+                  ),
                   _buildSummaryRow('Total Bills', '${data.billCount}'),
                 ],
               ),
@@ -236,22 +249,31 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Payment Collection',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Payment Collection',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   const Divider(),
                   _buildSummaryRow(
-                      'Cash', '₹${data.cashCollected.toStringAsFixed(2)}',
-                      valueColor: Colors.green),
-                  _buildSummaryRow('Online/UPI',
-                      '₹${data.onlineCollected.toStringAsFixed(2)}',
-                      valueColor: Colors.blue),
+                    'Cash',
+                    '₹${data.cashCollected.toStringAsFixed(2)}',
+                    valueColor: Colors.green,
+                  ),
                   _buildSummaryRow(
-                      'Card', '₹${data.cardCollected.toStringAsFixed(2)}',
-                      valueColor: Colors.purple),
+                    'Online/UPI',
+                    '₹${data.onlineCollected.toStringAsFixed(2)}',
+                    valueColor: Colors.blue,
+                  ),
                   _buildSummaryRow(
-                      'Credit', '₹${data.creditSales.toStringAsFixed(2)}',
-                      valueColor: Colors.orange),
+                    'Card',
+                    '₹${data.cardCollected.toStringAsFixed(2)}',
+                    valueColor: Colors.purple,
+                  ),
+                  _buildSummaryRow(
+                    'Credit',
+                    '₹${data.creditSales.toStringAsFixed(2)}',
+                    valueColor: Colors.orange,
+                  ),
                   const Divider(),
                   _buildSummaryRow(
                     'Total Collected',
@@ -272,15 +294,17 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Fuel-wise Summary',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Fuel-wise Summary',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   const Divider(),
                   if (data.fuelSummary.isEmpty)
                     const Text('No fuel data available')
                   else
-                    ...data.fuelSummary
-                        .map((fuel) => _buildFuelSummaryCard(fuel)),
+                    ...data.fuelSummary.map(
+                      (fuel) => _buildFuelSummaryCard(fuel),
+                    ),
                 ],
               ),
             ),
@@ -294,9 +318,10 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Shift-wise Breakdown',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Shift-wise Breakdown',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   const Divider(),
                   if (data.shifts.isEmpty)
                     const Text('No shifts for this date')
@@ -311,8 +336,12 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value,
-      {Color? valueColor, bool isBold = false}) {
+  Widget _buildSummaryRow(
+    String label,
+    String value, {
+    Color? valueColor,
+    bool isBold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -342,19 +371,27 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(fuel.fuelType,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            fuel.fuelType,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildMiniStat(
-                  'Opening', '${fuel.openingStock.toStringAsFixed(0)} L'),
+                'Opening',
+                '${fuel.openingStock.toStringAsFixed(0)} L',
+              ),
               _buildMiniStat(
-                  'Purchases', '+${fuel.purchases.toStringAsFixed(0)} L'),
+                'Purchases',
+                '+${fuel.purchases.toStringAsFixed(0)} L',
+              ),
               _buildMiniStat('Sales', '-${fuel.sales.toStringAsFixed(0)} L'),
               _buildMiniStat(
-                  'Closing', '${fuel.closingStock.toStringAsFixed(0)} L'),
+                'Closing',
+                '${fuel.closingStock.toStringAsFixed(0)} L',
+              ),
             ],
           ),
         ],
@@ -366,8 +403,10 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
     return Column(
       children: [
         Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-        Text(value,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
@@ -387,8 +426,10 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(shift.shiftName,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                shift.shiftName,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
               Text(
                 '${timeFormat.format(shift.startTime)} - ${shift.endTime != null ? timeFormat.format(shift.endTime!) : 'Active'}',
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
@@ -398,10 +439,14 @@ class _DsrReportScreenState extends State<DsrReportScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('₹${shift.totalSaleAmount.toStringAsFixed(0)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text('${shift.totalLitresSold.toStringAsFixed(1)} L',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(
+                '₹${shift.totalSaleAmount.toStringAsFixed(0)}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '${shift.totalLitresSold.toStringAsFixed(1)} L',
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
             ],
           ),
         ],

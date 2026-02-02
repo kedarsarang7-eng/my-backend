@@ -174,22 +174,24 @@ class ConnectionRepository {
 
       // Queue the request for sync to Firestore
       // The actual connection happens when vendor accepts
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: customerId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'connection_requests',
-        documentId: requestId,
-        payload: {
-          'id': requestId,
-          'customerId': customerId,
-          'vendorId': vendorId,
-          'customerName': customerName,
-          'customerPhone': customerPhone,
-          'status': 'PENDING',
-          'createdAt': now.toIso8601String(),
-        },
-        priority: 2, // Higher priority for connection requests
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: customerId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'connection_requests',
+          documentId: requestId,
+          payload: {
+            'id': requestId,
+            'customerId': customerId,
+            'vendorId': vendorId,
+            'customerName': customerName,
+            'customerPhone': customerPhone,
+            'status': 'PENDING',
+            'createdAt': now.toIso8601String(),
+          },
+          priority: 2, // Higher priority for connection requests
+        ),
+      );
 
       return requestId;
     }, 'createConnectionRequest');
@@ -223,37 +225,38 @@ class ConnectionRepository {
       await database.into(database.customerConnections).insert(connection);
 
       // Queue connection for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'connections',
-        documentId: connectionId,
-        payload: {
-          'id': connectionId,
-          'customerId': customerId,
-          'vendorId': userId,
-          'status': ConnectionStatus.active,
-          'customerRefId': customerRefId,
-          'createdAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'connections',
+          documentId: connectionId,
+          payload: {
+            'id': connectionId,
+            'customerId': customerId,
+            'vendorId': userId,
+            'status': ConnectionStatus.active,
+            'customerRefId': customerRefId,
+            'createdAt': now.toIso8601String(),
+          },
+        ),
+      );
 
       // Update the request status
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'connection_requests',
-        documentId: requestId,
-        payload: {
-          'status': 'ACCEPTED',
-          'respondedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'connection_requests',
+          documentId: requestId,
+          payload: {'status': 'ACCEPTED', 'respondedAt': now.toIso8601String()},
+        ),
+      );
 
       // Return the created connection
-      final entity = await (database.select(database.customerConnections)
-            ..where((t) => t.id.equals(connectionId)))
-          .getSingle();
+      final entity = await (database.select(
+        database.customerConnections,
+      )..where((t) => t.id.equals(connectionId))).getSingle();
 
       return VendorConnection.fromEntity(entity);
     }, 'acceptConnectionRequest');
@@ -268,29 +271,32 @@ class ConnectionRepository {
       final now = DateTime.now();
 
       // Queue status update for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'connection_requests',
-        documentId: requestId,
-        payload: {
-          'status': 'REJECTED',
-          'respondedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'connection_requests',
+          documentId: requestId,
+          payload: {'status': 'REJECTED', 'respondedAt': now.toIso8601String()},
+        ),
+      );
     }, 'rejectConnectionRequest');
   }
 
   /// Get all active connections for a customer
   Future<RepositoryResult<List<VendorConnection>>> getCustomerConnections(
-      String customerId) async {
+    String customerId,
+  ) async {
     return await errorHandler.runSafe<List<VendorConnection>>(() async {
-      final entities = await (database.select(database.customerConnections)
-            ..where((t) =>
-                t.customerId.equals(customerId) &
-                t.status.equals(ConnectionStatus.active))
-            ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
-          .get();
+      final entities =
+          await (database.select(database.customerConnections)
+                ..where(
+                  (t) =>
+                      t.customerId.equals(customerId) &
+                      t.status.equals(ConnectionStatus.active),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
+              .get();
 
       return entities.map(VendorConnection.fromEntity).toList();
     }, 'getCustomerConnections');
@@ -298,14 +304,18 @@ class ConnectionRepository {
 
   /// Get all connections for a vendor (their customers)
   Future<RepositoryResult<List<VendorConnection>>> getVendorConnections(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await errorHandler.runSafe<List<VendorConnection>>(() async {
-      final entities = await (database.select(database.customerConnections)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.status.equals(ConnectionStatus.active))
-            ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
-          .get();
+      final entities =
+          await (database.select(database.customerConnections)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.status.equals(ConnectionStatus.active),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
+              .get();
 
       return entities.map(VendorConnection.fromEntity).toList();
     }, 'getVendorConnections');
@@ -314,9 +324,11 @@ class ConnectionRepository {
   /// Watch connections stream for reactive UI
   Stream<List<VendorConnection>> watchCustomerConnections(String customerId) {
     return (database.select(database.customerConnections)
-          ..where((t) =>
-              t.customerId.equals(customerId) &
-              t.status.equals(ConnectionStatus.active))
+          ..where(
+            (t) =>
+                t.customerId.equals(customerId) &
+                t.status.equals(ConnectionStatus.active),
+          )
           ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
         .watch()
         .map((entities) => entities.map(VendorConnection.fromEntity).toList());
@@ -331,25 +343,29 @@ class ConnectionRepository {
       final now = DateTime.now();
 
       // Update local status
-      await (database.update(database.customerConnections)
-            ..where((t) => t.id.equals(connectionId)))
-          .write(CustomerConnectionsCompanion(
-        status: const Value(ConnectionStatus.disconnected),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.customerConnections,
+      )..where((t) => t.id.equals(connectionId))).write(
+        CustomerConnectionsCompanion(
+          status: const Value(ConnectionStatus.disconnected),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'connections',
-        documentId: connectionId,
-        payload: {
-          'status': ConnectionStatus.disconnected,
-          'updatedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'connections',
+          documentId: connectionId,
+          payload: {
+            'status': ConnectionStatus.disconnected,
+            'updatedAt': now.toIso8601String(),
+          },
+        ),
+      );
     }, 'disconnectFromVendor');
   }
 
@@ -365,9 +381,9 @@ class ConnectionRepository {
       final now = DateTime.now();
 
       // Get current connection
-      final connection = await (database.select(database.customerConnections)
-            ..where((t) => t.id.equals(connectionId)))
-          .getSingleOrNull();
+      final connection = await (database.select(
+        database.customerConnections,
+      )..where((t) => t.id.equals(connectionId))).getSingleOrNull();
 
       if (connection == null) return;
 
@@ -375,64 +391,73 @@ class ConnectionRepository {
       final newTotalPaid = connection.totalPaid + (addToPaid ?? 0);
       final newOutstanding = newTotalBilled - newTotalPaid;
 
-      await (database.update(database.customerConnections)
-            ..where((t) => t.id.equals(connectionId)))
-          .write(CustomerConnectionsCompanion(
-        totalBilled: Value(newTotalBilled),
-        totalPaid: Value(newTotalPaid),
-        outstandingBalance: Value(newOutstanding),
-        lastInvoiceDate: lastInvoiceDate != null
-            ? Value(lastInvoiceDate)
-            : const Value.absent(),
-        lastPaymentDate: lastPaymentDate != null
-            ? Value(lastPaymentDate)
-            : const Value.absent(),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.customerConnections,
+      )..where((t) => t.id.equals(connectionId))).write(
+        CustomerConnectionsCompanion(
+          totalBilled: Value(newTotalBilled),
+          totalPaid: Value(newTotalPaid),
+          outstandingBalance: Value(newOutstanding),
+          lastInvoiceDate: lastInvoiceDate != null
+              ? Value(lastInvoiceDate)
+              : const Value.absent(),
+          lastPaymentDate: lastPaymentDate != null
+              ? Value(lastPaymentDate)
+              : const Value.absent(),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'updateConnectionStats');
   }
 
   /// Search for shops/vendors by name or ID
   /// This queries local cache first, then syncs from server if not found
   Future<RepositoryResult<List<Map<String, dynamic>>>> searchShops(
-      String query) async {
+    String query,
+  ) async {
     return await errorHandler.runSafe<List<Map<String, dynamic>>>(() async {
       // First check local shops table
-      final localShops = await (database.select(database.shops)
-            ..where((t) =>
-                t.name.like('%$query%') |
-                t.shopName.like('%$query%') |
-                t.id.equals(query)))
-          .get();
+      final localShops =
+          await (database.select(database.shops)..where(
+                (t) =>
+                    t.name.like('%$query%') |
+                    t.shopName.like('%$query%') |
+                    t.id.equals(query),
+              ))
+              .get();
 
       if (localShops.isNotEmpty) {
         return localShops
-            .map((s) => {
-                  'id': s.id,
-                  'name': s.name,
-                  'shopName': s.shopName,
-                  'ownerId': s.ownerId,
-                  'phone': s.phone,
-                  'address': s.address,
-                })
+            .map(
+              (s) => {
+                'id': s.id,
+                'name': s.name,
+                'shopName': s.shopName,
+                'ownerId': s.ownerId,
+                'phone': s.phone,
+                'address': s.address,
+              },
+            )
             .toList();
       }
 
       // Queue a search request to sync matching shops
       // This will be processed when online and populate local cache
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: 'system',
-        operationType:
-            SyncOperationType.update, // Using update as a search signal
-        targetCollection: 'shop_search',
-        documentId: query,
-        payload: {
-          'query': query,
-          'requestedAt': DateTime.now().toIso8601String()
-        },
-        priority: 3,
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: 'system',
+          operationType:
+              SyncOperationType.update, // Using update as a search signal
+          targetCollection: 'shop_search',
+          documentId: query,
+          payload: {
+            'query': query,
+            'requestedAt': DateTime.now().toIso8601String(),
+          },
+          priority: 3,
+        ),
+      );
 
       return [];
     }, 'searchShops');

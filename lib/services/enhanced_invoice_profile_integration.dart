@@ -43,7 +43,8 @@ class EnhancedInvoiceProfileHelper {
 
     if (profile == null) {
       throw Exception(
-          'Vendor profile not found. Please set up your profile first.');
+        'Vendor profile not found. Please set up your profile first.',
+      );
     }
 
     // Get logo bytes if available
@@ -60,8 +61,9 @@ class EnhancedInvoiceProfileHelper {
     Uint8List? avatarBytes;
     if (profile.avatar != null) {
       try {
-        final byteData =
-            await services.rootBundle.load(profile.avatar!.assetPath);
+        final byteData = await services.rootBundle.load(
+          profile.avatar!.assetPath,
+        );
         avatarBytes = byteData.buffer.asUint8List();
       } catch (e) {
         debugPrint('Failed to load avatar asset: $e');

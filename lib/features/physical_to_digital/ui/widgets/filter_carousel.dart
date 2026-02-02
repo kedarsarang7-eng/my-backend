@@ -115,8 +115,9 @@ class _FilterCarouselState extends State<FilterCarousel> {
                       style: TextStyle(
                         color: isSelected ? kP2DAccentCyan : kP2DTextSecondary,
                         fontSize: 12,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                       ),
                     ),
                   ),

@@ -46,10 +46,12 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
 
       // Fetch all data from local repositories in parallel
       final billsFuture = sl<BillsRepository>().watchAll(userId: ownerId).first;
-      final purchFuture =
-          sl<PurchaseRepository>().watchAll(userId: ownerId).first;
-      final expFuture =
-          sl<ExpensesRepository>().watchAll(userId: ownerId).first;
+      final purchFuture = sl<PurchaseRepository>()
+          .watchAll(userId: ownerId)
+          .first;
+      final expFuture = sl<ExpensesRepository>()
+          .watchAll(userId: ownerId)
+          .first;
 
       final results = await Future.wait([billsFuture, purchFuture, expFuture]);
 
@@ -62,40 +64,46 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
       // Process Sales (Credit)
       for (var b in bills) {
         if (!_isInRange(b.date)) continue;
-        ledger.add(_LedgerItem(
-          date: b.date,
-          type: 'Sale',
-          refNo: b.invoiceNumber,
-          party: b.customerName,
-          debit: 0,
-          credit: b.grandTotal,
-        ));
+        ledger.add(
+          _LedgerItem(
+            date: b.date,
+            type: 'Sale',
+            refNo: b.invoiceNumber,
+            party: b.customerName,
+            debit: 0,
+            credit: b.grandTotal,
+          ),
+        );
       }
 
       // Process Purchases (Debit)
       for (var p in purchases) {
         if (!_isInRange(p.purchaseDate)) continue;
-        ledger.add(_LedgerItem(
-          date: p.purchaseDate,
-          type: 'Purchase',
-          refNo: p.invoiceNumber ?? '',
-          party: p.vendorName ?? 'Unknown',
-          debit: p.totalAmount,
-          credit: 0,
-        ));
+        ledger.add(
+          _LedgerItem(
+            date: p.purchaseDate,
+            type: 'Purchase',
+            refNo: p.invoiceNumber ?? '',
+            party: p.vendorName ?? 'Unknown',
+            debit: p.totalAmount,
+            credit: 0,
+          ),
+        );
       }
 
       // Process Expenses (Debit)
       for (var e in expenses) {
         if (!_isInRange(e.date)) continue;
-        ledger.add(_LedgerItem(
-          date: e.date,
-          type: 'Expense',
-          refNo: '-',
-          party: e.category,
-          debit: e.amount,
-          credit: 0,
-        ));
+        ledger.add(
+          _LedgerItem(
+            date: e.date,
+            type: 'Expense',
+            refNo: '-',
+            party: e.category,
+            debit: e.amount,
+            credit: 0,
+          ),
+        );
       }
 
       // Sort by date descending
@@ -122,30 +130,34 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
     if (_searchQuery.isEmpty) return _items;
     final q = _searchQuery.toLowerCase();
     return _items
-        .where((i) =>
-            i.party.toLowerCase().contains(q) ||
-            i.refNo.toLowerCase().contains(q) ||
-            i.type.toLowerCase().contains(q))
+        .where(
+          (i) =>
+              i.party.toLowerCase().contains(q) ||
+              i.refNo.toLowerCase().contains(q) ||
+              i.type.toLowerCase().contains(q),
+        )
         .toList();
   }
 
   Future<void> _selectDateRange() async {
     final picked = await showDateRangePicker(
-        context: context,
-        firstDate: DateTime(2020),
-        lastDate: DateTime.now().add(const Duration(days: 1)),
-        initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              primaryColor: Colors.teal,
-              colorScheme: const ColorScheme.light(primary: Colors.teal),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+      initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: Colors.teal,
+            colorScheme: const ColorScheme.light(primary: Colors.teal),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary,
             ),
-            child: child!,
-          );
-        });
+          ),
+          child: child!,
+        );
+      },
+    );
 
     if (picked != null) {
       setState(() {
@@ -157,7 +169,10 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
   }
 
   Future<void> _exportToPdf(
-      BuildContext context, List<_LedgerItem> items, bool isDark) async {
+    BuildContext context,
+    List<_LedgerItem> items,
+    bool isDark,
+  ) async {
     if (items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No transactions to export')),
@@ -227,18 +242,20 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
               },
               headers: ['Date', 'Type', 'Ref No', 'Party', 'Debit', 'Credit'],
               data: items
-                  .map((item) => [
-                        DateFormat('dd-MM-yyyy').format(item.date),
-                        item.type,
-                        item.refNo,
-                        item.party,
-                        item.debit > 0
-                            ? '₹${item.debit.toStringAsFixed(0)}'
-                            : '-',
-                        item.credit > 0
-                            ? '₹${item.credit.toStringAsFixed(0)}'
-                            : '-',
-                      ])
+                  .map(
+                    (item) => [
+                      DateFormat('dd-MM-yyyy').format(item.date),
+                      item.type,
+                      item.refNo,
+                      item.party,
+                      item.debit > 0
+                          ? '₹${item.debit.toStringAsFixed(0)}'
+                          : '-',
+                      item.credit > 0
+                          ? '₹${item.credit.toStringAsFixed(0)}'
+                          : '-',
+                    ],
+                  )
                   .toList(),
             ),
             pw.SizedBox(height: 16),
@@ -255,11 +272,14 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      pw.Text('Total Debit: ₹${totalDebit.toStringAsFixed(2)}',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       pw.Text(
-                          'Total Credit: ₹${totalCredit.toStringAsFixed(2)}',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        'Total Debit: ₹${totalDebit.toStringAsFixed(2)}',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                      ),
+                      pw.Text(
+                        'Total Credit: ₹${totalCredit.toStringAsFixed(2)}',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                      ),
                     ],
                   ),
                 ),
@@ -278,9 +298,9 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
       );
     } catch (e) {
       Navigator.pop(context); // Close loading
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Export error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Export error: $e')));
     }
   }
 
@@ -317,18 +337,22 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black87),
               decoration: InputDecoration(
                 hintText: 'Search Party, Ref No...',
-                hintStyle:
-                    TextStyle(color: isDark ? Colors.white30 : Colors.grey),
+                hintStyle: TextStyle(
+                  color: isDark ? Colors.white30 : Colors.grey,
+                ),
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: isDark
                     ? Colors.white.withOpacity(0.05)
                     : Colors.grey.shade100,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 16,
+                ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
@@ -349,17 +373,23 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
                         title: 'Type',
                         valueBuilder: (i) => i.type,
                         widgetBuilder: (i) => Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: _getTypeColor(i.type).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getTypeColor(i.type).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            i.type,
+                            style: TextStyle(
+                              color: _getTypeColor(i.type),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
                             ),
-                            child: Text(i.type,
-                                style: TextStyle(
-                                    color: _getTypeColor(i.type),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 11))),
+                          ),
+                        ),
                       ),
                       EnterpriseTableColumn(
                         title: 'Ref No',
@@ -374,21 +404,22 @@ class _AllTransactionsScreenState extends ConsumerState<AllTransactionsScreen> {
                         valueBuilder: (i) => i.debit,
                         isNumeric: true,
                         widgetBuilder: (i) => Text(
-                            i.debit > 0
-                                ? '₹${i.debit.toStringAsFixed(0)}'
-                                : '-',
-                            style: const TextStyle(color: Colors.redAccent)),
+                          i.debit > 0 ? '₹${i.debit.toStringAsFixed(0)}' : '-',
+                          style: const TextStyle(color: Colors.redAccent),
+                        ),
                       ),
                       EnterpriseTableColumn(
                         title: 'Credit',
                         valueBuilder: (i) => i.credit,
                         isNumeric: true,
                         widgetBuilder: (i) => Text(
-                            i.credit > 0
-                                ? '₹${i.credit.toStringAsFixed(0)}'
-                                : '-',
-                            style: const TextStyle(
-                                color: FuturisticColors.success)),
+                          i.credit > 0
+                              ? '₹${i.credit.toStringAsFixed(0)}'
+                              : '-',
+                          style: const TextStyle(
+                            color: FuturisticColors.success,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -420,11 +451,12 @@ class _LedgerItem {
   final double debit;
   final double credit;
 
-  _LedgerItem(
-      {required this.date,
-      required this.type,
-      required this.refNo,
-      required this.party,
-      required this.debit,
-      required this.credit});
+  _LedgerItem({
+    required this.date,
+    required this.type,
+    required this.refNo,
+    required this.party,
+    required this.debit,
+    required this.credit,
+  });
 }

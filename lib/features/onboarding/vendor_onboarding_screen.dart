@@ -58,9 +58,10 @@ class _VendorOnboardingScreenState extends State<VendorOnboardingScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -125,13 +126,13 @@ class _VendorOnboardingScreenState extends State<VendorOnboardingScreen>
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.0, 0.1),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.0, 0.1),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                  ),
               child: child,
             ),
           );
@@ -157,8 +158,10 @@ class _VendorOnboardingScreenState extends State<VendorOnboardingScreen>
             children: [
               // Skip button
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -264,10 +267,7 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
   @override
   void initState() {
     super.initState();
-    _cardController = PageController(
-      viewportFraction: 0.75,
-      initialPage: 0,
-    );
+    _cardController = PageController(viewportFraction: 0.75, initialPage: 0);
   }
 
   @override
@@ -336,8 +336,8 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
                   return AnimatedScale(
                     scale: isCurrent
                         ? (isSelected
-                            ? 1.03
-                            : 1.0) // Selected cards pop slightly more
+                              ? 1.03
+                              : 1.0) // Selected cards pop slightly more
                         : 0.88,
                     duration: const Duration(milliseconds: 250),
                     curve: Curves.easeOutCubic,
@@ -433,7 +433,8 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
                                               isSelected ? 20 : 18,
                                             ),
                                             child: _buildBusinessIllustration(
-                                                config),
+                                              config,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -463,7 +464,8 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
                                   // Description
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
+                                      horizontal: 20,
+                                    ),
                                     child: Text(
                                       config.description,
                                       style: AppTypography.bodySmall.copyWith(
@@ -490,24 +492,27 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
                                             children: [
                                               const SizedBox(height: 16),
                                               TweenAnimationBuilder<double>(
-                                                tween:
-                                                    Tween(begin: 0.0, end: 1.0),
+                                                tween: Tween(
+                                                  begin: 0.0,
+                                                  end: 1.0,
+                                                ),
                                                 duration: const Duration(
-                                                    milliseconds: 300),
+                                                  milliseconds: 300,
+                                                ),
                                                 curve: Curves.elasticOut,
                                                 builder:
                                                     (context, value, child) {
-                                                  return Transform.scale(
-                                                    scale: value,
-                                                    child: child,
-                                                  );
-                                                },
+                                                      return Transform.scale(
+                                                        scale: value,
+                                                        child: child,
+                                                      );
+                                                    },
                                                 child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 8,
-                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
+                                                      ),
                                                   decoration: BoxDecoration(
                                                     gradient: LinearGradient(
                                                       colors: [
@@ -518,15 +523,18 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
                                                     ),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            20),
+                                                          20,
+                                                        ),
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: config
                                                             .primaryColor
                                                             .withOpacity(0.4),
                                                         blurRadius: 8,
-                                                        offset:
-                                                            const Offset(0, 3),
+                                                        offset: const Offset(
+                                                          0,
+                                                          3,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -542,15 +550,17 @@ class _BusinessTypeScreenState extends State<_BusinessTypeScreen> {
                                                       const SizedBox(width: 6),
                                                       Text(
                                                         AppLocalizations.of(
-                                                                context)!
-                                                            .onboarding_selected,
+                                                          context,
+                                                        )!.onboarding_selected,
                                                         style: AppTypography
                                                             .labelLarge
                                                             .copyWith(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
                                                       ),
                                                     ],
                                                   ),
@@ -820,24 +830,26 @@ class _CongratulationsScreenState extends State<_CongratulationsScreen>
   void _generateConfetti() {
     final random = math.Random();
     for (int i = 0; i < 60; i++) {
-      _confetti.add(_ConfettiParticle(
-        x: random.nextDouble(),
-        y: random.nextDouble() * -1,
-        color: [
-          Colors.red,
-          Colors.blue,
-          Colors.green,
-          Colors.yellow,
-          Colors.purple,
-          Colors.orange,
-          Colors.pink,
-          Colors.cyan,
-          Colors.amber,
-          Colors.teal,
-        ][random.nextInt(10)],
-        speed: 0.4 + random.nextDouble() * 0.6,
-        rotation: random.nextDouble() * 2 * math.pi,
-      ));
+      _confetti.add(
+        _ConfettiParticle(
+          x: random.nextDouble(),
+          y: random.nextDouble() * -1,
+          color: [
+            Colors.red,
+            Colors.blue,
+            Colors.green,
+            Colors.yellow,
+            Colors.purple,
+            Colors.orange,
+            Colors.pink,
+            Colors.cyan,
+            Colors.amber,
+            Colors.teal,
+          ][random.nextInt(10)],
+          speed: 0.4 + random.nextDouble() * 0.6,
+          rotation: random.nextDouble() * 2 * math.pi,
+        ),
+      );
     }
   }
 
@@ -881,10 +893,7 @@ class _CongratulationsScreenState extends State<_CongratulationsScreen>
                   parent: _bounceController,
                   curve: Curves.elasticOut,
                 ),
-                child: const Text(
-                  '🎉',
-                  style: TextStyle(fontSize: 48),
-                ),
+                child: const Text('🎉', style: TextStyle(fontSize: 48)),
               ),
 
               const SizedBox(height: 16),
@@ -894,8 +903,9 @@ class _CongratulationsScreenState extends State<_CongratulationsScreen>
                 duration: const Duration(milliseconds: 500),
                 opacity: _showContent ? 1 : 0,
                 child: Text(
-                  AppLocalizations.of(context)!
-                      .onboarding_congratulations_title,
+                  AppLocalizations.of(
+                    context,
+                  )!.onboarding_congratulations_title,
                   style: AppTypography.headlineLarge.copyWith(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -914,8 +924,9 @@ class _CongratulationsScreenState extends State<_CongratulationsScreen>
                   duration: const Duration(milliseconds: 500),
                   opacity: _showContent ? 1 : 0,
                   child: Text(
-                    AppLocalizations.of(context)!
-                        .onboarding_congratulations_subtitle,
+                    AppLocalizations.of(
+                      context,
+                    )!.onboarding_congratulations_subtitle,
                     style: AppTypography.bodyLarge.copyWith(
                       color: FuturisticColors.textSecondary,
                       height: 1.5,
@@ -1138,10 +1149,7 @@ class _FloatingEmojiState extends State<_FloatingEmoji>
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(0, -8 * math.sin(_controller.value * math.pi)),
-          child: Text(
-            widget.emoji,
-            style: const TextStyle(fontSize: 28),
-          ),
+          child: Text(widget.emoji, style: const TextStyle(fontSize: 28)),
         );
       },
     );
@@ -1170,10 +1178,7 @@ class _ConfettiPainter extends CustomPainter {
   final List<_ConfettiParticle> particles;
   final double progress;
 
-  _ConfettiPainter({
-    required this.particles,
-    required this.progress,
-  });
+  _ConfettiPainter({required this.particles, required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1186,10 +1191,7 @@ class _ConfettiPainter extends CustomPainter {
         ..style = PaintingStyle.fill;
 
       canvas.save();
-      canvas.translate(
-        particle.x * size.width,
-        y * size.height,
-      );
+      canvas.translate(particle.x * size.width, y * size.height);
       canvas.rotate(particle.rotation + progress * 4);
 
       // Draw different shapes

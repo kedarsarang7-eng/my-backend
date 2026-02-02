@@ -26,13 +26,19 @@ class CustomerBillsScreen extends StatelessWidget {
           const QuickActionToolbar(
             title: 'Live Sales Monitor',
             actions: [
-              Text('Real-time Updates',
-                  style: TextStyle(
-                      color: FuturisticColors.success,
-                      fontWeight: FontWeight.bold)),
+              Text(
+                'Real-time Updates',
+                style: TextStyle(
+                  color: FuturisticColors.success,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               SizedBox(width: 8),
-              Icon(Icons.wifi_tethering,
-                  color: FuturisticColors.success, size: 16),
+              Icon(
+                Icons.wifi_tethering,
+                color: FuturisticColors.success,
+                size: 16,
+              ),
             ],
           ),
           Expanded(
@@ -46,9 +52,11 @@ class CustomerBillsScreen extends StatelessWidget {
                   }
                   if (snap.hasError) {
                     return Center(
-                        child: Text('Error: ${snap.error}',
-                            style: const TextStyle(
-                                color: FuturisticColors.error)));
+                      child: Text(
+                        'Error: ${snap.error}',
+                        style: const TextStyle(color: FuturisticColors.error),
+                      ),
+                    );
                   }
 
                   final bills = snap.data ?? [];
@@ -59,17 +67,22 @@ class CustomerBillsScreen extends StatelessWidget {
                     data: bills,
                     emptyMessage: 'No sales recorded yet.',
                     onRowClick: (b) => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => BillDetailScreen(bill: b))),
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BillDetailScreen(bill: b),
+                      ),
+                    ),
                     columns: [
                       SmartTableColumn(
                         title: 'Invoice #',
                         flex: 2,
-                        builder: (b) => Text('#${b.invoiceNumber}',
-                            style: const TextStyle(
-                                fontFamily: 'Monospace',
-                                color: FuturisticColors.primary)),
+                        builder: (b) => Text(
+                          '#${b.invoiceNumber}',
+                          style: const TextStyle(
+                            fontFamily: 'Monospace',
+                            color: FuturisticColors.primary,
+                          ),
+                        ),
                       ),
                       SmartTableColumn(
                         title: 'Customer',
@@ -81,37 +94,48 @@ class CustomerBillsScreen extends StatelessWidget {
                         title: 'Total',
                         flex: 1,
                         builder: (b) => Text(
-                            '₹${b.grandTotal.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: FuturisticColors.textPrimary)),
+                          '₹${b.grandTotal.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: FuturisticColors.textPrimary,
+                          ),
+                        ),
                       ),
                       SmartTableColumn(
-                          title: 'Status',
-                          flex: 1,
-                          builder: (b) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: (b.status == 'Paid'
+                        title: 'Status',
+                        flex: 1,
+                        builder: (b) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                (b.status == 'Paid'
+                                        ? FuturisticColors.success
+                                        : FuturisticColors.warning)
+                                    .withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color:
+                                  (b.status == 'Paid'
                                           ? FuturisticColors.success
                                           : FuturisticColors.warning)
-                                      .withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(
-                                      color: (b.status == 'Paid'
-                                              ? FuturisticColors.success
-                                              : FuturisticColors.warning)
-                                          .withOpacity(0.3)),
-                                ),
-                                child: Text(b.status,
-                                    style: TextStyle(
-                                        color: b.status == 'Paid'
-                                            ? FuturisticColors.success
-                                            : FuturisticColors.warning,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold)),
-                              )),
+                                      .withOpacity(0.3),
+                            ),
+                          ),
+                          child: Text(
+                            b.status,
+                            style: TextStyle(
+                              color: b.status == 'Paid'
+                                  ? FuturisticColors.success
+                                  : FuturisticColors.warning,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                       SmartTableColumn(
                         title: 'Time',
                         flex: 1,

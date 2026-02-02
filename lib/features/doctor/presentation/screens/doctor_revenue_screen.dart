@@ -95,8 +95,9 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
             decoration: BoxDecoration(
               color: FuturisticColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
-              border:
-                  Border.all(color: FuturisticColors.primary.withOpacity(0.3)),
+              border: Border.all(
+                color: FuturisticColors.primary.withOpacity(0.3),
+              ),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -104,12 +105,15 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
                 dropdownColor: FuturisticColors.surface,
                 icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
                 style: GoogleFonts.inter(
-                    color: Colors.white, fontWeight: FontWeight.w500),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                 items: _doctors.map((d) {
                   return DropdownMenuItem(
                     value: d.vendorId,
                     child: Text(
-                        d.clinicName ?? 'Dr. ${d.specialization ?? "Unknown"}'),
+                      d.clinicName ?? 'Dr. ${d.specialization ?? "Unknown"}',
+                    ),
                   );
                 }).toList(),
                 onChanged: (val) {
@@ -139,21 +143,27 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Revenue Cards
-                    Text('Revenue Overview',
-                        style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white70)),
+                    Text(
+                      'Revenue Overview',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white70,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     _buildRevenueCards(),
                     const SizedBox(height: 24),
 
                     // Visit Statistics
-                    Text('Patient Visits',
-                        style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white70)),
+                    Text(
+                      'Patient Visits',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white70,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     _buildVisitCards(),
                     const SizedBox(height: 24),
@@ -163,11 +173,14 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
                     const SizedBox(height: 32),
 
                     // Monthly Chart
-                    Text('Monthly Revenue Trend',
-                        style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
+                    Text(
+                      'Monthly Revenue Trend',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     Container(
                       height: 300,
@@ -189,22 +202,41 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
     return Row(
       children: [
         Expanded(
-            child: _buildRevenueCard(
-                'Today', _stats['today']!, Icons.today, Colors.green)),
+          child: _buildRevenueCard(
+            'Today',
+            _stats['today']!,
+            Icons.today,
+            Colors.green,
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildRevenueCard(
-                'This Week', _stats['week']!, Icons.date_range, Colors.blue)),
+          child: _buildRevenueCard(
+            'This Week',
+            _stats['week']!,
+            Icons.date_range,
+            Colors.blue,
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildRevenueCard('This Month', _stats['month']!,
-                Icons.calendar_month, FuturisticColors.primary)),
+          child: _buildRevenueCard(
+            'This Month',
+            _stats['month']!,
+            Icons.calendar_month,
+            FuturisticColors.primary,
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildRevenueCard(
-      String title, double amount, IconData icon, Color color) {
+    String title,
+    double amount,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -219,9 +251,13 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
             children: [
               Icon(icon, size: 16, color: color),
               const SizedBox(width: 6),
-              Text(title,
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.7), fontSize: 12)),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -244,10 +280,12 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
         Expanded(child: _buildVisitCard('Today', _todayVisits, Colors.orange)),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildVisitCard('This Week', _weekVisits, Colors.purple)),
+          child: _buildVisitCard('This Week', _weekVisits, Colors.purple),
+        ),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildVisitCard('This Month', _monthVisits, Colors.teal)),
+          child: _buildVisitCard('This Month', _monthVisits, Colors.teal),
+        ),
       ],
     );
   }
@@ -263,9 +301,13 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.7), fontSize: 12)),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 12,
+            ),
+          ),
           const SizedBox(height: 6),
           Row(
             children: [
@@ -279,9 +321,13 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
                   color: color,
                 ),
               ),
-              Text(' patients',
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.5), fontSize: 12)),
+              Text(
+                ' patients',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.5),
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
         ],
@@ -290,10 +336,12 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
   }
 
   Widget _buildQuickStats() {
-    final avgBillToday =
-        _todayVisits > 0 ? _stats['today']! / _todayVisits : 0.0;
-    final avgBillMonth =
-        _monthVisits > 0 ? _stats['month']! / _monthVisits : 0.0;
+    final avgBillToday = _todayVisits > 0
+        ? _stats['today']! / _todayVisits
+        : 0.0;
+    final avgBillMonth = _monthVisits > 0
+        ? _stats['month']! / _monthVisits
+        : 0.0;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -304,11 +352,17 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildQuickStatItem('Avg Bill (Today)',
-              '₹${avgBillToday.toStringAsFixed(0)}', Icons.receipt),
+          _buildQuickStatItem(
+            'Avg Bill (Today)',
+            '₹${avgBillToday.toStringAsFixed(0)}',
+            Icons.receipt,
+          ),
           Container(width: 1, height: 40, color: Colors.white10),
-          _buildQuickStatItem('Avg Bill (Month)',
-              '₹${avgBillMonth.toStringAsFixed(0)}', Icons.assessment),
+          _buildQuickStatItem(
+            'Avg Bill (Month)',
+            '₹${avgBillMonth.toStringAsFixed(0)}',
+            Icons.assessment,
+          ),
           Container(width: 1, height: 40, color: Colors.white10),
           _buildQuickStatItem('Total Patients', '$_monthVisits', Icons.group),
         ],
@@ -321,15 +375,19 @@ class _DoctorRevenueScreenState extends State<DoctorRevenueScreen> {
       children: [
         Icon(icon, color: FuturisticColors.primary, size: 24),
         const SizedBox(height: 8),
-        Text(value,
-            style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(label,
-            style:
-                TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11)),
+        Text(
+          label,
+          style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11),
+        ),
       ],
     );
   }

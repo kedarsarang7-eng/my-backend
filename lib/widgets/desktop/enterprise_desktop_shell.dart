@@ -29,7 +29,8 @@ class SelectedSidebarItemNotifier extends Notifier<SelectedSidebarItemState> {
 /// Provider for selected sidebar item
 final selectedSidebarItemProvider =
     NotifierProvider<SelectedSidebarItemNotifier, SelectedSidebarItemState>(
-        SelectedSidebarItemNotifier.new);
+      SelectedSidebarItemNotifier.new,
+    );
 
 /// Enterprise Desktop Shell - Main layout container with enterprise sidebar
 class EnterpriseDesktopShell extends ConsumerStatefulWidget {
@@ -196,9 +197,7 @@ class _EnterpriseDesktopShellState
                 width: 320,
                 decoration: BoxDecoration(
                   color: colorScheme.surface,
-                  border: Border(
-                    left: BorderSide(color: theme.dividerColor),
-                  ),
+                  border: Border(left: BorderSide(color: theme.dividerColor)),
                 ),
                 child: widget.rightPanel!,
               ),
@@ -276,8 +275,11 @@ class EnterpriseTopBar extends ConsumerWidget {
         child: Row(
           children: [
             const SizedBox(width: 12),
-            Icon(Icons.search_rounded,
-                color: theme.hintColor.withOpacity(0.6), size: 18),
+            Icon(
+              Icons.search_rounded,
+              color: theme.hintColor.withOpacity(0.6),
+              size: 18,
+            ),
             const SizedBox(width: 10),
             Expanded(
               child: TextField(
@@ -379,75 +381,76 @@ class _TopBarSyncIndicatorState extends State<_TopBarSyncIndicator>
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<SyncStats>(
-        stream: SyncEngine.instance.statsStream, // Listen to Real Stream
-        builder: (context, snapshot) {
-          final stats = snapshot.data;
+      stream: SyncEngine.instance.statsStream, // Listen to Real Stream
+      builder: (context, snapshot) {
+        final stats = snapshot.data;
 
-          // Default state (Loading or Init)
-          if (stats == null) {
-            return _TopBarIconButton(
-              icon: Icons.cloud_off_rounded,
-              tooltip: 'Checking Sync Status...',
-              accentColor: Colors.grey,
-              onTap: () => Navigator.of(context).pushNamed('/sync-status'),
-            );
-          }
-
-          // Determine State
-          bool isSyncing = stats.inProgressCount > 0;
-          bool hasError = stats.failedCount > 0;
-          bool isPending = stats.pendingCount > 0;
-
-          if (isSyncing) {
-            _spinController.repeat();
-            return RotationTransition(
-              turns: _spinController,
-              child: _TopBarIconButton(
-                icon: Icons.sync,
-                tooltip: 'Syncing ${stats.pendingCount} items...',
-                accentColor: Colors.blue,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Sync in progress...')),
-                  );
-                  Navigator.of(context).pushNamed('/sync-status');
-                },
-              ),
-            );
-          } else {
-            _spinController.stop();
-          }
-
-          if (hasError) {
-            return _TopBarIconButton(
-              icon: Icons.cloud_off,
-              tooltip: 'Sync Error! ${stats.failedCount} items failed.',
-              accentColor: FuturisticColors.error,
-              onTap: () => Navigator.of(context).pushNamed('/sync-status'),
-            );
-          }
-
-          if (isPending) {
-            return _TopBarIconButton(
-              icon: Icons.cloud_upload_outlined,
-              tooltip: '${stats.pendingCount} Pending Uploads',
-              accentColor: Colors.orange,
-              onTap: () {
-                // Trigger sync on click
-                SyncEngine.instance.triggerSync();
-                Navigator.of(context).pushNamed('/sync-status');
-              },
-            );
-          }
-
-          // All Synced (Green)
+        // Default state (Loading or Init)
+        if (stats == null) {
           return _TopBarIconButton(
-            icon: Icons.cloud_done_rounded,
-            tooltip: 'All Data Synced',
-            accentColor: FuturisticColors.success,
+            icon: Icons.cloud_off_rounded,
+            tooltip: 'Checking Sync Status...',
+            accentColor: Colors.grey,
             onTap: () => Navigator.of(context).pushNamed('/sync-status'),
           );
-        });
+        }
+
+        // Determine State
+        bool isSyncing = stats.inProgressCount > 0;
+        bool hasError = stats.failedCount > 0;
+        bool isPending = stats.pendingCount > 0;
+
+        if (isSyncing) {
+          _spinController.repeat();
+          return RotationTransition(
+            turns: _spinController,
+            child: _TopBarIconButton(
+              icon: Icons.sync,
+              tooltip: 'Syncing ${stats.pendingCount} items...',
+              accentColor: Colors.blue,
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sync in progress...')),
+                );
+                Navigator.of(context).pushNamed('/sync-status');
+              },
+            ),
+          );
+        } else {
+          _spinController.stop();
+        }
+
+        if (hasError) {
+          return _TopBarIconButton(
+            icon: Icons.cloud_off,
+            tooltip: 'Sync Error! ${stats.failedCount} items failed.',
+            accentColor: FuturisticColors.error,
+            onTap: () => Navigator.of(context).pushNamed('/sync-status'),
+          );
+        }
+
+        if (isPending) {
+          return _TopBarIconButton(
+            icon: Icons.cloud_upload_outlined,
+            tooltip: '${stats.pendingCount} Pending Uploads',
+            accentColor: Colors.orange,
+            onTap: () {
+              // Trigger sync on click
+              SyncEngine.instance.triggerSync();
+              Navigator.of(context).pushNamed('/sync-status');
+            },
+          );
+        }
+
+        // All Synced (Green)
+        return _TopBarIconButton(
+          icon: Icons.cloud_done_rounded,
+          tooltip: 'All Data Synced',
+          accentColor: FuturisticColors.success,
+          onTap: () => Navigator.of(context).pushNamed('/sync-status'),
+        );
+      },
+    );
   }
 }
 

@@ -21,12 +21,18 @@ class ButtonSizes {
   static const double borderRadius = 12.0;
   static const double iconSize = 20.0;
 
-  static const EdgeInsets paddingLarge =
-      EdgeInsets.symmetric(horizontal: 24, vertical: 16);
-  static const EdgeInsets paddingMedium =
-      EdgeInsets.symmetric(horizontal: 20, vertical: 12);
-  static const EdgeInsets paddingSmall =
-      EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+  static const EdgeInsets paddingLarge = EdgeInsets.symmetric(
+    horizontal: 24,
+    vertical: 16,
+  );
+  static const EdgeInsets paddingMedium = EdgeInsets.symmetric(
+    horizontal: 20,
+    vertical: 12,
+  );
+  static const EdgeInsets paddingSmall = EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 8,
+  );
 }
 
 /// Primary Button - High emphasis, main action
@@ -54,14 +60,14 @@ class PrimaryButton extends StatelessWidget {
     final height = size == ButtonSize.large
         ? ButtonSizes.heightLarge
         : size == ButtonSize.small
-            ? ButtonSizes.heightSmall
-            : ButtonSizes.heightMedium;
+        ? ButtonSizes.heightSmall
+        : ButtonSizes.heightMedium;
 
     final padding = size == ButtonSize.large
         ? ButtonSizes.paddingLarge
         : size == ButtonSize.small
-            ? ButtonSizes.paddingSmall
-            : ButtonSizes.paddingMedium;
+        ? ButtonSizes.paddingSmall
+        : ButtonSizes.paddingMedium;
 
     Widget button = Container(
       height: height,
@@ -69,7 +75,8 @@ class PrimaryButton extends StatelessWidget {
         gradient: onPressed != null
             ? FuturisticColors.primaryGradient
             : LinearGradient(
-                colors: [Colors.grey.shade400, Colors.grey.shade500]),
+                colors: [Colors.grey.shade400, Colors.grey.shade500],
+              ),
         borderRadius: BorderRadius.circular(ButtonSizes.borderRadius),
         boxShadow: onPressed != null
             ? [
@@ -153,14 +160,14 @@ class SecondaryButton extends StatelessWidget {
     final height = size == ButtonSize.large
         ? ButtonSizes.heightLarge
         : size == ButtonSize.small
-            ? ButtonSizes.heightSmall
-            : ButtonSizes.heightMedium;
+        ? ButtonSizes.heightSmall
+        : ButtonSizes.heightMedium;
 
     final padding = size == ButtonSize.large
         ? ButtonSizes.paddingLarge
         : size == ButtonSize.small
-            ? ButtonSizes.paddingSmall
-            : ButtonSizes.paddingMedium;
+        ? ButtonSizes.paddingSmall
+        : ButtonSizes.paddingMedium;
 
     final borderColor = isDark
         ? Colors.white.withOpacity(0.2)
@@ -230,25 +237,21 @@ class TertiaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor =
-        isDark ? FuturisticColors.accent1 : FuturisticColors.primary;
+    final textColor = isDark
+        ? FuturisticColors.accent1
+        : FuturisticColors.primary;
 
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: textColor,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: 18),
-            const SizedBox(width: 6),
-          ],
+          if (icon != null) ...[Icon(icon, size: 18), const SizedBox(width: 6)],
           Text(
             label,
             style: TextStyle(
@@ -295,7 +298,8 @@ class DangerButton extends StatelessWidget {
         gradient: onPressed != null
             ? FuturisticColors.errorGradient
             : LinearGradient(
-                colors: [Colors.grey.shade400, Colors.grey.shade500]),
+                colors: [Colors.grey.shade400, Colors.grey.shade500],
+              ),
         borderRadius: BorderRadius.circular(ButtonSizes.borderRadius),
       ),
       child: Material(
@@ -365,7 +369,8 @@ class PremiumIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = backgroundColor ??
+    final bgColor =
+        backgroundColor ??
         (isDark
             ? Colors.white.withOpacity(0.1)
             : FuturisticColors.primary.withOpacity(0.1));
@@ -374,10 +379,7 @@ class PremiumIconButton extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
       child: Material(
         color: Colors.transparent,
         shape: const CircleBorder(),

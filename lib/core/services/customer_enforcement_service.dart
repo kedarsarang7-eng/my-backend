@@ -136,7 +136,8 @@ class CustomerEnforcementService {
     if (usageRatio >= warningThreshold) {
       return EnforcementResult(
         action: EnforcementAction.warn,
-        message: 'Customer approaching credit limit. '
+        message:
+            'Customer approaching credit limit. '
             '${(usageRatio * 100).toStringAsFixed(0)}% of limit will be used after this transaction.',
         creditLimit: customer.creditLimit,
         currentOutstanding: customer.totalDues,
@@ -194,10 +195,7 @@ class CustomerEnforcementService {
 
     final customer = result.data!;
     final updateResult = await _customersRepository.updateCustomer(
-      customer.copyWith(
-        isBlocked: true,
-        blockReason: reason,
-      ),
+      customer.copyWith(isBlocked: true, blockReason: reason),
       userId: userId,
     );
 
@@ -216,10 +214,7 @@ class CustomerEnforcementService {
 
     final customer = result.data!;
     final updateResult = await _customersRepository.updateCustomer(
-      customer.copyWith(
-        isBlocked: false,
-        blockReason: null,
-      ),
+      customer.copyWith(isBlocked: false, blockReason: null),
       userId: userId,
     );
 

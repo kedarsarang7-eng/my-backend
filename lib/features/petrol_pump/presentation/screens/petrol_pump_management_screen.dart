@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../providers/app_state_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,8 +32,10 @@ class PetrolPumpManagementScreen extends ConsumerWidget {
             'Manage fuel types and daily rates',
             Icons.local_gas_station,
             Colors.red,
-            () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const FuelRatesScreen())),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const FuelRatesScreen()),
+            ),
           ),
           const SizedBox(height: 12),
           _buildMenuTile(
@@ -42,8 +44,10 @@ class PetrolPumpManagementScreen extends ConsumerWidget {
             'Configure dispensers and assign nozzles',
             Icons.settings_input_component,
             Colors.blue,
-            () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const DispenserListScreen())),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const DispenserListScreen()),
+            ),
           ),
           const SizedBox(height: 12),
           _buildMenuTile(
@@ -52,8 +56,10 @@ class PetrolPumpManagementScreen extends ConsumerWidget {
             'Open/Close shifts and view history',
             Icons.access_time_filled,
             Colors.green,
-            () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const ShiftHistoryScreen())),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ShiftHistoryScreen()),
+            ),
           ),
           const SizedBox(height: 12),
           _buildMenuTile(
@@ -62,8 +68,10 @@ class PetrolPumpManagementScreen extends ConsumerWidget {
             'Manage tank levels and purchases',
             Icons.water_drop,
             Colors.orange,
-            () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const TankListScreen())),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const TankListScreen()),
+            ),
           ),
           // Employee Management removed until fully implemented
           // Features must work or not exist per production policy

@@ -9,11 +9,7 @@ import 'package:dukanx/core/error/error_handler.dart';
 
 // Generate mocks with:
 // flutter pub run build_runner build
-@GenerateMocks([
-  ProductsRepository,
-  BillsRepository,
-  SessionManager,
-])
+@GenerateMocks([ProductsRepository, BillsRepository, SessionManager])
 import 'recommendation_service_test.mocks.dart';
 
 import 'package:get_it/get_it.dart';
@@ -58,8 +54,9 @@ void main() {
         _createMockProduct('p5', 'Product 5', 'Category B', 300.0),
       ];
 
-      when(mockProductsRepo.watchAll(userId: userId))
-          .thenAnswer((_) => Stream.value(mockProducts));
+      when(
+        mockProductsRepo.watchAll(userId: userId),
+      ).thenAnswer((_) => Stream.value(mockProducts));
 
       // Mock session manager
       // Note: This would need proper service locator setup
@@ -72,41 +69,40 @@ void main() {
       expect(result.length, lessThanOrEqualTo(5));
     });
 
-    test('getRecommendations with items in cart returns related products',
-        () async {
-      // Arrange
-      final mockProducts = [
-        _createMockProduct('p1', 'Apple', 'Fruits', 50.0),
-        _createMockProduct('p2', 'Banana', 'Fruits', 30.0),
-        _createMockProduct('p3', 'Orange', 'Fruits', 40.0),
-        _createMockProduct('p4', 'Milk', 'Dairy', 60.0),
-      ];
+    test(
+      'getRecommendations with items in cart returns related products',
+      () async {
+        // Arrange
+        final mockProducts = [
+          _createMockProduct('p1', 'Apple', 'Fruits', 50.0),
+          _createMockProduct('p2', 'Banana', 'Fruits', 30.0),
+          _createMockProduct('p3', 'Orange', 'Fruits', 40.0),
+          _createMockProduct('p4', 'Milk', 'Dairy', 60.0),
+        ];
 
-      final cartItems = [
-        BillItem(
-          productId: 'p1',
-          productName: 'Apple',
-          qty: 2,
-          price: 50.0,
-        ),
-      ];
+        final cartItems = [
+          BillItem(productId: 'p1', productName: 'Apple', qty: 2, price: 50.0),
+        ];
 
-      when(mockProductsRepo.watchAll(userId: userId))
-          .thenAnswer((_) => Stream.value(mockProducts));
+        when(
+          mockProductsRepo.watchAll(userId: userId),
+        ).thenAnswer((_) => Stream.value(mockProducts));
 
-      // Act
-      final result = await service.getRecommendations(cartItems);
+        // Act
+        final result = await service.getRecommendations(cartItems);
 
-      // Assert
-      expect(result, isNotEmpty);
-      // Should not include the item already in cart
-      expect(result.any((p) => p.id == 'p1'), false);
-    });
+        // Assert
+        expect(result, isNotEmpty);
+        // Should not include the item already in cart
+        expect(result.any((p) => p.id == 'p1'), false);
+      },
+    );
 
     test('getRecommendations with no products returns empty list', () async {
       // Arrange
-      when(mockProductsRepo.watchAll(userId: userId))
-          .thenAnswer((_) => Stream.value([]));
+      when(
+        mockProductsRepo.watchAll(userId: userId),
+      ).thenAnswer((_) => Stream.value([]));
 
       // Act
       final result = await service.getRecommendations([]);
@@ -140,12 +136,13 @@ void main() {
         ]),
       ];
 
-      when(mockProductsRepo.watchAll(userId: 'user123'))
-          .thenAnswer((_) => Stream.value(mockProducts));
+      when(
+        mockProductsRepo.watchAll(userId: 'user123'),
+      ).thenAnswer((_) => Stream.value(mockProducts));
 
-      when(mockBillsRepo.getAll(
-        userId: 'user123',
-      )).thenAnswer((_) async => RepositoryResult.success(mockBills));
+      when(
+        mockBillsRepo.getAll(userId: 'user123'),
+      ).thenAnswer((_) async => RepositoryResult.success(mockBills));
 
       // Act
       final cartItems = [
@@ -177,15 +174,20 @@ void main() {
 
       final cartItems = [
         BillItem(
-            productId: 'p1', productName: 'iPhone 12', qty: 1, price: 50000.0),
+          productId: 'p1',
+          productName: 'iPhone 12',
+          qty: 1,
+          price: 50000.0,
+        ),
       ];
 
-      when(mockProductsRepo.watchAll(userId: 'user123'))
-          .thenAnswer((_) => Stream.value(mockProducts));
+      when(
+        mockProductsRepo.watchAll(userId: 'user123'),
+      ).thenAnswer((_) => Stream.value(mockProducts));
 
-      when(mockBillsRepo.getAll(
-        userId: anyNamed('userId'),
-      )).thenAnswer((_) async => RepositoryResult.success([]));
+      when(
+        mockBillsRepo.getAll(userId: anyNamed('userId')),
+      ).thenAnswer((_) async => RepositoryResult.success([]));
 
       // Act
       final result = await service.getRecommendations(cartItems);
@@ -206,15 +208,20 @@ void main() {
 
       final cartItems = [
         BillItem(
-            productId: 'p1', productName: 'Product A', qty: 1, price: 100.0),
+          productId: 'p1',
+          productName: 'Product A',
+          qty: 1,
+          price: 100.0,
+        ),
       ];
 
-      when(mockProductsRepo.watchAll(userId: 'user123'))
-          .thenAnswer((_) => Stream.value(mockProducts));
+      when(
+        mockProductsRepo.watchAll(userId: 'user123'),
+      ).thenAnswer((_) => Stream.value(mockProducts));
 
-      when(mockBillsRepo.getAll(
-        userId: anyNamed('userId'),
-      )).thenAnswer((_) async => RepositoryResult.success([]));
+      when(
+        mockBillsRepo.getAll(userId: anyNamed('userId')),
+      ).thenAnswer((_) async => RepositoryResult.success([]));
 
       // Act
       final result = await service.getRecommendations(cartItems);
@@ -244,55 +251,60 @@ void main() {
   });
 
   group('RecommendationService - Trending Products', () {
-    test('getTrendingProducts identifies products with high velocity',
-        () async {
-      // Arrange
-      final now = DateTime.now();
-      final mockProducts = [
-        _createMockProduct('p1', 'Trending Product', 'Category A', 100.0),
-        _createMockProduct('p2', 'Regular Product', 'Category B', 150.0),
-      ];
+    test(
+      'getTrendingProducts identifies products with high velocity',
+      () async {
+        // Arrange
+        final now = DateTime.now();
+        final mockProducts = [
+          _createMockProduct('p1', 'Trending Product', 'Category A', 100.0),
+          _createMockProduct('p2', 'Regular Product', 'Category B', 150.0),
+        ];
 
-      // Recent bills (last 7 days) with high sales
-      final recentBills = List.generate(
-        10,
-        (i) => _createMockBill('b$i', now.subtract(Duration(days: i ~/ 2)), [
-          BillItem(
+        // Recent bills (last 7 days) with high sales
+        final recentBills = List.generate(
+          10,
+          (i) => _createMockBill('b$i', now.subtract(Duration(days: i ~/ 2)), [
+            BillItem(
               productId: 'p1',
               productName: 'Trending Product',
               qty: 5,
-              price: 100.0),
-        ]),
-      );
+              price: 100.0,
+            ),
+          ]),
+        );
 
-      // Previous bills (7-14 days ago) with low sales
-      final previousBills = [
-        _createMockBill('b10', now.subtract(const Duration(days: 10)), [
-          BillItem(
+        // Previous bills (7-14 days ago) with low sales
+        final previousBills = [
+          _createMockBill('b10', now.subtract(const Duration(days: 10)), [
+            BillItem(
               productId: 'p1',
               productName: 'Trending Product',
               qty: 1,
-              price: 100.0),
-        ]),
-      ];
+              price: 100.0,
+            ),
+          ]),
+        ];
 
-      when(mockProductsRepo.watchAll(userId: 'user123'))
-          .thenAnswer((_) => Stream.value(mockProducts));
+        when(
+          mockProductsRepo.watchAll(userId: 'user123'),
+        ).thenAnswer((_) => Stream.value(mockProducts));
 
-      when(mockBillsRepo.getAll(
-        userId: 'user123',
-      )).thenAnswer((invocation) async {
-        return RepositoryResult.success([...recentBills, ...previousBills]);
-      });
+        when(mockBillsRepo.getAll(userId: 'user123')).thenAnswer((
+          invocation,
+        ) async {
+          return RepositoryResult.success([...recentBills, ...previousBills]);
+        });
 
-      // Act
-      final result = await service.getTrendingProducts('user123');
+        // Act
+        final result = await service.getTrendingProducts('user123');
 
-      // Assert
-      expect(result, isNotEmpty);
-      // p1 should have positive velocity
-      expect(result.any((p) => p.id == 'p1'), true);
-    });
+        // Assert
+        expect(result, isNotEmpty);
+        // p1 should have positive velocity
+        expect(result.any((p) => p.id == 'p1'), true);
+      },
+    );
 
     test('handles zero previous sales correctly', () async {
       // Test edge case where previous period has no sales
@@ -309,16 +321,19 @@ void main() {
         _createMockProduct('p3', 'Product 3', 'Category A', 200.0),
       ];
 
-      when(mockProductsRepo.watchAll(userId: 'user123'))
-          .thenAnswer((_) => Stream.value(mockProducts));
+      when(
+        mockProductsRepo.watchAll(userId: 'user123'),
+      ).thenAnswer((_) => Stream.value(mockProducts));
 
-      when(mockBillsRepo.getAll(
-        userId: anyNamed('userId'),
-      )).thenAnswer((_) async => RepositoryResult.success([]));
+      when(
+        mockBillsRepo.getAll(userId: anyNamed('userId')),
+      ).thenAnswer((_) async => RepositoryResult.success([]));
 
       // Act
-      final result =
-          await service.getPersonalizedRecommendations('user123', []);
+      final result = await service.getPersonalizedRecommendations(
+        'user123',
+        [],
+      );
 
       // Assert
       expect(result, isNotEmpty);
@@ -346,16 +361,19 @@ void main() {
         BillItem(productId: 'p1', productName: 'In Cart', qty: 1, price: 100.0),
       ];
 
-      when(mockProductsRepo.watchAll(userId: 'user123'))
-          .thenAnswer((_) => Stream.value(mockProducts));
+      when(
+        mockProductsRepo.watchAll(userId: 'user123'),
+      ).thenAnswer((_) => Stream.value(mockProducts));
 
-      when(mockBillsRepo.getAll(
-        userId: anyNamed('userId'),
-      )).thenAnswer((_) async => RepositoryResult.success([]));
+      when(
+        mockBillsRepo.getAll(userId: anyNamed('userId')),
+      ).thenAnswer((_) async => RepositoryResult.success([]));
 
       // Act
-      final result =
-          await service.getPersonalizedRecommendations('user123', cartItems);
+      final result = await service.getPersonalizedRecommendations(
+        'user123',
+        cartItems,
+      );
 
       // Assert
       expect(result.any((p) => p.id == 'p1'), false);
@@ -366,8 +384,9 @@ void main() {
   group('RecommendationService - Error Handling', () {
     test('handles repository errors gracefully', () async {
       // Arrange
-      when(mockProductsRepo.watchAll(userId: anyNamed('userId')))
-          .thenAnswer((_) => Stream.error(Exception('Database error')));
+      when(
+        mockProductsRepo.watchAll(userId: anyNamed('userId')),
+      ).thenAnswer((_) => Stream.error(Exception('Database error')));
 
       // Act
       final result = await service.getRecommendations([]);

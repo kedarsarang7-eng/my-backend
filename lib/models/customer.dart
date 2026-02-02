@@ -18,14 +18,14 @@ class VegetablePurchase {
   });
 
   Map<String, dynamic> toMap() => {
-        'vegId': vegId,
-        'vegName': vegName,
-        'quantityKg': quantityKg,
-        'pricePerKg': pricePerKg,
-        'total': total,
-        'purchaseDate': purchaseDate.toIso8601String(),
-        'isRecurring': isRecurring,
-      };
+    'vegId': vegId,
+    'vegName': vegName,
+    'quantityKg': quantityKg,
+    'pricePerKg': pricePerKg,
+    'total': total,
+    'purchaseDate': purchaseDate.toIso8601String(),
+    'isRecurring': isRecurring,
+  };
 
   factory VegetablePurchase.fromMap(Map<String, dynamic> map) =>
       VegetablePurchase(
@@ -35,7 +35,8 @@ class VegetablePurchase {
         pricePerKg: (map['pricePerKg'] ?? 0).toDouble(),
         total: (map['total'] ?? 0).toDouble(),
         purchaseDate: DateTime.parse(
-            map['purchaseDate'] ?? DateTime.now().toIso8601String()),
+          map['purchaseDate'] ?? DateTime.now().toIso8601String(),
+        ),
         isRecurring: map['isRecurring'] ?? false,
       );
 }
@@ -60,7 +61,8 @@ class Customer {
 
   // === DEPRECATED: Use LedgerService.getPartyBalance() instead ===
   @Deprecated(
-      'Use LedgerService.getPartyBalance() to derive balance from ledger entries')
+    'Use LedgerService.getPartyBalance() to derive balance from ledger entries',
+  )
   double totalDues;
   @Deprecated('Use LedgerService to derive balance by payment mode')
   double cashDues;
@@ -117,46 +119,50 @@ class Customer {
   });
 
   factory Customer.fromMap(String id, Map<String, dynamic> map) => Customer(
-        id: id,
-        name: map['name'] ?? '',
-        phone: map['phone'] ?? '',
-        address: map['address'] ?? '',
-        email: map['email'],
-        password: map['password'] ?? '',
-        // New FK fields
-        businessId: map['businessId'],
-        ledgerId: map['ledgerId'],
-        gstin: map['gstin'],
-        totalDues: (map['totalDues'] ?? 0).toDouble(),
-        cashDues: (map['cashDues'] ?? 0).toDouble(),
-        onlineDues: (map['onlineDues'] ?? 0).toDouble(),
-        vegetableHistory: (map['vegetableHistory'] as List<dynamic>?)
-                ?.map((e) =>
-                    VegetablePurchase.fromMap(Map<String, dynamic>.from(e)))
-                .toList() ??
-            [],
-        billHistory: (map['billHistory'] as List<dynamic>?)
-                ?.map((e) => Map<String, dynamic>.from(e))
-                .toList() ??
-            [],
-        isBlacklisted: map['isBlacklisted'] ?? false,
-        blacklistDate: map['blacklistDate'] != null
-            ? DateTime.parse(map['blacklistDate'])
-            : null,
-        discountPercent: (map['discountPercent'] ?? 0).toDouble(),
-        marketTicketAmount: (map['marketTicketAmount'] ?? 0).toDouble(),
-        linkedOwnerId: map['linkedOwnerId'],
-        linkedShopIds: (map['linkedShopIds'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            (map['linkedOwnerId'] != null ? [map['linkedOwnerId']] : []),
-        // Petrol Pump fields
-        vehicleNumber: map['vehicleNumber'] as String?,
-        creditLimit: (map['creditLimit'] as num?)?.toDouble(),
-        monthlyBillingEnabled: map['monthlyBillingEnabled'] as bool? ?? false,
-        outstandingCreditAmount:
-            (map['outstandingCreditAmount'] as num?)?.toDouble() ?? 0.0,
-      );
+    id: id,
+    name: map['name'] ?? '',
+    phone: map['phone'] ?? '',
+    address: map['address'] ?? '',
+    email: map['email'],
+    password: map['password'] ?? '',
+    // New FK fields
+    businessId: map['businessId'],
+    ledgerId: map['ledgerId'],
+    gstin: map['gstin'],
+    totalDues: (map['totalDues'] ?? 0).toDouble(),
+    cashDues: (map['cashDues'] ?? 0).toDouble(),
+    onlineDues: (map['onlineDues'] ?? 0).toDouble(),
+    vegetableHistory:
+        (map['vegetableHistory'] as List<dynamic>?)
+            ?.map(
+              (e) => VegetablePurchase.fromMap(Map<String, dynamic>.from(e)),
+            )
+            .toList() ??
+        [],
+    billHistory:
+        (map['billHistory'] as List<dynamic>?)
+            ?.map((e) => Map<String, dynamic>.from(e))
+            .toList() ??
+        [],
+    isBlacklisted: map['isBlacklisted'] ?? false,
+    blacklistDate: map['blacklistDate'] != null
+        ? DateTime.parse(map['blacklistDate'])
+        : null,
+    discountPercent: (map['discountPercent'] ?? 0).toDouble(),
+    marketTicketAmount: (map['marketTicketAmount'] ?? 0).toDouble(),
+    linkedOwnerId: map['linkedOwnerId'],
+    linkedShopIds:
+        (map['linkedShopIds'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        (map['linkedOwnerId'] != null ? [map['linkedOwnerId']] : []),
+    // Petrol Pump fields
+    vehicleNumber: map['vehicleNumber'] as String?,
+    creditLimit: (map['creditLimit'] as num?)?.toDouble(),
+    monthlyBillingEnabled: map['monthlyBillingEnabled'] as bool? ?? false,
+    outstandingCreditAmount:
+        (map['outstandingCreditAmount'] as num?)?.toDouble() ?? 0.0,
+  );
 
   Customer copyWith({
     String? id,
@@ -216,35 +222,35 @@ class Customer {
   }
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'phone': phone,
-        'address': address,
-        if (email != null) 'email': email,
-        'password': password,
-        // New FK fields
-        'businessId': businessId,
-        'ledgerId': ledgerId,
-        'gstin': gstin,
-        // ignore: deprecated_member_use_from_same_package
-        'totalDues': totalDues,
-        // ignore: deprecated_member_use_from_same_package
-        'cashDues': cashDues,
-        // ignore: deprecated_member_use_from_same_package
-        'onlineDues': onlineDues,
-        'vegetableHistory': vegetableHistory.map((e) => e.toMap()).toList(),
-        'billHistory': billHistory,
-        'isBlacklisted': isBlacklisted,
-        'blacklistDate': blacklistDate?.toIso8601String(),
-        'discountPercent': discountPercent,
-        'marketTicketAmount': marketTicketAmount,
-        // ignore: deprecated_member_use_from_same_package
-        'linkedOwnerId': linkedOwnerId,
-        // ignore: deprecated_member_use_from_same_package
-        'linkedShopIds': linkedShopIds,
-        // Petrol Pump fields
-        if (vehicleNumber != null) 'vehicleNumber': vehicleNumber,
-        if (creditLimit != null) 'creditLimit': creditLimit,
-        'monthlyBillingEnabled': monthlyBillingEnabled,
-        'outstandingCreditAmount': outstandingCreditAmount,
-      };
+    'name': name,
+    'phone': phone,
+    'address': address,
+    if (email != null) 'email': email,
+    'password': password,
+    // New FK fields
+    'businessId': businessId,
+    'ledgerId': ledgerId,
+    'gstin': gstin,
+    // ignore: deprecated_member_use_from_same_package
+    'totalDues': totalDues,
+    // ignore: deprecated_member_use_from_same_package
+    'cashDues': cashDues,
+    // ignore: deprecated_member_use_from_same_package
+    'onlineDues': onlineDues,
+    'vegetableHistory': vegetableHistory.map((e) => e.toMap()).toList(),
+    'billHistory': billHistory,
+    'isBlacklisted': isBlacklisted,
+    'blacklistDate': blacklistDate?.toIso8601String(),
+    'discountPercent': discountPercent,
+    'marketTicketAmount': marketTicketAmount,
+    // ignore: deprecated_member_use_from_same_package
+    'linkedOwnerId': linkedOwnerId,
+    // ignore: deprecated_member_use_from_same_package
+    'linkedShopIds': linkedShopIds,
+    // Petrol Pump fields
+    if (vehicleNumber != null) 'vehicleNumber': vehicleNumber,
+    if (creditLimit != null) 'creditLimit': creditLimit,
+    'monthlyBillingEnabled': monthlyBillingEnabled,
+    'outstandingCreditAmount': outstandingCreditAmount,
+  };
 }

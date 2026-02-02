@@ -2,23 +2,14 @@ import '../../../core/di/service_locator.dart';
 import '../../../core/session/session_manager.dart';
 import '../../../core/repository/bills_repository.dart';
 
-enum VoiceIntentType {
-  navigateToBill,
-  navigateToReports,
-  querySales,
-  unknown,
-}
+enum VoiceIntentType { navigateToBill, navigateToReports, querySales, unknown }
 
 class VoiceIntent {
   final VoiceIntentType type;
   final String? responseText;
   final Map<String, dynamic>? params;
 
-  VoiceIntent({
-    required this.type,
-    this.responseText,
-    this.params,
-  });
+  VoiceIntent({required this.type, this.responseText, this.params});
 }
 
 class VoiceIntentService {
@@ -55,10 +46,12 @@ class VoiceIntentService {
           final result = await repo.getAll(userId: userId);
           if (result.isSuccess) {
             final now = DateTime.now();
-            final todayBills = result.data!.where((b) =>
-                b.date.year == now.year &&
-                b.date.month == now.month &&
-                b.date.day == now.day);
+            final todayBills = result.data!.where(
+              (b) =>
+                  b.date.year == now.year &&
+                  b.date.month == now.month &&
+                  b.date.day == now.day,
+            );
 
             final total = todayBills.fold(0.0, (sum, b) => sum + b.grandTotal);
             return VoiceIntent(

@@ -129,30 +129,40 @@ class _PaymentQrDialogState extends State<PaymentQrDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (_isSuccess) ...[
-              Icon(Icons.check_circle,
-                  color: FuturisticColors.success, size: 80),
+              Icon(
+                Icons.check_circle,
+                color: FuturisticColors.success,
+                size: 80,
+              ),
               const SizedBox(height: 16),
-              Text('Payment Verified!',
-                  style: AppTypography.headlineSmall.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: FuturisticColors.success)),
+              Text(
+                'Payment Verified!',
+                style: AppTypography.headlineSmall.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: FuturisticColors.success,
+                ),
+              ),
               const SizedBox(height: 8),
-              Text('Redirecting...',
-                  style: TextStyle(color: FuturisticColors.textMuted)),
+              Text(
+                'Redirecting...',
+                style: TextStyle(color: FuturisticColors.textMuted),
+              ),
             ] else ...[
               Text(
                 'Scan to Pay ₹${widget.amount.toStringAsFixed(2)}',
                 style: AppTypography.headlineSmall.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: FuturisticColors.textPrimary),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: FuturisticColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Customer: ${widget.customerName}',
-                style: AppTypography.bodyMedium
-                    .copyWith(color: FuturisticColors.textMuted),
+                style: AppTypography.bodyMedium.copyWith(
+                  color: FuturisticColors.textMuted,
+                ),
               ),
               const SizedBox(height: 20),
               Container(
@@ -163,80 +173,90 @@ class _PaymentQrDialogState extends State<PaymentQrDialog> {
                   color: Colors.white, // QR needs white background
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: FuturisticColors.primary.withOpacity(0.3),
-                      width: 2),
+                    color: FuturisticColors.primary.withOpacity(0.3),
+                    width: 2,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: FuturisticColors.primary.withOpacity(0.2),
                       blurRadius: 20,
                       spreadRadius: 2,
-                    )
+                    ),
                   ],
                 ),
                 child: _isLoading
                     ? CircularProgressIndicator(color: FuturisticColors.primary)
                     : _error != null
-                        ? Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.error_outline,
-                                    color: FuturisticColors.error, size: 40),
-                                const SizedBox(height: 8),
-                                Text(
-                                  _error!,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: FuturisticColors.error,
-                                      fontSize: 12),
-                                ),
-                              ],
+                    ? Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              color: FuturisticColors.error,
+                              size: 40,
                             ),
-                          )
-                        : QrImageView(
-                            data: _qrPayload!,
-                            version: QrVersions.auto,
-                            size: 200,
-                            backgroundColor: Colors.white,
-                            eyeStyle: QrEyeStyle(
-                              eyeShape: QrEyeShape.square,
-                              color: FuturisticColors.primary,
+                            const SizedBox(height: 8),
+                            Text(
+                              _error!,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: FuturisticColors.error,
+                                fontSize: 12,
+                              ),
                             ),
-                            dataModuleStyle: QrDataModuleStyle(
-                              dataModuleShape: QrDataModuleShape.square,
-                              color: Colors.black87,
-                            ),
-                          ),
+                          ],
+                        ),
+                      )
+                    : QrImageView(
+                        data: _qrPayload!,
+                        version: QrVersions.auto,
+                        size: 200,
+                        backgroundColor: Colors.white,
+                        eyeStyle: QrEyeStyle(
+                          eyeShape: QrEyeShape.square,
+                          color: FuturisticColors.primary,
+                        ),
+                        dataModuleStyle: QrDataModuleStyle(
+                          dataModuleShape: QrDataModuleShape.square,
+                          color: Colors.black87,
+                        ),
+                      ),
               ),
               const SizedBox(height: 12),
 
               // Timer Display
               if (!_isSuccess && !_isLoading)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    color: (_isExpired || _secondsRemaining < 30
-                            ? FuturisticColors.error
-                            : FuturisticColors.success)
-                        .withOpacity(0.1),
+                    color:
+                        (_isExpired || _secondsRemaining < 30
+                                ? FuturisticColors.error
+                                : FuturisticColors.success)
+                            .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: _isExpired || _secondsRemaining < 30
-                            ? FuturisticColors.error
-                            : FuturisticColors.success),
+                      color: _isExpired || _secondsRemaining < 30
+                          ? FuturisticColors.error
+                          : FuturisticColors.success,
+                    ),
                   ),
                   child: Text(
                     _isExpired
                         ? 'QR CODE EXPIRED'
                         : 'Valid for: ${_formatTime(_secondsRemaining)}',
                     style: TextStyle(
-                        color: _isExpired || _secondsRemaining < 30
-                            ? FuturisticColors.error
-                            : FuturisticColors.success,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2),
+                      color: _isExpired || _secondsRemaining < 30
+                          ? FuturisticColors.error
+                          : FuturisticColors.success,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ),
 

@@ -9,17 +9,9 @@ class SyncState {
   final String? error;
   final String? message;
 
-  const SyncState({
-    this.isLoading = false,
-    this.error,
-    this.message,
-  });
+  const SyncState({this.isLoading = false, this.error, this.message});
 
-  SyncState copyWith({
-    bool? isLoading,
-    String? error,
-    String? message,
-  }) {
+  SyncState copyWith({bool? isLoading, String? error, String? message}) {
     return SyncState(
       isLoading: isLoading ?? this.isLoading,
       error: error,
@@ -54,7 +46,9 @@ class SyncController extends Notifier<SyncState> {
       state = const SyncState(isLoading: false, message: 'Sync initiated');
     } catch (e, st) {
       state = SyncState(
-          isLoading: false, error: 'Failed to start sync: ${e.toString()}');
+        isLoading: false,
+        error: 'Failed to start sync: ${e.toString()}',
+      );
       debugPrint('SyncController Error: $e\n$st');
     }
   }

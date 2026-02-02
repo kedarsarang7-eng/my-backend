@@ -376,10 +376,7 @@ class _PlaceholderScreen extends StatelessWidget {
   final String title;
   final IconData icon;
 
-  const _PlaceholderScreen({
-    required this.title,
-    required this.icon,
-  });
+  const _PlaceholderScreen({required this.title, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -407,11 +404,7 @@ class _PlaceholderScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(
-                icon,
-                size: 36,
-                color: const Color(0xFF06B6D4),
-              ),
+              child: Icon(icon, size: 36, color: const Color(0xFF06B6D4)),
             ),
             const SizedBox(height: 24),
             Text(
@@ -429,9 +422,7 @@ class _PlaceholderScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF1E293B),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.1),
-                ),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

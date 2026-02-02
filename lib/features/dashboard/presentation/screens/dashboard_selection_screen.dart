@@ -131,8 +131,9 @@ class _DashboardSelectionScreenState extends State<DashboardSelectionScreen>
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               child: Text(
                                 "OR",
                                 style: GoogleFonts.outfit(
@@ -280,8 +281,9 @@ class _GlowRingPainter extends CustomPainter {
     );
 
     final paint = Paint()
-      ..shader =
-          gradient.createShader(Rect.fromCircle(center: center, radius: radius))
+      ..shader = gradient.createShader(
+        Rect.fromCircle(center: center, radius: radius),
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
@@ -353,15 +355,9 @@ class _DashboardCardState extends State<_DashboardCard> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: widget.iconColor.withOpacity(0.15),
-                  border: Border.all(
-                    color: widget.iconColor.withOpacity(0.3),
-                  ),
+                  border: Border.all(color: widget.iconColor.withOpacity(0.3)),
                 ),
-                child: Icon(
-                  widget.icon,
-                  color: widget.iconColor,
-                  size: 24,
-                ),
+                child: Icon(widget.icon, color: widget.iconColor, size: 24),
               ),
               const SizedBox(width: 16),
 
@@ -390,10 +386,7 @@ class _DashboardCardState extends State<_DashboardCard> {
                 ),
               ),
 
-              Icon(
-                Icons.chevron_right,
-                color: Colors.white.withOpacity(0.3),
-              ),
+              Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.3)),
             ],
           ),
         ),
@@ -411,11 +404,7 @@ class _SpaceBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0B0D1F),
-            Color(0xFF0F1B3D),
-            Color(0xFF0B0D1F),
-          ],
+          colors: [Color(0xFF0B0D1F), Color(0xFF0F1B3D), Color(0xFF0B0D1F)],
         ),
       ),
       child: Stack(
@@ -431,8 +420,9 @@ class _SpaceBackground extends StatelessWidget {
                 height: random.nextDouble() * 2 + 1,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      Colors.white.withOpacity(random.nextDouble() * 0.5 + 0.2),
+                  color: Colors.white.withOpacity(
+                    random.nextDouble() * 0.5 + 0.2,
+                  ),
                 ),
               ),
             );

@@ -26,7 +26,9 @@ void main() {
 
     test('Pharmacy Flow: ProductBatches table accepts valid data', () async {
       // Insert a product first
-      await database.into(database.products).insert(
+      await database
+          .into(database.products)
+          .insert(
             ProductsCompanion.insert(
               id: productId,
               userId: userId,
@@ -38,7 +40,9 @@ void main() {
           );
 
       // Insert batches
-      await database.into(database.productBatches).insert(
+      await database
+          .into(database.productBatches)
+          .insert(
             ProductBatchesCompanion.insert(
               id: 'batch_1',
               productId: productId,
@@ -49,7 +53,9 @@ void main() {
             ),
           );
 
-      await database.into(database.productBatches).insert(
+      await database
+          .into(database.productBatches)
+          .insert(
             ProductBatchesCompanion.insert(
               id: 'batch_2',
               productId: productId,
@@ -61,9 +67,9 @@ void main() {
           );
 
       // Verify
-      final batches = await (database.select(database.productBatches)
-            ..where((t) => t.productId.equals(productId)))
-          .get();
+      final batches = await (database.select(
+        database.productBatches,
+      )..where((t) => t.productId.equals(productId))).get();
 
       expect(batches.length, 2);
       expect(batches.any((b) => b.batchNumber == 'B001'), true);
@@ -74,7 +80,9 @@ void main() {
       const productId2 = 'prod_test_2';
 
       // Insert a product first
-      await database.into(database.products).insert(
+      await database
+          .into(database.products)
+          .insert(
             ProductsCompanion.insert(
               id: productId2,
               userId: userId,
@@ -86,7 +94,9 @@ void main() {
           );
 
       // Insert IMEIs
-      await database.into(database.iMEISerials).insert(
+      await database
+          .into(database.iMEISerials)
+          .insert(
             IMEISerialsCompanion.insert(
               id: 'imei_1',
               productId: productId2,
@@ -97,7 +107,9 @@ void main() {
             ),
           );
 
-      await database.into(database.iMEISerials).insert(
+      await database
+          .into(database.iMEISerials)
+          .insert(
             IMEISerialsCompanion.insert(
               id: 'imei_2',
               productId: productId2,
@@ -109,9 +121,9 @@ void main() {
           );
 
       // Verify
-      final imeis = await (database.select(database.iMEISerials)
-            ..where((t) => t.productId.equals(productId2)))
-          .get();
+      final imeis = await (database.select(
+        database.iMEISerials,
+      )..where((t) => t.productId.equals(productId2))).get();
 
       expect(imeis.length, 2);
       expect(imeis.any((x) => x.imeiOrSerial == 'IMEI_12345'), true);
@@ -121,7 +133,9 @@ void main() {
     test('Unique IMEI constraint prevents duplicates', () async {
       const productId3 = 'prod_test_3';
 
-      await database.into(database.products).insert(
+      await database
+          .into(database.products)
+          .insert(
             ProductsCompanion.insert(
               id: productId3,
               userId: userId,
@@ -132,7 +146,9 @@ void main() {
             ),
           );
 
-      await database.into(database.iMEISerials).insert(
+      await database
+          .into(database.iMEISerials)
+          .insert(
             IMEISerialsCompanion.insert(
               id: 'imei_dup_1',
               productId: productId3,
@@ -145,7 +161,9 @@ void main() {
 
       // Attempt duplicate IMEI for same user should fail
       expect(
-        () async => await database.into(database.iMEISerials).insert(
+        () async => await database
+            .into(database.iMEISerials)
+            .insert(
               IMEISerialsCompanion.insert(
                 id: 'imei_dup_2',
                 productId: productId3,

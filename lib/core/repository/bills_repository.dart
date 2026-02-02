@@ -52,12 +52,12 @@ class BillsRepository {
   final ErrorHandler errorHandler;
   final acc.AccountingService? accountingService;
   final InventoryService?
-      inventoryService; // Optional for now to ease transition
+  inventoryService; // Optional for now to ease transition
   final CustomerRecommendationService? customerRecommendationService;
   final AuditService? auditService;
   final DayBookService? dayBookService; // For real-time daybook updates
   final IMEIValidationService?
-      imeiValidationService; // IMEI validation for mobile/computer shops
+  imeiValidationService; // IMEI validation for mobile/computer shops
   final ProductBatchRepository? productBatchRepository;
   final BatchAllocationService? batchAllocationService;
   final EventDispatcher eventDispatcher;
@@ -93,9 +93,9 @@ class BillsRepository {
       // ============================================================
       // SECURITY GUARD: Business Type Isolation
       // ============================================================
-      final shop = await (database.select(database.shops)
-            ..where((t) => t.id.equals(bill.ownerId)))
-          .getSingleOrNull();
+      final shop = await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(bill.ownerId))).getSingleOrNull();
 
       if (shop != null &&
           shop.businessType != null &&
@@ -103,8 +103,9 @@ class BillsRepository {
           shop.businessType != 'other' &&
           shop.businessType != bill.businessType) {
         throw Exception(
-            'Security Violation: Cannot create ${bill.businessType} bill for ${shop.businessType} business. '
-            'Business Type is locked.');
+          'Security Violation: Cannot create ${bill.businessType} bill for ${shop.businessType} business. '
+          'Business Type is locked.',
+        );
       }
 
       // ============================================================
@@ -113,33 +114,43 @@ class BillsRepository {
       // 1. Prescription Check (Pharmacy/Clinic)
       if (bill.prescriptionId != null && bill.prescriptionId!.isNotEmpty) {
         FeatureResolver.enforceAccess(
-            bill.businessType, BusinessCapability.usePrescription);
+          bill.businessType,
+          BusinessCapability.usePrescription,
+        );
       }
 
       // 2. Table Management (Restaurant)
       if (bill.tableNumber != null && bill.tableNumber!.isNotEmpty) {
         FeatureResolver.enforceAccess(
-            bill.businessType, BusinessCapability.useTableManagement);
+          bill.businessType,
+          BusinessCapability.useTableManagement,
+        );
       }
 
       // 3. Vehicle / Fuel (Petrol Pump / Garage)
       if ((bill.vehicleNumber != null && bill.vehicleNumber!.isNotEmpty) ||
           (bill.fuelType != null && bill.fuelType!.isNotEmpty)) {
         FeatureResolver.enforceAccess(
-            bill.businessType, BusinessCapability.useVehicleDetails);
+          bill.businessType,
+          BusinessCapability.useVehicleDetails,
+        );
       }
 
       // 4. Broker / Mandi
       if (bill.brokerId != null && bill.brokerId!.isNotEmpty) {
         FeatureResolver.enforceAccess(
-            bill.businessType, BusinessCapability.useCommission);
+          bill.businessType,
+          BusinessCapability.useCommission,
+        );
       }
 
       // 5. Item Level - IMEI (Electronics)
       // Check if ANY item has Serial/IMEI
       if (bill.items.any((i) => i.serialNo != null && i.serialNo!.isNotEmpty)) {
         FeatureResolver.enforceAccess(
-            bill.businessType, BusinessCapability.useIMEI);
+          bill.businessType,
+          BusinessCapability.useIMEI,
+        );
       }
 
       // ============================================================
@@ -188,23 +199,27 @@ class BillsRepository {
         );
         if (!validation.isValid) {
           throw Exception(
-              'IMEI Validation Failed: ${validation.errors.join(", ")}');
+            'IMEI Validation Failed: ${validation.errors.join(", ")}',
+          );
         }
       }
 
       // INVOICE NUMBER UNIQUENESS CHECK
       // Prevents duplicate invoice numbers for the same user
       if (bill.invoiceNumber.isNotEmpty) {
-        final existingBill = await (database.select(database.bills)
-              ..where((t) =>
-                  t.userId.equals(bill.ownerId) &
-                  t.invoiceNumber.equals(bill.invoiceNumber) &
-                  t.deletedAt.isNull()))
-            .getSingleOrNull();
+        final existingBill =
+            await (database.select(database.bills)..where(
+                  (t) =>
+                      t.userId.equals(bill.ownerId) &
+                      t.invoiceNumber.equals(bill.invoiceNumber) &
+                      t.deletedAt.isNull(),
+                ))
+                .getSingleOrNull();
 
         if (existingBill != null) {
           throw Exception(
-              'Invoice number ${bill.invoiceNumber} already exists. Please use a unique invoice number.');
+            'Invoice number ${bill.invoiceNumber} already exists. Please use a unique invoice number.',
+          );
         }
       }
 
@@ -223,15 +238,17 @@ class BillsRepository {
           );
           if (isLocked) {
             throw Exception(
-                'Cannot create bill: Accounting period for ${bill.date.month}/${bill.date.year} is locked. '
-                'Contact your accountant to unlock the period before creating backdated bills.');
+              'Cannot create bill: Accounting period for ${bill.date.month}/${bill.date.year} is locked. '
+              'Contact your accountant to unlock the period before creating backdated bills.',
+            );
           }
         } catch (e) {
           // If it's our period lock exception, rethrow
           if (e.toString().contains('Cannot create bill')) rethrow;
           // Otherwise log and continue (don't block for service errors)
           debugPrint(
-              '[PERIOD_LOCK] Check failed in createBill, allowing creation: $e');
+            '[PERIOD_LOCK] Check failed in createBill, allowing creation: $e',
+          );
         }
       }
 
@@ -250,9 +267,9 @@ class BillsRepository {
           bill.paymentType == 'Credit' &&
           bill.customerId.isNotEmpty) {
         try {
-          final customer = await (database.select(database.customers)
-                ..where((t) => t.id.equals(bill.customerId)))
-              .getSingleOrNull();
+          final customer = await (database.select(
+            database.customers,
+          )..where((t) => t.id.equals(bill.customerId))).getSingleOrNull();
 
           if (customer != null && customer.creditLimit > 0) {
             final projectedDues = customer.totalDues + bill.grandTotal;
@@ -294,229 +311,242 @@ class BillsRepository {
       }
 
       // Execute transaction and capture collected sync operations
-      final collectedSyncOps =
-          await database.transaction<List<SyncQueueItem>>(() async {
-        // Collect sync operations inside transaction
-        final syncOps = <SyncQueueItem>[];
+      final collectedSyncOps = await database.transaction<List<SyncQueueItem>>(
+        () async {
+          // Collect sync operations inside transaction
+          final syncOps = <SyncQueueItem>[];
 
-        // 1. CALCULATE COGS (Cost of Goods Sold) at sale time
-        // This captures the historical cost for accurate profit tracking
-        double totalCogs = 0;
-        for (final item in bill.items) {
-          if (item.productId.isNotEmpty) {
-            final product = await (database.select(database.products)
-                  ..where((t) => t.id.equals(item.productId)))
-                .getSingleOrNull();
-
-            if (product != null) {
-              totalCogs += item.qty * product.costPrice;
-            }
-          }
-        }
-
-        // Calculate gross profit (grandTotal - tax - COGS)
-        // Note: grandTotal includes tax, so we need subtotal for net revenue
-        final grossProfit = bill.subtotal - totalCogs;
-
-        // 2. Insert into local DB with COGS data
-        await database.into(database.bills).insert(
-              BillsCompanion.insert(
-                id: bill.id,
-                userId: bill.ownerId.isNotEmpty ? bill.ownerId : 'unknown',
-                invoiceNumber: bill.invoiceNumber,
-                customerId: Value(bill.customerId),
-                customerName: Value(bill.customerName),
-                billDate: bill.date,
-                subtotal: Value(bill.subtotal),
-                taxAmount: Value(bill.totalTax),
-                discountAmount: Value(bill.discountApplied),
-                grandTotal: Value(bill.grandTotal),
-                paidAmount: Value(bill.paidAmount),
-                cashPaid: Value(bill.cashPaid),
-                onlinePaid: Value(bill.onlinePaid),
-                businessType: Value(bill.businessType),
-                businessId: Value(bill.businessId),
-                serviceCharge: Value(bill.serviceCharge),
-                costOfGoodsSold: Value(totalCogs),
-                grossProfit: Value(grossProfit),
-                prescriptionId: Value(bill.prescriptionId),
-                itemsJson:
-                    jsonEncode(bill.items.map((i) => i.toMap()).toList()),
-                status: Value(bill.status),
-                paymentMode: Value(bill.paymentType),
-                source: Value(bill.source),
-                createdAt: now,
-                updatedAt: now,
-                // Restaurant
-                tableNumber: Value(bill.tableNumber),
-                waiterId: Value(bill.waiterId),
-                kotId: Value(bill.kotId),
-                // Petrol Pump
-                vehicleNumber: Value(bill.vehicleNumber),
-                driverName: Value(bill.driverName),
-                fuelType: Value(bill.fuelType),
-                pumpReadingStart: Value(bill.pumpReadingStart),
-                pumpReadingEnd: Value(bill.pumpReadingEnd),
-                // Mandi
-                brokerId: Value(bill.brokerId),
-                marketCess: Value(bill.marketCess),
-                commissionAmount: Value(bill.commissionAmount),
-              ),
-            );
-
-        // 2. ATOMIC Stock Deduction (within SAME transaction - no nested tx)
-        if (inventoryService != null) {
+          // 1. CALCULATE COGS (Cost of Goods Sold) at sale time
+          // This captures the historical cost for accurate profit tracking
+          double totalCogs = 0;
           for (final item in bill.items) {
-            if (item.productId.isNotEmpty && item.qty > 0) {
-              // CHECK FOR RECIPE (BOM)
-              // If recipe exists, we deduct RAW MATERIALS instead of the product itself.
-              final recipe = await (database.select(database.billOfMaterials)
-                    ..where((t) => t.finishedGoodId.equals(item.productId)))
-                  .get();
+            if (item.productId.isNotEmpty) {
+              final product = await (database.select(
+                database.products,
+              )..where((t) => t.id.equals(item.productId))).getSingleOrNull();
 
-              if (recipe.isNotEmpty) {
-                // DEDUCT INGREDIENTS based on Recipe
-                for (final ingredient in recipe) {
-                  final qtyNeeded = ingredient.quantityRequired * item.qty;
-                  final ops = await inventoryService!.deductStockInTransaction(
-                    userId: bill.ownerId,
-                    productId: ingredient.rawMaterialId,
-                    quantity: qtyNeeded,
-                    referenceId: bill.id,
-                    invoiceNumber: bill.invoiceNumber,
-                    date: bill.date,
-                    reason: 'SALE_INGREDIENT', // Distinct reason
-                    description: 'Used in ${item.productName}',
-                  );
-                  syncOps.addAll(ops);
-                }
-                // NOTE: We do NOT deduct the finished good (service item) stock
-              } else {
-                // NORMAL DEDUCTION (Finish Good / Trading Item)
-                final ops = await inventoryService!.deductStockInTransaction(
-                  userId: bill.ownerId,
-                  productId: item.productId,
-                  quantity: item.qty,
-                  referenceId: bill.id,
-                  invoiceNumber: bill.invoiceNumber,
-                  date: bill.date,
-                  batchId: item.batchId,
-                  batchNumber: item.batchNo,
-                );
-                syncOps.addAll(ops);
+              if (product != null) {
+                totalCogs += item.qty * product.costPrice;
               }
             }
           }
-        }
 
-        // 2a. Mark IMEIs as Sold (for electronics/mobile business types)
-        if (imeiValidationService != null) {
-          await imeiValidationService!.markIMEIsAsSold(
-            userId: bill.ownerId,
-            billId: bill.id,
-            customerId: bill.customerId,
-            items: bill.items,
-          );
-        }
+          // Calculate gross profit (grandTotal - tax - COGS)
+          // Note: grandTotal includes tax, so we need subtotal for net revenue
+          final grossProfit = bill.subtotal - totalCogs;
 
-        // 2b. ATOMIC Payment Recording (Fixes Ghost Payments)
-        if (bill.paidAmount > 0) {
-          final paymentId = const Uuid().v4();
-          await database.into(database.payments).insert(
-                PaymentsCompanion.insert(
-                  id: paymentId,
-                  userId: bill.ownerId,
-                  billId: bill.id,
+          // 2. Insert into local DB with COGS data
+          await database
+              .into(database.bills)
+              .insert(
+                BillsCompanion.insert(
+                  id: bill.id,
+                  userId: bill.ownerId.isNotEmpty ? bill.ownerId : 'unknown',
+                  invoiceNumber: bill.invoiceNumber,
                   customerId: Value(bill.customerId),
-                  amount: bill.paidAmount,
-                  paymentMode: bill.paymentType,
-                  referenceNumber: const Value('Initial Payment'),
-                  notes: const Value('Payment at time of bill creation'),
-                  paymentDate: bill.date,
+                  customerName: Value(bill.customerName),
+                  billDate: bill.date,
+                  subtotal: Value(bill.subtotal),
+                  taxAmount: Value(bill.totalTax),
+                  discountAmount: Value(bill.discountApplied),
+                  grandTotal: Value(bill.grandTotal),
+                  paidAmount: Value(bill.paidAmount),
+                  cashPaid: Value(bill.cashPaid),
+                  onlinePaid: Value(bill.onlinePaid),
+                  businessType: Value(bill.businessType),
+                  businessId: Value(bill.businessId),
+                  serviceCharge: Value(bill.serviceCharge),
+                  costOfGoodsSold: Value(totalCogs),
+                  grossProfit: Value(grossProfit),
+                  prescriptionId: Value(bill.prescriptionId),
+                  itemsJson: jsonEncode(
+                    bill.items.map((i) => i.toMap()).toList(),
+                  ),
+                  status: Value(bill.status),
+                  paymentMode: Value(bill.paymentType),
+                  source: Value(bill.source),
                   createdAt: now,
-                  isSynced: const Value(false),
-                  version: const Value(1),
+                  updatedAt: now,
+                  // Restaurant
+                  tableNumber: Value(bill.tableNumber),
+                  waiterId: Value(bill.waiterId),
+                  kotId: Value(bill.kotId),
+                  // Petrol Pump
+                  vehicleNumber: Value(bill.vehicleNumber),
+                  driverName: Value(bill.driverName),
+                  fuelType: Value(bill.fuelType),
+                  pumpReadingStart: Value(bill.pumpReadingStart),
+                  pumpReadingEnd: Value(bill.pumpReadingEnd),
+                  // Mandi
+                  brokerId: Value(bill.brokerId),
+                  marketCess: Value(bill.marketCess),
+                  commissionAmount: Value(bill.commissionAmount),
                 ),
               );
 
-          // Queue Payment Sync
-          syncOps.add(SyncQueueItem.create(
-            userId: bill.ownerId,
-            operationType: SyncOperationType.create,
-            targetCollection: 'payments',
-            documentId: paymentId,
-            payload: {
-              'id': paymentId,
-              'userId': bill.ownerId,
-              'billId': bill.id,
-              'customerId': bill.customerId,
-              'amount': bill.paidAmount,
-              'paymentMode': bill.paymentType,
-              'referenceNumber': 'Initial Payment',
-              'notes': 'Payment at time of bill creation',
-              'paymentDate': bill.date.toIso8601String(),
-              'createdAt': now.toIso8601String(),
-            },
-          ));
-        }
+          // 2. ATOMIC Stock Deduction (within SAME transaction - no nested tx)
+          if (inventoryService != null) {
+            for (final item in bill.items) {
+              if (item.productId.isNotEmpty && item.qty > 0) {
+                // CHECK FOR RECIPE (BOM)
+                // If recipe exists, we deduct RAW MATERIALS instead of the product itself.
+                final recipe = await (database.select(
+                  database.billOfMaterials,
+                )..where((t) => t.finishedGoodId.equals(item.productId))).get();
 
-        // 3. Update Customer Balance if applicable
-        if (bill.customerId.isNotEmpty) {
-          final customer = await (database.select(database.customers)
-                ..where((t) => t.id.equals(bill.customerId)))
-              .getSingleOrNull();
-
-          if (customer != null) {
-            final newTotalBilled = customer.totalBilled + bill.grandTotal;
-            final newTotalDues =
-                customer.totalDues + (bill.grandTotal - bill.paidAmount);
-
-            await (database.update(database.customers)
-                  ..where((t) => t.id.equals(bill.customerId)))
-                .write(CustomersCompanion(
-              totalBilled: Value(newTotalBilled),
-              totalDues: Value(newTotalDues),
-              updatedAt: Value(now),
-              isSynced: const Value(false),
-            ));
-
-            // Collect customer sync for after transaction
-            syncOps.add(SyncQueueItem.create(
-              userId: bill.ownerId,
-              operationType: SyncOperationType.update,
-              targetCollection: 'customers',
-              documentId: bill.customerId,
-              payload: {
-                'totalBilled': newTotalBilled,
-                'totalDues': newTotalDues,
-                'updatedAt': now.toIso8601String(),
-              },
-            ));
+                if (recipe.isNotEmpty) {
+                  // DEDUCT INGREDIENTS based on Recipe
+                  for (final ingredient in recipe) {
+                    final qtyNeeded = ingredient.quantityRequired * item.qty;
+                    final ops = await inventoryService!
+                        .deductStockInTransaction(
+                          userId: bill.ownerId,
+                          productId: ingredient.rawMaterialId,
+                          quantity: qtyNeeded,
+                          referenceId: bill.id,
+                          invoiceNumber: bill.invoiceNumber,
+                          date: bill.date,
+                          reason: 'SALE_INGREDIENT', // Distinct reason
+                          description: 'Used in ${item.productName}',
+                        );
+                    syncOps.addAll(ops);
+                  }
+                  // NOTE: We do NOT deduct the finished good (service item) stock
+                } else {
+                  // NORMAL DEDUCTION (Finish Good / Trading Item)
+                  final ops = await inventoryService!.deductStockInTransaction(
+                    userId: bill.ownerId,
+                    productId: item.productId,
+                    quantity: item.qty,
+                    referenceId: bill.id,
+                    invoiceNumber: bill.invoiceNumber,
+                    date: bill.date,
+                    batchId: item.batchId,
+                    batchNumber: item.batchNo,
+                  );
+                  syncOps.addAll(ops);
+                }
+              }
+            }
           }
-        }
 
-        // 4. Create Accounting Journal Entry (will THROW if period locked)
-        if (accountingService != null) {
-          await accountingService!.createSalesEntry(
-            userId: bill.ownerId,
-            billId: bill.id,
-            customerId: bill.customerId.isNotEmpty ? bill.customerId : 'CASH',
-            customerName: bill.customerName.isNotEmpty
-                ? bill.customerName
-                : 'Walk-in Customer',
-            totalAmount: bill.grandTotal,
-            taxableAmount: bill.subtotal,
-            cgstAmount: 0,
-            sgstAmount: 0,
-            igstAmount: 0,
-            discountAmount: bill.discountApplied,
-            invoiceDate: bill.date,
-            invoiceNumber: bill.invoiceNumber,
-          );
-        }
+          // 2a. Mark IMEIs as Sold (for electronics/mobile business types)
+          if (imeiValidationService != null) {
+            await imeiValidationService!.markIMEIsAsSold(
+              userId: bill.ownerId,
+              billId: bill.id,
+              customerId: bill.customerId,
+              items: bill.items,
+            );
+          }
 
-        return syncOps;
-      });
+          // 2b. ATOMIC Payment Recording (Fixes Ghost Payments)
+          if (bill.paidAmount > 0) {
+            final paymentId = const Uuid().v4();
+            await database
+                .into(database.payments)
+                .insert(
+                  PaymentsCompanion.insert(
+                    id: paymentId,
+                    userId: bill.ownerId,
+                    billId: bill.id,
+                    customerId: Value(bill.customerId),
+                    amount: bill.paidAmount,
+                    paymentMode: bill.paymentType,
+                    referenceNumber: const Value('Initial Payment'),
+                    notes: const Value('Payment at time of bill creation'),
+                    paymentDate: bill.date,
+                    createdAt: now,
+                    isSynced: const Value(false),
+                    version: const Value(1),
+                  ),
+                );
+
+            // Queue Payment Sync
+            syncOps.add(
+              SyncQueueItem.create(
+                userId: bill.ownerId,
+                operationType: SyncOperationType.create,
+                targetCollection: 'payments',
+                documentId: paymentId,
+                payload: {
+                  'id': paymentId,
+                  'userId': bill.ownerId,
+                  'billId': bill.id,
+                  'customerId': bill.customerId,
+                  'amount': bill.paidAmount,
+                  'paymentMode': bill.paymentType,
+                  'referenceNumber': 'Initial Payment',
+                  'notes': 'Payment at time of bill creation',
+                  'paymentDate': bill.date.toIso8601String(),
+                  'createdAt': now.toIso8601String(),
+                },
+              ),
+            );
+          }
+
+          // 3. Update Customer Balance if applicable
+          if (bill.customerId.isNotEmpty) {
+            final customer = await (database.select(
+              database.customers,
+            )..where((t) => t.id.equals(bill.customerId))).getSingleOrNull();
+
+            if (customer != null) {
+              final newTotalBilled = customer.totalBilled + bill.grandTotal;
+              final newTotalDues =
+                  customer.totalDues + (bill.grandTotal - bill.paidAmount);
+
+              await (database.update(
+                database.customers,
+              )..where((t) => t.id.equals(bill.customerId))).write(
+                CustomersCompanion(
+                  totalBilled: Value(newTotalBilled),
+                  totalDues: Value(newTotalDues),
+                  updatedAt: Value(now),
+                  isSynced: const Value(false),
+                ),
+              );
+
+              // Collect customer sync for after transaction
+              syncOps.add(
+                SyncQueueItem.create(
+                  userId: bill.ownerId,
+                  operationType: SyncOperationType.update,
+                  targetCollection: 'customers',
+                  documentId: bill.customerId,
+                  payload: {
+                    'totalBilled': newTotalBilled,
+                    'totalDues': newTotalDues,
+                    'updatedAt': now.toIso8601String(),
+                  },
+                ),
+              );
+            }
+          }
+
+          // 4. Create Accounting Journal Entry (will THROW if period locked)
+          if (accountingService != null) {
+            await accountingService!.createSalesEntry(
+              userId: bill.ownerId,
+              billId: bill.id,
+              customerId: bill.customerId.isNotEmpty ? bill.customerId : 'CASH',
+              customerName: bill.customerName.isNotEmpty
+                  ? bill.customerName
+                  : 'Walk-in Customer',
+              totalAmount: bill.grandTotal,
+              taxableAmount: bill.subtotal,
+              cgstAmount: 0,
+              sgstAmount: 0,
+              igstAmount: 0,
+              discountAmount: bill.discountApplied,
+              invoiceDate: bill.date,
+              invoiceNumber: bill.invoiceNumber,
+            );
+          }
+
+          return syncOps;
+        },
+      );
 
       // 5. Queue ALL collected sync operations AFTER transaction commits
       // If transaction failed, we never reach here - atomic guarantee!
@@ -525,13 +555,15 @@ class BillsRepository {
       }
 
       // 6. Queue bill for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: bill.ownerId,
-        operationType: SyncOperationType.create,
-        targetCollection: collectionName,
-        documentId: bill.id,
-        payload: bill.toMap(),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: bill.ownerId,
+          operationType: SyncOperationType.create,
+          targetCollection: collectionName,
+          documentId: bill.id,
+          payload: bill.toMap(),
+        ),
+      );
 
       // 7. Track Customer Visit for Recommendation Engine (non-blocking)
       if (customerRecommendationService != null && bill.customerId.isNotEmpty) {
@@ -589,15 +621,16 @@ class BillsRepository {
           // 2. Prepare Items for Calculation
           final gstItems = bill.items
               .where((i) => i.taxAmount > 0 || i.gstRate > 0)
-              .map((i) => LineItemForGst(
-                    hsnCode: i.hsn.isNotEmpty ? i.hsn : null,
-                    description: i.productName,
-                    quantity: i.qty,
-                    unit: i.unit,
-                    taxableValue:
-                        (i.qty * i.price) - i.discount, // Excludes tax
-                    gstRate: i.gstRate,
-                  ))
+              .map(
+                (i) => LineItemForGst(
+                  hsnCode: i.hsn.isNotEmpty ? i.hsn : null,
+                  description: i.productName,
+                  quantity: i.qty,
+                  unit: i.unit,
+                  taxableValue: (i.qty * i.price) - i.discount, // Excludes tax
+                  gstRate: i.gstRate,
+                ),
+              )
               .toList();
 
           if (gstItems.isNotEmpty) {
@@ -657,7 +690,8 @@ class BillsRepository {
               billId: bill.id,
               farmerId: bill.brokerId!, // Broker ID is mapped to Farmer ID
               saleAmount: bill.grandTotal,
-              commissionRate: (bill.commissionAmount /
+              commissionRate:
+                  (bill.commissionAmount /
                       (bill.grandTotal > 0 ? bill.grandTotal : 1)) *
                   100,
             );
@@ -695,9 +729,9 @@ class BillsRepository {
       // ============================================================
       // SECURITY GUARD: Business Type Isolation
       // ============================================================
-      final shop = await (database.select(database.shops)
-            ..where((t) => t.id.equals(bill.ownerId)))
-          .getSingleOrNull();
+      final shop = await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(bill.ownerId))).getSingleOrNull();
 
       if (shop != null &&
           shop.businessType != null &&
@@ -705,7 +739,8 @@ class BillsRepository {
           shop.businessType != 'other' &&
           shop.businessType != bill.businessType) {
         throw Exception(
-            'Security Violation: Cannot update bill to ${bill.businessType} for ${shop.businessType} business. Type is locked.');
+          'Security Violation: Cannot update bill to ${bill.businessType} for ${shop.businessType} business. Type is locked.',
+        );
       }
 
       // ============================================================
@@ -725,8 +760,9 @@ class BillsRepository {
           );
           if (isLocked) {
             throw Exception(
-                'Cannot modify bill: Accounting period for ${bill.date.month}/${bill.date.year} is locked. '
-                'Contact your accountant to unlock the period.');
+              'Cannot modify bill: Accounting period for ${bill.date.month}/${bill.date.year} is locked. '
+              'Contact your accountant to unlock the period.',
+            );
           }
         } catch (e) {
           // If it's our period lock exception, rethrow
@@ -742,223 +778,249 @@ class BillsRepository {
       late Bill recalculatedBill;
 
       // Collect sync operations for queuing after transaction
-      final collectedSyncOps =
-          await database.transaction<List<SyncQueueItem>>(() async {
-        final syncOps = <SyncQueueItem>[];
+      final collectedSyncOps = await database.transaction<List<SyncQueueItem>>(
+        () async {
+          final syncOps = <SyncQueueItem>[];
 
-        // 1. Fetch old bill to calculate deltas
-        final fetchedEntity = await (database.select(database.bills)
-              ..where((t) => t.id.equals(bill.id)))
-            .getSingleOrNull();
+          // 1. Fetch old bill to calculate deltas
+          final fetchedEntity = await (database.select(
+            database.bills,
+          )..where((t) => t.id.equals(bill.id))).getSingleOrNull();
 
-        if (fetchedEntity == null) throw Exception('Bill not found');
-        oldEntity = fetchedEntity;
+          if (fetchedEntity == null) throw Exception('Bill not found');
+          oldEntity = fetchedEntity;
 
-        // ============================================================
-        // SAFETY PATCH: Optimistic Locking (Control 1)
-        // ============================================================
-        // Prevent race conditions by comparing updatedAt timestamps.
-        // If expectedUpdatedAt is provided and doesn't match DB's updatedAt,
-        // it means another process modified the bill after client loaded it.
-        // Uses existing updatedAt column - NO SCHEMA CHANGE.
-        // BACKWARD COMPATIBLE: Only enforces if expectedUpdatedAt is provided.
-        // ============================================================
-        if (expectedUpdatedAt != null) {
-          final dbUpdatedAt = oldEntity.updatedAt;
-          // Allow 2 second tolerance for clock skew
-          final difference =
-              dbUpdatedAt.difference(expectedUpdatedAt).inSeconds.abs();
-          if (difference > 2) {
-            throw Exception(
+          // ============================================================
+          // SAFETY PATCH: Optimistic Locking (Control 1)
+          // ============================================================
+          // Prevent race conditions by comparing updatedAt timestamps.
+          // If expectedUpdatedAt is provided and doesn't match DB's updatedAt,
+          // it means another process modified the bill after client loaded it.
+          // Uses existing updatedAt column - NO SCHEMA CHANGE.
+          // BACKWARD COMPATIBLE: Only enforces if expectedUpdatedAt is provided.
+          // ============================================================
+          if (expectedUpdatedAt != null) {
+            final dbUpdatedAt = oldEntity.updatedAt;
+            // Allow 2 second tolerance for clock skew
+            final difference = dbUpdatedAt
+                .difference(expectedUpdatedAt)
+                .inSeconds
+                .abs();
+            if (difference > 2) {
+              throw Exception(
                 'Concurrent edit detected: This bill was modified by another user or device. '
                 'Please refresh and try again. (Expected: ${expectedUpdatedAt.toIso8601String()}, '
-                'Found: ${dbUpdatedAt.toIso8601String()})');
-          }
-        }
-
-        // ============================================================
-        // GAP-1 PATCH: Ghost Return / Edit Prevention
-        // ============================================================
-        // Check if the bill is LOCKED (Printed or Paid)
-        final isLocked = (oldEntity.printCount > 0) ||
-            (oldEntity.paidAmount > 0 && oldEntity.status != 'DRAFT') ||
-            (oldEntity.status == 'Paid');
-
-        if (isLocked) {
-          // Require Authorization
-          if (approverId == null || editReason == null || editReason.isEmpty) {
-            throw Exception(
-                'Bill is LOCKED (Printed/Paid). Manager Approval & Reason required to edit.');
-          }
-
-          // If authorized, we will log a special audit event later
-        }
-        // ============================================================
-
-        // Parse old items for stock comparison
-        try {
-          final decoded = jsonDecode(oldEntity.itemsJson) as List;
-          oldItems = decoded
-              .map((i) => BillItem.fromMap(i as Map<String, dynamic>))
-              .toList();
-        } catch (_) {
-          oldItems = [];
-        }
-
-        // 2. RECALCULATE totals from items (NEVER trust frontend values)
-        recalculatedBill = _recalculateBillTotals(bill);
-
-        // 3. STOCK ADJUSTMENT for quantity changes
-        if (inventoryService != null) {
-          // Build maps for efficient lookup
-          final oldItemMap = <String, double>{};
-          for (final item in oldItems) {
-            if (item.productId.isNotEmpty) {
-              oldItemMap[item.productId] =
-                  (oldItemMap[item.productId] ?? 0) + item.qty;
+                'Found: ${dbUpdatedAt.toIso8601String()})',
+              );
             }
           }
 
-          final newItemMap = <String, double>{};
-          for (final item in bill.items) {
-            if (item.productId.isNotEmpty) {
-              newItemMap[item.productId] =
-                  (newItemMap[item.productId] ?? 0) + item.qty;
+          // ============================================================
+          // GAP-1 PATCH: Ghost Return / Edit Prevention
+          // ============================================================
+          // Check if the bill is LOCKED (Printed or Paid)
+          final isLocked =
+              (oldEntity.printCount > 0) ||
+              (oldEntity.paidAmount > 0 && oldEntity.status != 'DRAFT') ||
+              (oldEntity.status == 'Paid');
+
+          if (isLocked) {
+            // Require Authorization
+            if (approverId == null ||
+                editReason == null ||
+                editReason.isEmpty) {
+              throw Exception(
+                'Bill is LOCKED (Printed/Paid). Manager Approval & Reason required to edit.',
+              );
             }
+
+            // If authorized, we will log a special audit event later
+          }
+          // ============================================================
+
+          // Parse old items for stock comparison
+          try {
+            final decoded = jsonDecode(oldEntity.itemsJson) as List;
+            oldItems = decoded
+                .map((i) => BillItem.fromMap(i as Map<String, dynamic>))
+                .toList();
+          } catch (_) {
+            oldItems = [];
           }
 
-          // Get all unique product IDs
-          final allProductIds = {...oldItemMap.keys, ...newItemMap.keys};
+          // 2. RECALCULATE totals from items (NEVER trust frontend values)
+          recalculatedBill = _recalculateBillTotals(bill);
 
-          for (final productId in allProductIds) {
-            final oldQty = oldItemMap[productId] ?? 0;
-            final newQty = newItemMap[productId] ?? 0;
-            final qtyDelta =
-                oldQty - newQty; // Positive = need to restore stock
+          // 3. STOCK ADJUSTMENT for quantity changes
+          if (inventoryService != null) {
+            // Build maps for efficient lookup
+            final oldItemMap = <String, double>{};
+            for (final item in oldItems) {
+              if (item.productId.isNotEmpty) {
+                oldItemMap[item.productId] =
+                    (oldItemMap[item.productId] ?? 0) + item.qty;
+              }
+            }
 
-            if (qtyDelta.abs() > 0.001) {
-              // Use small threshold for floating point
-              if (qtyDelta > 0) {
-                // Restore stock (qty reduced in edit or item removed)
-                await inventoryService!.addStockMovement(
-                  userId: bill.ownerId,
-                  productId: productId,
-                  type: 'IN',
-                  reason: 'BILL_EDIT_REVERSAL',
-                  quantity: qtyDelta.abs(),
-                  referenceId: bill.id,
-                  description:
-                      'Stock restored due to bill edit: ${bill.invoiceNumber}',
-                  createdBy: 'SYSTEM',
-                );
-              } else {
-                // Deduct more stock (qty increased in edit or new item added)
-                final ops = await inventoryService!.deductStockInTransaction(
-                  userId: bill.ownerId,
-                  productId: productId,
-                  quantity: qtyDelta.abs(),
-                  referenceId: bill.id,
-                  invoiceNumber: bill.invoiceNumber,
-                  date: bill.date,
-                );
-                syncOps.addAll(ops);
+            final newItemMap = <String, double>{};
+            for (final item in bill.items) {
+              if (item.productId.isNotEmpty) {
+                newItemMap[item.productId] =
+                    (newItemMap[item.productId] ?? 0) + item.qty;
+              }
+            }
+
+            // Get all unique product IDs
+            final allProductIds = {...oldItemMap.keys, ...newItemMap.keys};
+
+            for (final productId in allProductIds) {
+              final oldQty = oldItemMap[productId] ?? 0;
+              final newQty = newItemMap[productId] ?? 0;
+              final qtyDelta =
+                  oldQty - newQty; // Positive = need to restore stock
+
+              if (qtyDelta.abs() > 0.001) {
+                // Use small threshold for floating point
+                if (qtyDelta > 0) {
+                  // Restore stock (qty reduced in edit or item removed)
+                  await inventoryService!.addStockMovement(
+                    userId: bill.ownerId,
+                    productId: productId,
+                    type: 'IN',
+                    reason: 'BILL_EDIT_REVERSAL',
+                    quantity: qtyDelta.abs(),
+                    referenceId: bill.id,
+                    description:
+                        'Stock restored due to bill edit: ${bill.invoiceNumber}',
+                    createdBy: 'SYSTEM',
+                  );
+                } else {
+                  // Deduct more stock (qty increased in edit or new item added)
+                  final ops = await inventoryService!.deductStockInTransaction(
+                    userId: bill.ownerId,
+                    productId: productId,
+                    quantity: qtyDelta.abs(),
+                    referenceId: bill.id,
+                    invoiceNumber: bill.invoiceNumber,
+                    date: bill.date,
+                  );
+                  syncOps.addAll(ops);
+                }
               }
             }
           }
-        }
 
-        // 4. Calculate customer ledger deltas
-        final oldGrandTotal = oldEntity.grandTotal;
-        final oldPending =
-            (oldGrandTotal - oldEntity.paidAmount).clamp(0.0, double.infinity);
-        final newPending =
-            (recalculatedBill.grandTotal - recalculatedBill.paidAmount)
-                .clamp(0.0, double.infinity);
-        final duesDelta = newPending - oldPending;
-        final billedDelta = recalculatedBill.grandTotal - oldGrandTotal;
+          // 4. Calculate customer ledger deltas
+          final oldGrandTotal = oldEntity.grandTotal;
+          final oldPending = (oldGrandTotal - oldEntity.paidAmount).clamp(
+            0.0,
+            double.infinity,
+          );
+          final newPending =
+              (recalculatedBill.grandTotal - recalculatedBill.paidAmount).clamp(
+                0.0,
+                double.infinity,
+              );
+          final duesDelta = newPending - oldPending;
+          final billedDelta = recalculatedBill.grandTotal - oldGrandTotal;
 
-        // 5. Update Bill in Local DB with RECALCULATED values
-        await (database.update(database.bills)
-              ..where((t) => t.id.equals(bill.id)))
-            .write(BillsCompanion(
-          invoiceNumber: Value(recalculatedBill.invoiceNumber),
-          customerId: Value(recalculatedBill.customerId),
-          customerName: Value(recalculatedBill.customerName),
-          billDate: Value(recalculatedBill.date),
-          subtotal: Value(recalculatedBill.subtotal),
-          taxAmount: Value(recalculatedBill.totalTax),
-          discountAmount: Value(recalculatedBill.discountApplied),
-          grandTotal: Value(recalculatedBill.grandTotal),
-          paidAmount: Value(recalculatedBill.paidAmount),
-          cashPaid: Value(recalculatedBill.cashPaid),
-          onlinePaid: Value(recalculatedBill.onlinePaid),
-          businessType: Value(recalculatedBill.businessType),
-          businessId: Value(recalculatedBill.businessId),
-          serviceCharge: Value(recalculatedBill.serviceCharge),
-          prescriptionId: Value(recalculatedBill.prescriptionId),
-          itemsJson: Value(jsonEncode(
-              recalculatedBill.items.map((i) => i.toMap()).toList())),
-          status: Value(recalculatedBill.status),
-          paymentMode: Value(recalculatedBill.paymentType),
-          source: Value(recalculatedBill.source),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-          printCount: Value(recalculatedBill.printCount),
-          // Restaurant
-          tableNumber: Value(recalculatedBill.tableNumber),
-          waiterId: Value(recalculatedBill.waiterId),
-          kotId: Value(recalculatedBill.kotId),
-          // Petrol Pump
-          vehicleNumber: Value(recalculatedBill.vehicleNumber),
-          driverName: Value(recalculatedBill.driverName),
-          fuelType: Value(recalculatedBill.fuelType),
-          pumpReadingStart: Value(recalculatedBill.pumpReadingStart),
-          pumpReadingEnd: Value(recalculatedBill.pumpReadingEnd),
-          // Mandi
-          brokerId: Value(recalculatedBill.brokerId),
-          marketCess: Value(recalculatedBill.marketCess),
-          commissionAmount: Value(recalculatedBill.commissionAmount),
-        ));
-
-        // 6. Update Customer Ledger with deltas
-        if (recalculatedBill.customerId.isNotEmpty &&
-            (duesDelta.abs() > 0.001 || billedDelta.abs() > 0.001)) {
-          final customer = await (database.select(database.customers)
-                ..where((t) => t.id.equals(recalculatedBill.customerId)))
-              .getSingleOrNull();
-
-          if (customer != null) {
-            final newTotalDues =
-                (customer.totalDues + duesDelta).clamp(0.0, double.infinity);
-            final newTotalBilled = (customer.totalBilled + billedDelta)
-                .clamp(0.0, double.infinity);
-
-            await (database.update(database.customers)
-                  ..where((t) => t.id.equals(recalculatedBill.customerId)))
-                .write(CustomersCompanion(
-              totalDues: Value(newTotalDues),
-              totalBilled: Value(newTotalBilled),
+          // 5. Update Bill in Local DB with RECALCULATED values
+          await (database.update(
+            database.bills,
+          )..where((t) => t.id.equals(bill.id))).write(
+            BillsCompanion(
+              invoiceNumber: Value(recalculatedBill.invoiceNumber),
+              customerId: Value(recalculatedBill.customerId),
+              customerName: Value(recalculatedBill.customerName),
+              billDate: Value(recalculatedBill.date),
+              subtotal: Value(recalculatedBill.subtotal),
+              taxAmount: Value(recalculatedBill.totalTax),
+              discountAmount: Value(recalculatedBill.discountApplied),
+              grandTotal: Value(recalculatedBill.grandTotal),
+              paidAmount: Value(recalculatedBill.paidAmount),
+              cashPaid: Value(recalculatedBill.cashPaid),
+              onlinePaid: Value(recalculatedBill.onlinePaid),
+              businessType: Value(recalculatedBill.businessType),
+              businessId: Value(recalculatedBill.businessId),
+              serviceCharge: Value(recalculatedBill.serviceCharge),
+              prescriptionId: Value(recalculatedBill.prescriptionId),
+              itemsJson: Value(
+                jsonEncode(
+                  recalculatedBill.items.map((i) => i.toMap()).toList(),
+                ),
+              ),
+              status: Value(recalculatedBill.status),
+              paymentMode: Value(recalculatedBill.paymentType),
+              source: Value(recalculatedBill.source),
               updatedAt: Value(now),
               isSynced: const Value(false),
-            ));
+              printCount: Value(recalculatedBill.printCount),
+              // Restaurant
+              tableNumber: Value(recalculatedBill.tableNumber),
+              waiterId: Value(recalculatedBill.waiterId),
+              kotId: Value(recalculatedBill.kotId),
+              // Petrol Pump
+              vehicleNumber: Value(recalculatedBill.vehicleNumber),
+              driverName: Value(recalculatedBill.driverName),
+              fuelType: Value(recalculatedBill.fuelType),
+              pumpReadingStart: Value(recalculatedBill.pumpReadingStart),
+              pumpReadingEnd: Value(recalculatedBill.pumpReadingEnd),
+              // Mandi
+              brokerId: Value(recalculatedBill.brokerId),
+              marketCess: Value(recalculatedBill.marketCess),
+              commissionAmount: Value(recalculatedBill.commissionAmount),
+            ),
+          );
 
-            // Queue customer sync
-            syncOps.add(SyncQueueItem.create(
-              userId: recalculatedBill.ownerId,
-              operationType: SyncOperationType.update,
-              targetCollection: 'customers',
-              documentId: recalculatedBill.customerId,
-              payload: {
-                'totalDues': newTotalDues,
-                'totalBilled': newTotalBilled,
-                'updatedAt': now.toIso8601String(),
-              },
-            ));
+          // 6. Update Customer Ledger with deltas
+          if (recalculatedBill.customerId.isNotEmpty &&
+              (duesDelta.abs() > 0.001 || billedDelta.abs() > 0.001)) {
+            final customer =
+                await (database.select(database.customers)
+                      ..where((t) => t.id.equals(recalculatedBill.customerId)))
+                    .getSingleOrNull();
+
+            if (customer != null) {
+              final newTotalDues = (customer.totalDues + duesDelta).clamp(
+                0.0,
+                double.infinity,
+              );
+              final newTotalBilled = (customer.totalBilled + billedDelta).clamp(
+                0.0,
+                double.infinity,
+              );
+
+              await (database.update(
+                database.customers,
+              )..where((t) => t.id.equals(recalculatedBill.customerId))).write(
+                CustomersCompanion(
+                  totalDues: Value(newTotalDues),
+                  totalBilled: Value(newTotalBilled),
+                  updatedAt: Value(now),
+                  isSynced: const Value(false),
+                ),
+              );
+
+              // Queue customer sync
+              syncOps.add(
+                SyncQueueItem.create(
+                  userId: recalculatedBill.ownerId,
+                  operationType: SyncOperationType.update,
+                  targetCollection: 'customers',
+                  documentId: recalculatedBill.customerId,
+                  payload: {
+                    'totalDues': newTotalDues,
+                    'totalBilled': newTotalBilled,
+                    'updatedAt': now.toIso8601String(),
+                  },
+                ),
+              );
+            }
           }
-        }
 
-        return syncOps;
-      });
+          return syncOps;
+        },
+      );
 
       // 7. Queue all collected sync operations AFTER transaction commits
       for (final syncOp in collectedSyncOps) {
@@ -966,13 +1028,15 @@ class BillsRepository {
       }
 
       // 8. Queue bill sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: recalculatedBill.ownerId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: recalculatedBill.id,
-        payload: recalculatedBill.toMap(),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: recalculatedBill.ownerId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: recalculatedBill.id,
+          payload: recalculatedBill.toMap(),
+        ),
+      );
 
       // 9. DAYBOOK UPDATE - Record delta for bill edit (non-blocking)
       // If amounts changed, we need to adjust the daybook
@@ -1014,16 +1078,17 @@ class BillsRepository {
         if (approverId != null && auditService != null) {
           try {
             auditService!.logSecurityEvent(
-                userId: bill.ownerId,
-                severity: 'HIGH',
-                message: 'Bill Force Edit Authorized',
-                details: {
-                  'billId': bill.id,
-                  'approverId': approverId,
-                  'reason': editReason,
-                  'oldGrandTotal': oldEntity.grandTotal,
-                  'newGrandTotal': recalculatedBill.grandTotal,
-                });
+              userId: bill.ownerId,
+              severity: 'HIGH',
+              message: 'Bill Force Edit Authorized',
+              details: {
+                'billId': bill.id,
+                'approverId': approverId,
+                'reason': editReason,
+                'oldGrandTotal': oldEntity.grandTotal,
+                'newGrandTotal': recalculatedBill.grandTotal,
+              },
+            );
           } catch (_) {}
         }
       }
@@ -1088,9 +1153,9 @@ class BillsRepository {
   /// Get bill by ID
   Future<RepositoryResult<Bill>> getById(String id) async {
     return await errorHandler.runSafe<Bill>(() async {
-      final entity = await (database.select(database.bills)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (database.select(
+        database.bills,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) throw Exception('Bill not found');
       return _entityToBill(entity);
@@ -1098,8 +1163,11 @@ class BillsRepository {
   }
 
   /// Get all bills
-  Future<RepositoryResult<List<Bill>>> getAll(
-      {required String userId, String? customerId, String? businessId}) async {
+  Future<RepositoryResult<List<Bill>>> getAll({
+    required String userId,
+    String? customerId,
+    String? businessId,
+  }) async {
     return await errorHandler.runSafe<List<Bill>>(() async {
       final query = database.select(database.bills)
         ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull());
@@ -1120,8 +1188,11 @@ class BillsRepository {
   }
 
   /// Watch all bills
-  Stream<List<Bill>> watchAll(
-      {required String userId, String? customerId, String? businessId}) {
+  Stream<List<Bill>> watchAll({
+    required String userId,
+    String? customerId,
+    String? businessId,
+  }) {
     final query = database.select(database.bills)
       ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull());
 
@@ -1151,9 +1222,9 @@ class BillsRepository {
       String? customerId; // Lift variable for access outside transaction
 
       await database.transaction(() async {
-        final entity = await (database.select(database.bills)
-              ..where((t) => t.id.equals(billId)))
-            .getSingleOrNull();
+        final entity = await (database.select(
+          database.bills,
+        )..where((t) => t.id.equals(billId))).getSingleOrNull();
 
         if (entity == null) throw Exception('Bill not found');
 
@@ -1165,8 +1236,9 @@ class BillsRepository {
             newPaidAmount >= entity.grandTotal; // Using grandTotal from entity
 
         // Status Update Logic
-        final newStatus =
-            isFullyPaid ? 'Paid' : (newPaidAmount > 0 ? 'Partial' : 'Unpaid');
+        final newStatus = isFullyPaid
+            ? 'Paid'
+            : (newPaidAmount > 0 ? 'Partial' : 'Unpaid');
 
         double newCashPaid = entity.cashPaid;
         double newOnlinePaid = entity.onlinePaid;
@@ -1178,35 +1250,41 @@ class BillsRepository {
         }
 
         // 1. Update Bill
-        await (database.update(database.bills)
-              ..where((t) => t.id.equals(billId)))
-            .write(BillsCompanion(
-          paidAmount: Value(newPaidAmount),
-          cashPaid: Value(newCashPaid),
-          onlinePaid: Value(newOnlinePaid),
-          status: Value(newStatus),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-        ));
+        await (database.update(
+          database.bills,
+        )..where((t) => t.id.equals(billId))).write(
+          BillsCompanion(
+            paidAmount: Value(newPaidAmount),
+            cashPaid: Value(newCashPaid),
+            onlinePaid: Value(newOnlinePaid),
+            status: Value(newStatus),
+            updatedAt: Value(now),
+            isSynced: const Value(false),
+          ),
+        );
 
         // Queue bill update
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.update,
-          targetCollection: collectionName,
-          documentId: billId,
-          payload: {
-            'paidAmount': newPaidAmount,
-            'cashPaid': newCashPaid,
-            'onlinePaid': newOnlinePaid,
-            'status': newStatus,
-            'updatedAt': now.toIso8601String(),
-          },
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.update,
+            targetCollection: collectionName,
+            documentId: billId,
+            payload: {
+              'paidAmount': newPaidAmount,
+              'cashPaid': newCashPaid,
+              'onlinePaid': newOnlinePaid,
+              'status': newStatus,
+              'updatedAt': now.toIso8601String(),
+            },
+          ),
+        );
 
         // 2. Add Revenue Record (Receipt) - Creates Payment Entity
         final paymentId = const Uuid().v4();
-        await database.into(database.payments).insert(
+        await database
+            .into(database.payments)
+            .insert(
               PaymentsCompanion.insert(
                 id: paymentId,
                 userId: userId,
@@ -1225,56 +1303,64 @@ class BillsRepository {
             );
 
         // Queue Payment Sync
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.create,
-          targetCollection: 'payments',
-          documentId: paymentId,
-          payload: {
-            'id': paymentId,
-            'userId': userId,
-            'billId': billId,
-            'customerId': entity.customerId,
-            'amount': amount,
-            'paymentMode': paymentMode,
-            'notes': notes,
-            'paymentDate': now.toIso8601String(),
-            'createdAt': now.toIso8601String(),
-          },
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.create,
+            targetCollection: 'payments',
+            documentId: paymentId,
+            payload: {
+              'id': paymentId,
+              'userId': userId,
+              'billId': billId,
+              'customerId': entity.customerId,
+              'amount': amount,
+              'paymentMode': paymentMode,
+              'notes': notes,
+              'paymentDate': now.toIso8601String(),
+              'createdAt': now.toIso8601String(),
+            },
+          ),
+        );
 
         // 3. Update Customer Ledger
         if (entity.customerId != null && entity.customerId!.isNotEmpty) {
-          final customer = await (database.select(database.customers)
-                ..where((t) => t.id.equals(entity.customerId!)))
-              .getSingleOrNull();
+          final customer = await (database.select(
+            database.customers,
+          )..where((t) => t.id.equals(entity.customerId!))).getSingleOrNull();
 
           if (customer != null) {
             final newTotalPaid = customer.totalPaid + amount;
             // Clamp to 0 to prevent negative dues if paidAmount > dues
-            final newTotalDues =
-                (customer.totalDues - amount).clamp(0.0, double.infinity);
+            final newTotalDues = (customer.totalDues - amount).clamp(
+              0.0,
+              double.infinity,
+            );
 
-            await (database.update(database.customers)
-                  ..where((t) => t.id.equals(entity.customerId!)))
-                .write(CustomersCompanion(
-              totalPaid: Value(newTotalPaid),
-              totalDues: Value(newTotalDues),
-              updatedAt: Value(now),
-              isSynced: const Value(false),
-            ));
+            await (database.update(
+              database.customers,
+            )..where((t) => t.id.equals(entity.customerId!))).write(
+              CustomersCompanion(
+                totalPaid: Value(newTotalPaid),
+                totalDues: Value(newTotalDues),
+                updatedAt: Value(now),
+                isSynced: const Value(false),
+              ),
+            );
 
-            await syncManager.enqueue(SyncQueueItem.create(
-              userId: userId,
-              operationType: SyncOperationType.update,
-              targetCollection: 'customers',
-              documentId: entity.customerId!,
-              payload: {
-                'totalPaid': newTotalPaid,
-                'totalDues': newTotalDues,
-                'updatedAt': now.toIso8601String(),
-              },
-            ));
+            await syncManager.enqueue(
+              SyncQueueItem.create(
+                userId: userId,
+                operationType: SyncOperationType.update,
+                targetCollection: 'customers',
+                documentId: entity.customerId!,
+                payload: {
+                  'totalPaid': newTotalPaid,
+                  'totalDues': newTotalDues,
+                  'updatedAt': now.toIso8601String(),
+                },
+              ),
+            );
           }
         }
       });
@@ -1330,22 +1416,25 @@ class BillsRepository {
 
       await database.transaction(() async {
         // 1. Fetch the payment
-        final payment = await (database.select(database.payments)
-              ..where((t) => t.id.equals(paymentId) & t.deletedAt.isNull()))
-            .getSingleOrNull();
+        final payment =
+            await (database.select(database.payments)
+                  ..where((t) => t.id.equals(paymentId) & t.deletedAt.isNull()))
+                .getSingleOrNull();
 
         if (payment == null) {
           throw Exception('Payment not found or already deleted: $paymentId');
         }
 
         // 2. Fetch and update the bill
-        final bill = await (database.select(database.bills)
-              ..where((t) => t.id.equals(payment.billId)))
-            .getSingleOrNull();
+        final bill = await (database.select(
+          database.bills,
+        )..where((t) => t.id.equals(payment.billId))).getSingleOrNull();
 
         if (bill != null) {
-          final newPaidAmount =
-              (bill.paidAmount - payment.amount).clamp(0.0, double.infinity);
+          final newPaidAmount = (bill.paidAmount - payment.amount).clamp(
+            0.0,
+            double.infinity,
+          );
           final newStatus = newPaidAmount >= bill.grandTotal
               ? 'Paid'
               : (newPaidAmount > 0 ? 'Partial' : 'Unpaid');
@@ -1355,93 +1444,111 @@ class BillsRepository {
           double newOnlinePaid = bill.onlinePaid;
 
           if (payment.paymentMode.toLowerCase() == 'cash') {
-            newCashPaid =
-                (newCashPaid - payment.amount).clamp(0.0, double.infinity);
+            newCashPaid = (newCashPaid - payment.amount).clamp(
+              0.0,
+              double.infinity,
+            );
           } else {
-            newOnlinePaid =
-                (newOnlinePaid - payment.amount).clamp(0.0, double.infinity);
+            newOnlinePaid = (newOnlinePaid - payment.amount).clamp(
+              0.0,
+              double.infinity,
+            );
           }
 
-          await (database.update(database.bills)
-                ..where((t) => t.id.equals(payment.billId)))
-              .write(BillsCompanion(
-            paidAmount: Value(newPaidAmount),
-            cashPaid: Value(newCashPaid),
-            onlinePaid: Value(newOnlinePaid),
-            status: Value(newStatus),
-            updatedAt: Value(now),
-            isSynced: const Value(false),
-          ));
+          await (database.update(
+            database.bills,
+          )..where((t) => t.id.equals(payment.billId))).write(
+            BillsCompanion(
+              paidAmount: Value(newPaidAmount),
+              cashPaid: Value(newCashPaid),
+              onlinePaid: Value(newOnlinePaid),
+              status: Value(newStatus),
+              updatedAt: Value(now),
+              isSynced: const Value(false),
+            ),
+          );
 
           // Queue bill update for sync
-          await syncManager.enqueue(SyncQueueItem.create(
-            userId: userId,
-            operationType: SyncOperationType.update,
-            targetCollection: 'bills',
-            documentId: payment.billId,
-            payload: {
-              'paidAmount': newPaidAmount,
-              'cashPaid': newCashPaid,
-              'onlinePaid': newOnlinePaid,
-              'status': newStatus,
-              'updatedAt': now.toIso8601String(),
-            },
-          ));
+          await syncManager.enqueue(
+            SyncQueueItem.create(
+              userId: userId,
+              operationType: SyncOperationType.update,
+              targetCollection: 'bills',
+              documentId: payment.billId,
+              payload: {
+                'paidAmount': newPaidAmount,
+                'cashPaid': newCashPaid,
+                'onlinePaid': newOnlinePaid,
+                'status': newStatus,
+                'updatedAt': now.toIso8601String(),
+              },
+            ),
+          );
         }
 
         // 3. Reverse customer ledger
         if (payment.customerId != null && payment.customerId!.isNotEmpty) {
-          final customer = await (database.select(database.customers)
-                ..where((t) => t.id.equals(payment.customerId!)))
-              .getSingleOrNull();
+          final customer = await (database.select(
+            database.customers,
+          )..where((t) => t.id.equals(payment.customerId!))).getSingleOrNull();
 
           if (customer != null) {
             // Reverse: totalPaid decreases, totalDues increases
-            final newTotalPaid = (customer.totalPaid - payment.amount)
-                .clamp(0.0, double.infinity);
+            final newTotalPaid = (customer.totalPaid - payment.amount).clamp(
+              0.0,
+              double.infinity,
+            );
             final newTotalDues = customer.totalDues + payment.amount;
 
-            await (database.update(database.customers)
-                  ..where((t) => t.id.equals(payment.customerId!)))
-                .write(CustomersCompanion(
-              totalPaid: Value(newTotalPaid),
-              totalDues: Value(newTotalDues),
-              updatedAt: Value(now),
-              isSynced: const Value(false),
-            ));
+            await (database.update(
+              database.customers,
+            )..where((t) => t.id.equals(payment.customerId!))).write(
+              CustomersCompanion(
+                totalPaid: Value(newTotalPaid),
+                totalDues: Value(newTotalDues),
+                updatedAt: Value(now),
+                isSynced: const Value(false),
+              ),
+            );
 
             // Queue customer sync
-            await syncManager.enqueue(SyncQueueItem.create(
-              userId: userId,
-              operationType: SyncOperationType.update,
-              targetCollection: 'customers',
-              documentId: payment.customerId!,
-              payload: {
-                'totalPaid': newTotalPaid,
-                'totalDues': newTotalDues,
-                'updatedAt': now.toIso8601String(),
-              },
-            ));
+            await syncManager.enqueue(
+              SyncQueueItem.create(
+                userId: userId,
+                operationType: SyncOperationType.update,
+                targetCollection: 'customers',
+                documentId: payment.customerId!,
+                payload: {
+                  'totalPaid': newTotalPaid,
+                  'totalDues': newTotalDues,
+                  'updatedAt': now.toIso8601String(),
+                },
+              ),
+            );
           }
         }
 
         // 4. Soft delete the payment (keep for audit trail)
-        await (database.update(database.payments)
-              ..where((t) => t.id.equals(paymentId)))
-            .write(PaymentsCompanion(
-          deletedAt: Value(now),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-        ));
+        await (database.update(
+          database.payments,
+        )..where((t) => t.id.equals(paymentId))).write(
+          PaymentsCompanion(
+            deletedAt: Value(now),
+            updatedAt: Value(now),
+            isSynced: const Value(false),
+          ),
+        );
 
         // 5. Queue payment deletion for sync
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.delete,
-          targetCollection: 'payments',
-          documentId: paymentId,
-          payload: {'deletedAt': now.toIso8601String()},
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.delete,
+            targetCollection: 'payments',
+            documentId: paymentId,
+            payload: {'deletedAt': now.toIso8601String()},
+          ),
+        );
       });
 
       // 6. Audit Logging (non-blocking)
@@ -1484,23 +1591,25 @@ class BillsRepository {
     return await errorHandler.runSafe<bool>(() async {
       final now = DateTime.now();
       // Fetch to get ownerId if needed, but assuming calling context knows or we just update
-      final entity = await (database.select(database.bills)
-            ..where((t) => t.id.equals(billId)))
-          .getSingleOrNull();
+      final entity = await (database.select(
+        database.bills,
+      )..where((t) => t.id.equals(billId))).getSingleOrNull();
       if (entity == null) throw Exception('Bill not found');
 
       final updates = BillsCompanion(
         status: Value(status),
         paidAmount: Value(paidAmount),
         cashPaid: cashPaid != null ? Value(cashPaid) : const Value.absent(),
-        onlinePaid:
-            onlinePaid != null ? Value(onlinePaid) : const Value.absent(),
+        onlinePaid: onlinePaid != null
+            ? Value(onlinePaid)
+            : const Value.absent(),
         updatedAt: Value(now),
         isSynced: const Value(false),
       );
 
-      await (database.update(database.bills)..where((t) => t.id.equals(billId)))
-          .write(updates);
+      await (database.update(
+        database.bills,
+      )..where((t) => t.id.equals(billId))).write(updates);
 
       // Queue sync
       final payload = {
@@ -1511,13 +1620,15 @@ class BillsRepository {
       if (cashPaid != null) payload['cashPaid'] = cashPaid;
       if (onlinePaid != null) payload['onlinePaid'] = onlinePaid;
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: entity.userId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: billId,
-        payload: payload,
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: entity.userId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: billId,
+          payload: payload,
+        ),
+      );
 
       return true;
     }, 'updateBillStatus');
@@ -1539,22 +1650,24 @@ class BillsRepository {
       final requestId =
           '${now.millisecondsSinceEpoch}_${billId.substring(0, 4)}';
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: customerId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'bill_corrections',
-        documentId: requestId,
-        payload: {
-          'billId': billId,
-          'customerId': customerId,
-          'message': message,
-          'billAmount': billAmount,
-          'createdAt': now.toIso8601String(),
-          'status': 'PENDING',
-          '_targetPath':
-              'customers/$customerId/bills/$billId/corrections/$requestId',
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: customerId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'bill_corrections',
+          documentId: requestId,
+          payload: {
+            'billId': billId,
+            'customerId': customerId,
+            'message': message,
+            'billAmount': billAmount,
+            'createdAt': now.toIso8601String(),
+            'status': 'PENDING',
+            '_targetPath':
+                'customers/$customerId/bills/$billId/corrections/$requestId',
+          },
+        ),
+      );
 
       return true;
     }, 'createCorrectionRequest');
@@ -1607,7 +1720,8 @@ class BillsRepository {
 
   /// Get today's summary stats
   Future<RepositoryResult<Map<String, dynamic>>> getTodaySummary(
-      String userId) async {
+    String userId,
+  ) async {
     return await errorHandler.runSafe<Map<String, dynamic>>(() async {
       final stats = await database.getDashboardStats(userId);
 
@@ -1641,7 +1755,8 @@ class BillsRepository {
 
   /// Get Purchase vs Sale stats
   Future<RepositoryResult<Map<String, dynamic>>> getPurchaseVsSaleStats(
-      String userId) async {
+    String userId,
+  ) async {
     return await errorHandler.runSafe<Map<String, dynamic>>(() async {
       final stats = await database.getDashboardStats(userId);
       // We need actual purchase data.
@@ -1665,7 +1780,9 @@ class BillsRepository {
   /// 2. Reverses customer balance updates
   /// 3. Creates audit trail with reason
   Future<RepositoryResult<void>> deleteBill(
-      String billId, String userId) async {
+    String billId,
+    String userId,
+  ) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
 
@@ -1676,9 +1793,9 @@ class BillsRepository {
       // Must fetch bill first to get the date for period check.
       // ============================================================
       if (accountingService != null) {
-        final billForCheck = await (database.select(database.bills)
-              ..where((t) => t.id.equals(billId)))
-            .getSingleOrNull();
+        final billForCheck = await (database.select(
+          database.bills,
+        )..where((t) => t.id.equals(billId))).getSingleOrNull();
 
         if (billForCheck != null) {
           try {
@@ -1688,8 +1805,9 @@ class BillsRepository {
             );
             if (isLocked) {
               throw Exception(
-                  'Cannot delete bill: Accounting period for ${billForCheck.billDate.month}/${billForCheck.billDate.year} is locked. '
-                  'Contact your accountant to unlock the period.');
+                'Cannot delete bill: Accounting period for ${billForCheck.billDate.month}/${billForCheck.billDate.year} is locked. '
+                'Contact your accountant to unlock the period.',
+              );
             }
           } catch (e) {
             if (e.toString().contains('Cannot delete bill')) rethrow;
@@ -1700,9 +1818,9 @@ class BillsRepository {
 
       await database.transaction(() async {
         // 1. Fetch the bill to get amounts and items for reversal
-        final bill = await (database.select(database.bills)
-              ..where((t) => t.id.equals(billId)))
-            .getSingleOrNull();
+        final bill = await (database.select(
+          database.bills,
+        )..where((t) => t.id.equals(billId))).getSingleOrNull();
 
         if (bill == null) {
           throw Exception('Bill not found: $billId');
@@ -1740,9 +1858,9 @@ class BillsRepository {
 
         // 4. Reverse customer balance if applicable
         if (bill.customerId != null && bill.customerId!.isNotEmpty) {
-          final customer = await (database.select(database.customers)
-                ..where((t) => t.id.equals(bill.customerId!)))
-              .getSingleOrNull();
+          final customer = await (database.select(
+            database.customers,
+          )..where((t) => t.id.equals(bill.customerId!))).getSingleOrNull();
 
           if (customer != null) {
             // Reverse the balance updates made during bill creation
@@ -1754,47 +1872,55 @@ class BillsRepository {
                 (customer.totalDues - (bill.grandTotal - bill.paidAmount))
                     .clamp(0.0, double.infinity);
 
-            await (database.update(database.customers)
-                  ..where((t) => t.id.equals(bill.customerId!)))
-                .write(CustomersCompanion(
-              totalBilled: Value(reversedTotalBilled),
-              totalDues: Value(reversedTotalDues),
-              updatedAt: Value(now),
-              isSynced: const Value(false),
-            ));
+            await (database.update(
+              database.customers,
+            )..where((t) => t.id.equals(bill.customerId!))).write(
+              CustomersCompanion(
+                totalBilled: Value(reversedTotalBilled),
+                totalDues: Value(reversedTotalDues),
+                updatedAt: Value(now),
+                isSynced: const Value(false),
+              ),
+            );
 
             // Queue customer sync
-            await syncManager.enqueue(SyncQueueItem.create(
-              userId: userId,
-              operationType: SyncOperationType.update,
-              targetCollection: 'customers',
-              documentId: bill.customerId!,
-              payload: {
-                'totalBilled': reversedTotalBilled,
-                'totalDues': reversedTotalDues,
-                'updatedAt': now.toIso8601String(),
-              },
-            ));
+            await syncManager.enqueue(
+              SyncQueueItem.create(
+                userId: userId,
+                operationType: SyncOperationType.update,
+                targetCollection: 'customers',
+                documentId: bill.customerId!,
+                payload: {
+                  'totalBilled': reversedTotalBilled,
+                  'totalDues': reversedTotalDues,
+                  'updatedAt': now.toIso8601String(),
+                },
+              ),
+            );
           }
         }
 
         // 5. Mark bill as deleted locally
-        await (database.update(database.bills)
-              ..where((t) => t.id.equals(billId)))
-            .write(BillsCompanion(
-          deletedAt: Value(now),
-          isSynced: const Value(false),
-          updatedAt: Value(now),
-        ));
+        await (database.update(
+          database.bills,
+        )..where((t) => t.id.equals(billId))).write(
+          BillsCompanion(
+            deletedAt: Value(now),
+            isSynced: const Value(false),
+            updatedAt: Value(now),
+          ),
+        );
 
         // 6. Queue bill deletion for sync
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.delete,
-          targetCollection: 'bills',
-          documentId: billId,
-          payload: {'deletedAt': now.toIso8601String()},
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.delete,
+            targetCollection: 'bills',
+            documentId: billId,
+            payload: {'deletedAt': now.toIso8601String()},
+          ),
+        );
 
         // 7. DAYBOOK REVERSAL - Reverse the sale from daybook (non-blocking)
         if (dayBookService != null) {
@@ -1820,7 +1946,10 @@ class BillsRepository {
         if (auditService != null) {
           try {
             auditService!.logInvoiceDeletion(
-                userId, billId, 'User Deleted - Stock Restored');
+              userId,
+              billId,
+              'User Deleted - Stock Restored',
+            );
           } catch (e) {
             debugPrint('Failed to log deletion audit: $e');
           }
@@ -1869,12 +1998,16 @@ class BillsRepository {
     final validator = PharmacyValidationService();
 
     try {
-      validator.validateBillItems(bill.items, businessType,
-          prescriptionId: bill.prescriptionId);
+      validator.validateBillItems(
+        bill.items,
+        businessType,
+        prescriptionId: bill.prescriptionId,
+      );
     } on PharmacyComplianceException catch (e) {
       // Log the compliance violation for audit
       debugPrint(
-          '[PHARMACY_COMPLIANCE] Blocked sale: ${e.code} - ${e.message}');
+        '[PHARMACY_COMPLIANCE] Blocked sale: ${e.code} - ${e.message}',
+      );
       rethrow;
     }
   }

@@ -36,7 +36,7 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
     'THEFT',
     'CONSUMPTION',
     'EXPIRED',
-    'OTHER_OUT'
+    'OTHER_OUT',
   ];
 
   final List<String> _reasonsIn = [
@@ -48,7 +48,7 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
     'SALE_RETURN',
     'FOUND',
     'SURPLUS',
-    'OTHER_IN'
+    'OTHER_IN',
   ];
 
   @override
@@ -72,10 +72,8 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => StockProductPicker(
-        ownerId: _userId ?? '',
-        selectProductOnly: true,
-      ),
+      builder: (context) =>
+          StockProductPicker(ownerId: _userId ?? '', selectProductOnly: true),
     );
 
     if (result != null && result is StockItem) {
@@ -88,9 +86,9 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedProduct == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a product')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a product')));
       return;
     }
 
@@ -123,8 +121,9 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error: $e'),
-              backgroundColor: FuturisticColors.error),
+            content: Text('Error: $e'),
+            backgroundColor: FuturisticColors.error,
+          ),
         );
       }
     } finally {
@@ -137,9 +136,7 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
     final reasons = _type == 'OUT' ? _reasonsOut : _reasonsIn;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stock Adjustment'),
-      ),
+      appBar: AppBar(title: const Text('Stock Adjustment')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -158,8 +155,9 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
                   _onTypeChanged(newSelection.first);
                 },
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.resolveWith<Color>((states) {
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                    states,
+                  ) {
                     if (states.contains(MaterialState.selected)) {
                       return _type == 'OUT'
                           ? FuturisticColors.unpaidBackground
@@ -176,10 +174,12 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
                 value: _reason,
                 decoration: const InputDecoration(labelText: 'Reason'),
                 items: reasons
-                    .map((r) => DropdownMenuItem(
-                          value: r,
-                          child: Text(r.replaceAll('_', ' ')),
-                        ))
+                    .map(
+                      (r) => DropdownMenuItem(
+                        value: r,
+                        child: Text(r.replaceAll('_', ' ')),
+                      ),
+                    )
                     .toList(),
                 onChanged: (val) => setState(() => _reason = val!),
               ),
@@ -197,8 +197,9 @@ class _StockAdjustmentScreenState extends State<StockAdjustmentScreen> {
                   child: Text(
                     _selectedProduct?.name ?? 'Select Product',
                     style: TextStyle(
-                      color:
-                          _selectedProduct == null ? Colors.grey : Colors.black,
+                      color: _selectedProduct == null
+                          ? Colors.grey
+                          : Colors.black,
                     ),
                   ),
                 ),

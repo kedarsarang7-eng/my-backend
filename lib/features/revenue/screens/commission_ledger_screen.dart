@@ -28,10 +28,11 @@ class _CommissionLedgerScreenState
   void _initStream() {
     final userId = ref.read(authStateProvider).userId;
     if (userId != null) {
-      _stream = (_db.select(_db.commissionLedger)
-            ..where((t) => t.userId.equals(userId))
-            ..orderBy([(t) => OrderingTerm.desc(t.date)]))
-          .watch();
+      _stream =
+          (_db.select(_db.commissionLedger)
+                ..where((t) => t.userId.equals(userId))
+                ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+              .watch();
     }
   }
 
@@ -67,12 +68,15 @@ class _CommissionLedgerScreenState
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: Colors.green.shade100,
-                    child:
-                        const Icon(Icons.currency_rupee, color: Colors.green),
+                    child: const Icon(
+                      Icons.currency_rupee,
+                      color: Colors.green,
+                    ),
                   ),
                   title: Text("Sale: ₹${item.saleAmount.toStringAsFixed(0)}"),
                   subtitle: Text(
-                      "Date: ${DateFormat('dd MMM yyyy').format(item.date)}\nFarmer ID: ${item.farmerId.substring(0, 5)}..."),
+                    "Date: ${DateFormat('dd MMM yyyy').format(item.date)}\nFarmer ID: ${item.farmerId.substring(0, 5)}...",
+                  ),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,12 +84,16 @@ class _CommissionLedgerScreenState
                       Text(
                         "+ ₹${item.commissionAmount.toStringAsFixed(0)}",
                         style: const TextStyle(
-                            color: Colors.green, fontWeight: FontWeight.bold),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         "Comm (${item.commissionRate}%)",
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),

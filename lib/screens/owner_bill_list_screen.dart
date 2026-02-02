@@ -50,9 +50,9 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating bill: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error updating bill: $e')));
       }
     }
   }
@@ -164,9 +164,9 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error printing: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error printing: $e')));
       }
     }
   }
@@ -209,8 +209,10 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
             child: Center(
               child: Text(
                 '${(fontSize / 12.0 * 100).toStringAsFixed(0)}%',
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -232,8 +234,9 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
         ],
       ),
       body: StreamBuilder<List<Bill>>(
-        stream: sl<BillsRepository>()
-            .watchAll(userId: sl<SessionManager>().ownerId ?? ''),
+        stream: sl<BillsRepository>().watchAll(
+          userId: sl<SessionManager>().ownerId ?? '',
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -251,8 +254,9 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
           }
 
           final allBills = snapshot.data ?? [];
-          final bills =
-              allBills.where((b) => b.customerId == widget.customerId).toList();
+          final bills = allBills
+              .where((b) => b.customerId == widget.customerId)
+              .toList();
 
           // Sort descending by date
           bills.sort((a, b) => b.date.compareTo(a.date));
@@ -262,18 +266,11 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.receipt_long,
-                    size: 64,
-                    color: Colors.grey[300],
-                  ),
+                  Icon(Icons.receipt_long, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
                   Text(
                     'No bills found',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -404,10 +401,12 @@ class _OwnerBillListScreenState extends State<OwnerBillListScreen> {
                                       _markBillPaid(bill, true);
                                     }
                                   },
-                                  icon:
-                                      Icon(isPaid ? Icons.close : Icons.check),
+                                  icon: Icon(
+                                    isPaid ? Icons.close : Icons.check,
+                                  ),
                                   label: Text(
-                                      isPaid ? 'Mark Unpaid' : 'Mark Paid'),
+                                    isPaid ? 'Mark Unpaid' : 'Mark Paid',
+                                  ),
                                 ),
                               ),
                             ],

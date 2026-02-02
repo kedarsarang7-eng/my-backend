@@ -60,8 +60,9 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('Marketing Campaigns'),
         backgroundColor: Colors.transparent,
@@ -82,18 +83,16 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _campaigns.isEmpty
-                    ? _buildEmptyState(isDark)
-                    : RefreshIndicator(
-                        onRefresh: _loadCampaigns,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _campaigns.length,
-                          itemBuilder: (_, i) => _buildCampaignCard(
-                            _campaigns[i],
-                            isDark,
-                          ),
-                        ),
-                      ),
+                ? _buildEmptyState(isDark)
+                : RefreshIndicator(
+                    onRefresh: _loadCampaigns,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _campaigns.length,
+                      itemBuilder: (_, i) =>
+                          _buildCampaignCard(_campaigns[i], isDark),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -114,8 +113,9 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
 
   Widget _buildSummaryCards(bool isDark) {
     int total = _campaigns.length;
-    int running =
-        _campaigns.where((c) => c.status == CampaignStatus.running).length;
+    int running = _campaigns
+        .where((c) => c.status == CampaignStatus.running)
+        .length;
     int sent = _campaigns.fold(0, (sum, c) => sum + c.sentCount);
 
     return Padding(
@@ -123,20 +123,40 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
       child: Row(
         children: [
           _buildStatCard(
-              'Total', total.toString(), Icons.campaign, Colors.blue, isDark),
+            'Total',
+            total.toString(),
+            Icons.campaign,
+            Colors.blue,
+            isDark,
+          ),
           const SizedBox(width: 12),
-          _buildStatCard('Running', running.toString(), Icons.play_circle,
-              Colors.green, isDark),
+          _buildStatCard(
+            'Running',
+            running.toString(),
+            Icons.play_circle,
+            Colors.green,
+            isDark,
+          ),
           const SizedBox(width: 12),
-          _buildStatCard('Messages', sent.toString(), Icons.message,
-              Colors.purple, isDark),
+          _buildStatCard(
+            'Messages',
+            sent.toString(),
+            Icons.message,
+            Colors.purple,
+            isDark,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildStatCard(
-      String label, String value, IconData icon, Color color, bool isDark) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(14),
@@ -199,8 +219,9 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
                 _loadCampaigns();
               },
               backgroundColor: isDark ? Colors.white10 : Colors.grey[100],
-              selectedColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              selectedColor: Theme.of(
+                context,
+              ).colorScheme.primary.withOpacity(0.2),
             ),
           );
         }).toList(),
@@ -273,8 +294,10 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
 
                 // Status Badge
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(6),
@@ -298,11 +321,17 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
               children: [
                 _buildStat(Icons.people, '${campaign.totalRecipients}', isDark),
                 const SizedBox(width: 16),
-                _buildStat(Icons.check_circle_outline, '${campaign.sentCount}',
-                    isDark),
+                _buildStat(
+                  Icons.check_circle_outline,
+                  '${campaign.sentCount}',
+                  isDark,
+                ),
                 const SizedBox(width: 16),
                 _buildStat(
-                    Icons.error_outline, '${campaign.failedCount}', isDark),
+                  Icons.error_outline,
+                  '${campaign.failedCount}',
+                  isDark,
+                ),
                 const Spacer(),
                 Text(
                   DateFormat('dd MMM').format(campaign.createdAt),
@@ -357,9 +386,7 @@ class _CampaignsListScreenState extends State<CampaignsListScreen> {
           const SizedBox(height: 8),
           Text(
             'Create your first WhatsApp campaign',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.grey,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.grey),
           ),
         ],
       ),

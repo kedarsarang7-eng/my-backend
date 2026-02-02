@@ -63,9 +63,9 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                 title: Text(
                   businessType.displayName, // Use displayName from Extension
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 background: Container(
@@ -128,10 +128,8 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                       // Quick Tips Section
                       Text(
                         'Quick Tips',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       ModernCard(
@@ -181,11 +179,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             color: FuturisticColors.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(AppBorderRadius.md),
           ),
-          child: Icon(
-            icon,
-            color: FuturisticColors.primary,
-            size: 20,
-          ),
+          child: Icon(icon, color: FuturisticColors.primary, size: 20),
         ),
         const SizedBox(width: AppSpacing.md),
         Expanded(
@@ -194,16 +188,16 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 description,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: FuturisticColors.textSecondary,
-                    ),
+                  color: FuturisticColors.textSecondary,
+                ),
               ),
             ],
           ),

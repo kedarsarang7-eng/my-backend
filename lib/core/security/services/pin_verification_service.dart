@@ -25,8 +25,8 @@ class PinVerificationService {
   PinVerificationService({
     required OwnerPinService pinService,
     required AuditRepository auditRepository,
-  })  : _pinService = pinService,
-        _auditRepository = auditRepository;
+  }) : _pinService = pinService,
+       _auditRepository = auditRepository;
 
   /// Check if an action requires PIN for a specific business
   Future<bool> requiresPinFor({
@@ -185,7 +185,8 @@ class PinVerificationService {
         targetTableName: 'pin_authorization',
         recordId: referenceId ?? businessId,
         action: success ? 'AUTHORIZE' : 'DENY',
-        newValueJson: '''{
+        newValueJson:
+            '''{
           "action": "${action.name}",
           "success": $success,
           "severity": "${action.severity.name}",
@@ -212,7 +213,8 @@ class PinVerificationService {
         targetTableName: 'fraud_alerts',
         recordId: referenceId ?? businessId,
         action: 'CREATE',
-        newValueJson: '''{
+        newValueJson:
+            '''{
           "alertType": "CRITICAL_ACTION",
           "action": "${action.name}",
           "severity": "HIGH",

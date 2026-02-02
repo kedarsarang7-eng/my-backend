@@ -6,8 +6,9 @@ import '../../domain/entities/bill_template.dart';
 import '../providers/settings_providers.dart';
 
 // State for the current edits
-final editingTemplateProvider =
-    NotifierProvider<EditingTemplate, BillTemplate>(EditingTemplate.new);
+final editingTemplateProvider = NotifierProvider<EditingTemplate, BillTemplate>(
+  EditingTemplate.new,
+);
 
 class EditingTemplate extends Notifier<BillTemplate> {
   @override
@@ -48,7 +49,9 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                          blurRadius: 5, color: Colors.grey.withOpacity(0.2))
+                        blurRadius: 5,
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
                     ],
                   ),
                   child: SingleChildScrollView(
@@ -58,18 +61,29 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                         crossAxisAlignment: _getAlign(template.headerAlignment),
                         children: [
                           if (template.showLogo)
-                            const Icon(Icons.store,
-                                size: 50, color: Colors.indigo),
+                            const Icon(
+                              Icons.store,
+                              size: 50,
+                              color: Colors.indigo,
+                            ),
                           if (template.showShopName)
-                            const Text('DUKAN EXTRA',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                            const Text(
+                              'DUKAN EXTRA',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           if (template.showAddress)
-                            const Text('123, Market Yard, Pune - 411037',
-                                style: TextStyle(color: Colors.grey)),
+                            const Text(
+                              '123, Market Yard, Pune - 411037',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           if (template.showPhone)
-                            const Text('Phone: 9876543210',
-                                style: TextStyle(color: Colors.grey)),
+                            const Text(
+                              'Phone: 9876543210',
+                              style: TextStyle(color: Colors.grey),
+                            ),
 
                           const Divider(thickness: 2),
 
@@ -77,45 +91,69 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                           Table(
                             border: TableBorder.all(color: Colors.black12),
                             children: const [
-                              TableRow(children: [
-                                Padding(
+                              TableRow(
+                                children: [
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('Item',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                                Padding(
+                                    child: Text(
+                                      'Item',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('Qty',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                                Padding(
+                                    child: Text(
+                                      'Qty',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('Amount',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                              ]),
-                              TableRow(children: [
-                                Padding(
+                                    child: Text(
+                                      'Amount',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TableRow(
+                                children: [
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('Sugar')),
-                                Padding(
+                                    child: Text('Sugar'),
+                                  ),
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('2 kg')),
-                                Padding(
+                                    child: Text('2 kg'),
+                                  ),
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('80.00')),
-                              ]),
-                              TableRow(children: [
-                                Padding(
+                                    child: Text('80.00'),
+                                  ),
+                                ],
+                              ),
+                              TableRow(
+                                children: [
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('Oil')),
-                                Padding(
+                                    child: Text('Oil'),
+                                  ),
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('1 L')),
-                                Padding(
+                                    child: Text('1 L'),
+                                  ),
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text('120.00')),
-                              ]),
+                                    child: Text('120.00'),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
 
@@ -128,19 +166,26 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                                 children: [
                                   if (template.showTax)
                                     const Text('Tax (5%): 10.00'),
-                                  const Text('Total: 210.00',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold)),
+                                  const Text(
+                                    'Total: 210.00',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                           const Divider(thickness: 2),
                           Center(
-                              child: Text(template.footerText,
-                                  style: const TextStyle(
-                                      fontStyle: FontStyle.italic))),
+                            child: Text(
+                              template.footerText,
+                              style: const TextStyle(
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -156,8 +201,10 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
-                      const Text('Header Settings',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Header Settings',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       SwitchListTile(
                         title: const Text('Show Logo'),
                         value: template.showLogo,
@@ -177,12 +224,15 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                         value: template.showAddress,
                         onChanged: (v) => ref
                             .read(editingTemplateProvider.notifier)
-                            .setTemplate(template.copyWith(
-                                showAddress: v, showPhone: v)),
+                            .setTemplate(
+                              template.copyWith(showAddress: v, showPhone: v),
+                            ),
                       ),
                       const Divider(),
-                      const Text('Columns',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Columns',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       SwitchListTile(
                         title: const Text('Show Tax Breakdown'),
                         value: template.showTax,
@@ -191,8 +241,10 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                             .setTemplate(template.copyWith(showTax: v)),
                       ),
                       const Divider(),
-                      const Text('Alignment',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Alignment',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       SegmentedButton<String>(
                         segments: const [
                           ButtonSegment(value: 'left', label: Text('Left')),
@@ -203,16 +255,22 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
                         onSelectionChanged: (Set<String> newSelection) {
                           ref
                               .read(editingTemplateProvider.notifier)
-                              .setTemplate(template.copyWith(
-                                  headerAlignment: newSelection.first));
+                              .setTemplate(
+                                template.copyWith(
+                                  headerAlignment: newSelection.first,
+                                ),
+                              );
                         },
                       ),
                       const Divider(),
-                      const Text('Footer',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Footer',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       TextField(
-                        decoration:
-                            const InputDecoration(hintText: 'Footer Text'),
+                        decoration: const InputDecoration(
+                          hintText: 'Footer Text',
+                        ),
                         onChanged: (v) => ref
                             .read(editingTemplateProvider.notifier)
                             .setTemplate(template.copyWith(footerText: v)),
@@ -228,8 +286,8 @@ class BillTemplateDesignerScreen extends ConsumerWidget {
 
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Template Saved!')));
+                              const SnackBar(content: Text('Template Saved!')),
+                            );
                           }
                         },
                         child: const Text('Save Template'),

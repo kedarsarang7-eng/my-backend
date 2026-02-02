@@ -39,12 +39,13 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
   Future<void> _loadLinkedShops() async {
     if (widget.customer == null) return;
     try {
-      final connections =
-          await sl<ConnectionService>().getAcceptedConnections();
+      final connections = await sl<ConnectionService>()
+          .getAcceptedConnections();
       if (mounted) {
         setState(() {
-          _linkedShops =
-              connections.map((c) => c['vendorId'] as String).toList();
+          _linkedShops = connections
+              .map((c) => c['vendorId'] as String)
+              .toList();
           // Auto-select first shop if none selected
           if (_selectedShopId == null && _linkedShops.isNotEmpty) {
             _selectedShopId = _linkedShops.first;
@@ -73,25 +74,16 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
         controller: _tabController,
         children: [
           // Account Overview Tab (for selected shop)
-          _AccountOverviewTab(
-            customerId: customerId,
-            shopId: _selectedShopId,
-          ),
+          _AccountOverviewTab(customerId: customerId, shopId: _selectedShopId),
           // Bill Details Tab (for selected shop)
-          CustomerLiveBillsTab(
-            customerId: customerId,
-            shopId: _selectedShopId,
-          ),
+          CustomerLiveBillsTab(customerId: customerId, shopId: _selectedShopId),
           // Udhar tab (Always available, filtered by shop ideally)
           // UdharTab might need update to support filtering, but for now passing customerId
           customerId.isNotEmpty
               ? UdharTab(customerId: customerId)
               : const Center(child: Text('Customer ID not available')),
           // Report tab (for selected shop)
-          _DailyReportTab(
-            customerId: customerId,
-            shopId: _selectedShopId,
-          ),
+          _DailyReportTab(customerId: customerId, shopId: _selectedShopId),
           // NEW: Total Bill of Every Shop
           _TotalBillsAllShopsTab(
             customerId: customerId,
@@ -117,9 +109,9 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
             Text(
               'Welcome, $customerName',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: Colors.blue.shade700,
-                  ),
+                fontWeight: FontWeight.w800,
+                color: Colors.blue.shade700,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -132,12 +124,15 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
                     Text(
                       'Shop: $_selectedShopId',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey.shade800,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const Icon(Icons.arrow_drop_down,
-                        size: 16, color: Colors.grey),
+                    const Icon(
+                      Icons.arrow_drop_down,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                   ],
                 ),
               )
@@ -145,9 +140,9 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
               Text(
                 'Select a shop',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
           ],
         ),
@@ -243,9 +238,8 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ShopManagementScreen(
-                      customer: widget.customer,
-                    ),
+                    builder: (context) =>
+                        ShopManagementScreen(customer: widget.customer),
                   ),
                 ).then((_) => _loadLinkedShops());
               },
@@ -287,18 +281,20 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
                 padding: EdgeInsets.all(8.0),
                 child: Text('No linked shops found.'),
               ),
-            ..._linkedShops.map((shopId) => ListTile(
-                  leading: const Icon(Icons.store),
-                  title: Text('Shop ID: $shopId'),
-                  selected: shopId == _selectedShopId,
-                  trailing: shopId == _selectedShopId
-                      ? const Icon(Icons.check, color: Colors.blue)
-                      : null,
-                  onTap: () {
-                    setState(() => _selectedShopId = shopId);
-                    Navigator.pop(context);
-                  },
-                )),
+            ..._linkedShops.map(
+              (shopId) => ListTile(
+                leading: const Icon(Icons.store),
+                title: Text('Shop ID: $shopId'),
+                selected: shopId == _selectedShopId,
+                trailing: shopId == _selectedShopId
+                    ? const Icon(Icons.check, color: Colors.blue)
+                    : null,
+                onTap: () {
+                  setState(() => _selectedShopId = shopId);
+                  Navigator.pop(context);
+                },
+              ),
+            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.add),
@@ -308,13 +304,12 @@ class _ProfessionalCustomerPortalState extends State<ProfessionalCustomerPortal>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ShopManagementScreen(
-                      customer: widget.customer,
-                    ),
+                    builder: (context) =>
+                        ShopManagementScreen(customer: widget.customer),
                   ),
                 ).then((_) => _loadLinkedShops());
               },
-            )
+            ),
           ],
         ),
       ),
@@ -326,10 +321,7 @@ class _AccountOverviewTab extends StatelessWidget {
   final String customerId;
   final String? shopId;
 
-  const _AccountOverviewTab({
-    required this.customerId,
-    this.shopId,
-  });
+  const _AccountOverviewTab({required this.customerId, this.shopId});
 
   @override
   Widget build(BuildContext context) {
@@ -339,8 +331,10 @@ class _AccountOverviewTab extends StatelessWidget {
     // Use BillsRepository to watch bills for this customer
     // Note: shopId here refers to the owner/vendor ID
     return StreamBuilder<List<Bill>>(
-      stream: sl<BillsRepository>()
-          .watchAll(userId: shopId!, customerId: customerId),
+      stream: sl<BillsRepository>().watchAll(
+        userId: shopId!,
+        customerId: customerId,
+      ),
       builder: (context, snap) {
         double totalPurchase = 0;
         double totalPaid = 0;
@@ -356,8 +350,10 @@ class _AccountOverviewTab extends StatelessWidget {
           for (var bill in bills) {
             totalPurchase += bill.subtotal;
             totalPaid += bill.paidAmount;
-            final pending =
-                (bill.subtotal - bill.paidAmount).clamp(0.0, double.infinity);
+            final pending = (bill.subtotal - bill.paidAmount).clamp(
+              0.0,
+              double.infinity,
+            );
             pendingDues += pending;
 
             if (bill.isPaid || bill.status.toLowerCase() == 'paid') {
@@ -400,11 +396,11 @@ class _AccountOverviewTab extends StatelessWidget {
                     children: [
                       Text(
                         'Total Pending Dues',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                       const Icon(
                         Icons.warning_rounded,
@@ -417,9 +413,9 @@ class _AccountOverviewTab extends StatelessWidget {
                   Text(
                     '₹${pendingDues.toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -427,8 +423,8 @@ class _AccountOverviewTab extends StatelessWidget {
                         ? 'All clear! No pending dues.'
                         : 'Due soon - please settle',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withOpacity(0.85),
-                        ),
+                      color: Colors.white.withOpacity(0.85),
+                    ),
                   ),
                 ],
               ),
@@ -472,27 +468,36 @@ class _AccountOverviewTab extends StatelessWidget {
             // Account Summary
             Text(
               'Account Summary',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
-            _buildSummaryRow(context, 'Total Purchases',
-                '₹${totalPurchase.toStringAsFixed(2)}'),
+            _buildSummaryRow(
+              context,
+              'Total Purchases',
+              '₹${totalPurchase.toStringAsFixed(2)}',
+            ),
             const Divider(),
             _buildSummaryRow(
-                context, 'Amount Paid', '₹${totalPaid.toStringAsFixed(2)}'),
+              context,
+              'Amount Paid',
+              '₹${totalPaid.toStringAsFixed(2)}',
+            ),
             const Divider(),
             _buildSummaryRow(
-                context, 'Pending Dues', '₹${pendingDues.toStringAsFixed(2)}',
-                isHighlight: true),
+              context,
+              'Pending Dues',
+              '₹${pendingDues.toStringAsFixed(2)}',
+              isHighlight: true,
+            ),
             const SizedBox(height: 24),
             // Payment Methods
             Text(
               'Quick Payment',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
             // ... payment buttons ...
@@ -524,16 +529,16 @@ class _AccountOverviewTab extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: color,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             title,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -556,18 +561,18 @@ class _AccountOverviewTab extends StatelessWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isHighlight
-                      ? FuturisticColors.error
-                      : Colors.grey.shade700,
-                  fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
-                ),
+              color: isHighlight
+                  ? FuturisticColors.error
+                  : Colors.grey.shade700,
+              fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w500,
+            ),
           ),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isHighlight ? FuturisticColors.error : Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: isHighlight ? FuturisticColors.error : Colors.black,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),
@@ -579,10 +584,7 @@ class _DailyReportTab extends StatelessWidget {
   final String customerId;
   final String? shopId;
 
-  const _DailyReportTab({
-    required this.customerId,
-    this.shopId,
-  });
+  const _DailyReportTab({required this.customerId, this.shopId});
 
   @override
   Widget build(BuildContext context) {
@@ -594,8 +596,10 @@ class _DailyReportTab extends StatelessWidget {
     }
 
     return StreamBuilder<List<Bill>>(
-      stream: sl<BillsRepository>()
-          .watchAll(userId: shopId!, customerId: customerId),
+      stream: sl<BillsRepository>().watchAll(
+        userId: shopId!,
+        customerId: customerId,
+      ),
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -608,14 +612,17 @@ class _DailyReportTab extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.assignment_outlined,
-                    size: 60, color: Colors.grey.shade300),
+                Icon(
+                  Icons.assignment_outlined,
+                  size: 60,
+                  color: Colors.grey.shade300,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'No transactions yet',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.grey.shade500,
-                      ),
+                    color: Colors.grey.shade500,
+                  ),
                 ),
               ],
             ),
@@ -633,8 +640,10 @@ class _DailyReportTab extends StatelessWidget {
         for (var bill in bills) {
           totalAmount += bill.subtotal;
           amountPaid += bill.paidAmount;
-          pendingAmount +=
-              (bill.subtotal - bill.paidAmount).clamp(0.0, double.infinity);
+          pendingAmount += (bill.subtotal - bill.paidAmount).clamp(
+            0.0,
+            double.infinity,
+          );
 
           final dateKey = DateFormat('yyyy-MM-dd').format(bill.date);
           groupedBills.putIfAbsent(dateKey, () => []).add(bill);
@@ -648,9 +657,9 @@ class _DailyReportTab extends StatelessWidget {
           children: [
             Text(
               'Daily Report ($shopId)',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             // ... Rest of the report code ...
             const SizedBox(height: 12),
@@ -668,21 +677,30 @@ class _DailyReportTab extends StatelessWidget {
                   Text(
                     'Summary',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.blue.shade700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blue.shade700,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryRow(context, 'Total Bills', '$totalBills'),
                   const SizedBox(height: 8),
-                  _buildSummaryRow(context, 'Total Amount',
-                      '₹${totalAmount.toStringAsFixed(2)}'),
+                  _buildSummaryRow(
+                    context,
+                    'Total Amount',
+                    '₹${totalAmount.toStringAsFixed(2)}',
+                  ),
                   const SizedBox(height: 8),
-                  _buildSummaryRow(context, 'Amount Paid',
-                      '₹${amountPaid.toStringAsFixed(2)}'),
+                  _buildSummaryRow(
+                    context,
+                    'Amount Paid',
+                    '₹${amountPaid.toStringAsFixed(2)}',
+                  ),
                   const SizedBox(height: 8),
-                  _buildSummaryRow(context, 'Pending Amount',
-                      '₹${pendingAmount.toStringAsFixed(2)}'),
+                  _buildSummaryRow(
+                    context,
+                    'Pending Amount',
+                    '₹${pendingAmount.toStringAsFixed(2)}',
+                  ),
                 ],
               ),
             ),
@@ -690,11 +708,14 @@ class _DailyReportTab extends StatelessWidget {
             // Dynamic daily cards
             ...sortedDates.map((dateStr) {
               final dayBills = groupedBills[dateStr]!;
-              final double dayTotal =
-                  dayBills.fold(0, (sum, b) => sum + b.subtotal);
+              final double dayTotal = dayBills.fold(
+                0,
+                (sum, b) => sum + b.subtotal,
+              );
 
-              final bool anyPending = dayBills
-                  .any((b) => !b.isPaid && b.status.toLowerCase() != 'paid');
+              final bool anyPending = dayBills.any(
+                (b) => !b.isPaid && b.status.toLowerCase() != 'paid',
+              );
               String statusText = 'Paid';
               Color statusColor = FuturisticColors.success;
               if (anyPending) {
@@ -713,10 +734,14 @@ class _DailyReportTab extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('₹${dayTotal.toStringAsFixed(0)}',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Text(statusText,
-                          style: TextStyle(color: statusColor, fontSize: 12)),
+                      Text(
+                        '₹${dayTotal.toStringAsFixed(0)}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        statusText,
+                        style: TextStyle(color: statusColor, fontSize: 12),
+                      ),
                     ],
                   ),
                 ),
@@ -756,8 +781,10 @@ class CustomerLiveBillsTab extends StatelessWidget {
     }
 
     return StreamBuilder<List<Bill>>(
-      stream: sl<BillsRepository>()
-          .watchAll(userId: shopId!, customerId: customerId!),
+      stream: sl<BillsRepository>().watchAll(
+        userId: shopId!,
+        customerId: customerId!,
+      ),
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -777,12 +804,14 @@ class CustomerLiveBillsTab extends StatelessWidget {
             .length;
         final pendingBills = totalBills - paidBills;
         final totalPendingAmount = bills.fold<double>(
-            0,
-            (sum, b) =>
-                sum +
-                ((b.subtotal - b.paidAmount).clamp(0.0, double.infinity)));
-        final totalPurchaseAmount =
-            bills.fold<double>(0, (sum, b) => sum + b.subtotal);
+          0,
+          (sum, b) =>
+              sum + ((b.subtotal - b.paidAmount).clamp(0.0, double.infinity)),
+        );
+        final totalPurchaseAmount = bills.fold<double>(
+          0,
+          (sum, b) => sum + b.subtotal,
+        );
 
         return ListView(
           padding: const EdgeInsets.all(16),
@@ -791,66 +820,92 @@ class CustomerLiveBillsTab extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                    child: _metricCard(context, 'Total Bills',
-                        totalBills.toString(), Colors.blue)),
+                  child: _metricCard(
+                    context,
+                    'Total Bills',
+                    totalBills.toString(),
+                    Colors.blue,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
-                    child: _metricCard(context, 'Bills Paid',
-                        paidBills.toString(), FuturisticColors.success)),
+                  child: _metricCard(
+                    context,
+                    'Bills Paid',
+                    paidBills.toString(),
+                    FuturisticColors.success,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
-                    child: _metricCard(context, 'Pending',
-                        pendingBills.toString(), Colors.orange)),
+                  child: _metricCard(
+                    context,
+                    'Pending',
+                    pendingBills.toString(),
+                    Colors.orange,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
-                    child: _metricCard(
-                        context,
-                        'Pending Amount',
-                        '₹${totalPendingAmount.toStringAsFixed(2)}',
-                        FuturisticColors.error)),
+                  child: _metricCard(
+                    context,
+                    'Pending Amount',
+                    '₹${totalPendingAmount.toStringAsFixed(2)}',
+                    FuturisticColors.error,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
-                    child: _metricCard(
-                        context,
-                        'Total Purchases',
-                        '₹${totalPurchaseAmount.toStringAsFixed(2)}',
-                        Colors.purple)),
+                  child: _metricCard(
+                    context,
+                    'Total Purchases',
+                    '₹${totalPurchaseAmount.toStringAsFixed(2)}',
+                    Colors.purple,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 16),
 
             // Bills list
-            ...bills.map((b) => Card(
-                  child: ListTile(
-                    title: Text(
-                        b.invoiceNumber.isNotEmpty ? b.invoiceNumber : b.id),
-                    subtitle: Text(DateFormat('dd/MM/yyyy').format(b.date)),
-                    trailing: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text('₹${b.subtotal.toStringAsFixed(2)}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 4),
-                        Text(b.status,
-                            style: TextStyle(
-                                color: (b.status.toLowerCase() == 'paid')
-                                    ? FuturisticColors.success
-                                    : Colors.orange)),
-                      ],
-                    ),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Bill ${b.invoiceNumber}')),
-                      );
-                    },
+            ...bills.map(
+              (b) => Card(
+                child: ListTile(
+                  title: Text(
+                    b.invoiceNumber.isNotEmpty ? b.invoiceNumber : b.id,
                   ),
-                ))
+                  subtitle: Text(DateFormat('dd/MM/yyyy').format(b.date)),
+                  trailing: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '₹${b.subtotal.toStringAsFixed(2)}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        b.status,
+                        style: TextStyle(
+                          color: (b.status.toLowerCase() == 'paid')
+                              ? FuturisticColors.success
+                              : Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Bill ${b.invoiceNumber}')),
+                    );
+                  },
+                ),
+              ),
+            ),
           ],
         );
       },
@@ -858,7 +913,11 @@ class CustomerLiveBillsTab extends StatelessWidget {
   }
 
   Widget _metricCard(
-      BuildContext context, String title, String value, Color color) {
+    BuildContext context,
+    String title,
+    String value,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -869,17 +928,20 @@ class CustomerLiveBillsTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700, color: color)),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(title,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: Colors.grey[700])),
+          Text(
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey[700]),
+          ),
         ],
       ),
     );
@@ -924,8 +986,10 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
           grandTotalBills += bills.length;
           for (var bill in bills) {
             grandTotalAmount += bill.subtotal;
-            grandTotalPending +=
-                (bill.subtotal - bill.paidAmount).clamp(0.0, double.infinity);
+            grandTotalPending += (bill.subtotal - bill.paidAmount).clamp(
+              0.0,
+              double.infinity,
+            );
           }
         }
 
@@ -958,10 +1022,14 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _grandSummaryItem('Total Bills', '$grandTotalBills'),
-                      _grandSummaryItem('Total Amount',
-                          '₹${grandTotalAmount.toStringAsFixed(0)}'),
-                      _grandSummaryItem('Pending',
-                          '₹${grandTotalPending.toStringAsFixed(0)}'),
+                      _grandSummaryItem(
+                        'Total Amount',
+                        '₹${grandTotalAmount.toStringAsFixed(0)}',
+                      ),
+                      _grandSummaryItem(
+                        'Pending',
+                        '₹${grandTotalPending.toStringAsFixed(0)}',
+                      ),
                     ],
                   ),
                 ],
@@ -971,13 +1039,16 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
             ...linkedShops.map((shopId) {
               final shopBills = shopBillsMap[shopId] ?? [];
               final totalCount = shopBills.length;
-              final totalAmount =
-                  shopBills.fold(0.0, (sum, b) => sum + b.subtotal);
+              final totalAmount = shopBills.fold(
+                0.0,
+                (sum, b) => sum + b.subtotal,
+              );
               final totalPending = shopBills.fold(
-                  0.0,
-                  (sum, b) =>
-                      sum +
-                      (b.subtotal - b.paidAmount).clamp(0.0, double.infinity));
+                0.0,
+                (sum, b) =>
+                    sum +
+                    (b.subtotal - b.paidAmount).clamp(0.0, double.infinity),
+              );
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
@@ -993,7 +1064,9 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
                           Text(
                             'Shop ID: $shopId',
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
@@ -1002,13 +1075,17 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _summaryColumn('Total Bills', '$totalCount'),
-                          _summaryColumn('Total Amount',
-                              '₹${totalAmount.toStringAsFixed(0)}'),
                           _summaryColumn(
-                              'Pending', '₹${totalPending.toStringAsFixed(0)}',
-                              isWarning: totalPending > 0),
+                            'Total Amount',
+                            '₹${totalAmount.toStringAsFixed(0)}',
+                          ),
+                          _summaryColumn(
+                            'Pending',
+                            '₹${totalPending.toStringAsFixed(0)}',
+                            isWarning: totalPending > 0,
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -1052,10 +1129,7 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
         ),
       ],
     );
@@ -1067,11 +1141,14 @@ class _TotalBillsAllShopsTab extends StatelessWidget {
       children: [
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
         const SizedBox(height: 4),
-        Text(value,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: isWarning ? FuturisticColors.error : Colors.black)),
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: isWarning ? FuturisticColors.error : Colors.black,
+          ),
+        ),
       ],
     );
   }

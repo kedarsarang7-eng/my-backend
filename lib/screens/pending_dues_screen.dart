@@ -30,9 +30,12 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: Text('Udhar Dashboard',
-            style: AppTypography.headlineMedium
-                .copyWith(color: isDark ? Colors.white : Colors.black87)),
+        title: Text(
+          'Udhar Dashboard',
+          style: AppTypography.headlineMedium.copyWith(
+            color: isDark ? Colors.white : Colors.black87,
+          ),
+        ),
         iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
       ),
       body: Container(
@@ -43,13 +46,17 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
         ),
         child: SafeArea(
           child: StreamBuilder<List<Bill>>(
-            stream: sl<BillsRepository>()
-                .watchAll(userId: sl<SessionManager>().ownerId ?? ''),
+            stream: sl<BillsRepository>().watchAll(
+              userId: sl<SessionManager>().ownerId ?? '',
+            ),
             builder: (context, snap) {
               if (snap.hasError) {
                 return Center(
-                    child: Text('Error: ${snap.error}',
-                        style: TextStyle(color: FuturisticColors.error)));
+                  child: Text(
+                    'Error: ${snap.error}',
+                    style: TextStyle(color: FuturisticColors.error),
+                  ),
+                );
               }
               if (!snap.hasData) {
                 return const Center(child: CircularProgressIndicator());
@@ -91,23 +98,30 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
 
                   // Search
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: GlassContainer(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: TextField(
                         controller: _searchCtrl,
                         style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black),
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Search invoice #...',
                           hintStyle: TextStyle(
-                              color: isDark ? Colors.white54 : Colors.grey),
-                          icon: Icon(Icons.search,
-                              color: isDark ? Colors.white54 : Colors.grey),
+                            color: isDark ? Colors.white54 : Colors.grey,
+                          ),
+                          icon: Icon(
+                            Icons.search,
+                            color: isDark ? Colors.white54 : Colors.grey,
+                          ),
                           border: InputBorder.none,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
                         ),
                         onChanged: (_) => setState(() {}),
                       ),
@@ -148,14 +162,20 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text('Total Outstanding Udhar',
-                style: AppTypography.bodyMedium.copyWith(
-                    color: Colors.white70, fontWeight: FontWeight.bold)),
+            Text(
+              'Total Outstanding Udhar',
+              style: AppTypography.bodyMedium.copyWith(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             Text(
               '₹${total.toStringAsFixed(0)}',
-              style: AppTypography.displayMedium
-                  .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+              style: AppTypography.displayMedium.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -164,19 +184,24 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12)),
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Column(
                       children: [
-                        const Text('Overdue (>30d)',
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 12)),
+                        const Text(
+                          'Overdue (>30d)',
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
                         const SizedBox(height: 4),
-                        Text('₹${overdue.toStringAsFixed(0)}',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16)),
+                        Text(
+                          '₹${overdue.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -186,19 +211,24 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12)),
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Column(
                       children: [
-                        const Text('Recent',
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 12)),
+                        const Text(
+                          'Recent',
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
                         const SizedBox(height: 4),
-                        Text('₹${(total - overdue).toStringAsFixed(0)}',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16)),
+                        Text(
+                          '₹${(total - overdue).toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -235,64 +265,75 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
                             ? bill.customerName
                             : 'Unknown Customer',
                         style: AppTypography.bodyLarge.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                       ),
                       Text(
                         'Invoice #${bill.invoiceNumber}',
                         style: AppTypography.bodySmall.copyWith(
-                            color: isDark ? Colors.white54 : Colors.grey),
+                          color: isDark ? Colors.white54 : Colors.grey,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: isOverdue
                         ? FuturisticColors.error.withOpacity(0.1)
                         : FuturisticColors.warning.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: isOverdue
-                            ? FuturisticColors.error.withOpacity(0.3)
-                            : FuturisticColors.warning.withOpacity(0.3)),
+                      color: isOverdue
+                          ? FuturisticColors.error.withOpacity(0.3)
+                          : FuturisticColors.warning.withOpacity(0.3),
+                    ),
                   ),
                   child: Text(
                     '₹${pending.toStringAsFixed(0)} Left',
                     style: TextStyle(
-                        color: isOverdue
-                            ? FuturisticColors.error
-                            : FuturisticColors.warning,
-                        fontWeight: FontWeight.bold),
+                      color: isOverdue
+                          ? FuturisticColors.error
+                          : FuturisticColors.warning,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
             Divider(
-                height: 24,
-                color: isDark ? Colors.white10 : FuturisticColors.divider),
+              height: 24,
+              color: isDark ? Colors.white10 : FuturisticColors.divider,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    Icon(Icons.calendar_today,
-                        size: 14,
-                        color: isOverdue
-                            ? FuturisticColors.error
-                            : (isDark ? Colors.white54 : Colors.grey)),
+                    Icon(
+                      Icons.calendar_today,
+                      size: 14,
+                      color: isOverdue
+                          ? FuturisticColors.error
+                          : (isDark ? Colors.white54 : Colors.grey),
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       DateFormat('dd MMM yyyy').format(bill.date),
                       style: TextStyle(
-                          fontSize: 12,
-                          color: isOverdue
-                              ? FuturisticColors.error
-                              : (isDark ? Colors.white54 : Colors.grey),
-                          fontWeight:
-                              isOverdue ? FontWeight.bold : FontWeight.normal),
+                        fontSize: 12,
+                        color: isOverdue
+                            ? FuturisticColors.error
+                            : (isDark ? Colors.white54 : Colors.grey),
+                        fontWeight: isOverdue
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
                     ),
                   ],
                 ),
@@ -300,8 +341,10 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
                   onTap: () => _markAsPaid(bill),
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: FuturisticColors.success.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -309,9 +352,10 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
                     child: Text(
                       'Mark Paid',
                       style: TextStyle(
-                          color: FuturisticColors.success,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                        color: FuturisticColors.success,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
@@ -339,8 +383,9 @@ class _PendingDuesScreenState extends ConsumerState<PendingDuesScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Marked as Paid!')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Marked as Paid!')));
       }
     } catch (e) {
       debugPrint('Error marking paid: $e');

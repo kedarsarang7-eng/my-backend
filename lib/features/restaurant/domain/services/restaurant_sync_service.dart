@@ -23,11 +23,11 @@ class RestaurantSyncService {
     RestaurantTableRepository? tableRepo,
     RestaurantBillRepository? billRepo,
     SyncManager? syncManager,
-  })  : _menuRepo = menuRepo ?? FoodMenuRepository(),
-        _orderRepo = orderRepo ?? FoodOrderRepository(),
-        _tableRepo = tableRepo ?? RestaurantTableRepository(),
-        _billRepo = billRepo ?? RestaurantBillRepository(),
-        _syncManager = syncManager ?? SyncManager.instance;
+  }) : _menuRepo = menuRepo ?? FoodMenuRepository(),
+       _orderRepo = orderRepo ?? FoodOrderRepository(),
+       _tableRepo = tableRepo ?? RestaurantTableRepository(),
+       _billRepo = billRepo ?? RestaurantBillRepository(),
+       _syncManager = syncManager ?? SyncManager.instance;
 
   /// Sync all unsynced restaurant data for a vendor
   Future<void> syncAll(String vendorId) async {
@@ -44,13 +44,15 @@ class RestaurantSyncService {
     final unsyncedItems = await _menuRepo.getUnsyncedItems(vendorId);
 
     for (final item in unsyncedItems) {
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: vendorId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'food_menu_items',
-        documentId: item.id,
-        payload: item.toFirestoreMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendorId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'food_menu_items',
+          documentId: item.id,
+          payload: item.toFirestoreMap(),
+        ),
+      );
 
       await _menuRepo.markItemSynced(item.id);
     }
@@ -61,13 +63,15 @@ class RestaurantSyncService {
     final unsyncedOrders = await _orderRepo.getUnsyncedOrders(vendorId);
 
     for (final order in unsyncedOrders) {
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: vendorId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'food_orders',
-        documentId: order.id,
-        payload: order.toFirestoreMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendorId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'food_orders',
+          documentId: order.id,
+          payload: order.toFirestoreMap(),
+        ),
+      );
 
       await _orderRepo.markOrderSynced(order.id);
     }
@@ -78,13 +82,15 @@ class RestaurantSyncService {
     final unsyncedTables = await _tableRepo.getUnsyncedTables(vendorId);
 
     for (final table in unsyncedTables) {
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: vendorId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'restaurant_tables',
-        documentId: table.id,
-        payload: table.toFirestoreMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendorId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'restaurant_tables',
+          documentId: table.id,
+          payload: table.toFirestoreMap(),
+        ),
+      );
 
       await _tableRepo.markTableSynced(table.id);
     }
@@ -95,13 +101,15 @@ class RestaurantSyncService {
     final unsyncedBills = await _billRepo.getUnsyncedBills(vendorId);
 
     for (final bill in unsyncedBills) {
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: vendorId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'restaurant_bills',
-        documentId: bill.id,
-        payload: bill.toFirestoreMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendorId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'restaurant_bills',
+          documentId: bill.id,
+          payload: bill.toFirestoreMap(),
+        ),
+      );
 
       await _billRepo.markBillSynced(bill.id);
     }

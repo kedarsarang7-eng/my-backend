@@ -31,8 +31,10 @@ void main() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
     spySyncManager = SpySyncManager();
     patientRepo = PatientRepository(db: db, syncManager: spySyncManager);
-    prescriptionRepo =
-        PrescriptionRepository(db: db, syncManager: spySyncManager);
+    prescriptionRepo = PrescriptionRepository(
+      db: db,
+      syncManager: spySyncManager,
+    );
   });
 
   tearDown(() async {

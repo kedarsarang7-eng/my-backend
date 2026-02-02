@@ -64,14 +64,16 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
       if (result.isSuccess && result.data != null) {
         setState(() {
           _logs = result.data!
-              .map((log) => AuditEntry(
-                    id: log.id.toString(),
-                    timestamp: log.timestamp,
-                    user: log.deviceId ?? 'Unknown',
-                    action: log.action,
-                    details: '${log.targetTableName}: ${log.recordId}',
-                    severity: _mapActionToSeverity(log.action),
-                  ))
+              .map(
+                (log) => AuditEntry(
+                  id: log.id.toString(),
+                  timestamp: log.timestamp,
+                  user: log.deviceId ?? 'Unknown',
+                  action: log.action,
+                  details: '${log.targetTableName}: ${log.recordId}',
+                  severity: _mapActionToSeverity(log.action),
+                ),
+              )
               .toList();
         });
       }
@@ -94,15 +96,16 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
 
   List<AuditEntry> get _filteredLogs {
     return _logs.where((log) {
-      final matchesSearch = log.details
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase()) ||
-          log.user
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase()) ||
-          log.action
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase());
+      final matchesSearch =
+          log.details.toLowerCase().contains(
+            _searchController.text.toLowerCase(),
+          ) ||
+          log.user.toLowerCase().contains(
+            _searchController.text.toLowerCase(),
+          ) ||
+          log.action.toLowerCase().contains(
+            _searchController.text.toLowerCase(),
+          );
 
       final matchesFilter =
           _selectedFilter == 'All' || log.severity == _selectedFilter;
@@ -127,23 +130,22 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
               filled: true,
               fillColor: FuturisticColors.surface,
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
             ),
             onChanged: (_) => setState(() {}),
           ),
-        )
+        ),
       ],
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: _buildFilters(),
-          ),
+          Padding(padding: const EdgeInsets.all(16), child: _buildFilters()),
           Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _buildLogTable()),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _buildLogTable(),
+          ),
         ],
       ),
     );
@@ -157,7 +159,9 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
         _buildFilterChip('INFO', FuturisticColors.success),
         const SizedBox(width: 8),
         _buildFilterChip(
-            'WARNING', FuturisticColors.accent1), // Yellow/Orange equivalent
+          'WARNING',
+          FuturisticColors.accent1,
+        ), // Yellow/Orange equivalent
         const SizedBox(width: 8),
         _buildFilterChip('CRITICAL', FuturisticColors.error),
       ],
@@ -218,47 +222,62 @@ class _AuditLogScreenState extends State<AuditLogScreen> {
             Expanded(
               child: ListView.separated(
                 itemCount: _filteredLogs.length,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     Divider(height: 1, color: Colors.white.withOpacity(0.05)),
                 itemBuilder: (context, index) {
                   final log = _filteredLogs[index];
                   return Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     color: index % 2 == 0
                         ? Colors.transparent
                         : Colors.white.withOpacity(0.02),
                     child: Row(
                       children: [
                         _bodyCell(
-                            DateFormat('MMM dd HH:mm').format(log.timestamp),
-                            2,
-                            Colors.white70),
+                          DateFormat('MMM dd HH:mm').format(log.timestamp),
+                          2,
+                          Colors.white70,
+                        ),
                         Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: _getSeverityColor(log.severity)
-                                    .withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                    color: _getSeverityColor(log.severity)
-                                        .withOpacity(0.5)),
+                          flex: 1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getSeverityColor(
+                                log.severity,
+                              ).withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: _getSeverityColor(
+                                  log.severity,
+                                ).withOpacity(0.5),
                               ),
-                              child: Text(log.severity,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      // Removed GoogleFonts
-                                      color: _getSeverityColor(log.severity),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold)),
-                            )),
+                            ),
+                            child: Text(
+                              log.severity,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                // Removed GoogleFonts
+                                color: _getSeverityColor(log.severity),
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                         _bodyCell(log.user, 2, Colors.white),
                         _bodyCell(log.action, 2, FuturisticColors.textPrimary),
                         _bodyCell(
-                            log.details, 5, FuturisticColors.textSecondary),
+                          log.details,
+                          5,
+                          FuturisticColors.textSecondary,
+                        ),
                       ],
                     ),
                   );

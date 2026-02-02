@@ -8,11 +8,9 @@ import 'local_storage_service.dart';
 
 /// Keeps local Hive cache and Firestore in sync so bills remain editable offline.
 class BillService {
-  BillService({
-    FirebaseFirestore? firestore,
-    LocalStorageService? localStorage,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _localStorage = localStorage ?? LocalStorageService();
+  BillService({FirebaseFirestore? firestore, LocalStorageService? localStorage})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _localStorage = localStorage ?? LocalStorageService();
 
   final FirebaseFirestore _firestore;
   final LocalStorageService _localStorage;
@@ -20,16 +18,24 @@ class BillService {
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection('bills');
 
-  Stream<List<Bill>> watchBills(
-      {String? ownerId, String? customerId, String? businessId}) {
+  Stream<List<Bill>> watchBills({
+    String? ownerId,
+    String? customerId,
+    String? businessId,
+  }) {
     final controller = StreamController<List<Bill>>.broadcast();
     controller.add(
       _filterCachedBills(
-          ownerId: ownerId, customerId: customerId, businessId: businessId),
+        ownerId: ownerId,
+        customerId: customerId,
+        businessId: businessId,
+      ),
     );
 
-    Query<Map<String, dynamic>> query =
-        _collection.orderBy('date', descending: true);
+    Query<Map<String, dynamic>> query = _collection.orderBy(
+      'date',
+      descending: true,
+    );
     if (ownerId != null && ownerId.isNotEmpty) {
       query = query.where('ownerId', isEqualTo: ownerId);
     }
@@ -41,25 +47,37 @@ class BillService {
     }
 
     StreamSubscription? sub;
-    sub = query.snapshots().listen((snapshot) async {
-      final bills =
-          snapshot.docs.map((doc) => Bill.fromMap(doc.id, doc.data())).toList();
-      await _localStorage.replaceBills(bills);
-      controller.add(
-        _filterCachedBills(
+    sub = query.snapshots().listen(
+      (snapshot) async {
+        final bills = snapshot.docs
+            .map((doc) => Bill.fromMap(doc.id, doc.data()))
+            .toList();
+        await _localStorage.replaceBills(bills);
+        controller.add(
+          _filterCachedBills(
             ownerId: ownerId,
             customerId: customerId,
             businessId: businessId,
-            source: bills),
-      );
-    }, onError: (error, stack) {
-      developer.log('Bill stream error: $error',
-          name: 'BillService', error: error, stackTrace: stack);
-      controller.add(
-        _filterCachedBills(
-            ownerId: ownerId, customerId: customerId, businessId: businessId),
-      );
-    });
+            source: bills,
+          ),
+        );
+      },
+      onError: (error, stack) {
+        developer.log(
+          'Bill stream error: $error',
+          name: 'BillService',
+          error: error,
+          stackTrace: stack,
+        );
+        controller.add(
+          _filterCachedBills(
+            ownerId: ownerId,
+            customerId: customerId,
+            businessId: businessId,
+          ),
+        );
+      },
+    );
 
     controller.onCancel = () {
       sub?.cancel();
@@ -76,12 +94,17 @@ class BillService {
   }) async {
     if (!refresh) {
       final cached = _filterCachedBills(
-          ownerId: ownerId, customerId: customerId, businessId: businessId);
+        ownerId: ownerId,
+        customerId: customerId,
+        businessId: businessId,
+      );
       if (cached.isNotEmpty) return cached;
     }
     try {
-      Query<Map<String, dynamic>> query =
-          _collection.orderBy('date', descending: true);
+      Query<Map<String, dynamic>> query = _collection.orderBy(
+        'date',
+        descending: true,
+      );
       if (ownerId != null && ownerId.isNotEmpty) {
         query = query.where('ownerId', isEqualTo: ownerId);
       }
@@ -92,15 +115,23 @@ class BillService {
         query = query.where('businessId', isEqualTo: businessId);
       }
       final snapshot = await query.get();
-      final bills =
-          snapshot.docs.map((doc) => Bill.fromMap(doc.id, doc.data())).toList();
+      final bills = snapshot.docs
+          .map((doc) => Bill.fromMap(doc.id, doc.data()))
+          .toList();
       await _localStorage.replaceBills(bills);
       return bills;
     } catch (e, stack) {
-      developer.log('fetchBills fallback to cache: $e',
-          name: 'BillService', error: e, stackTrace: stack);
+      developer.log(
+        'fetchBills fallback to cache: $e',
+        name: 'BillService',
+        error: e,
+        stackTrace: stack,
+      );
       final cached = _filterCachedBills(
-          ownerId: ownerId, customerId: customerId, businessId: businessId);
+        ownerId: ownerId,
+        customerId: customerId,
+        businessId: businessId,
+      );
       if (cached.isNotEmpty) return cached;
       rethrow;
     }
@@ -124,8 +155,12 @@ class BillService {
       await _localStorage.setSyncStatus('bill', sanitized.id, true);
       return sanitized;
     } catch (e, stack) {
-      developer.log('Bill save offline, will retry sync: $e',
-          name: 'BillService', error: e, stackTrace: stack);
+      developer.log(
+        'Bill save offline, will retry sync: $e',
+        name: 'BillService',
+        error: e,
+        stackTrace: stack,
+      );
       throw Exception('Bill saved locally. Sync pending. (${e.toString()})');
     }
   }
@@ -141,8 +176,12 @@ class BillService {
       await _collection.doc(sanitized.id).set(sanitized.toMap());
       await _localStorage.setSyncStatus('bill', sanitized.id, true);
     } catch (e, stack) {
-      developer.log('Bill update failed: $e',
-          name: 'BillService', error: e, stackTrace: stack);
+      developer.log(
+        'Bill update failed: $e',
+        name: 'BillService',
+        error: e,
+        stackTrace: stack,
+      );
       throw Exception('Unable to sync bill. ${e.toString()}');
     }
   }
@@ -154,8 +193,12 @@ class BillService {
       await _collection.doc(billId).delete();
       await _localStorage.setSyncStatus('bill', billId, true);
     } catch (e, stack) {
-      developer.log('Bill delete failed: $e',
-          name: 'BillService', error: e, stackTrace: stack);
+      developer.log(
+        'Bill delete failed: $e',
+        name: 'BillService',
+        error: e,
+        stackTrace: stack,
+      );
       throw Exception('Unable to delete bill online. ${e.toString()}');
     }
   }
@@ -179,8 +222,12 @@ class BillService {
         await _collection.doc(bill.id).set(bill.toMap());
         await _localStorage.setSyncStatus('bill', bill.id, true);
       } catch (e, stack) {
-        developer.log('Retry bill sync failed for ${bill.id}: $e',
-            name: 'BillService', error: e, stackTrace: stack);
+        developer.log(
+          'Retry bill sync failed for ${bill.id}: $e',
+          name: 'BillService',
+          error: e,
+          stackTrace: stack,
+        );
       }
     }
   }
@@ -193,8 +240,9 @@ class BillService {
   }) {
     final bills = source ?? _localStorage.getAllBills();
     return bills.where((bill) {
-      final ownerMatches =
-          ownerId == null || ownerId.isEmpty ? true : bill.ownerId == ownerId;
+      final ownerMatches = ownerId == null || ownerId.isEmpty
+          ? true
+          : bill.ownerId == ownerId;
       final customerMatches = customerId == null || customerId.isEmpty
           ? true
           : bill.customerId == customerId;

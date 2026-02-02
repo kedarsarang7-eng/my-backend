@@ -38,14 +38,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.currentProfile.name);
-    _phoneController =
-        TextEditingController(text: widget.currentProfile.phone ?? '');
-    _emailController =
-        TextEditingController(text: widget.currentProfile.email ?? '');
-    _addressController =
-        TextEditingController(text: widget.currentProfile.address ?? '');
-    _gstinController =
-        TextEditingController(text: widget.currentProfile.gstin ?? '');
+    _phoneController = TextEditingController(
+      text: widget.currentProfile.phone ?? '',
+    );
+    _emailController = TextEditingController(
+      text: widget.currentProfile.email ?? '',
+    );
+    _addressController = TextEditingController(
+      text: widget.currentProfile.address ?? '',
+    );
+    _gstinController = TextEditingController(
+      text: widget.currentProfile.gstin ?? '',
+    );
   }
 
   @override
@@ -96,15 +100,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         if (result.data != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Profile updated successfully'),
-                backgroundColor: Colors.green),
+              content: Text('Profile updated successfully'),
+              backgroundColor: Colors.green,
+            ),
           );
           Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text('Update failed: ${result.error}'),
-                backgroundColor: Colors.red),
+              content: Text('Update failed: ${result.error}'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       }
@@ -133,19 +139,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         actions: [
           if (_isLoading)
             const Center(
-                child: Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: SizedBox(
+              child: Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2)),
-            ))
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            )
           else
             TextButton(
               onPressed: _saveProfile,
-              child: Text("SAVE",
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-            )
+              child: Text(
+                "SAVE",
+                style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+              ),
+            ),
         ],
       ),
       body: SingleChildScrollView(

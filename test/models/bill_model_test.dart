@@ -128,10 +128,7 @@ void main() {
         price: 30.0,
       );
 
-      final updated = original.copyWith(
-        qty: 2.0,
-        discount: 5.0,
-      );
+      final updated = original.copyWith(qty: 2.0, discount: 5.0);
 
       expect(updated.qty, 2.0);
       expect(updated.discount, 5.0);
@@ -268,7 +265,7 @@ void main() {
         'customerName': 'Deser Customer',
         'date': DateTime.now().toIso8601String(),
         'items': [
-          {'vegId': 'v1', 'itemName': 'Item1', 'qty': 2, 'price': 50}
+          {'vegId': 'v1', 'itemName': 'Item1', 'qty': 2, 'price': 50},
         ],
         'subtotal': 100,
         'grandTotal': 100,
@@ -297,10 +294,7 @@ void main() {
         status: 'Unpaid',
       );
 
-      final updated = bill.copyWith(
-        paidAmount: 500.0,
-        status: 'Paid',
-      );
+      final updated = bill.copyWith(paidAmount: 500.0, status: 'Paid');
 
       expect(updated.paidAmount, 500.0);
       expect(updated.status, 'Paid');

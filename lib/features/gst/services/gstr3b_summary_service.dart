@@ -8,7 +8,7 @@ class Gstr3bSummaryService {
   final GstRepository _gstRepo;
 
   Gstr3bSummaryService({GstRepository? gstRepo})
-      : _gstRepo = gstRepo ?? GstRepository();
+    : _gstRepo = gstRepo ?? GstRepository();
 
   /// Generate GSTR-3B summary for a period
   Future<Gstr3bSummary> generateSummary({
@@ -47,44 +47,62 @@ class Gstr3bSummaryService {
   /// Calculate Table 3.1 - Outward taxable supplies
   Table31Summary _calculateTable3_1(List<GstInvoiceDetailModel> invoices) {
     // Row (a): Outward taxable supplies (other than zero rated, nil rated and exempted)
-    final taxableSupplies =
-        invoices.where((i) => i.invoiceType != GstInvoiceType.nil).toList();
+    final taxableSupplies = invoices
+        .where((i) => i.invoiceType != GstInvoiceType.nil)
+        .toList();
 
     // Row (b): Outward taxable supplies (zero rated)
     final zeroRated = invoices
-        .where((i) =>
-            i.invoiceType == GstInvoiceType.export ||
-            (i.cgstRate == 0 && i.sgstRate == 0 && i.igstRate == 0))
+        .where(
+          (i) =>
+              i.invoiceType == GstInvoiceType.export ||
+              (i.cgstRate == 0 && i.sgstRate == 0 && i.igstRate == 0),
+        )
         .toList();
 
     // Row (c): Other outward supplies (nil rated, exempted)
-    final nilExempt =
-        invoices.where((i) => i.invoiceType == GstInvoiceType.nil).toList();
+    final nilExempt = invoices
+        .where((i) => i.invoiceType == GstInvoiceType.nil)
+        .toList();
 
     // Row (d): Inward supplies (liable to reverse charge) - placeholder
     // Row (e): Non-GST outward supplies - placeholder
 
     return Table31Summary(
       // Row (a)
-      taxableSuppliesTaxableValue:
-          taxableSupplies.fold(0.0, (sum, i) => sum + i.taxableValue),
-      taxableSuppliesCgst:
-          taxableSupplies.fold(0.0, (sum, i) => sum + i.cgstAmount),
-      taxableSuppliesSgst:
-          taxableSupplies.fold(0.0, (sum, i) => sum + i.sgstAmount),
-      taxableSuppliesIgst:
-          taxableSupplies.fold(0.0, (sum, i) => sum + i.igstAmount),
-      taxableSuppliesCess:
-          taxableSupplies.fold(0.0, (sum, i) => sum + i.cessAmount),
+      taxableSuppliesTaxableValue: taxableSupplies.fold(
+        0.0,
+        (sum, i) => sum + i.taxableValue,
+      ),
+      taxableSuppliesCgst: taxableSupplies.fold(
+        0.0,
+        (sum, i) => sum + i.cgstAmount,
+      ),
+      taxableSuppliesSgst: taxableSupplies.fold(
+        0.0,
+        (sum, i) => sum + i.sgstAmount,
+      ),
+      taxableSuppliesIgst: taxableSupplies.fold(
+        0.0,
+        (sum, i) => sum + i.igstAmount,
+      ),
+      taxableSuppliesCess: taxableSupplies.fold(
+        0.0,
+        (sum, i) => sum + i.cessAmount,
+      ),
 
       // Row (b)
-      zeroRatedTaxableValue:
-          zeroRated.fold(0.0, (sum, i) => sum + i.taxableValue),
+      zeroRatedTaxableValue: zeroRated.fold(
+        0.0,
+        (sum, i) => sum + i.taxableValue,
+      ),
       zeroRatedIgst: zeroRated.fold(0.0, (sum, i) => sum + i.igstAmount),
 
       // Row (c)
-      nilExemptTaxableValue:
-          nilExempt.fold(0.0, (sum, i) => sum + i.taxableValue),
+      nilExemptTaxableValue: nilExempt.fold(
+        0.0,
+        (sum, i) => sum + i.taxableValue,
+      ),
 
       // Row (d) - placeholder
       reverseChargeTaxableValue: 0,
@@ -101,9 +119,11 @@ class Gstr3bSummaryService {
   List<Table32Item> _calculateTable3_2(List<GstInvoiceDetailModel> invoices) {
     // Filter B2C interstate supplies
     final b2cInterstate = invoices
-        .where((i) =>
-            i.invoiceType == GstInvoiceType.b2cl &&
-            i.supplyType == SupplyType.inter)
+        .where(
+          (i) =>
+              i.invoiceType == GstInvoiceType.b2cl &&
+              i.supplyType == SupplyType.inter,
+        )
         .toList();
 
     // Group by place of supply
@@ -138,7 +158,7 @@ class Gstr3bSummaryService {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     return months[month - 1];
   }

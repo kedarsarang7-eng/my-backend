@@ -169,9 +169,9 @@ class _EditBillScreenState extends State<EditBillScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving bill: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving bill: $e')));
       }
     } finally {
       if (mounted) {
@@ -217,10 +217,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
                       children: [
                         const Text(
                           'Customer:',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         Text(
                           widget.customerName,
@@ -237,10 +234,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
                       children: [
                         const Text(
                           'Date:',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         Text(
                           DateFormat('dd/MM/yyyy').format(widget.bill.date),
@@ -433,8 +427,10 @@ class _EditBillScreenState extends State<EditBillScreen> {
                         ),
                         const SizedBox(width: 4),
                         IconButton(
-                          icon: const Icon(Icons.delete,
-                              color: FuturisticColors.error),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: FuturisticColors.error,
+                          ),
                           onPressed: () => _removeItem(index),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -463,12 +459,12 @@ class _EditBillScreenState extends State<EditBillScreen> {
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         prefixText: '₹ ',
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
       ),
     );
   }
@@ -510,10 +506,7 @@ class _AddItemDialog extends StatefulWidget {
   final List<String> vegetables;
   final Function(String vegName, double pricePerKg, double qtyKg) onAdd;
 
-  const _AddItemDialog({
-    required this.vegetables,
-    required this.onAdd,
-  });
+  const _AddItemDialog({required this.vegetables, required this.onAdd});
 
   @override
   State<_AddItemDialog> createState() => _AddItemDialogState();
@@ -576,8 +569,9 @@ class _AddItemDialogState extends State<_AddItemDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: priceController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Price per KG (₹)',
                 border: OutlineInputBorder(),
@@ -586,8 +580,9 @@ class _AddItemDialogState extends State<_AddItemDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: qtyController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Quantity (KG)',
                 border: OutlineInputBorder(),
@@ -604,7 +599,8 @@ class _AddItemDialogState extends State<_AddItemDialog> {
         ElevatedButton(
           onPressed: _add,
           style: ElevatedButton.styleFrom(
-              backgroundColor: FuturisticColors.primary),
+            backgroundColor: FuturisticColors.primary,
+          ),
           child: const Text('Add'),
         ),
       ],
@@ -636,10 +632,12 @@ class _EditItemDialogState extends State<_EditItemDialog> {
   void initState() {
     super.initState();
     selectedVeg = widget.item.itemName;
-    priceController =
-        TextEditingController(text: widget.item.price.toStringAsFixed(0));
-    qtyController =
-        TextEditingController(text: widget.item.qty.toStringAsFixed(2));
+    priceController = TextEditingController(
+      text: widget.item.price.toStringAsFixed(0),
+    );
+    qtyController = TextEditingController(
+      text: widget.item.qty.toStringAsFixed(2),
+    );
   }
 
   @override
@@ -686,8 +684,9 @@ class _EditItemDialogState extends State<_EditItemDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: priceController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Price per KG (₹)',
                 border: OutlineInputBorder(),
@@ -696,8 +695,9 @@ class _EditItemDialogState extends State<_EditItemDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: qtyController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Quantity (KG)',
                 border: OutlineInputBorder(),
@@ -714,7 +714,8 @@ class _EditItemDialogState extends State<_EditItemDialog> {
         ElevatedButton(
           onPressed: _save,
           style: ElevatedButton.styleFrom(
-              backgroundColor: FuturisticColors.primary),
+            backgroundColor: FuturisticColors.primary,
+          ),
           child: const Text('Save'),
         ),
       ],

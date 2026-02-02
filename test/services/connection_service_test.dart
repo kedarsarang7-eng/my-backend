@@ -76,10 +76,7 @@ void main() {
     });
 
     test('should handle missing shopName with default', () {
-      final map = {
-        'vendorId': 'vendor-123',
-        'customerId': 'cust-456',
-      };
+      final map = {'vendorId': 'vendor-123', 'customerId': 'cust-456'};
 
       final shop = ConnectedShop.fromMap(map);
 
@@ -98,14 +95,20 @@ void main() {
 
     test('should handle various shop names', () {
       final shops = [
-        ConnectedShop.fromMap(
-            {'vendorId': 'v1', 'customerId': 'c1', 'shopName': 'ABC Store'}),
-        ConnectedShop.fromMap(
-            {'vendorId': 'v2', 'customerId': 'c2', 'shopName': 'XYZ Mart'}),
+        ConnectedShop.fromMap({
+          'vendorId': 'v1',
+          'customerId': 'c1',
+          'shopName': 'ABC Store',
+        }),
+        ConnectedShop.fromMap({
+          'vendorId': 'v2',
+          'customerId': 'c2',
+          'shopName': 'XYZ Mart',
+        }),
         ConnectedShop.fromMap({
           'vendorId': 'v3',
           'customerId': 'c3',
-          'shopName': 'दुकान नंबर 123'
+          'shopName': 'दुकान नंबर 123',
         }),
       ];
 

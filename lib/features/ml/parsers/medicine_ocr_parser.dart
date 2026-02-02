@@ -91,8 +91,9 @@ class MedicineOcrParser {
     RegExp(r'VALID\s*TILL[:\s]*(\d{1,2})[/\-](\d{2,4})', caseSensitive: false),
     // Standalone date patterns near EXP-related words (MMM-YYYY)
     RegExp(
-        r'(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[/\-\s]?(\d{2,4})',
-        caseSensitive: false),
+      r'(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[/\-\s]?(\d{2,4})',
+      caseSensitive: false,
+    ),
   ];
 
   // ============================================================
@@ -125,11 +126,15 @@ class MedicineOcrParser {
     // MRP ₹123.45, MRP Rs 123.45
     RegExp(r'MRP[:\s]*[₹Rs\.]*\s*(\d+(?:\.\d{1,2})?)', caseSensitive: false),
     // M.R.P: 123.45
-    RegExp(r'M\.R\.P\.?[:\s]*[₹Rs\.]*\s*(\d+(?:\.\d{1,2})?)',
-        caseSensitive: false),
+    RegExp(
+      r'M\.R\.P\.?[:\s]*[₹Rs\.]*\s*(\d+(?:\.\d{1,2})?)',
+      caseSensitive: false,
+    ),
     // MAX RETAIL PRICE 123.45
-    RegExp(r'MAX(?:IMUM)?\s*RETAIL\s*PRICE[:\s]*[₹Rs\.]*\s*(\d+(?:\.\d{1,2})?)',
-        caseSensitive: false),
+    RegExp(
+      r'MAX(?:IMUM)?\s*RETAIL\s*PRICE[:\s]*[₹Rs\.]*\s*(\d+(?:\.\d{1,2})?)',
+      caseSensitive: false,
+    ),
   ];
 
   // ============================================================
@@ -138,8 +143,10 @@ class MedicineOcrParser {
   // Supports: 500mg, 10ml, 5g, 250 mg, 100 ml
   // ============================================================
 
-  static final RegExp _strengthPattern =
-      RegExp(r'(\d+(?:\.\d+)?)\s*(mg|ml|g|gm|mcg|iu)\b', caseSensitive: false);
+  static final RegExp _strengthPattern = RegExp(
+    r'(\d+(?:\.\d+)?)\s*(mg|ml|g|gm|mcg|iu)\b',
+    caseSensitive: false,
+  );
 
   /// Parse medicine-specific fields from raw OCR text
   ///
@@ -148,7 +155,8 @@ class MedicineOcrParser {
     if (rawText.isEmpty) return MedicineOcrResult.empty();
 
     debugPrint(
-        '[MedicineOcrParser] Parsing text: ${rawText.substring(0, rawText.length.clamp(0, 100))}...');
+      '[MedicineOcrParser] Parsing text: ${rawText.substring(0, rawText.length.clamp(0, 100))}...',
+    );
 
     final batchNumber = _extractBatchNumber(rawText);
     final expiryDate = _extractExpiryDate(rawText);
@@ -268,7 +276,7 @@ class MedicineOcrParser {
       'SEP',
       'OCT',
       'NOV',
-      'DEC'
+      'DEC',
     ];
     return months.contains(text.toUpperCase());
   }

@@ -63,11 +63,14 @@ class BillModel {
       paymentMethod: map['paymentMethod'] as String? ?? 'pending',
       status: map['status'] as String? ?? 'pending',
       date: DateTime.parse(
-          map['date'] as String? ?? DateTime.now().toIso8601String()),
+        map['date'] as String? ?? DateTime.now().toIso8601String(),
+      ),
       dueDate: DateTime.parse(
-          map['dueDate'] as String? ?? DateTime.now().toIso8601String()),
+        map['dueDate'] as String? ?? DateTime.now().toIso8601String(),
+      ),
       updatedAt: DateTime.parse(
-          map['updatedAt'] as String? ?? DateTime.now().toIso8601String()),
+        map['updatedAt'] as String? ?? DateTime.now().toIso8601String(),
+      ),
       notes: map['notes'] as String?,
       billImageUri: map['billImageUri'] as String?,
       syncStatus: (map['syncStatus'] as int?) == 1,

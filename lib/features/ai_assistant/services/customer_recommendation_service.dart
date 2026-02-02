@@ -36,9 +36,9 @@ class CustomerRecommendationService {
 
       // Fetch all behaviors for user
       // Note: In a larger app, we would paginate or limit this query
-      final behaviors = await (_db.select(_db.customerBehaviors)
-            ..where((t) => t.userId.equals(userId)))
-          .get();
+      final behaviors = await (_db.select(
+        _db.customerBehaviors,
+      )..where((t) => t.userId.equals(userId))).get();
 
       // Score each customer
       final scoredCustomers = <String, double>{};
@@ -56,9 +56,9 @@ class CustomerRecommendationService {
       if (topIds.isEmpty) return [];
 
       // Fetch actual customer details
-      final entities = await (_db.select(_db.customers)
-            ..where((t) => t.id.isIn(topIds)))
-          .get();
+      final entities = await (_db.select(
+        _db.customers,
+      )..where((t) => t.id.isIn(topIds))).get();
 
       // Convert to Domain Object
       final customers = entities.map(_entityToCustomer).toList();
@@ -88,13 +88,15 @@ class CustomerRecommendationService {
       final timeSlot = _getTimeSlot(now);
 
       // Check if behavior record exists
-      final existing = await (_db.select(_db.customerBehaviors)
-            ..where((t) => t.customerId.equals(customerId)))
-          .getSingleOrNull();
+      final existing = await (_db.select(
+        _db.customerBehaviors,
+      )..where((t) => t.customerId.equals(customerId))).getSingleOrNull();
 
       if (existing == null) {
         // Create new record
-        await _db.into(_db.customerBehaviors).insert(
+        await _db
+            .into(_db.customerBehaviors)
+            .insert(
               CustomerBehaviorsCompanion.insert(
                 customerId: customerId,
                 userId: userId,
@@ -114,18 +116,21 @@ class CustomerRecommendationService {
         final newCount = existing.visitCount + 1;
         final newTotal = existing.totalSpend + billAmount;
 
-        await (_db.update(_db.customerBehaviors)
-              ..where((t) => t.customerId.equals(customerId)))
-            .write(
+        await (_db.update(
+          _db.customerBehaviors,
+        )..where((t) => t.customerId.equals(customerId))).write(
           CustomerBehaviorsCompanion(
             lastVisit: Value(now),
             visitCount: Value(newCount),
-            morningVisits:
-                Value(existing.morningVisits + (timeSlot == 'morning' ? 1 : 0)),
+            morningVisits: Value(
+              existing.morningVisits + (timeSlot == 'morning' ? 1 : 0),
+            ),
             afternoonVisits: Value(
-                existing.afternoonVisits + (timeSlot == 'afternoon' ? 1 : 0)),
-            eveningVisits:
-                Value(existing.eveningVisits + (timeSlot == 'evening' ? 1 : 0)),
+              existing.afternoonVisits + (timeSlot == 'afternoon' ? 1 : 0),
+            ),
+            eveningVisits: Value(
+              existing.eveningVisits + (timeSlot == 'evening' ? 1 : 0),
+            ),
             totalSpend: Value(newTotal),
             avgBillAmount: Value(newTotal / newCount),
             scoreUpdatedAt: Value(now),
@@ -141,7 +146,10 @@ class CustomerRecommendationService {
   // --- Helper Logic ---
 
   double _calculateScore(
-      CustomerBehaviorEntity b, DateTime now, String currentTimeSlot) {
+    CustomerBehaviorEntity b,
+    DateTime now,
+    String currentTimeSlot,
+  ) {
     // 1. Recency Score (0-1)
     // Decays rapidly over 30 days
     final daysSince = now.difference(b.lastVisit).inDays;
@@ -168,8 +176,9 @@ class CustomerRecommendationService {
 
     // 4. Monetary Score (0-1)
     // Normalized against a 'high spender' threshold (e.g. 5000 avg)
-    final monetaryScore =
-        (b.avgBillAmount > 5000) ? 1.0 : (b.avgBillAmount / 5000.0);
+    final monetaryScore = (b.avgBillAmount > 5000)
+        ? 1.0
+        : (b.avgBillAmount / 5000.0);
 
     // Weighted Sum
     // Recency (40%) + Frequency (30%) + Time (20%) + Monetary (10%)
@@ -193,29 +202,30 @@ class CustomerRecommendationService {
   }
 
   Future<List<Customer>> _getRecentCustomers(String userId, int limit) async {
-    final entities = await (_db.select(_db.customers)
-          ..where((t) => t.userId.equals(userId))
-          ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
-          ..limit(limit))
-        .get();
+    final entities =
+        await (_db.select(_db.customers)
+              ..where((t) => t.userId.equals(userId))
+              ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+              ..limit(limit))
+            .get();
     return entities.map(_entityToCustomer).toList();
   }
 
   Customer _entityToCustomer(CustomerEntity e) => Customer(
-        id: e.id,
-        odId: e.userId,
-        name: e.name,
-        phone: e.phone,
-        email: e.email,
-        address: e.address,
-        gstin: e.gstin,
-        totalBilled: e.totalBilled,
-        totalPaid: e.totalPaid,
-        totalDues: e.totalDues,
-        isActive: e.isActive,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-        deletedAt: e.deletedAt,
-      );
+    id: e.id,
+    odId: e.userId,
+    name: e.name,
+    phone: e.phone,
+    email: e.email,
+    address: e.address,
+    gstin: e.gstin,
+    totalBilled: e.totalBilled,
+    totalPaid: e.totalPaid,
+    totalDues: e.totalDues,
+    isActive: e.isActive,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+    deletedAt: e.deletedAt,
+  );
 }

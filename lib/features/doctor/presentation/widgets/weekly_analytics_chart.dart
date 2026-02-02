@@ -48,7 +48,8 @@ class WeeklyAnalyticsChart extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                         gradient: FuturisticColors.primaryGradient,
                         boxShadow: FuturisticColors.neonShadow(
-                            FuturisticColors.primary),
+                          FuturisticColors.primary,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),

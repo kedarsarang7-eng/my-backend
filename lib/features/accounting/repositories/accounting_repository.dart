@@ -17,33 +17,39 @@ class AccountingRepository {
 
   /// Get all ledger accounts for a user
   Future<List<LedgerAccountModel>> getAllLedgerAccounts(String userId) async {
-    final results = await (_db.select(_db.ledgerAccounts)
-          ..where((t) => t.userId.equals(userId) & t.isActive.equals(true))
-          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
-        .get();
+    final results =
+        await (_db.select(_db.ledgerAccounts)
+              ..where((t) => t.userId.equals(userId) & t.isActive.equals(true))
+              ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+            .get();
 
     return results.map(_ledgerEntityToModel).toList();
   }
 
   /// Get ledger accounts by group
   Future<List<LedgerAccountModel>> getLedgersByGroup(
-      String userId, AccountGroup group) async {
-    final results = await (_db.select(_db.ledgerAccounts)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.accountGroup.equals(group.value) &
-              t.isActive.equals(true))
-          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
-        .get();
+    String userId,
+    AccountGroup group,
+  ) async {
+    final results =
+        await (_db.select(_db.ledgerAccounts)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.accountGroup.equals(group.value) &
+                    t.isActive.equals(true),
+              )
+              ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+            .get();
 
     return results.map(_ledgerEntityToModel).toList();
   }
 
   /// Get ledger by ID
   Future<LedgerAccountModel?> getLedgerById(String id) async {
-    final result = await (_db.select(_db.ledgerAccounts)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final result = await (_db.select(
+      _db.ledgerAccounts,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (result == null) return null;
     return _ledgerEntityToModel(result);
@@ -51,13 +57,18 @@ class AccountingRepository {
 
   /// Get ledger by linked entity (customer/vendor)
   Future<LedgerAccountModel?> getLedgerByLinkedEntity(
-      String userId, String entityType, String entityId) async {
-    final result = await (_db.select(_db.ledgerAccounts)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.linkedEntityType.equals(entityType) &
-              t.linkedEntityId.equals(entityId)))
-        .getSingleOrNull();
+    String userId,
+    String entityType,
+    String entityId,
+  ) async {
+    final result =
+        await (_db.select(_db.ledgerAccounts)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.linkedEntityType.equals(entityType) &
+                  t.linkedEntityId.equals(entityId),
+            ))
+            .getSingleOrNull();
 
     if (result == null) return null;
     return _ledgerEntityToModel(result);
@@ -65,7 +76,9 @@ class AccountingRepository {
 
   /// Save ledger account
   Future<void> saveLedgerAccount(LedgerAccountModel ledger) async {
-    await _db.into(_db.ledgerAccounts).insertOnConflictUpdate(
+    await _db
+        .into(_db.ledgerAccounts)
+        .insertOnConflictUpdate(
           LedgerAccountsCompanion(
             id: Value(ledger.id),
             userId: Value(ledger.userId),
@@ -90,20 +103,24 @@ class AccountingRepository {
 
   /// Update ledger balance
   Future<void> updateLedgerBalance(String ledgerId, double newBalance) async {
-    await (_db.update(_db.ledgerAccounts)..where((t) => t.id.equals(ledgerId)))
-        .write(LedgerAccountsCompanion(
-      currentBalance: Value(newBalance),
-      updatedAt: Value(DateTime.now()),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.ledgerAccounts,
+    )..where((t) => t.id.equals(ledgerId))).write(
+      LedgerAccountsCompanion(
+        currentBalance: Value(newBalance),
+        updatedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
   }
 
   /// Create system ledgers for a new user
   Future<void> createSystemLedgers(String userId) async {
-    final existingCount = await (_db.select(_db.ledgerAccounts)
-          ..where((t) => t.userId.equals(userId) & t.isSystem.equals(true)))
-        .get()
-        .then((l) => l.length);
+    final existingCount =
+        await (_db.select(_db.ledgerAccounts)
+              ..where((t) => t.userId.equals(userId) & t.isSystem.equals(true)))
+            .get()
+            .then((l) => l.length);
 
     if (existingCount > 0) return; // Already created
 
@@ -124,7 +141,10 @@ class AccountingRepository {
 
   /// Get or create ledger for customer
   Future<LedgerAccountModel> getOrCreateCustomerLedger(
-      String userId, String customerId, String customerName) async {
+    String userId,
+    String customerId,
+    String customerName,
+  ) async {
     var ledger = await getLedgerByLinkedEntity(userId, 'CUSTOMER', customerId);
     if (ledger != null) return ledger;
 
@@ -146,7 +166,10 @@ class AccountingRepository {
 
   /// Get or create ledger for vendor
   Future<LedgerAccountModel> getOrCreateVendorLedger(
-      String userId, String vendorId, String vendorName) async {
+    String userId,
+    String vendorId,
+    String vendorName,
+  ) async {
     var ledger = await getLedgerByLinkedEntity(userId, 'VENDOR', vendorId);
     if (ledger != null) return ledger;
 
@@ -239,8 +262,11 @@ class AccountingRepository {
   // ============================================================================
 
   /// Get all journal entries for a user
-  Future<List<JournalEntryModel>> getAllJournalEntries(String userId,
-      {DateTime? startDate, DateTime? endDate}) async {
+  Future<List<JournalEntryModel>> getAllJournalEntries(
+    String userId, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     var query = _db.select(_db.journalEntries)
       ..where((t) => t.userId.equals(userId))
       ..orderBy([(t) => OrderingTerm.desc(t.entryDate)]);
@@ -259,12 +285,17 @@ class AccountingRepository {
   /// Watch journal entries for Day Book (Live Stream)
   /// Ordered strictly by: transactionDate, createdAt, entryId
   Stream<List<JournalEntryModel>> watchDayBookEntries(
-      String userId, DateTime startDate, DateTime endDate) {
+    String userId,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     return (_db.select(_db.journalEntries)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.entryDate.isBiggerOrEqualValue(startDate) &
-              t.entryDate.isSmallerOrEqualValue(endDate))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.entryDate.isBiggerOrEqualValue(startDate) &
+                t.entryDate.isSmallerOrEqualValue(endDate),
+          )
           ..orderBy([
             (t) => OrderingTerm.desc(t.entryDate),
             (t) => OrderingTerm.desc(t.createdAt),
@@ -276,9 +307,9 @@ class AccountingRepository {
 
   /// Get journal entry by ID
   Future<JournalEntryModel?> getJournalEntryById(String id) async {
-    final result = await (_db.select(_db.journalEntries)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final result = await (_db.select(
+      _db.journalEntries,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (result == null) return null;
     return _journalEntityToModel(result);
@@ -286,11 +317,15 @@ class AccountingRepository {
 
   /// Get journal entries by source
   Future<List<JournalEntryModel>> getJournalEntriesBySource(
-      String sourceType, String sourceId) async {
-    final results = await (_db.select(_db.journalEntries)
-          ..where((t) =>
-              t.sourceType.equals(sourceType) & t.sourceId.equals(sourceId)))
-        .get();
+    String sourceType,
+    String sourceId,
+  ) async {
+    final results =
+        await (_db.select(_db.journalEntries)..where(
+              (t) =>
+                  t.sourceType.equals(sourceType) & t.sourceId.equals(sourceId),
+            ))
+            .get();
 
     return results.map(_journalEntityToModel).toList();
   }
@@ -299,10 +334,13 @@ class AccountingRepository {
   Future<void> saveJournalEntry(JournalEntryModel entry) async {
     if (!entry.isBalanced) {
       throw Exception(
-          'Journal entry is not balanced: Debit ${entry.totalDebit} != Credit ${entry.totalCredit}');
+        'Journal entry is not balanced: Debit ${entry.totalDebit} != Credit ${entry.totalCredit}',
+      );
     }
 
-    await _db.into(_db.journalEntries).insertOnConflictUpdate(
+    await _db
+        .into(_db.journalEntries)
+        .insertOnConflictUpdate(
           JournalEntriesCompanion(
             id: Value(entry.id),
             userId: Value(entry.userId),
@@ -312,8 +350,9 @@ class AccountingRepository {
             narration: Value(entry.narration),
             sourceType: Value(entry.sourceType?.value),
             sourceId: Value(entry.sourceId),
-            entriesJson:
-                Value(jsonEncode(entry.entries.map((e) => e.toMap()).toList())),
+            entriesJson: Value(
+              jsonEncode(entry.entries.map((e) => e.toMap()).toList()),
+            ),
             date: Value(entry.entryDate), // Legacy required field
             amount: Value(entry.totalDebit), // Legacy required field
             totalDebit: Value(entry.totalDebit),
@@ -342,12 +381,14 @@ class AccountingRepository {
     final now = DateTime.now();
     final yearMonth = '${now.year}${now.month.toString().padLeft(2, '0')}';
 
-    final existingCount = await (_db.select(_db.journalEntries)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.voucherNumber.like('$prefix-$yearMonth%')))
-        .get()
-        .then((l) => l.length);
+    final existingCount =
+        await (_db.select(_db.journalEntries)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.voucherNumber.like('$prefix-$yearMonth%'),
+            ))
+            .get()
+            .then((l) => l.length);
 
     return '$prefix-$yearMonth-${(existingCount + 1).toString().padLeft(4, '0')}';
   }
@@ -364,8 +405,11 @@ class AccountingRepository {
 
     // Debit Customer (Receivable)
     final debitLine = JournalEntryLine(
-      ledgerId:
-          (await getOrCreateCustomerLedger(userId, customerId, 'Customer')).id,
+      ledgerId: (await getOrCreateCustomerLedger(
+        userId,
+        customerId,
+        'Customer',
+      )).id,
       ledgerName: 'Customer',
       debit: amount,
       credit: 0,
@@ -408,8 +452,10 @@ class AccountingRepository {
     required double amount,
     required DateTime date,
   }) async {
-    final voucherNumber =
-        await getNextVoucherNumber(userId, VoucherType.receipt);
+    final voucherNumber = await getNextVoucherNumber(
+      userId,
+      VoucherType.receipt,
+    );
 
     // Debit Cash (Asset)
     final cashLedger = await _getSystemLedger(userId, 'Cash on Hand');
@@ -422,8 +468,11 @@ class AccountingRepository {
 
     // Credit Customer (Reduces Receivable)
     final creditLine = JournalEntryLine(
-      ledgerId:
-          (await getOrCreateCustomerLedger(userId, customerId, 'Customer')).id,
+      ledgerId: (await getOrCreateCustomerLedger(
+        userId,
+        customerId,
+        'Customer',
+      )).id,
       ledgerName: 'Customer',
       debit: 0,
       credit: amount,
@@ -450,10 +499,13 @@ class AccountingRepository {
   }
 
   Future<LedgerAccountModel> _getSystemLedger(
-      String userId, String name) async {
-    final ledger = await (_db.select(_db.ledgerAccounts)
-          ..where((t) => t.userId.equals(userId) & t.name.equals(name)))
-        .getSingleOrNull();
+    String userId,
+    String name,
+  ) async {
+    final ledger =
+        await (_db.select(_db.ledgerAccounts)
+              ..where((t) => t.userId.equals(userId) & t.name.equals(name)))
+            .getSingleOrNull();
 
     if (ledger != null) return _ledgerEntityToModel(ledger);
 
@@ -463,8 +515,9 @@ class AccountingRepository {
       id: const Uuid().v4(),
       userId: userId,
       name: name,
-      group:
-          name == 'Sales Account' ? AccountGroup.income : AccountGroup.assets,
+      group: name == 'Sales Account'
+          ? AccountGroup.income
+          : AccountGroup.assets,
       type: name == 'Sales Account' ? AccountType.sales : AccountType.cash,
       isSystem: true,
       createdAt: DateTime.now(),
@@ -485,8 +538,9 @@ class AccountingRepository {
       id: entity.id,
       userId: entity.userId,
       voucherNumber: entity.voucherNumber ?? '',
-      voucherType:
-          VoucherTypeExtension.fromString(entity.voucherType ?? 'JOURNAL'),
+      voucherType: VoucherTypeExtension.fromString(
+        entity.voucherType ?? 'JOURNAL',
+      ),
       entryDate: entity.entryDate,
       narration: entity.narration,
       sourceType: entity.sourceType != null
@@ -509,23 +563,28 @@ class AccountingRepository {
 
   /// Get all accounting periods
   Future<List<AccountingPeriodModel>> getAllPeriods(String userId) async {
-    final results = await (_db.select(_db.accountingPeriods)
-          ..where((t) => t.userId.equals(userId))
-          ..orderBy([(t) => OrderingTerm.desc(t.startDate)]))
-        .get();
+    final results =
+        await (_db.select(_db.accountingPeriods)
+              ..where((t) => t.userId.equals(userId))
+              ..orderBy([(t) => OrderingTerm.desc(t.startDate)]))
+            .get();
 
     return results.map(_periodEntityToModel).toList();
   }
 
   /// Get current period for a date
   Future<AccountingPeriodModel?> getPeriodForDate(
-      String userId, DateTime date) async {
-    final results = await (_db.select(_db.accountingPeriods)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.startDate.isSmallerOrEqualValue(date) &
-              t.endDate.isBiggerOrEqualValue(date)))
-        .getSingleOrNull();
+    String userId,
+    DateTime date,
+  ) async {
+    final results =
+        await (_db.select(_db.accountingPeriods)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.startDate.isSmallerOrEqualValue(date) &
+                  t.endDate.isBiggerOrEqualValue(date),
+            ))
+            .getSingleOrNull();
 
     if (results == null) return null;
     return _periodEntityToModel(results);
@@ -533,7 +592,9 @@ class AccountingRepository {
 
   /// Save accounting period
   Future<void> saveAccountingPeriod(AccountingPeriodModel period) async {
-    await _db.into(_db.accountingPeriods).insertOnConflictUpdate(
+    await _db
+        .into(_db.accountingPeriods)
+        .insertOnConflictUpdate(
           AccountingPeriodsCompanion(
             id: Value(period.id),
             userId: Value(period.userId),
@@ -551,14 +612,16 @@ class AccountingRepository {
 
   /// Lock a period
   Future<void> lockPeriod(String periodId, String lockedByUserId) async {
-    await (_db.update(_db.accountingPeriods)
-          ..where((t) => t.id.equals(periodId)))
-        .write(AccountingPeriodsCompanion(
-      isLocked: const Value(true),
-      lockedAt: Value(DateTime.now()),
-      lockedByUserId: Value(lockedByUserId),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.accountingPeriods,
+    )..where((t) => t.id.equals(periodId))).write(
+      AccountingPeriodsCompanion(
+        isLocked: const Value(true),
+        lockedAt: Value(DateTime.now()),
+        lockedByUserId: Value(lockedByUserId),
+        isSynced: const Value(false),
+      ),
+    );
   }
 
   AccountingPeriodModel _periodEntityToModel(AccountingPeriodEntity entity) {

@@ -172,19 +172,12 @@ class _ActionButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: color.withOpacity(isDark ? 0.2 : 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: color.withOpacity(0.3),
-              width: 1,
-            ),
+            border: Border.all(color: color.withOpacity(0.3), width: 1),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                color: color,
-                size: 28,
-              ),
+              Icon(icon, color: color, size: 28),
               const SizedBox(height: 8),
               Text(
                 label,

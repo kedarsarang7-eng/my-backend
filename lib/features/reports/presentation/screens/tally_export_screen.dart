@@ -37,21 +37,24 @@ class _TallyExportScreenState extends State<TallyExportScreen> {
           width: 500,
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                )
-              ]),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Select Date Range',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                'Select Date Range',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -90,15 +93,19 @@ class _TallyExportScreenState extends State<TallyExportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(isFrom ? 'From Date' : 'To Date',
-                style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(
+              isFrom ? 'From Date' : 'To Date',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
             const SizedBox(height: 4),
             Row(
               children: [
                 const Icon(Icons.calendar_today, size: 16, color: Colors.teal),
                 const SizedBox(width: 8),
-                Text(DateFormat('dd MMM yyyy').format(date),
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  DateFormat('dd MMM yyyy').format(date),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ],
@@ -144,9 +151,11 @@ class _TallyExportScreenState extends State<TallyExportScreen> {
 
       if (file != null && mounted) {
         // Share via share_plus
-        await Share.shareXFiles([XFile(file.path)],
-            text:
-                'Tally XML Export (${DateFormat('dd-MMM').format(_fromDate)} to ${DateFormat('dd-MMM').format(_toDate)})');
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text:
+              'Tally XML Export (${DateFormat('dd-MMM').format(_fromDate)} to ${DateFormat('dd-MMM').format(_toDate)})',
+        );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to generate export file')),
@@ -154,9 +163,9 @@ class _TallyExportScreenState extends State<TallyExportScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) {

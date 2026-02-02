@@ -19,19 +19,19 @@ class _ErrorLogsScreenState extends ConsumerState<ErrorLogsScreen>
       'time': DateTime.now().subtract(const Duration(minutes: 5)),
       'level': 'ERROR',
       'source': 'SyncManager',
-      'message': 'Network timeout while syncing batch #84920'
+      'message': 'Network timeout while syncing batch #84920',
     },
     {
       'time': DateTime.now().subtract(const Duration(hours: 2)),
       'level': 'WARNING',
       'source': 'InventoryService',
-      'message': 'Low memory warning detected during large import'
+      'message': 'Low memory warning detected during large import',
     },
     {
       'time': DateTime.now().subtract(const Duration(days: 1)),
       'level': 'INFO',
       'source': 'System',
-      'message': 'Backup completed successfully'
+      'message': 'Backup completed successfully',
     },
   ];
 
@@ -40,13 +40,13 @@ class _ErrorLogsScreenState extends ConsumerState<ErrorLogsScreen>
       'id': 'SYNC-001',
       'action': 'CREATE_BILL',
       'status': 'PENDING',
-      'retries': 0
+      'retries': 0,
     },
     {
       'id': 'SYNC-002',
       'action': 'UPDATE_STOCK',
       'status': 'FAILED',
-      'retries': 3
+      'retries': 3,
     },
   ];
 
@@ -93,10 +93,7 @@ class _ErrorLogsScreenState extends ConsumerState<ErrorLogsScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
-                _buildErrorLogList(),
-                _buildSyncQueueList(),
-              ],
+              children: [_buildErrorLogList(), _buildSyncQueueList()],
             ),
           ),
         ],
@@ -124,14 +121,20 @@ class _ErrorLogsScreenState extends ConsumerState<ErrorLogsScreen>
                 color: isError
                     ? FuturisticColors.error
                     : (isWarning
-                        ? FuturisticColors.warning
-                        : FuturisticColors.success),
+                          ? FuturisticColors.warning
+                          : FuturisticColors.success),
               ),
-              title: Text(log['message'],
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-              subtitle: Text('${log['source']} • ${_formatTime(log['time'])}',
-                  style: TextStyle(color: Colors.white.withOpacity(0.6))),
+              title: Text(
+                log['message'],
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                '${log['source']} • ${_formatTime(log['time'])}',
+                style: TextStyle(color: Colors.white.withOpacity(0.6)),
+              ),
               trailing: isError
                   ? IconButton(
                       icon: const Icon(Icons.refresh, color: Colors.white70),
@@ -158,13 +161,21 @@ class _ErrorLogsScreenState extends ConsumerState<ErrorLogsScreen>
           padding: const EdgeInsets.only(bottom: 12),
           child: ModernCard(
             child: ListTile(
-              leading: const Icon(Icons.cloud_upload_outlined,
-                  color: FuturisticColors.accent1),
-              title: Text(item['action'],
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-              subtitle: Text('ID: ${item['id']} • Retries: ${item['retries']}',
-                  style: TextStyle(color: Colors.white.withOpacity(0.6))),
+              leading: const Icon(
+                Icons.cloud_upload_outlined,
+                color: FuturisticColors.accent1,
+              ),
+              title: Text(
+                item['action'],
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                'ID: ${item['id']} • Retries: ${item['retries']}',
+                style: TextStyle(color: Colors.white.withOpacity(0.6)),
+              ),
               trailing: Chip(
                 label: Text(item['status']),
                 backgroundColor: isFailed

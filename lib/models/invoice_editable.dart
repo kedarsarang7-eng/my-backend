@@ -35,14 +35,14 @@ class EditableInvoiceItem {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'itemName': itemName,
-        'manQuantity': manQuantity,
-        'kiloWeight': kiloWeight,
-        'ratePerKilo': ratePerKilo,
-        'manRate': manRate,
-        'totalAmount': totalAmount,
-      };
+    'id': id,
+    'itemName': itemName,
+    'manQuantity': manQuantity,
+    'kiloWeight': kiloWeight,
+    'ratePerKilo': ratePerKilo,
+    'manRate': manRate,
+    'totalAmount': totalAmount,
+  };
 
   factory EditableInvoiceItem.fromMap(Map<String, dynamic> map) =>
       EditableInvoiceItem(
@@ -84,22 +84,22 @@ class InvoiceCharges {
   }
 
   Map<String, dynamic> toMap() => {
-        'okshanKharcha': okshanKharcha,
-        'nagarpalika': nagarpalika,
-        'commission': commission,
-        'hamali': hamali,
-        'vetChithi': vetChithi,
-        'gadiKhada': gadiKhada,
-      };
+    'okshanKharcha': okshanKharcha,
+    'nagarpalika': nagarpalika,
+    'commission': commission,
+    'hamali': hamali,
+    'vetChithi': vetChithi,
+    'gadiKhada': gadiKhada,
+  };
 
   factory InvoiceCharges.fromMap(Map<String, dynamic> map) => InvoiceCharges(
-        okshanKharcha: (map['okshanKharcha'] ?? 0).toDouble(),
-        nagarpalika: (map['nagarpalika'] ?? 0).toDouble(),
-        commission: (map['commission'] ?? 0).toDouble(),
-        hamali: (map['hamali'] ?? 0).toDouble(),
-        vetChithi: (map['vetChithi'] ?? 0).toDouble(),
-        gadiKhada: (map['gadiKhada'] ?? 0).toDouble(),
-      );
+    okshanKharcha: (map['okshanKharcha'] ?? 0).toDouble(),
+    nagarpalika: (map['nagarpalika'] ?? 0).toDouble(),
+    commission: (map['commission'] ?? 0).toDouble(),
+    hamali: (map['hamali'] ?? 0).toDouble(),
+    vetChithi: (map['vetChithi'] ?? 0).toDouble(),
+    gadiKhada: (map['gadiKhada'] ?? 0).toDouble(),
+  );
 }
 
 /// Enhanced Editable Invoice Model
@@ -176,53 +176,54 @@ class EditableInvoice {
   String get formattedTime => DateFormat('hh:mm a').format(createdAt);
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'ownerName': ownerName,
-        'shopName': shopName,
-        'ownerPhone': ownerPhone,
-        'ownerAddress': ownerAddress,
-        'gstNumber': gstNumber,
-        'logoUrl': logoUrl,
-        'customerName': customerName,
-        'customerVillage': customerVillage,
-        'invoiceDate': invoiceDate,
-        'items': items.map((i) => i.toMap()).toList(),
-        'charges': charges.toMap(),
-        'ownerSignatureUrl': ownerSignatureUrl,
-        'stampUrl': stampUrl,
-        'notes': notes,
-        'paid': paid,
-        'paidAt': paidAt,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-      };
+    'id': id,
+    'ownerName': ownerName,
+    'shopName': shopName,
+    'ownerPhone': ownerPhone,
+    'ownerAddress': ownerAddress,
+    'gstNumber': gstNumber,
+    'logoUrl': logoUrl,
+    'customerName': customerName,
+    'customerVillage': customerVillage,
+    'invoiceDate': invoiceDate,
+    'items': items.map((i) => i.toMap()).toList(),
+    'charges': charges.toMap(),
+    'ownerSignatureUrl': ownerSignatureUrl,
+    'stampUrl': stampUrl,
+    'notes': notes,
+    'paid': paid,
+    'paidAt': paidAt,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+  };
 
   factory EditableInvoice.fromMap(Map<String, dynamic> map) => EditableInvoice(
-        id: map['id'] ?? '',
-        ownerName: map['ownerName'] ?? '',
-        shopName: map['shopName'] ?? '',
-        ownerPhone: map['ownerPhone'] ?? '',
-        ownerAddress: map['ownerAddress'] ?? '',
-        gstNumber: map['gstNumber'],
-        logoUrl: map['logoUrl'],
-        customerName: map['customerName'] ?? '',
-        customerVillage: map['customerVillage'] ?? '',
-        invoiceDate: (map['invoiceDate'] as dynamic).toDate() ?? DateTime.now(),
-        items: (map['items'] as List?)
-                ?.map((i) =>
-                    EditableInvoiceItem.fromMap(i as Map<String, dynamic>))
-                .toList() ??
-            [],
-        charges: InvoiceCharges.fromMap(
-            (map['charges'] as Map<String, dynamic>?) ?? {}),
-        ownerSignatureUrl: map['ownerSignatureUrl'],
-        stampUrl: map['stampUrl'],
-        notes: map['notes'] ?? '',
-        paid: map['paid'] ?? false,
-        paidAt: map['paidAt'],
-        createdAt: (map['createdAt'] as dynamic).toDate() ?? DateTime.now(),
-        updatedAt: (map['updatedAt'] as dynamic).toDate() ?? DateTime.now(),
-      );
+    id: map['id'] ?? '',
+    ownerName: map['ownerName'] ?? '',
+    shopName: map['shopName'] ?? '',
+    ownerPhone: map['ownerPhone'] ?? '',
+    ownerAddress: map['ownerAddress'] ?? '',
+    gstNumber: map['gstNumber'],
+    logoUrl: map['logoUrl'],
+    customerName: map['customerName'] ?? '',
+    customerVillage: map['customerVillage'] ?? '',
+    invoiceDate: (map['invoiceDate'] as dynamic).toDate() ?? DateTime.now(),
+    items:
+        (map['items'] as List?)
+            ?.map((i) => EditableInvoiceItem.fromMap(i as Map<String, dynamic>))
+            .toList() ??
+        [],
+    charges: InvoiceCharges.fromMap(
+      (map['charges'] as Map<String, dynamic>?) ?? {},
+    ),
+    ownerSignatureUrl: map['ownerSignatureUrl'],
+    stampUrl: map['stampUrl'],
+    notes: map['notes'] ?? '',
+    paid: map['paid'] ?? false,
+    paidAt: map['paidAt'],
+    createdAt: (map['createdAt'] as dynamic).toDate() ?? DateTime.now(),
+    updatedAt: (map['updatedAt'] as dynamic).toDate() ?? DateTime.now(),
+  );
 
   /// Create empty invoice with default values
   factory EditableInvoice.empty({

@@ -14,8 +14,8 @@ class VendorItemSnapshotRepository {
   VendorItemSnapshotRepository({
     required FirebaseFirestore firestore,
     required LocalStorageService localStorage,
-  })  : _firestore = firestore,
-        _localStorage = localStorage;
+  }) : _firestore = firestore,
+       _localStorage = localStorage;
 
   /// Get snapshot for a vendor (cache-first strategy)
   Future<VendorItemSnapshot?> getSnapshot(String vendorId) async {
@@ -31,8 +31,10 @@ class VendorItemSnapshotRepository {
 
     // 2. Fetch from Firestore
     try {
-      final doc =
-          await _firestore.collection(_collectionName).doc(vendorId).get();
+      final doc = await _firestore
+          .collection(_collectionName)
+          .doc(vendorId)
+          .get();
 
       if (doc.exists && doc.data() != null) {
         final snapshot = VendorItemSnapshot.fromMap(vendorId, doc.data()!);
@@ -52,8 +54,10 @@ class VendorItemSnapshotRepository {
   /// Force refresh from Firestore
   Future<VendorItemSnapshot?> refreshSnapshot(String vendorId) async {
     try {
-      final doc =
-          await _firestore.collection(_collectionName).doc(vendorId).get();
+      final doc = await _firestore
+          .collection(_collectionName)
+          .doc(vendorId)
+          .get();
 
       if (doc.exists && doc.data() != null) {
         final snapshot = VendorItemSnapshot.fromMap(vendorId, doc.data()!);
@@ -68,19 +72,17 @@ class VendorItemSnapshotRepository {
 
   /// Watch snapshot changes (real-time updates)
   Stream<VendorItemSnapshot?> watchSnapshot(String vendorId) {
-    return _firestore
-        .collection(_collectionName)
-        .doc(vendorId)
-        .snapshots()
-        .map((doc) {
-      if (doc.exists && doc.data() != null) {
-        final snapshot = VendorItemSnapshot.fromMap(vendorId, doc.data()!);
-        // Update local cache asynchronously
-        _saveLocalSnapshot(snapshot);
-        return snapshot;
-      }
-      return null;
-    });
+    return _firestore.collection(_collectionName).doc(vendorId).snapshots().map(
+      (doc) {
+        if (doc.exists && doc.data() != null) {
+          final snapshot = VendorItemSnapshot.fromMap(vendorId, doc.data()!);
+          // Update local cache asynchronously
+          _saveLocalSnapshot(snapshot);
+          return snapshot;
+        }
+        return null;
+      },
+    );
   }
 
   /// Update snapshot (called by vendor-side after stock changes)
@@ -121,9 +123,7 @@ class VendorItemSnapshotRepository {
 
   Future<VendorItemSnapshot?> _getLocalSnapshot(String vendorId) async {
     try {
-      final data = _localStorage.getRequestDraft(
-        'snapshot_$vendorId',
-      );
+      final data = _localStorage.getRequestDraft('snapshot_$vendorId');
       if (data != null) {
         return VendorItemSnapshot.fromMap(vendorId, data);
       }

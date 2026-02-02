@@ -22,10 +22,7 @@ import 'customer/customer_menu_screen.dart';
 class TableManagementScreen extends ConsumerStatefulWidget {
   final String vendorId;
 
-  const TableManagementScreen({
-    super.key,
-    required this.vendorId,
-  });
+  const TableManagementScreen({super.key, required this.vendorId});
 
   @override
   ConsumerState<TableManagementScreen> createState() =>
@@ -51,8 +48,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(FuturisticColors.primary),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  FuturisticColors.primary,
+                ),
               ),
             );
           }
@@ -91,7 +89,7 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               ? LinearGradient(
                   colors: [
                     FuturisticColors.darkSurface,
-                    FuturisticColors.darkBackground
+                    FuturisticColors.darkBackground,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -99,7 +97,7 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               : LinearGradient(
                   colors: [
                     FuturisticColors.surface,
-                    FuturisticColors.background
+                    FuturisticColors.background,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -115,8 +113,11 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               borderRadius: BorderRadius.circular(AppBorderRadius.md),
               boxShadow: AppShadows.glowShadow(FuturisticColors.secondary),
             ),
-            child: const Icon(Icons.table_restaurant,
-                color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.table_restaurant,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Text(
@@ -192,11 +193,7 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               width: 1.5,
             ),
           ),
-          child: Icon(
-            icon,
-            color: FuturisticColors.primary,
-            size: 22,
-          ),
+          child: Icon(icon, color: FuturisticColors.primary, size: 22),
         ),
       ),
     );
@@ -306,8 +303,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
     final statusGradient = _getStatusGradient(table.status);
 
     return ModernCard(
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       onTap: () => _showTableActions(table),
       padding: EdgeInsets.zero,
       child: Column(
@@ -495,17 +493,23 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               leading: const Icon(Icons.info_outline),
               title: Text('Table ${table.tableNumber}'),
               subtitle: Text(
-                  'Capacity: ${table.capacity} • ${table.status.displayName}'),
+                'Capacity: ${table.capacity} • ${table.status.displayName}',
+              ),
             ),
             const Divider(height: 1),
             // Take Order (New connectivity feature)
             ListTile(
-              leading: const Icon(Icons.restaurant_menu,
-                  color: FuturisticColors.primary),
-              title: const Text('Take Order',
-                  style: TextStyle(
-                      color: FuturisticColors.primary,
-                      fontWeight: FontWeight.bold)),
+              leading: const Icon(
+                Icons.restaurant_menu,
+                color: FuturisticColors.primary,
+              ),
+              title: const Text(
+                'Take Order',
+                style: TextStyle(
+                  color: FuturisticColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _navigateToMenu(table);
@@ -515,8 +519,10 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
             // Status actions
             if (table.status != TableStatus.available)
               ListTile(
-                leading: const Icon(Icons.check_circle,
-                    color: FuturisticColors.success),
+                leading: const Icon(
+                  Icons.check_circle,
+                  color: FuturisticColors.success,
+                ),
                 title: const Text('Mark Available'),
                 onTap: () {
                   Navigator.pop(context);
@@ -525,8 +531,10 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               ),
             if (table.status != TableStatus.occupied)
               ListTile(
-                leading:
-                    const Icon(Icons.people, color: FuturisticColors.error),
+                leading: const Icon(
+                  Icons.people,
+                  color: FuturisticColors.error,
+                ),
                 title: const Text('Mark Occupied'),
                 onTap: () {
                   Navigator.pop(context);
@@ -544,8 +552,10 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
               ),
             if (table.status != TableStatus.cleaning)
               ListTile(
-                leading:
-                    const Icon(Icons.cleaning_services, color: Colors.blue),
+                leading: const Icon(
+                  Icons.cleaning_services,
+                  color: Colors.blue,
+                ),
                 title: const Text('Mark Cleaning'),
                 onTap: () {
                   Navigator.pop(context);
@@ -557,7 +567,8 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
             ListTile(
               leading: const Icon(Icons.qr_code_2),
               title: Text(
-                  table.qrCodeId != null ? 'View QR Code' : 'Generate QR Code'),
+                table.qrCodeId != null ? 'View QR Code' : 'Generate QR Code',
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _handleQrCode(table);
@@ -575,8 +586,10 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
             // Delete
             ListTile(
               leading: const Icon(Icons.delete, color: FuturisticColors.error),
-              title: const Text('Delete Table',
-                  style: TextStyle(color: FuturisticColors.error)),
+              title: const Text(
+                'Delete Table',
+                style: TextStyle(color: FuturisticColors.error),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteTable(table);
@@ -619,9 +632,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
           table: table,
           restaurantName: restaurantName,
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('QR Code generated!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('QR Code generated!')));
       }
     }
   }
@@ -691,9 +704,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
 
               if (mounted) {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Table added!')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Table added!')));
               }
             },
             child: const Text('Add'),
@@ -705,8 +718,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
 
   void _showEditTableDialog(RestaurantTable table) {
     final numberController = TextEditingController(text: table.tableNumber);
-    final capacityController =
-        TextEditingController(text: table.capacity.toString());
+    final capacityController = TextEditingController(
+      text: table.capacity.toString(),
+    );
     final sectionController = TextEditingController(text: table.section ?? '');
 
     showDialog(
@@ -729,8 +743,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: sectionController,
-              decoration:
-                  const InputDecoration(labelText: 'Section (optional)'),
+              decoration: const InputDecoration(
+                labelText: 'Section (optional)',
+              ),
             ),
           ],
         ),
@@ -752,9 +767,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
 
               if (mounted) {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Table updated!')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Table updated!')));
               }
             },
             child: const Text('Save'),
@@ -798,9 +813,7 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
             TextField(
               controller: capacityController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Default Capacity',
-              ),
+              decoration: const InputDecoration(labelText: 'Default Capacity'),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -868,14 +881,15 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: FuturisticColors.error),
+              backgroundColor: FuturisticColors.error,
+            ),
             onPressed: () async {
               await _tableRepo.deleteTable(table.id);
               if (mounted) {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Table deleted')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Table deleted')));
               }
             },
             child: const Text('Delete', style: TextStyle(color: Colors.white)),
@@ -918,9 +932,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Generated $generated QR codes')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Generated $generated QR codes')));
     }
   }
 
@@ -930,9 +944,9 @@ class _TableManagementScreenState extends ConsumerState<TableManagementScreen> {
     final tables = result.data!;
 
     if (tables.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No tables to print')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No tables to print')));
       return;
     }
 

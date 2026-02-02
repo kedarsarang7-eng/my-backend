@@ -21,12 +21,8 @@ class CreditNoteResult<T> {
   final T? data;
   final String? error;
 
-  CreditNoteResult.success(this.data)
-      : isSuccess = true,
-        error = null;
-  CreditNoteResult.failure(this.error)
-      : isSuccess = false,
-        data = null;
+  CreditNoteResult.success(this.data) : isSuccess = true, error = null;
+  CreditNoteResult.failure(this.error) : isSuccess = false, data = null;
 }
 
 /// Credit Note Repository - Drift-based offline-first storage
@@ -37,7 +33,8 @@ class CreditNoteRepository {
 
   /// Create a new credit note
   Future<CreditNoteResult<CreditNote>> createCreditNote(
-      CreditNote creditNote) async {
+    CreditNote creditNote,
+  ) async {
     try {
       // Insert into CreditNotes table (using ReturnInwards table for now as schema exists)
       final entity = ReturnInwardsCompanion(
@@ -50,8 +47,9 @@ class CreditNoteRepository {
         amount: Value(creditNote.grandTotal),
         totalReturnAmount: Value(creditNote.grandTotal),
         reason: Value(creditNote.reason),
-        itemsJson:
-            Value(jsonEncode(creditNote.items.map((e) => e.toMap()).toList())),
+        itemsJson: Value(
+          jsonEncode(creditNote.items.map((e) => e.toMap()).toList()),
+        ),
         status: Value(creditNote.status.name.toUpperCase()),
         date: Value(creditNote.date),
         createdAt: Value(creditNote.createdAt),
@@ -61,11 +59,16 @@ class CreditNoteRepository {
       await _db.into(_db.returnInwards).insert(entity);
 
       // Queue for sync
-      _queueForSync(creditNote.userId, creditNote.id, SyncOperationType.create,
-          creditNote.toMap());
+      _queueForSync(
+        creditNote.userId,
+        creditNote.id,
+        SyncOperationType.create,
+        creditNote.toMap(),
+      );
 
       debugPrint(
-          'CreditNoteRepository: Created credit note ${creditNote.creditNoteNumber}');
+        'CreditNoteRepository: Created credit note ${creditNote.creditNoteNumber}',
+      );
       return CreditNoteResult.success(creditNote);
     } catch (e) {
       debugPrint('CreditNoteRepository: Error creating credit note: $e');
@@ -122,25 +125,32 @@ class CreditNoteRepository {
 
   /// Get credit notes for a specific customer
   Future<List<CreditNote>> getCreditNotesForCustomer(
-      String userId, String customerId) async {
+    String userId,
+    String customerId,
+  ) async {
     try {
       final query = _db.select(_db.returnInwards)
-        ..where((tbl) =>
-            tbl.userId.equals(userId) & tbl.customerId.equals(customerId))
+        ..where(
+          (tbl) =>
+              tbl.userId.equals(userId) & tbl.customerId.equals(customerId),
+        )
         ..orderBy([(tbl) => OrderingTerm.desc(tbl.date)]);
 
       final entities = await query.get();
       return entities.map((e) => _entityToCreditNote(e)).toList();
     } catch (e) {
       debugPrint(
-          'CreditNoteRepository: Error getting customer credit notes: $e');
+        'CreditNoteRepository: Error getting customer credit notes: $e',
+      );
       return [];
     }
   }
 
   /// Get credit notes for a specific bill
   Future<List<CreditNote>> getCreditNotesForBill(
-      String userId, String billId) async {
+    String userId,
+    String billId,
+  ) async {
     try {
       final query = _db.select(_db.returnInwards)
         ..where((tbl) => tbl.userId.equals(userId) & tbl.billId.equals(billId))
@@ -162,11 +172,13 @@ class CreditNoteRepository {
   }) async {
     try {
       final query = _db.select(_db.returnInwards)
-        ..where((tbl) =>
-            tbl.userId.equals(userId) &
-            tbl.date.isBiggerOrEqualValue(fromDate) &
-            tbl.date.isSmallerOrEqualValue(toDate) &
-            tbl.status.equals('CONFIRMED'))
+        ..where(
+          (tbl) =>
+              tbl.userId.equals(userId) &
+              tbl.date.isBiggerOrEqualValue(fromDate) &
+              tbl.date.isSmallerOrEqualValue(toDate) &
+              tbl.status.equals('CONFIRMED'),
+        )
         ..orderBy([(tbl) => OrderingTerm.asc(tbl.date)]);
 
       final entities = await query.get();
@@ -193,12 +205,14 @@ class CreditNoteRepository {
   /// Mark stock as re-entered
   Future<bool> markStockReEntered(String creditNoteId) async {
     try {
-      await (_db.update(_db.returnInwards)
-            ..where((tbl) => tbl.id.equals(creditNoteId)))
-          .write(const ReturnInwardsCompanion(
-        status: Value('PROCESSED'),
-        isSynced: Value(false),
-      ));
+      await (_db.update(
+        _db.returnInwards,
+      )..where((tbl) => tbl.id.equals(creditNoteId))).write(
+        const ReturnInwardsCompanion(
+          status: Value('PROCESSED'),
+          isSynced: Value(false),
+        ),
+      );
 
       return true;
     } catch (e) {
@@ -223,7 +237,8 @@ class CreditNoteRepository {
     try {
       // This would update the GSTR-1 period field if we had one
       debugPrint(
-          'CreditNoteRepository: Marked $creditNoteId for GSTR-1 period $period');
+        'CreditNoteRepository: Marked $creditNoteId for GSTR-1 period $period',
+      );
       return true;
     } catch (e) {
       debugPrint('CreditNoteRepository: Error marking GSTR-1 inclusion: $e');
@@ -234,13 +249,15 @@ class CreditNoteRepository {
   /// Cancel a credit note
   Future<bool> cancelCreditNote(String creditNoteId, String reason) async {
     try {
-      await (_db.update(_db.returnInwards)
-            ..where((tbl) => tbl.id.equals(creditNoteId)))
-          .write(ReturnInwardsCompanion(
-        status: const Value('CANCELLED'),
-        reason: Value(reason),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.returnInwards,
+      )..where((tbl) => tbl.id.equals(creditNoteId))).write(
+        ReturnInwardsCompanion(
+          status: const Value('CANCELLED'),
+          reason: Value(reason),
+          isSynced: const Value(false),
+        ),
+      );
 
       return true;
     } catch (e) {
@@ -256,12 +273,14 @@ class CreditNoteRepository {
     required double adjustedAmount,
   }) async {
     try {
-      await (_db.update(_db.returnInwards)
-            ..where((tbl) => tbl.id.equals(creditNoteId)))
-          .write(const ReturnInwardsCompanion(
-        status: Value('ADJUSTED'),
-        isSynced: Value(false),
-      ));
+      await (_db.update(
+        _db.returnInwards,
+      )..where((tbl) => tbl.id.equals(creditNoteId))).write(
+        const ReturnInwardsCompanion(
+          status: Value('ADJUSTED'),
+          isSynced: Value(false),
+        ),
+      );
 
       return true;
     } catch (e) {
@@ -271,8 +290,12 @@ class CreditNoteRepository {
   }
 
   /// Queue operation for sync using proper SyncQueueItem
-  void _queueForSync(String userId, String documentId,
-      SyncOperationType operation, Map<String, dynamic> payload) {
+  void _queueForSync(
+    String userId,
+    String documentId,
+    SyncOperationType operation,
+    Map<String, dynamic> payload,
+  ) {
     try {
       final syncItem = SyncQueueItem.create(
         userId: userId,

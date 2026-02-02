@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert'; // Added for jsonEncode
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Added
 import 'package:drift/drift.dart';
 import '../../api/sync_api_client.dart';
 import '../data/drift_sync_repository.dart';
@@ -34,8 +36,10 @@ class RestSyncEngine {
     _isInitialized = true;
 
     // Start periodic pull (every 5 minutes)
-    _pullTimer =
-        Timer.periodic(const Duration(minutes: 5), (_) => triggerPull());
+    _pullTimer = Timer.periodic(
+      const Duration(minutes: 5),
+      (_) => triggerPull(),
+    );
 
     debugPrint('RestSyncEngine: Initialized');
   }
@@ -92,9 +96,13 @@ class RestSyncEngine {
         processedIds.add(item.operationId);
       } catch (e) {
         debugPrint(
-            'RestSyncEngine: Payload Conversion Error for ${item.operationId}: $e');
+          'RestSyncEngine: Payload Conversion Error for ${item.operationId}: $e',
+        );
         await _repo.markFailed(
-            item.operationId, e.toString(), item.retryCount + 1);
+          item.operationId,
+          e.toString(),
+          item.retryCount + 1,
+        );
       }
     }
 
@@ -108,11 +116,15 @@ class RestSyncEngine {
         // Need to know collection and docId to mark entity synced
         // We can look up from pendingItems
         final item = pendingItems.firstWhere((e) => e.operationId == opId);
-        await _repo.markSynced(opId,
-            collection: item.targetCollection, docId: item.documentId);
+        await _repo.markSynced(
+          opId,
+          collection: item.targetCollection,
+          docId: item.documentId,
+        );
       }
       debugPrint(
-          'RestSyncEngine: Pushed ${processedIds.length} items successfully');
+        'RestSyncEngine: Pushed ${processedIds.length} items successfully',
+      );
     } catch (e) {
       debugPrint('RestSyncEngine: API Push Failed: $e');
       // Mark all batch as RETRY
@@ -125,70 +137,69 @@ class RestSyncEngine {
 
   Future<void> _pull() async {
     // Determine last sync timestamp
-    // We can store this in SharedPrefs or a special table.
-    // For now, let's assume we query the latest 'syncedAt' from SyncQueue?
-    // No, SyncQueue tracks OUR pushes.
-    // We need a 'LastPullTimestamp'.
-    // Let's use a simple query to get the max 'updatedAt' from tables?
-    // Safer: Store explicitly.
+    final prefs = await SharedPreferences.getInstance();
+    final lastSyncMillis = prefs.getInt('last_sync_timestamp') ?? 0;
+    final lastSyncTime = DateTime.fromMillisecondsSinceEpoch(lastSyncMillis);
 
-    // Quick hack: Use a fixed timestamp or fetch from DB if stored.
-    // I'll leave valid logic for "Last Sync Time" as TODO or use epoch for full sync first.
-    final lastSyncTime =
-        DateTime.fromMillisecondsSinceEpoch(0); // Full Sync for now
-    // TODO: Fetch real lastSyncTime from SharedPreferences
+    const businessId = 'default_business'; // Default until Auth is ready
 
-    const businessId = 'default_business'; // TODO: Get from Auth Provider
-
-    final pullReq =
-        PullRequest(businessId: businessId, lastSyncTimestamp: lastSyncTime);
+    final pullReq = PullRequest(
+      businessId: businessId,
+      lastSyncTimestamp: lastSyncTime,
+    );
 
     try {
       final response = await _api.pullChanges(pullReq);
 
       // Upsert Customers
       for (final cust in response.customers) {
-        await _db.insertCustomer(CustomersCompanion.insert(
-          id: cust.id,
-          userId: businessId,
-          name: cust.name,
-          phone: Value(cust.phone),
-          email: Value(cust.email),
-          updatedAt: cust.updatedAt,
-          createdAt: cust.updatedAt, // If new
-          isSynced: const Value(true), // coming from server, so it is synced
-        ));
+        await _db.insertCustomer(
+          CustomersCompanion.insert(
+            id: cust.id,
+            userId: businessId,
+            name: cust.name,
+            phone: Value(cust.phone),
+            email: Value(cust.email),
+            updatedAt: cust.updatedAt,
+            createdAt: cust.updatedAt, // If new
+            isSynced: const Value(true), // coming from server, so it is synced
+          ),
+        );
       }
 
       // Upsert Products
       for (final prod in response.products) {
-        await _db.insertProduct(ProductsCompanion.insert(
-          id: prod.id,
-          userId: businessId,
-          name: prod.name,
-          sellingPrice: prod.price,
-          sku: Value(prod.sku),
-          stockQuantity: Value(prod.stockQty ?? 0),
-          updatedAt: prod.updatedAt,
-          createdAt: prod.updatedAt,
-          isSynced: const Value(true),
-        ));
+        await _db.insertProduct(
+          ProductsCompanion.insert(
+            id: prod.id,
+            userId: businessId,
+            name: prod.name,
+            sellingPrice: prod.price,
+            sku: Value(prod.sku),
+            stockQuantity: Value(prod.stockQty ?? 0),
+            updatedAt: prod.updatedAt,
+            createdAt: prod.updatedAt,
+            isSynced: const Value(true),
+          ),
+        );
       }
 
       // Upsert Bills
       for (final bill in response.bills) {
         // Bill Logic
-        await _db.insertBill(BillsCompanion.insert(
-          id: bill.id,
-          userId: businessId,
-          invoiceNumber: bill.invoiceNumber,
-          billDate: bill.billDate,
-          grandTotal: Value(bill.totalAmount),
-          itemsJson: '[]', // TODO: convert items to JSON
-          updatedAt: bill.updatedAt,
-          createdAt: bill.updatedAt,
-          isSynced: const Value(true),
-        ));
+        await _db.insertBill(
+          BillsCompanion.insert(
+            id: bill.id,
+            userId: businessId,
+            invoiceNumber: bill.invoiceNumber,
+            billDate: bill.billDate,
+            grandTotal: Value(bill.totalAmount),
+            itemsJson: jsonEncode(bill.items.map((e) => e.toJson()).toList()),
+            updatedAt: bill.updatedAt,
+            createdAt: bill.updatedAt,
+            isSynced: const Value(true),
+          ),
+        );
       }
 
       // Update Checkpoint

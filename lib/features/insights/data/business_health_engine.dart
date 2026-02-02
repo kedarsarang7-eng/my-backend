@@ -245,21 +245,29 @@ class BusinessHealthEngine {
       final last30Days = now.subtract(const Duration(days: 30));
 
       // Get sales from last 7 days
-      final recentQuery = await (_database.selectOnly(_database.bills)
-            ..addColumns([_database.bills.grandTotal.sum()])
-            ..where(_database.bills.userId.equals(userId) &
-                _database.bills.billDate.isBiggerOrEqualValue(last7Days)))
-          .getSingleOrNull();
+      final recentQuery =
+          await (_database.selectOnly(_database.bills)
+                ..addColumns([_database.bills.grandTotal.sum()])
+                ..where(
+                  _database.bills.userId.equals(userId) &
+                      _database.bills.billDate.isBiggerOrEqualValue(last7Days),
+                ))
+              .getSingleOrNull();
       final recentSales =
           recentQuery?.read(_database.bills.grandTotal.sum()) ?? 0.0;
 
       // Get sales from previous 23 days (7-30 days ago)
-      final olderQuery = await (_database.selectOnly(_database.bills)
-            ..addColumns([_database.bills.grandTotal.sum()])
-            ..where(_database.bills.userId.equals(userId) &
-                _database.bills.billDate.isBiggerOrEqualValue(last30Days) &
-                _database.bills.billDate.isSmallerThanValue(last7Days)))
-          .getSingleOrNull();
+      final olderQuery =
+          await (_database.selectOnly(_database.bills)
+                ..addColumns([_database.bills.grandTotal.sum()])
+                ..where(
+                  _database.bills.userId.equals(userId) &
+                      _database.bills.billDate.isBiggerOrEqualValue(
+                        last30Days,
+                      ) &
+                      _database.bills.billDate.isSmallerThanValue(last7Days),
+                ))
+              .getSingleOrNull();
       final olderSales =
           olderQuery?.read(_database.bills.grandTotal.sum()) ?? 0.0;
 
@@ -312,27 +320,32 @@ class BusinessHealthEngine {
   Future<HealthFactor> _calculatePendingPayments(String userId) async {
     try {
       // Get total pending dues
-      final pendingQuery = await (_database.selectOnly(_database.customers)
-            ..addColumns([_database.customers.totalDues.sum()])
-            ..where(_database.customers.userId.equals(userId)))
-          .getSingleOrNull();
+      final pendingQuery =
+          await (_database.selectOnly(_database.customers)
+                ..addColumns([_database.customers.totalDues.sum()])
+                ..where(_database.customers.userId.equals(userId)))
+              .getSingleOrNull();
       final totalPending =
           pendingQuery?.read(_database.customers.totalDues.sum()) ?? 0.0;
 
       // Get total sales (last 30 days for ratio)
       final now = DateTime.now();
       final last30Days = now.subtract(const Duration(days: 30));
-      final salesQuery = await (_database.selectOnly(_database.bills)
-            ..addColumns([_database.bills.grandTotal.sum()])
-            ..where(_database.bills.userId.equals(userId) &
-                _database.bills.billDate.isBiggerOrEqualValue(last30Days)))
-          .getSingleOrNull();
+      final salesQuery =
+          await (_database.selectOnly(_database.bills)
+                ..addColumns([_database.bills.grandTotal.sum()])
+                ..where(
+                  _database.bills.userId.equals(userId) &
+                      _database.bills.billDate.isBiggerOrEqualValue(last30Days),
+                ))
+              .getSingleOrNull();
       final totalSales =
           salesQuery?.read(_database.bills.grandTotal.sum()) ?? 1.0;
 
       // Calculate pending ratio
-      final pendingRatio =
-          totalSales > 0 ? (totalPending / totalSales) * 100 : 0.0;
+      final pendingRatio = totalSales > 0
+          ? (totalPending / totalSales) * 100
+          : 0.0;
 
       // Score: >50% = 0, 10% = 80, <10% = 100
       int score;
@@ -376,10 +389,11 @@ class BusinessHealthEngine {
   Future<HealthFactor> _calculateStockHealth(String userId) async {
     try {
       // Get total products
-      final totalQuery = await (_database.selectOnly(_database.products)
-            ..addColumns([_database.products.id.count()])
-            ..where(_database.products.userId.equals(userId)))
-          .getSingleOrNull();
+      final totalQuery =
+          await (_database.selectOnly(_database.products)
+                ..addColumns([_database.products.id.count()])
+                ..where(_database.products.userId.equals(userId)))
+              .getSingleOrNull();
       final totalProducts =
           totalQuery?.read(_database.products.id.count()) ?? 0;
 
@@ -393,21 +407,28 @@ class BusinessHealthEngine {
       }
 
       // Get low stock count
-      final lowStockQuery = await (_database.selectOnly(_database.products)
-            ..addColumns([_database.products.id.count()])
-            ..where(_database.products.userId.equals(userId) &
-                _database.products.stockQuantity
-                    .isSmallerOrEqual(_database.products.lowStockThreshold)))
-          .getSingleOrNull();
+      final lowStockQuery =
+          await (_database.selectOnly(_database.products)
+                ..addColumns([_database.products.id.count()])
+                ..where(
+                  _database.products.userId.equals(userId) &
+                      _database.products.stockQuantity.isSmallerOrEqual(
+                        _database.products.lowStockThreshold,
+                      ),
+                ))
+              .getSingleOrNull();
       final lowStockCount =
           lowStockQuery?.read(_database.products.id.count()) ?? 0;
 
       // Get out of stock count
-      final outOfStockQuery = await (_database.selectOnly(_database.products)
-            ..addColumns([_database.products.id.count()])
-            ..where(_database.products.userId.equals(userId) &
-                _database.products.stockQuantity.equals(0)))
-          .getSingleOrNull();
+      final outOfStockQuery =
+          await (_database.selectOnly(_database.products)
+                ..addColumns([_database.products.id.count()])
+                ..where(
+                  _database.products.userId.equals(userId) &
+                      _database.products.stockQuantity.equals(0),
+                ))
+              .getSingleOrNull();
       final outOfStockCount =
           outOfStockQuery?.read(_database.products.id.count()) ?? 0;
 
@@ -453,20 +474,26 @@ class BusinessHealthEngine {
       final last30Days = now.subtract(const Duration(days: 30));
 
       // Get income (sales)
-      final incomeQuery = await (_database.selectOnly(_database.bills)
-            ..addColumns([_database.bills.grandTotal.sum()])
-            ..where(_database.bills.userId.equals(userId) &
-                _database.bills.billDate.isBiggerOrEqualValue(last30Days)))
-          .getSingleOrNull();
+      final incomeQuery =
+          await (_database.selectOnly(_database.bills)
+                ..addColumns([_database.bills.grandTotal.sum()])
+                ..where(
+                  _database.bills.userId.equals(userId) &
+                      _database.bills.billDate.isBiggerOrEqualValue(last30Days),
+                ))
+              .getSingleOrNull();
       final income = incomeQuery?.read(_database.bills.grandTotal.sum()) ?? 0.0;
 
       // Get expenses (purchases)
-      final expenseQuery = await (_database.selectOnly(_database.purchaseOrders)
-            ..addColumns([_database.purchaseOrders.totalAmount.sum()])
-            ..where(_database.purchaseOrders.userId.equals(userId) &
-                _database.purchaseOrders.purchaseDate
-                    .isBiggerOrEqualValue(last30Days)))
-          .getSingleOrNull();
+      final expenseQuery =
+          await (_database.selectOnly(_database.purchaseOrders)
+                ..addColumns([_database.purchaseOrders.totalAmount.sum()])
+                ..where(
+                  _database.purchaseOrders.userId.equals(userId) &
+                      _database.purchaseOrders.purchaseDate
+                          .isBiggerOrEqualValue(last30Days),
+                ))
+              .getSingleOrNull();
       final expense =
           expenseQuery?.read(_database.purchaseOrders.totalAmount.sum()) ?? 0.0;
 
@@ -586,8 +613,9 @@ class BusinessHealthEngine {
     for (final factor in factors.where((f) => f.score < 60)) {
       switch (factor.type) {
         case HealthFactorType.salesTrend:
-          recommendations
-              .add('💡 Run promotions or reach out to inactive customers');
+          recommendations.add(
+            '💡 Run promotions or reach out to inactive customers',
+          );
           break;
         case HealthFactorType.pendingPayments:
           recommendations.add('💰 Send payment reminders to overdue customers');
@@ -596,8 +624,9 @@ class BusinessHealthEngine {
           recommendations.add('📦 Reorder low-stock items before they run out');
           break;
         case HealthFactorType.cashFlow:
-          recommendations
-              .add('📊 Review expenses and collect pending payments');
+          recommendations.add(
+            '📊 Review expenses and collect pending payments',
+          );
           break;
         case HealthFactorType.syncHealth:
           recommendations.add('☁️ Connect to WiFi to sync pending changes');
@@ -633,8 +662,10 @@ final businessHealthEngineProvider = Provider<BusinessHealthEngine>((ref) {
 });
 
 /// Provider for health score (auto-updates)
-final healthScoreProvider =
-    FutureProvider.family<HealthScoreResult, String>((ref, userId) async {
+final healthScoreProvider = FutureProvider.family<HealthScoreResult, String>((
+  ref,
+  userId,
+) async {
   final engine = ref.watch(businessHealthEngineProvider);
   return engine.calculateHealthScore(userId);
 });
@@ -642,13 +673,13 @@ final healthScoreProvider =
 /// Provider for health score stream (periodic refresh)
 final healthScoreStreamProvider =
     StreamProvider.family<HealthScoreResult, String>((ref, userId) async* {
-  final engine = ref.watch(businessHealthEngineProvider);
+      final engine = ref.watch(businessHealthEngineProvider);
 
-  // Emit immediately
-  yield await engine.calculateHealthScore(userId);
+      // Emit immediately
+      yield await engine.calculateHealthScore(userId);
 
-  // Then every 5 minutes
-  await for (final _ in Stream.periodic(const Duration(minutes: 5))) {
-    yield await engine.calculateHealthScore(userId);
-  }
-});
+      // Then every 5 minutes
+      await for (final _ in Stream.periodic(const Duration(minutes: 5))) {
+        yield await engine.calculateHealthScore(userId);
+      }
+    });

@@ -25,8 +25,9 @@ class OcrParser {
       final confidenceFactors = <double>[];
 
       // GSTIN Detection
-      final gstinRegex =
-          RegExp(r'\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}');
+      final gstinRegex = RegExp(
+        r'\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}',
+      );
       final gstinMatches = gstinRegex.allMatches(text);
       String? vendorGstin;
       if (gstinMatches.isNotEmpty) {
@@ -38,10 +39,13 @@ class OcrParser {
       String? invoiceNumber;
       final invoicePatterns = [
         RegExp(
-            r'(?:invoice|inv|bill|receipt|memo)\s*(?:no|number|#|:)?\s*[:.]?\s*([A-Z0-9\-\/]+)',
-            caseSensitive: false),
-        RegExp(r'(?:no|number|#)\s*[:.]?\s*([A-Z0-9\-\/]{4,})',
-            caseSensitive: false),
+          r'(?:invoice|inv|bill|receipt|memo)\s*(?:no|number|#|:)?\s*[:.]?\s*([A-Z0-9\-\/]+)',
+          caseSensitive: false,
+        ),
+        RegExp(
+          r'(?:no|number|#)\s*[:.]?\s*([A-Z0-9\-\/]{4,})',
+          caseSensitive: false,
+        ),
       ];
       for (final pattern in invoicePatterns) {
         final match = pattern.firstMatch(text);
@@ -78,7 +82,7 @@ class OcrParser {
       for (final match in amountRegex.allMatches(text)) {
         final amount =
             double.tryParse(match.group(1)!.replaceAll(RegExp(r'[,\s]'), '')) ??
-                0;
+            0;
         if (amount > 0 && amount < 10000000) {
           amounts.add(amount);
         }
@@ -87,8 +91,9 @@ class OcrParser {
       // Find grand total
       double grandTotal = 0;
       final totalPattern = RegExp(
-          r'(?:grand|total|net|payable)\s*[:.]?\s*(?:₹|rs\.?)?\s*(\d+(?:\.\d{1,2})?)',
-          caseSensitive: false);
+        r'(?:grand|total|net|payable)\s*[:.]?\s*(?:₹|rs\.?)?\s*(\d+(?:\.\d{1,2})?)',
+        caseSensitive: false,
+      );
       final totalMatch = totalPattern.firstMatch(text);
       if (totalMatch != null) {
         grandTotal = double.tryParse(totalMatch.group(1)!) ?? 0;
@@ -101,8 +106,9 @@ class OcrParser {
       // Tax Detection
       double taxAmount = 0;
       final taxPattern = RegExp(
-          r'(?:gst|cgst|sgst|igst|tax)\s*[:@]?\s*(\d+(?:\.\d{1,2})?)\s*%?',
-          caseSensitive: false);
+        r'(?:gst|cgst|sgst|igst|tax)\s*[:@]?\s*(\d+(?:\.\d{1,2})?)\s*%?',
+        caseSensitive: false,
+      );
       final taxMatch = taxPattern.firstMatch(text);
       if (taxMatch != null) {
         final taxVal = double.tryParse(taxMatch.group(1)!) ?? 0;
@@ -119,7 +125,8 @@ class OcrParser {
       // Line Items Detection
       final items = <ParsedItem>[];
       final itemPattern = RegExp(
-          r'^(.+?)\s+(\d+(?:\.\d+)?)\s*[xX×*]?\s*(?:₹|rs\.?)?\s*(\d+(?:\.\d+)?)');
+        r'^(.+?)\s+(\d+(?:\.\d+)?)\s*[xX×*]?\s*(?:₹|rs\.?)?\s*(\d+(?:\.\d+)?)',
+      );
       for (final line in lines) {
         final match = itemPattern.firstMatch(line);
         if (match != null) {
@@ -127,11 +134,13 @@ class OcrParser {
           if (name.length > 2 &&
               !name.toLowerCase().contains('total') &&
               !name.toLowerCase().contains('invoice')) {
-            items.add(ParsedItem(
-              productName: name,
-              quantity: double.tryParse(match.group(2)!) ?? 1,
-              unitPrice: double.tryParse(match.group(3)!) ?? 0,
-            ));
+            items.add(
+              ParsedItem(
+                productName: name,
+                quantity: double.tryParse(match.group(2)!) ?? 1,
+                unitPrice: double.tryParse(match.group(3)!) ?? 0,
+              ),
+            );
           }
         }
       }
@@ -142,8 +151,9 @@ class OcrParser {
       // Customer Name Detection
       String? customerName;
       final customerPattern = RegExp(
-          r'(?:customer|party|buyer|bill\s*to)\s*[:.]?\s*(.+)',
-          caseSensitive: false);
+        r'(?:customer|party|buyer|bill\s*to)\s*[:.]?\s*(.+)',
+        caseSensitive: false,
+      );
       final custMatch = customerPattern.firstMatch(text);
       if (custMatch != null) {
         customerName = custMatch.group(1)!.trim();
@@ -169,11 +179,7 @@ class OcrParser {
         amountsFound: amounts.length,
       );
     } catch (e) {
-      return OcrParseResult(
-        success: false,
-        confidence: 0,
-        error: e.toString(),
-      );
+      return OcrParseResult(success: false, confidence: 0, error: e.toString());
     }
   }
 }

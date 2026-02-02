@@ -140,13 +140,15 @@ class _PremiumFloatingActionButtonState
       duration: const Duration(milliseconds: 150),
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _glowAnimation = Tween<double>(begin: 8, end: 16).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _glowAnimation = Tween<double>(
+      begin: 8,
+      end: 16,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -192,10 +194,7 @@ class _PremiumFloatingActionButtonState
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: child,
-            );
+            return Transform.scale(scale: _scaleAnimation.value, child: child);
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
@@ -217,14 +216,14 @@ class _PremiumFloatingActionButtonState
                           _isPressed
                               ? 0.5
                               : _isHovered
-                                  ? 0.4
-                                  : 0.25,
+                              ? 0.4
+                              : 0.25,
                         ),
                         blurRadius: _isPressed
                             ? _glowAnimation.value
                             : _isHovered
-                                ? 20
-                                : 12,
+                            ? 20
+                            : 12,
                         offset: const Offset(0, 4),
                         spreadRadius: _isHovered ? 2 : 0,
                       ),
@@ -238,11 +237,7 @@ class _PremiumFloatingActionButtonState
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    widget.icon,
-                    color: effectiveFgColor,
-                    size: 24,
-                  ),
+                  Icon(widget.icon, color: effectiveFgColor, size: 24),
                   if (widget.isExtended && widget.label != null) ...[
                     const SizedBox(width: 10),
                     Text(
@@ -301,9 +296,10 @@ class _PremiumFabIconState extends State<PremiumFabIcon>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.92,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -328,10 +324,7 @@ class _PremiumFabIconState extends State<PremiumFabIcon>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: child,
-            );
+            return Transform.scale(scale: _scaleAnimation.value, child: child);
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),

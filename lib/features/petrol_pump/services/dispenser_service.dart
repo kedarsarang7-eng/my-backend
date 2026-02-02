@@ -37,8 +37,10 @@ class DispenserService {
   Stream<List<Dispenser>> getDispensers() {
     return _dispenserCollection.snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) =>
-              Dispenser.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) =>
+                Dispenser.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+          )
           .toList();
     });
   }
@@ -63,11 +65,13 @@ class DispenserService {
 
     if (dispenserDoc.exists) {
       final dispenser = Dispenser.fromMap(
-          dispenserDoc.id, dispenserDoc.data() as Map<String, dynamic>);
+        dispenserDoc.id,
+        dispenserDoc.data() as Map<String, dynamic>,
+      );
 
       if (!dispenser.nozzleIds.contains(nozzle.nozzleId)) {
         await dispenserRef.update({
-          'nozzleIds': FieldValue.arrayUnion([nozzle.nozzleId])
+          'nozzleIds': FieldValue.arrayUnion([nozzle.nozzleId]),
         });
       }
     }
@@ -79,19 +83,22 @@ class DispenserService {
         .where('dispenserId', isEqualTo: dispenserId)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) =>
-              Nozzle.fromMap(doc.id, doc.data() as Map<String, dynamic>))
-          .toList();
-    });
+          return snapshot.docs
+              .map(
+                (doc) =>
+                    Nozzle.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+              )
+              .toList();
+        });
   }
 
   /// Get all nozzles
   Stream<List<Nozzle>> getAllNozzles() {
     return _nozzleCollection.snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) =>
-              Nozzle.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) => Nozzle.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+          )
           .toList();
     });
   }
@@ -114,11 +121,16 @@ class DispenserService {
 
     // 2. PERMISSION CHECK: canEditReadings
     if (employeeId != null) {
-      final hasPermission =
-          await _checkPermission(employeeId, 'canEditReadings');
+      final hasPermission = await _checkPermission(
+        employeeId,
+        'canEditReadings',
+      );
       if (!hasPermission) {
         await _logUnauthorizedAttempt(
-            employeeId, 'updateOpeningReading', nozzleId);
+          employeeId,
+          'updateOpeningReading',
+          nozzleId,
+        );
         throw PermissionDeniedException(
           'canEditReadings',
           'You do not have permission to edit nozzle readings.',
@@ -160,11 +172,16 @@ class DispenserService {
 
     // 2. PERMISSION CHECK: canEditReadings (skip for system updates like sales)
     if (!isSystemUpdate && employeeId != null) {
-      final hasPermission =
-          await _checkPermission(employeeId, 'canEditReadings');
+      final hasPermission = await _checkPermission(
+        employeeId,
+        'canEditReadings',
+      );
       if (!hasPermission) {
         await _logUnauthorizedAttempt(
-            employeeId, 'updateClosingReading', nozzleId);
+          employeeId,
+          'updateClosingReading',
+          nozzleId,
+        );
         throw PermissionDeniedException(
           'canEditReadings',
           'You do not have permission to edit nozzle readings.',
@@ -196,7 +213,8 @@ class DispenserService {
       final data = doc.data() as Map<String, dynamic>;
       if (data['status'] == 'closed') {
         throw Exception(
-            'Cannot modify nozzle reading: The linked shift is CLOSED. Re-open shift to edit.');
+          'Cannot modify nozzle reading: The linked shift is CLOSED. Re-open shift to edit.',
+        );
       }
     }
   }
@@ -207,8 +225,10 @@ class DispenserService {
       final doc = await _employeeCollection.doc(employeeId).get();
       if (!doc.exists) return false;
 
-      final employee =
-          Employee.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+      final employee = Employee.fromMap(
+        doc.id,
+        doc.data() as Map<String, dynamic>,
+      );
 
       switch (permission) {
         case 'canEditReadings':
@@ -232,7 +252,10 @@ class DispenserService {
 
   /// Log unauthorized permission attempt
   Future<void> _logUnauthorizedAttempt(
-      String employeeId, String action, String resourceId) async {
+    String employeeId,
+    String action,
+    String resourceId,
+  ) async {
     try {
       final auditRepo = sl<AuditRepository>();
       await auditRepo.logAction(
@@ -249,8 +272,12 @@ class DispenserService {
   }
 
   /// Log reading change for audit trail
-  Future<void> _logReadingChange(String nozzleId, String readingType,
-      double value, String? employeeId) async {
+  Future<void> _logReadingChange(
+    String nozzleId,
+    String readingType,
+    double value,
+    String? employeeId,
+  ) async {
     try {
       final auditRepo = sl<AuditRepository>();
       await auditRepo.logAction(

@@ -22,7 +22,8 @@ class TankService {
     return _tankCollection.snapshots().map((snapshot) {
       return snapshot.docs
           .map(
-              (doc) => Tank.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+            (doc) => Tank.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+          )
           .toList();
     });
   }
@@ -50,16 +51,22 @@ class TankService {
 
   /// Add purchase (refill) with AUDIT TRAIL
   /// Gap #4 FIX: All purchases are logged with before/after stock
-  Future<void> addPurchase(String tankId, double quantity,
-      {String? employeeId, String? invoiceNumber}) async {
+  Future<void> addPurchase(
+    String tankId,
+    double quantity, {
+    String? employeeId,
+    String? invoiceNumber,
+  }) async {
     final docRef = _tankCollection.doc(tankId);
 
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) throw Exception('Tank not found');
 
-      final tank =
-          Tank.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
+      final tank = Tank.fromMap(
+        snapshot.id,
+        snapshot.data() as Map<String, dynamic>,
+      );
       final oldStock = tank.currentStock;
       final updatedTank = tank.addPurchase(quantity);
 
@@ -84,16 +91,22 @@ class TankService {
 
   /// Record dip reading (manual check) with AUDIT TRAIL
   /// Gap #4 FIX: Dip readings that cause stock changes are logged
-  Future<void> recordDipReading(String tankId, double actualStock,
-      {String? employeeId, String? reason}) async {
+  Future<void> recordDipReading(
+    String tankId,
+    double actualStock, {
+    String? employeeId,
+    String? reason,
+  }) async {
     final docRef = _tankCollection.doc(tankId);
 
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) throw Exception('Tank not found');
 
-      final tank =
-          Tank.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
+      final tank = Tank.fromMap(
+        snapshot.id,
+        snapshot.data() as Map<String, dynamic>,
+      );
       final oldStock = tank.currentStock;
       final variance = actualStock - tank.calculatedStock;
       final updatedTank = tank.updateWithDipReading(actualStock);
@@ -124,10 +137,7 @@ class TankService {
           details:
               'HIGH VARIANCE DETECTED: ${variance.toStringAsFixed(2)}L difference requires investigation',
           employeeId: employeeId,
-          metadata: {
-            'severity': 'HIGH',
-            'variance': variance,
-          },
+          metadata: {'severity': 'HIGH', 'variance': variance},
         );
       }
     });
@@ -147,8 +157,10 @@ class TankService {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) throw Exception('Tank not found');
 
-      final tank =
-          Tank.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
+      final tank = Tank.fromMap(
+        snapshot.id,
+        snapshot.data() as Map<String, dynamic>,
+      );
       final oldStock = tank.currentStock;
       final adjustment = newStock - oldStock;
 
@@ -183,8 +195,10 @@ class TankService {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) return; // Silent fail if tank deleted
 
-      final tank =
-          Tank.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
+      final tank = Tank.fromMap(
+        snapshot.id,
+        snapshot.data() as Map<String, dynamic>,
+      );
       final updatedTank = tank.deductSales(quantity);
 
       transaction.update(docRef, updatedTank.toMap());

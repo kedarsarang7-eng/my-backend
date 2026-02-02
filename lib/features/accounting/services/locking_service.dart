@@ -10,15 +10,19 @@ class LockingService {
 
   /// Get the current lock date for a user
   Future<DateTime?> getLockDate(String userId) async {
-    final lock = await (_db.select(_db.periodLocks)
-          ..where((t) => t.id.equals('global_lock') & t.userId.equals(userId)))
-        .getSingleOrNull();
+    final lock =
+        await (_db.select(_db.periodLocks)..where(
+              (t) => t.id.equals('global_lock') & t.userId.equals(userId),
+            ))
+            .getSingleOrNull();
     return lock?.lockDate;
   }
 
   /// Set or update the lock date
   Future<void> setLockDate(String userId, DateTime date) async {
-    await _db.into(_db.periodLocks).insert(
+    await _db
+        .into(_db.periodLocks)
+        .insert(
           PeriodLockEntity(
             id: 'global_lock',
             userId: userId,
@@ -43,8 +47,11 @@ class LockingService {
   }
 
   /// Validate action and throw exception if locked, unless an override is provided.
-  Future<void> validateAction(String userId, DateTime date,
-      {LockOverrideContext? overrideContext}) async {
+  Future<void> validateAction(
+    String userId,
+    DateTime date, {
+    LockOverrideContext? overrideContext,
+  }) async {
     if (await isDateLocked(userId, date)) {
       if (overrideContext != null) {
         // Valid override provided, log it and proceed
@@ -60,7 +67,8 @@ class LockingService {
         return;
       }
       throw PeriodLockedException(
-          "This period is locked. Cannot add/edit entries.");
+        "This period is locked. Cannot add/edit entries.",
+      );
     }
   }
 
@@ -74,7 +82,9 @@ class LockingService {
     required Map<String, dynamic> modifiedValues,
     required String approvedBy,
   }) async {
-    await _db.into(_db.lockOverrideLogs).insert(
+    await _db
+        .into(_db.lockOverrideLogs)
+        .insert(
           LockOverrideLogEntity(
             id: const Uuid().v4(),
             userId: userId,

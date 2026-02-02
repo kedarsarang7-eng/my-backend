@@ -15,7 +15,9 @@ class DeliveryChallanRepository {
   /// Create a new Delivery Challan
   Future<void> createChallan(DeliveryChallan challan) async {
     await _db.transaction(() async {
-      await _db.into(_db.deliveryChallans).insert(
+      await _db
+          .into(_db.deliveryChallans)
+          .insert(
             DeliveryChallansCompanion(
               id: Value(challan.id),
               userId: Value(challan.userId),
@@ -33,7 +35,8 @@ class DeliveryChallanRepository {
               eWayBillNumber: Value(challan.eWayBillNumber),
               shippingAddress: Value(challan.shippingAddress),
               itemsJson: Value(
-                  jsonEncode(challan.items.map((e) => e.toJson()).toList())),
+                jsonEncode(challan.items.map((e) => e.toJson()).toList()),
+              ),
               isSynced: const Value(false),
               createdAt: Value(DateTime.now()),
               updatedAt: Value(DateTime.now()),
@@ -54,9 +57,9 @@ class DeliveryChallanRepository {
   /// Update an existing Challan
   Future<void> updateChallan(DeliveryChallan challan) async {
     await _db.transaction(() async {
-      await (_db.update(_db.deliveryChallans)
-            ..where((t) => t.id.equals(challan.id)))
-          .write(
+      await (_db.update(
+        _db.deliveryChallans,
+      )..where((t) => t.id.equals(challan.id))).write(
         DeliveryChallansCompanion(
           customerId: Value(challan.customerId),
           customerName: Value(challan.customerName),
@@ -69,8 +72,9 @@ class DeliveryChallanRepository {
           vehicleNumber: Value(challan.vehicleNumber),
           eWayBillNumber: Value(challan.eWayBillNumber),
           shippingAddress: Value(challan.shippingAddress),
-          itemsJson:
-              Value(jsonEncode(challan.items.map((e) => e.toJson()).toList())),
+          itemsJson: Value(
+            jsonEncode(challan.items.map((e) => e.toJson()).toList()),
+          ),
           convertedBillId: Value(challan.convertedBillId),
           updatedAt: Value(DateTime.now()),
           isSynced: const Value(false),
@@ -89,9 +93,9 @@ class DeliveryChallanRepository {
 
   /// Get Challan by ID
   Future<DeliveryChallan?> getById(String id) async {
-    final row = await (_db.select(_db.deliveryChallans)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.deliveryChallans,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (row == null) return null;
     return _entityToModel(row);
@@ -99,13 +103,14 @@ class DeliveryChallanRepository {
 
   /// Get all Challans for a user
   Future<List<DeliveryChallan>> getAll(String userId) async {
-    final rows = await (_db.select(_db.deliveryChallans)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
-          ..orderBy([
-            (t) => OrderingTerm.desc(t.challanDate),
-            (t) => OrderingTerm.desc(t.createdAt)
-          ]))
-        .get();
+    final rows =
+        await (_db.select(_db.deliveryChallans)
+              ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
+              ..orderBy([
+                (t) => OrderingTerm.desc(t.challanDate),
+                (t) => OrderingTerm.desc(t.createdAt),
+              ]))
+            .get();
 
     return rows.map(_entityToModel).toList();
   }
@@ -116,7 +121,7 @@ class DeliveryChallanRepository {
           ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
           ..orderBy([
             (t) => OrderingTerm.desc(t.challanDate),
-            (t) => OrderingTerm.desc(t.createdAt)
+            (t) => OrderingTerm.desc(t.createdAt),
           ]))
         .watch()
         .map((rows) => rows.map(_entityToModel).toList());

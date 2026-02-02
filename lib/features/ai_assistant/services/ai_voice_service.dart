@@ -101,7 +101,9 @@ class AiVoiceService extends ChangeNotifier {
 
     if (!available) {
       _setState(
-          VoiceState.error, "Microphone unavailable or permission denied.");
+        VoiceState.error,
+        "Microphone unavailable or permission denied.",
+      );
     }
   }
 
@@ -168,7 +170,8 @@ class AiVoiceService extends ChangeNotifier {
       );
 
       debugPrint(
-          "🤖 AI Response: ${response.text} (Intent: ${response.intent})");
+        "🤖 AI Response: ${response.text} (Intent: ${response.intent})",
+      );
 
       _lastAiText = response.text;
       _lastIntent = response.intent;
@@ -199,15 +202,19 @@ class AiVoiceService extends ChangeNotifier {
     }
   }
 
-  void _provideResponse(String userText, String aiText, String intent,
-      Map<String, dynamic>? params) {
+  void _provideResponse(
+    String userText,
+    String aiText,
+    String intent,
+    Map<String, dynamic>? params,
+  ) {
     // UI Update
     notifyListeners();
     _responseController.add({
       'user_text': userText,
       'mahiru_text': aiText,
       'intent': intent,
-      'data': params
+      'data': params,
     });
 
     if (aiText.isNotEmpty) {

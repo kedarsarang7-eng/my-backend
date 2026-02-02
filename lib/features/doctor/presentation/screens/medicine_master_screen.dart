@@ -48,10 +48,12 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
         // Filter for medicines category
         setState(() {
           _medicines = result.data!
-              .where((p) =>
-                  p.category?.toLowerCase() == 'medicine' ||
-                  p.category?.toLowerCase() == 'medicines' ||
-                  p.category?.toLowerCase() == 'drug')
+              .where(
+                (p) =>
+                    p.category?.toLowerCase() == 'medicine' ||
+                    p.category?.toLowerCase() == 'medicines' ||
+                    p.category?.toLowerCase() == 'drug',
+              )
               .toList();
           _filteredMedicines = _medicines;
         });
@@ -113,13 +115,13 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredMedicines.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _filteredMedicines.length,
-                        itemBuilder: (context, index) =>
-                            _buildMedicineCard(_filteredMedicines[index]),
-                      ),
+                ? _buildEmptyState()
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: _filteredMedicines.length,
+                    itemBuilder: (context, index) =>
+                        _buildMedicineCard(_filteredMedicines[index]),
+                  ),
           ),
         ],
       ),
@@ -131,13 +133,18 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.medication_outlined,
-              size: 64, color: Colors.white.withOpacity(0.3)),
+          Icon(
+            Icons.medication_outlined,
+            size: 64,
+            color: Colors.white.withOpacity(0.3),
+          ),
           const SizedBox(height: 16),
           Text(
             'No medicines found',
             style: GoogleFonts.inter(
-                color: Colors.white.withOpacity(0.7), fontSize: 16),
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 16,
+            ),
           ),
           const SizedBox(height: 8),
           TextButton.icon(
@@ -164,7 +171,9 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
         title: Text(
           medicine.name,
           style: GoogleFonts.inter(
-              color: Colors.white, fontWeight: FontWeight.w600),
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,8 +181,10 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
             const SizedBox(height: 4),
             Row(
               children: [
-                _buildInfoChip('₹${medicine.sellingPrice.toStringAsFixed(2)}',
-                    Colors.green),
+                _buildInfoChip(
+                  '₹${medicine.sellingPrice.toStringAsFixed(2)}',
+                  Colors.green,
+                ),
                 const SizedBox(width: 8),
                 if (medicine.unit.isNotEmpty)
                   _buildInfoChip(medicine.unit, Colors.blue),
@@ -227,16 +238,20 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
       ),
       child: Text(
         text,
-        style:
-            TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          color: color,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
 
   Future<void> _showMedicineDialog(Product? medicine) async {
     final nameController = TextEditingController(text: medicine?.name ?? '');
-    final priceController =
-        TextEditingController(text: medicine?.sellingPrice.toString() ?? '');
+    final priceController = TextEditingController(
+      text: medicine?.sellingPrice.toString() ?? '',
+    );
     final unitController = TextEditingController(text: medicine?.unit ?? 'pcs');
 
     final result = await showDialog<bool>(
@@ -351,8 +366,10 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: FuturisticColors.surface,
-        title: const Text('Delete Medicine?',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Delete Medicine?',
+          style: TextStyle(color: Colors.white),
+        ),
         content: Text(
           'Are you sure you want to delete "${medicine.name}"?',
           style: const TextStyle(color: Colors.white70),
@@ -376,9 +393,9 @@ class _MedicineMasterScreenState extends ConsumerState<MedicineMasterScreen> {
       _loadMedicines();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Medicine deleted')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Medicine deleted')));
       }
     }
   }

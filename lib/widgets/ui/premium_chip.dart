@@ -49,9 +49,10 @@ class _PremiumChipState extends State<PremiumChip>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.96).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.96,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -76,10 +77,7 @@ class _PremiumChipState extends State<PremiumChip>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: child,
-            );
+            return Transform.scale(scale: _scaleAnimation.value, child: child);
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
@@ -93,15 +91,16 @@ class _PremiumChipState extends State<PremiumChip>
                 color: widget.selected
                     ? selectedColor
                     : _isHovered
-                        ? FuturisticColors.accent1.withOpacity(0.5)
-                        : Colors.white.withOpacity(0.15),
+                    ? FuturisticColors.accent1.withOpacity(0.5)
+                    : Colors.white.withOpacity(0.15),
                 width: widget.selected ? 2 : 1.5,
               ),
               boxShadow: widget.selected || _isHovered
                   ? [
                       BoxShadow(
-                        color: selectedColor
-                            .withOpacity(widget.selected ? 0.2 : 0.1),
+                        color: selectedColor.withOpacity(
+                          widget.selected ? 0.2 : 0.1,
+                        ),
                         blurRadius: _isHovered ? 12 : 8,
                         offset: const Offset(0, 2),
                       ),
@@ -115,11 +114,7 @@ class _PremiumChipState extends State<PremiumChip>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (widget.showCheckmark && widget.selected) ...[
-                    Icon(
-                      Icons.check_rounded,
-                      size: 16,
-                      color: selectedColor,
-                    ),
+                    Icon(Icons.check_rounded, size: 16, color: selectedColor),
                     const SizedBox(width: 6),
                   ] else if (widget.icon != null) ...[
                     Icon(
@@ -135,8 +130,9 @@ class _PremiumChipState extends State<PremiumChip>
                     widget.label,
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight:
-                          widget.selected ? FontWeight.w600 : FontWeight.w500,
+                      fontWeight: widget.selected
+                          ? FontWeight.w600
+                          : FontWeight.w500,
                       color: widget.selected
                           ? FuturisticColors.textPrimary
                           : FuturisticColors.textSecondary,
@@ -239,10 +235,7 @@ class StatusChip extends StatelessWidget {
   }
 
   factory StatusChip.info({required String label}) {
-    return StatusChip(
-      label: label,
-      status: StatusType.info,
-    );
+    return StatusChip(label: label, status: StatusType.info);
   }
 
   @override

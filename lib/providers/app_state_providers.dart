@@ -243,8 +243,9 @@ class ThemeStateNotifier extends Notifier<ThemeState> {
           color: const Color(0xFF1E293B), // Slate 800
           elevation: 2,
           shadowColor: Colors.black.withOpacity(0.3),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF0F172A),
@@ -289,8 +290,9 @@ class ThemeStateNotifier extends Notifier<ThemeState> {
           color: palette.creamCard,
           elevation: 2,
           shadowColor: Colors.black.withOpacity(0.05),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
@@ -350,12 +352,14 @@ class LocaleStateNotifier extends Notifier<LocaleState> {
     if (legacyName != null) {
       try {
         final appLang = AppLanguage.values.firstWhere(
-            (l) => l.name == legacyName,
-            orElse: () => AppLanguage.english);
+          (l) => l.name == legacyName,
+          orElse: () => AppLanguage.english,
+        );
 
         final config = LanguageConfig.all.firstWhere(
-            (c) => c.language == appLang,
-            orElse: () => LanguageConfig.all.first);
+          (c) => c.language == appLang,
+          orElse: () => LanguageConfig.all.first,
+        );
 
         // Save to new key for future
         await prefs.setString('locale', config.code);
@@ -377,8 +381,9 @@ class LocaleStateNotifier extends Notifier<LocaleState> {
   }
 }
 
-final localeStateProvider =
-    NotifierProvider<LocaleStateNotifier, LocaleState>(LocaleStateNotifier.new);
+final localeStateProvider = NotifierProvider<LocaleStateNotifier, LocaleState>(
+  LocaleStateNotifier.new,
+);
 
 // ============================================================================
 // AUTH STATE
@@ -476,8 +481,9 @@ class AuthStateNotifier extends Notifier<AuthState> {
   }
 }
 
-final authStateProvider =
-    NotifierProvider<AuthStateNotifier, AuthState>(AuthStateNotifier.new);
+final authStateProvider = NotifierProvider<AuthStateNotifier, AuthState>(
+  AuthStateNotifier.new,
+);
 
 // ============================================================================
 // CUSTOMERS STATE
@@ -507,16 +513,20 @@ class CustomersState {
   }
 }
 
-final customersStreamProvider =
-    StreamProvider.family<List<Customer>, String?>((ref, userId) {
+final customersStreamProvider = StreamProvider.family<List<Customer>, String?>((
+  ref,
+  userId,
+) {
   if (userId == null || userId.isEmpty) {
     return const Stream.empty();
   }
   return sl<CustomersRepository>().watchAll(userId: userId);
 });
 
-final patientsStreamProvider =
-    StreamProvider.family<List<Patient>, String?>((ref, userId) async* {
+final patientsStreamProvider = StreamProvider.family<List<Patient>, String?>((
+  ref,
+  userId,
+) async* {
   if (userId == null || userId.isEmpty) {
     yield [];
     return;
@@ -529,8 +539,9 @@ final patientsStreamProvider =
   }
 });
 
-final todaysVisitsProvider =
-    FutureProvider.autoDispose<List<Visit>>((ref) async {
+final todaysVisitsProvider = FutureProvider.autoDispose<List<Visit>>((
+  ref,
+) async {
   final user = ref.watch(authStateProvider).user;
   if (user == null) return [];
 
@@ -566,10 +577,7 @@ class BusinessTypeState {
   final BusinessType type;
   final String? customName;
 
-  BusinessTypeState({
-    this.type = BusinessType.other,
-    this.customName,
-  });
+  BusinessTypeState({this.type = BusinessType.other, this.customName});
 
   BusinessTypeState copyWith({BusinessType? type, String? customName}) {
     return BusinessTypeState(
@@ -662,14 +670,16 @@ class BusinessTypeNotifier extends Notifier<BusinessTypeState> {
 
 final businessTypeProvider =
     NotifierProvider<BusinessTypeNotifier, BusinessTypeState>(
-        BusinessTypeNotifier.new);
+      BusinessTypeNotifier.new,
+    );
 
 // ============================================================================
 // APP DATABASE PROVIDER (for direct access if needed)
 // ============================================================================
 
-final appDatabaseProvider =
-    Provider<AppDatabase>((ref) => AppDatabase.instance);
+final appDatabaseProvider = Provider<AppDatabase>(
+  (ref) => AppDatabase.instance,
+);
 
 // Modular DAOs
 final pharmacyDaoProvider = Provider<PharmacyDao>((ref) {
@@ -750,9 +760,13 @@ class SettingsStateNotifier extends Notifier<SettingsState> {
       // Customer trying to access Owner view - BLOCKED
       final context = sl<GlobalKey<NavigatorState>>().currentContext;
       if (context != null && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             content: Text(
-                'Permission Denied: Customers cannot access Owner Dashboard.')));
+              'Permission Denied: Customers cannot access Owner Dashboard.',
+            ),
+          ),
+        );
       }
       return;
     }
@@ -770,9 +784,10 @@ class SettingsStateNotifier extends Notifier<SettingsState> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       unawaited(
-          FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'name': name,
-      }, SetOptions(merge: true)));
+        FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'name': name,
+        }, SetOptions(merge: true)),
+      );
     }
   }
 
@@ -784,9 +799,10 @@ class SettingsStateNotifier extends Notifier<SettingsState> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       unawaited(
-          FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'profileImageUrl': url,
-      }, SetOptions(merge: true)));
+        FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'profileImageUrl': url,
+        }, SetOptions(merge: true)),
+      );
     }
   }
 
@@ -825,7 +841,8 @@ class SettingsStateNotifier extends Notifier<SettingsState> {
 
 final settingsStateProvider =
     NotifierProvider<SettingsStateNotifier, SettingsState>(
-        SettingsStateNotifier.new);
+      SettingsStateNotifier.new,
+    );
 // Convenience provider for current user (Firebase User)
 final currentUserProvider = Provider<User?>((ref) {
   return ref.watch(authStateProvider).user;

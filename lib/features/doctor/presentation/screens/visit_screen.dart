@@ -128,8 +128,10 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
 
   Future<void> _loadTemplates() async {
     final docId = sl<SessionManager>().ownerId ?? 'SYSTEM';
-    final templates =
-        await _templateRepo.getTemplatesByType(docId, 'DIAGNOSIS');
+    final templates = await _templateRepo.getTemplatesByType(
+      docId,
+      'DIAGNOSIS',
+    );
     if (mounted) setState(() => _diagnosisTemplates = templates);
   }
 
@@ -151,26 +153,29 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
     _loadTemplates();
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Saved as template')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Saved as template')));
     }
   }
 
   Future<void> _loadInitialPatient() async {
     if (widget.patientId != null) {
-      final patient =
-          await sl<PatientRepository>().getPatientById(widget.patientId!);
+      final patient = await sl<PatientRepository>().getPatientById(
+        widget.patientId!,
+      );
       if (patient != null && mounted) {
         setState(() => _selectedPatient = patient);
       } else if (mounted) {
         // Fallback if patient not found
-        setState(() => _selectedPatient = PatientModel(
-              id: widget.patientId!,
-              name: widget.patientName ?? 'Patient',
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ));
+        setState(
+          () => _selectedPatient = PatientModel(
+            id: widget.patientId!,
+            name: widget.patientName ?? 'Patient',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
       }
     }
   }
@@ -197,11 +202,7 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
       subtitle: 'Doctor Consultation',
       actions: [
         if (_visitStatus == 'IN_PROGRESS')
-          PrimaryButton(
-            label: 'Save',
-            icon: Icons.save,
-            onPressed: _saveVisit,
-          ),
+          PrimaryButton(label: 'Save', icon: Icons.save, onPressed: _saveVisit),
       ],
       child: Form(
         key: _formKey,
@@ -284,7 +285,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
             child: Text(
               statusText,
               style: GoogleFonts.inter(
-                  color: statusColor, fontWeight: FontWeight.w500),
+                color: statusColor,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           if (_selectedPatient != null &&
@@ -298,7 +301,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
               child: Text(
                 _selectedPatient!.bloodGroup!,
                 style: const TextStyle(
-                    color: Colors.red, fontWeight: FontWeight.bold),
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
         ],
@@ -350,7 +355,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                       Text(
                         'Chronic: ${_selectedPatient!.chronicConditions}',
                         style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.w500),
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                     if (_selectedPatient!.allergies?.isNotEmpty == true) ...[
@@ -358,7 +365,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                       Text(
                         'Allergies: ${_selectedPatient!.allergies}',
                         style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.w500),
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ],
@@ -372,7 +381,8 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                 color: FuturisticColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: FuturisticColors.primary.withOpacity(0.3)),
+                  color: FuturisticColors.primary.withOpacity(0.3),
+                ),
               ),
               child: Row(
                 children: [
@@ -383,7 +393,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                           ? _selectedPatient!.name[0].toUpperCase()
                           : 'P',
                       style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -401,8 +413,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                         ),
                         Text(
                           '${_selectedPatient!.age ?? '--'} yrs • ${_selectedPatient!.gender ?? '--'} • ${_selectedPatient!.phone ?? '--'}',
-                          style:
-                              TextStyle(color: Colors.white.withOpacity(0.7)),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                          ),
                         ),
                       ],
                     ),
@@ -427,8 +440,10 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
                 prefixIcon: const Icon(Icons.search, color: Colors.white54),
                 suffixIcon: IconButton(
-                  icon:
-                      const Icon(Icons.qr_code_scanner, color: Colors.white54),
+                  icon: const Icon(
+                    Icons.qr_code_scanner,
+                    color: Colors.white54,
+                  ),
                   onPressed: _scanPatientQR,
                   tooltip: 'Scan Patient QR',
                 ),
@@ -459,12 +474,17 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                     return ListTile(
                       leading: CircleAvatar(
                         child: Text(
-                            patient.name.isNotEmpty ? patient.name[0] : 'P'),
+                          patient.name.isNotEmpty ? patient.name[0] : 'P',
+                        ),
                       ),
-                      title: Text(patient.name,
-                          style: const TextStyle(color: Colors.white)),
-                      subtitle: Text(patient.phone ?? '',
-                          style: const TextStyle(color: Colors.grey)),
+                      title: Text(
+                        patient.name,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        patient.phone ?? '',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
                       onTap: () {
                         setState(() {
                           _selectedPatient = patient;
@@ -492,24 +512,44 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
           Row(
             children: [
               Expanded(
-                  child: _buildVitalInput(
-                      _bpController, 'BP', 'mmHg', Icons.favorite)),
+                child: _buildVitalInput(
+                  _bpController,
+                  'BP',
+                  'mmHg',
+                  Icons.favorite,
+                ),
+              ),
               const SizedBox(width: 12),
               Expanded(
-                  child: _buildVitalInput(
-                      _pulseController, 'Pulse', 'bpm', Icons.timeline)),
+                child: _buildVitalInput(
+                  _pulseController,
+                  'Pulse',
+                  'bpm',
+                  Icons.timeline,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                  child: _buildVitalInput(
-                      _tempController, 'Temp', '°F', Icons.thermostat)),
+                child: _buildVitalInput(
+                  _tempController,
+                  'Temp',
+                  '°F',
+                  Icons.thermostat,
+                ),
+              ),
               const SizedBox(width: 12),
               Expanded(
-                  child: _buildVitalInput(
-                      _weightController, 'Weight', 'kg', Icons.monitor_weight)),
+                child: _buildVitalInput(
+                  _weightController,
+                  'Weight',
+                  'kg',
+                  Icons.monitor_weight,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -519,8 +559,12 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
     );
   }
 
-  Widget _buildVitalInput(TextEditingController controller, String label,
-      String suffix, IconData icon) {
+  Widget _buildVitalInput(
+    TextEditingController controller,
+    String label,
+    String suffix,
+    IconData icon,
+  ) {
     return TextFormField(
       controller: controller,
       style: const TextStyle(color: Colors.white),
@@ -537,8 +581,10 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
     );
   }
@@ -570,8 +616,10 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
           // Quick symptom chips
           Text(
             'Quick Select:',
-            style:
-                TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 12,
+            ),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -632,8 +680,10 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
                 borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
               ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.bookmark_add_outlined,
-                    color: Colors.white70),
+                icon: const Icon(
+                  Icons.bookmark_add_outlined,
+                  color: Colors.white70,
+                ),
                 tooltip: 'Save as Template',
                 onPressed: () =>
                     _saveAsTemplate(_diagnosisController.text, 'DIAGNOSIS'),
@@ -644,23 +694,28 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
             const SizedBox(height: 12),
             Text(
               'Templates:',
-              style:
-                  TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 12,
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: _diagnosisTemplates
-                  .map((t) => ActionChip(
-                        label: Text(t.title),
-                        backgroundColor:
-                            FuturisticColors.primary.withOpacity(0.2),
-                        labelStyle: const TextStyle(color: Colors.white),
-                        onPressed: () {
-                          _diagnosisController.text = t.content;
-                        },
-                      ))
+                  .map(
+                    (t) => ActionChip(
+                      label: Text(t.title),
+                      backgroundColor: FuturisticColors.primary.withOpacity(
+                        0.2,
+                      ),
+                      labelStyle: const TextStyle(color: Colors.white),
+                      onPressed: () {
+                        _diagnosisController.text = t.content;
+                      },
+                    ),
+                  )
                   .toList(),
             ),
           ],
@@ -764,9 +819,7 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
         backgroundColor: onPressed == null ? Colors.grey.shade800 : color,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -814,9 +867,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
         // Trigger search logic?
         // Or if it is exact ID, fetch directly.
         // Let's settle for setting text and maybe triggering search if needed.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Scanned: $barcode')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Scanned: $barcode')));
       }
     }
   }
@@ -946,8 +999,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
 
       // If prescription exists, add medicines to bill
       if (_prescriptionId != null) {
-        final prescription =
-            await _prescriptionRepo.getPrescriptionById(_prescriptionId!);
+        final prescription = await _prescriptionRepo.getPrescriptionById(
+          _prescriptionId!,
+        );
         if (prescription != null) {
           await _billingService.addPrescriptionToBill(
             billId: billId,
@@ -994,9 +1048,9 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error generating bill: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error generating bill: $e')));
       }
     }
   }
@@ -1075,13 +1129,15 @@ class _VisitScreenState extends ConsumerState<VisitScreen> {
       await _visitsRepo.updateVisit(visit);
 
       // Update patient's lastVisitId (keeping direct DB for this patient update)
-      await (_db.update(_db.patients)
-            ..where((t) => t.id.equals(_selectedPatient!.id)))
-          .write(PatientsCompanion(
-        lastVisitId: Value(_visitId),
-        lastVisitDate: Value(now),
-        updatedAt: Value(now),
-      ));
+      await (_db.update(
+        _db.patients,
+      )..where((t) => t.id.equals(_selectedPatient!.id))).write(
+        PatientsCompanion(
+          lastVisitId: Value(_visitId),
+          lastVisitDate: Value(now),
+          updatedAt: Value(now),
+        ),
+      );
 
       setState(() => _visitStatus = 'COMPLETED');
 

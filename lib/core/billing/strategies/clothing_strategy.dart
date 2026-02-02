@@ -24,7 +24,9 @@ class ClothingStrategy extends BaseBusinessStrategy {
             buildQuantitySelector(item, onUpdate, isDark, accentColor),
             const SizedBox(width: 8),
             Expanded(
-                flex: 2, child: _buildSizeSelector(item, onUpdate, isDark)),
+              flex: 2,
+              child: _buildSizeSelector(item, onUpdate, isDark),
+            ),
             const SizedBox(width: 8),
             buildPriceField(item, onUpdate, isDark, config.priceLabel),
           ],
@@ -42,7 +44,10 @@ class ClothingStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildSizeSelector(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     final sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -56,10 +61,12 @@ class ClothingStrategy extends BaseBusinessStrategy {
           isExpanded: true,
           isDense: true,
           items: sizes
-              .map((s) => DropdownMenuItem(
-                    value: s,
-                    child: Text(s, style: TextStyle(fontSize: 14)),
-                  ))
+              .map(
+                (s) => DropdownMenuItem(
+                  value: s,
+                  child: Text(s, style: TextStyle(fontSize: 14)),
+                ),
+              )
               .toList(),
           onChanged: (val) {
             onUpdate(item.copyWith(size: val));
@@ -70,7 +77,10 @@ class ClothingStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildColorField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Color',
       value: item.color ?? '',
@@ -82,7 +92,10 @@ class ClothingStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildDiscountField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return Expanded(
       child: compactTextField(
         label: 'Discount',

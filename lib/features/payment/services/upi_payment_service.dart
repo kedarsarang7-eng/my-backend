@@ -37,9 +37,9 @@ class UpiPaymentService {
     await _ensureInitialized();
 
     // 1. Fetch Vendor
-    final vendor = await (_db.select(_db.vendors)
-          ..where((t) => t.id.equals(vendorId)))
-        .getSingleOrNull();
+    final vendor = await (_db.select(
+      _db.vendors,
+    )..where((t) => t.id.equals(vendorId))).getSingleOrNull();
 
     if (vendor == null || vendor.upiId == null || vendor.upiId!.isEmpty) {
       throw Exception('Vendor missing secure UPI ID');
@@ -47,19 +47,22 @@ class UpiPaymentService {
 
     // 2. Security Parameters
     final nonce = const Uuid().v4(); // Layer 2: Unique Nonce
-    final expiresAt =
-        DateTime.now().add(const Duration(minutes: 5)); // Layer 5: 5-min expiry
+    final expiresAt = DateTime.now().add(
+      const Duration(minutes: 5),
+    ); // Layer 5: 5-min expiry
     // Use part of nonce for TR to keep it short enough for UPI (max 35 chars usually safe)
     // UPI spec says tr can be up to 35 chars. Using billId substring + random
-    final tr =
-        'TR-${billId.substring(0, 4)}-${nonce.substring(0, 6)}'.toUpperCase();
+    final tr = 'TR-${billId.substring(0, 4)}-${nonce.substring(0, 6)}'
+        .toUpperCase();
 
     // 3. Generate HMAC Signature (Layer 2)
     final signatureData = '$billId|$vendorId|$amount|$nonce|$tr';
     final signature = _generateSignature(signatureData);
 
     // 4. Create Audit Record
-    await _db.into(_db.paymentTransactions).insert(
+    await _db
+        .into(_db.paymentTransactions)
+        .insert(
           PaymentTransactionsCompanion.insert(
             id: const Uuid().v4(),
             billId: billId,
@@ -106,9 +109,9 @@ class UpiPaymentService {
     required String payerUpi, // From callback
     required double paidAmount,
   }) async {
-    final txn = await (_db.select(_db.paymentTransactions)
-          ..where((t) => t.billId.equals(billId)))
-        .getSingleOrNull();
+    final txn = await (_db.select(
+      _db.paymentTransactions,
+    )..where((t) => t.billId.equals(billId))).getSingleOrNull();
 
     if (txn == null) throw Exception('Transaction not found');
 
@@ -130,12 +133,17 @@ class UpiPaymentService {
     }
 
     // Layer 7: Fingerprinting
-    final fingerprint =
-        _generateFingerprint(txn.billId, txn.vendorId, txn.amount, payerUpi);
+    final fingerprint = _generateFingerprint(
+      txn.billId,
+      txn.vendorId,
+      txn.amount,
+      payerUpi,
+    );
     // Check if fingerprint exists (duplicate payment with same params)
-    final dupe = await (_db.select(_db.paymentTransactions)
-          ..where((t) => t.transactionFingerprint.equals(fingerprint)))
-        .getSingleOrNull();
+    final dupe =
+        await (_db.select(_db.paymentTransactions)
+              ..where((t) => t.transactionFingerprint.equals(fingerprint)))
+            .getSingleOrNull();
 
     if (dupe != null && dupe.id != txn.id) {
       await _markFailed(txn.id, 'DUPLICATE_FINGERPRINT');
@@ -143,9 +151,9 @@ class UpiPaymentService {
     }
 
     // Success
-    await (_db.update(_db.paymentTransactions)
-          ..where((t) => t.id.equals(txn.id)))
-        .write(
+    await (_db.update(
+      _db.paymentTransactions,
+    )..where((t) => t.id.equals(txn.id))).write(
       PaymentTransactionsCompanion(
         status: const Value('SUCCESS'),
         isVerified: const Value(true),
@@ -159,15 +167,20 @@ class UpiPaymentService {
   }
 
   String _generateFingerprint(
-      String billId, String vendorId, double amount, String payerUpi) {
+    String billId,
+    String vendorId,
+    double amount,
+    String payerUpi,
+  ) {
     final data = '$billId|$vendorId|$amount|$payerUpi';
     // SHA-256 Fingerprint
     return sha256.convert(utf8.encode(data)).toString();
   }
 
   Future<void> _markFailed(String id, String reason) async {
-    await (_db.update(_db.paymentTransactions)..where((t) => t.id.equals(id)))
-        .write(
+    await (_db.update(
+      _db.paymentTransactions,
+    )..where((t) => t.id.equals(id))).write(
       PaymentTransactionsCompanion(
         status: const Value('FAILED'),
         scannedByParams: Value('Reason: $reason'),

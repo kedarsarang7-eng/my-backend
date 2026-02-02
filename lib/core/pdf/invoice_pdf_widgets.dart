@@ -60,8 +60,10 @@ class InvoicePdfWidgets {
                 height: 60,
                 width: 60,
                 margin: const pw.EdgeInsets.only(right: 12),
-                child:
-                    pw.Image(pw.MemoryImage(logoImage), fit: pw.BoxFit.contain),
+                child: pw.Image(
+                  pw.MemoryImage(logoImage),
+                  fit: pw.BoxFit.contain,
+                ),
               )
             else if (avatarImage != null)
               pw.Container(
@@ -73,8 +75,10 @@ class InvoicePdfWidgets {
                   border: pw.Border.all(color: theme.primaryColor, width: 1),
                 ),
                 child: pw.ClipOval(
-                  child: pw.Image(pw.MemoryImage(avatarImage),
-                      fit: pw.BoxFit.cover),
+                  child: pw.Image(
+                    pw.MemoryImage(avatarImage),
+                    fit: pw.BoxFit.cover,
+                  ),
                 ),
               ),
             // Shop Name & Tagline
@@ -256,14 +260,17 @@ class InvoicePdfWidgets {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.end,
       children: [
-        pw.Text('$label: ',
-            style: pw.TextStyle(fontSize: 10, color: theme.textGray)),
+        pw.Text(
+          '$label: ',
+          style: pw.TextStyle(fontSize: 10, color: theme.textGray),
+        ),
         pw.Text(
           value,
           style: pw.TextStyle(
-              fontSize: 10,
-              fontWeight: pw.FontWeight.bold,
-              color: theme.textDark),
+            fontSize: 10,
+            fontWeight: pw.FontWeight.bold,
+            color: theme.textDark,
+          ),
         ),
       ],
     );
@@ -363,18 +370,20 @@ class InvoicePdfWidgets {
         pw.TableRow(
           decoration: pw.BoxDecoration(color: theme.primaryColor),
           children: headers
-              .map((h) => pw.Container(
-                    padding: const pw.EdgeInsets.all(6),
-                    alignment: pw.Alignment.center,
-                    child: pw.Text(
-                      h,
-                      style: pw.TextStyle(
-                        color: PdfColors.white,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 9,
-                      ),
+              .map(
+                (h) => pw.Container(
+                  padding: const pw.EdgeInsets.all(6),
+                  alignment: pw.Alignment.center,
+                  child: pw.Text(
+                    h,
+                    style: pw.TextStyle(
+                      color: PdfColors.white,
+                      fontWeight: pw.FontWeight.bold,
+                      fontSize: 9,
                     ),
-                  ))
+                  ),
+                ),
+              )
               .toList(),
         ),
         // Data Rows
@@ -389,22 +398,31 @@ class InvoicePdfWidgets {
             ),
             children: [
               _tableCell('${index + 1}'),
-              _tableCell(_truncateText(item.name, 40),
-                  align: pw.Alignment.centerLeft),
+              _tableCell(
+                _truncateText(item.name, 40),
+                align: pw.Alignment.centerLeft,
+              ),
               _tableCell(item.quantity),
               _tableCell(item.unit),
-              _tableCell(_currencyFormat.format(item.rate),
-                  align: pw.Alignment.centerRight),
+              _tableCell(
+                _currencyFormat.format(item.rate),
+                align: pw.Alignment.centerRight,
+              ),
               if (showTax)
                 _tableCell(
-                    item.taxPercent != null ? '${item.taxPercent}%' : '-'),
+                  item.taxPercent != null ? '${item.taxPercent}%' : '-',
+                ),
               _tableCell(
-                  item.discount != null && item.discount! > 0
-                      ? _currencyFormat.format(item.discount!)
-                      : '-',
-                  align: pw.Alignment.centerRight),
-              _tableCell(_currencyFormat.format(item.amount),
-                  align: pw.Alignment.centerRight, bold: true),
+                item.discount != null && item.discount! > 0
+                    ? _currencyFormat.format(item.discount!)
+                    : '-',
+                align: pw.Alignment.centerRight,
+              ),
+              _tableCell(
+                _currencyFormat.format(item.amount),
+                align: pw.Alignment.centerRight,
+                bold: true,
+              ),
             ],
           );
         }),
@@ -464,8 +482,10 @@ class InvoicePdfWidgets {
     );
   }
 
-  pw.Widget _tableHeaderCell(String text,
-      {pw.Alignment alignment = pw.Alignment.center}) {
+  pw.Widget _tableHeaderCell(
+    String text, {
+    pw.Alignment alignment = pw.Alignment.center,
+  }) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(6),
       alignment: alignment,
@@ -480,8 +500,11 @@ class InvoicePdfWidgets {
     );
   }
 
-  pw.Widget _tableCell(String text,
-      {pw.Alignment align = pw.Alignment.center, bool bold = false}) {
+  pw.Widget _tableCell(
+    String text, {
+    pw.Alignment align = pw.Alignment.center,
+    bool bold = false,
+  }) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(6),
       alignment: align,
@@ -544,8 +567,12 @@ class InvoicePdfWidgets {
               pw.SizedBox(height: 6),
               pw.Divider(color: theme.borderColor),
               pw.SizedBox(height: 6),
-              _totalRow(labels['grandTotal']!, grandTotal,
-                  isBold: true, isHighlight: true),
+              _totalRow(
+                labels['grandTotal']!,
+                grandTotal,
+                isBold: true,
+                isHighlight: true,
+              ),
             ],
           ),
         ),
@@ -639,26 +666,32 @@ class InvoicePdfWidgets {
           pw.Text(
             labels['notes']!,
             style: pw.TextStyle(
-                fontSize: 10,
-                fontWeight: pw.FontWeight.bold,
-                color: theme.textDark),
+              fontSize: 10,
+              fontWeight: pw.FontWeight.bold,
+              color: theme.textDark,
+            ),
           ),
           pw.SizedBox(height: 3),
-          pw.Text(notes,
-              style: pw.TextStyle(fontSize: 9, color: theme.textGray)),
+          pw.Text(
+            notes,
+            style: pw.TextStyle(fontSize: 9, color: theme.textGray),
+          ),
           pw.SizedBox(height: 10),
         ],
         if (terms != null && terms.isNotEmpty) ...[
           pw.Text(
             labels['termsConditions']!,
             style: pw.TextStyle(
-                fontSize: 10,
-                fontWeight: pw.FontWeight.bold,
-                color: theme.textDark),
+              fontSize: 10,
+              fontWeight: pw.FontWeight.bold,
+              color: theme.textDark,
+            ),
           ),
           pw.SizedBox(height: 3),
-          pw.Text(terms,
-              style: pw.TextStyle(fontSize: 9, color: theme.textGray)),
+          pw.Text(
+            terms,
+            style: pw.TextStyle(fontSize: 9, color: theme.textGray),
+          ),
         ],
       ],
     );
@@ -688,16 +721,19 @@ class InvoicePdfWidgets {
               pw.Container(
                 height: 45,
                 width: 100,
-                child: pw.Image(pw.MemoryImage(signatureImage),
-                    fit: pw.BoxFit.contain),
+                child: pw.Image(
+                  pw.MemoryImage(signatureImage),
+                  fit: pw.BoxFit.contain,
+                ),
               )
             else
               pw.Container(
                 height: 45,
                 width: 100,
                 decoration: pw.BoxDecoration(
-                  border:
-                      pw.Border(bottom: pw.BorderSide(color: theme.textDark)),
+                  border: pw.Border(
+                    bottom: pw.BorderSide(color: theme.textDark),
+                  ),
                 ),
               ),
             pw.SizedBox(height: 4),

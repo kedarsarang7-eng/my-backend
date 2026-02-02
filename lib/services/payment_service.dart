@@ -88,7 +88,7 @@ class PaymentService {
           'name': customerName,
         },
         'external': {
-          'wallets': ['paytm', 'googlepay']
+          'wallets': ['paytm', 'googlepay'],
         },
         'notes': {
           'bill_id': bill.id,
@@ -154,8 +154,10 @@ class PaymentService {
       onResult(false, 'Payment failed: ${response.message}');
       _currentBillContext.clear();
     } catch (e) {
-      developer.log('Error handling payment failure: $e',
-          name: 'PaymentService');
+      developer.log(
+        'Error handling payment failure: $e',
+        name: 'PaymentService',
+      );
     }
   }
 
@@ -168,8 +170,10 @@ class PaymentService {
       );
       _currentBillContext.clear();
     } catch (e) {
-      developer.log('Error handling external wallet: $e',
-          name: 'PaymentService');
+      developer.log(
+        'Error handling external wallet: $e',
+        name: 'PaymentService',
+      );
     }
   }
 
@@ -236,11 +240,12 @@ class PaymentService {
 
       // Use updateBillStatus for full override
       final result = await _billsRepo.updateBillStatus(
-          billId: bill.id,
-          status: 'Paid',
-          paidAmount: amountToPay,
-          cashPaid: cashPaid,
-          onlinePaid: onlinePaid);
+        billId: bill.id,
+        status: 'Paid',
+        paidAmount: amountToPay,
+        cashPaid: cashPaid,
+        onlinePaid: onlinePaid,
+      );
 
       if (result.success) {
         onResult(true, 'Bill marked as paid!');
@@ -306,8 +311,10 @@ class PaymentService {
         'bills': customerBills,
       };
     } catch (e) {
-      developer.log('Error getting payment summary: $e',
-          name: 'PaymentService');
+      developer.log(
+        'Error getting payment summary: $e',
+        name: 'PaymentService',
+      );
       return {};
     }
   }

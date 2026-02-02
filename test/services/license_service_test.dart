@@ -1,5 +1,5 @@
 import 'package:dukanx/services/device_fingerprint_service.dart';
-import 'package:dukanx/services/license_service.dart';
+// import 'package:dukanx/services/license_service.dart'; // Removed unused
 import 'package:dukanx/core/database/app_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -17,10 +17,11 @@ import 'license_service_test.mocks.dart';
   DeviceFingerprintService,
 ])
 void main() {
-  late LicenseService licenseService;
+  // late LicenseService licenseService; // Removed unused
   late MockFirebaseFunctions mockFunctions;
   // ignore: unused_local_variable
-  late MockAppDatabase mockDatabase; // Kept for future use
+  // ignore: unused_local_variable
+  late MockAppDatabase mockDatabase;
   late MockDeviceFingerprintService mockFingerprintService;
 
   setUp(() {
@@ -28,11 +29,11 @@ void main() {
     mockDatabase = MockAppDatabase();
     mockFingerprintService = MockDeviceFingerprintService();
 
-    licenseService = LicenseService(
-      mockDatabase, // In a real test, this needs to be mocked carefully for Drift
-      functions: mockFunctions,
-      fingerprintService: mockFingerprintService,
-    );
+    // licenseService = LicenseService(
+    //   mockDatabase,
+    //   functions: mockFunctions,
+    //   fingerprintService: mockFingerprintService,
+    // );
   });
 
   group('LicenseService Tests', () {
@@ -48,12 +49,14 @@ void main() {
       );
 
       // Mock Fingerprint Service
-      when(mockFingerprintService.getFingerprint())
-          .thenAnswer((_) async => fingerprint);
+      when(
+        mockFingerprintService.getFingerprint(),
+      ).thenAnswer((_) async => fingerprint);
 
       // Mock Cloud Function
-      when(mockFunctions.httpsCallable('activateLicense'))
-          .thenReturn(mockCallable);
+      when(
+        mockFunctions.httpsCallable('activateLicense'),
+      ).thenReturn(mockCallable);
       when(mockCallable.call(any)).thenAnswer((_) async => mockResult);
 
       final responseData = {

@@ -51,7 +51,8 @@ class BillItemModel {
       pricePerKg: (map['pricePerKg'] as num?)?.toDouble() ?? 0.0,
       total: (map['total'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(
-          map['createdAt'] as String? ?? DateTime.now().toIso8601String()),
+        map['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      ),
       syncStatus: (map['syncStatus'] as int?) == 1,
       firestoreDocId: map['firestoreDocId'] as String?,
     );

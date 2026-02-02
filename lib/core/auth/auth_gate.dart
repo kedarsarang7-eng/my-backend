@@ -74,18 +74,17 @@ class _AuthGateState extends State<AuthGate> {
         final session = sl<SessionManager>();
 
         debugPrint(
-            '[AuthGate] Building - initialized: ${session.isInitialized}, '
-            'loading: ${session.isLoading}, '
-            'authenticated: ${session.isAuthenticated}, '
-            'role: ${session.currentSession.role}');
+          '[AuthGate] Building - initialized: ${session.isInitialized}, '
+          'loading: ${session.isLoading}, '
+          'authenticated: ${session.isAuthenticated}, '
+          'role: ${session.currentSession.role}',
+        );
 
         // ============================================
         // STATE 1: Loading / Initializing
         // ============================================
         if (!session.isInitialized || session.isLoading) {
-          return const AuthLoadingScreen(
-            message: 'Initializing...',
-          );
+          return const AuthLoadingScreen(message: 'Initializing...');
         }
 
         // ============================================
@@ -95,13 +94,15 @@ class _AuthGateState extends State<AuthGate> {
           // If logged in as Owner in Customer Mode -> Force Logout immediately
           if (session.isOwner) {
             debugPrint(
-                '[AuthGate] Owner logged in during Customer Only Mode -> Forcing Logout');
+              '[AuthGate] Owner logged in during Customer Only Mode -> Forcing Logout',
+            );
             // We can't await here easily, but we can schedule it
             WidgetsBinding.instance.addPostFrameCallback((_) {
               session.signOut();
             });
             return const AuthLoadingScreen(
-                message: 'Switching to Customer Mode...');
+              message: 'Switching to Customer Mode...',
+            );
           }
 
           // If not authenticated, show Customer Auth directly (No Dashboard Selection)
@@ -148,7 +149,8 @@ class _AuthGateState extends State<AuthGate> {
           case UserRole.unknown:
             // Unknown role - show error and force logout
             return AuthErrorScreen(
-              errorMessage: 'Unable to determine your account type. '
+              errorMessage:
+                  'Unable to determine your account type. '
                   'Please contact support or try logging in again.',
               errorCode: 'ROLE_UNKNOWN',
               onRetry: () => _handleRetry(),
@@ -232,8 +234,8 @@ class _AuthGateState extends State<AuthGate> {
     final signupService = OnboardingService();
     final loginService = LoginOnboardingService();
 
-    final needsLanguage =
-        !(await localizationService.hasCompletedLanguageSelection());
+    final needsLanguage = !(await localizationService
+        .hasCompletedLanguageSelection());
     final needsSignup = !(await signupService.isOnboardingCompleted());
     final needsLogin = !(await loginService.hasSeenLoginOnboarding());
 

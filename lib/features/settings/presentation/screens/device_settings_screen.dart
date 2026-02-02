@@ -62,8 +62,10 @@ class _DeviceSettingsScreenState extends ConsumerState<DeviceSettingsScreen> {
                   ListTile(
                     title: const Text('Backup Frequency'),
                     subtitle: const Text('Daily at 12:00 AM'),
-                    trailing:
-                        const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () => _showBackupFrequencyDialog(),
                   ),
                 ],
@@ -80,12 +82,17 @@ class _DeviceSettingsScreenState extends ConsumerState<DeviceSettingsScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Default Tax Rate (GST)',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('${_defaultTaxRate.toStringAsFixed(0)}%',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: FuturisticColors.accent1)),
+                        const Text(
+                          'Default Tax Rate (GST)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '${_defaultTaxRate.toStringAsFixed(0)}%',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: FuturisticColors.accent1,
+                          ),
+                        ),
                       ],
                     ),
                     Slider(
@@ -106,8 +113,10 @@ class _DeviceSettingsScreenState extends ConsumerState<DeviceSettingsScreen> {
             const SizedBox(height: 16),
             ModernCard(
               child: ListTile(
-                leading:
-                    const Icon(Icons.print, color: FuturisticColors.accent2),
+                leading: const Icon(
+                  Icons.print,
+                  color: FuturisticColors.accent2,
+                ),
                 title: const Text('Printer Configuration'),
                 subtitle: const Text('Manage connected thermal printers'),
                 trailing: const Icon(Icons.chevron_right),
@@ -121,7 +130,7 @@ class _DeviceSettingsScreenState extends ConsumerState<DeviceSettingsScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(color: FuturisticColors.textSecondary),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -129,7 +138,11 @@ class _DeviceSettingsScreenState extends ConsumerState<DeviceSettingsScreen> {
   }
 
   Widget _buildSwitchTile(
-      String title, String subtitle, bool value, ValueChanged<bool> onChanged) {
+    String title,
+    String subtitle,
+    bool value,
+    ValueChanged<bool> onChanged,
+  ) {
     return SwitchListTile(
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),

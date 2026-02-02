@@ -71,7 +71,8 @@ Future<Result<T>> safeAsync<T>({
     // Wait before retry (with exponential backoff if enabled)
     if (attempt < maxRetries - 1) {
       final delay = useExponentialBackoff
-          ? initialDelay * (1 << attempt) // 100ms, 200ms, 400ms, etc.
+          ? initialDelay *
+                (1 << attempt) // 100ms, 200ms, 400ms, etc.
           : initialDelay;
       await Future.delayed(delay);
     }
@@ -197,8 +198,10 @@ extension SafeFutureExtension<T> on Future<T> {
   }
 
   /// Add timeout with graceful error handling
-  Future<Result<T>> withTimeout(Duration timeout,
-      {String? errorMessage}) async {
+  Future<Result<T>> withTimeout(
+    Duration timeout, {
+    String? errorMessage,
+  }) async {
     try {
       final data = await this.timeout(timeout);
       return Result.success(data);

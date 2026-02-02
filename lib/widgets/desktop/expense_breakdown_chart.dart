@@ -89,8 +89,10 @@ class _ExpenseBreakdownChartState extends State<ExpenseBreakdownChart> {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: FuturisticColors.warning.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -125,52 +127,48 @@ class _ExpenseBreakdownChartState extends State<ExpenseBreakdownChart> {
                           pieTouchData: PieTouchData(
                             touchCallback:
                                 (FlTouchEvent event, pieTouchResponse) {
-                              setState(() {
-                                if (!event.isInterestedForInteractions ||
-                                    pieTouchResponse == null ||
-                                    pieTouchResponse.touchedSection == null) {
-                                  touchedIndex = -1;
-                                  return;
-                                }
-                                touchedIndex = pieTouchResponse
-                                    .touchedSection!.touchedSectionIndex;
-                              });
-                            },
+                                  setState(() {
+                                    if (!event.isInterestedForInteractions ||
+                                        pieTouchResponse == null ||
+                                        pieTouchResponse.touchedSection ==
+                                            null) {
+                                      touchedIndex = -1;
+                                      return;
+                                    }
+                                    touchedIndex = pieTouchResponse
+                                        .touchedSection!
+                                        .touchedSectionIndex;
+                                  });
+                                },
                           ),
                           borderData: FlBorderData(show: false),
                           sectionsSpace: 3,
                           centerSpaceRadius: 50,
-                          sections: List.generate(
-                            widget.data.length,
-                            (i) {
-                              final isTouched = i == touchedIndex;
-                              final fontSize = isTouched ? 14.0 : 11.0;
-                              final radius = isTouched ? 60.0 : 50.0;
-                              final percentage = (values[i] / total) * 100;
-                              final color =
-                                  _chartColors[i % _chartColors.length];
+                          sections: List.generate(widget.data.length, (i) {
+                            final isTouched = i == touchedIndex;
+                            final fontSize = isTouched ? 14.0 : 11.0;
+                            final radius = isTouched ? 60.0 : 50.0;
+                            final percentage = (values[i] / total) * 100;
+                            final color = _chartColors[i % _chartColors.length];
 
-                              return PieChartSectionData(
-                                color: color,
-                                value: values[i],
-                                title: '${percentage.toStringAsFixed(0)}%',
-                                radius: radius,
-                                titleStyle: TextStyle(
-                                  fontSize: fontSize,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: const [
-                                    Shadow(
-                                      color: Colors.black45,
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                                badgePositionPercentageOffset:
-                                    isTouched ? 1.1 : 0.98,
-                              );
-                            },
-                          ),
+                            return PieChartSectionData(
+                              color: color,
+                              value: values[i],
+                              title: '${percentage.toStringAsFixed(0)}%',
+                              radius: radius,
+                              titleStyle: TextStyle(
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: const [
+                                  Shadow(color: Colors.black45, blurRadius: 4),
+                                ],
+                              ),
+                              badgePositionPercentageOffset: isTouched
+                                  ? 1.1
+                                  : 0.98,
+                            );
+                          }),
                         ),
                       ),
                       // Center label with total
@@ -216,82 +214,80 @@ class _ExpenseBreakdownChartState extends State<ExpenseBreakdownChart> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        widget.data.length,
-                        (i) {
-                          final color = _chartColors[i % _chartColors.length];
-                          final isTouched = i == touchedIndex;
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(vertical: 4),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: isTouched
-                                  ? color.withOpacity(0.15)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8),
-                              border: isTouched
-                                  ? Border.all(color: color.withOpacity(0.3))
-                                  : null,
-                            ),
-                            child: Row(
-                              children: [
-                                // Color indicator
-                                Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: color,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: color.withOpacity(0.4),
-                                        blurRadius: 4,
-                                      ),
-                                    ],
-                                  ),
+                      children: List.generate(widget.data.length, (i) {
+                        final color = _chartColors[i % _chartColors.length];
+                        final isTouched = i == touchedIndex;
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isTouched
+                                ? color.withOpacity(0.15)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                            border: isTouched
+                                ? Border.all(color: color.withOpacity(0.3))
+                                : null,
+                          ),
+                          child: Row(
+                            children: [
+                              // Color indicator
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: color,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: color.withOpacity(0.4),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 10),
-                                // Category name and amount
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        keys[i],
-                                        style: TextStyle(
-                                          color: isTouched
-                                              ? Colors.white
-                                              : FuturisticColors.textSecondary,
-                                          fontSize: 12,
-                                          fontWeight: isTouched
-                                              ? FontWeight.w600
-                                              : FontWeight.normal,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(width: 10),
+                              // Category name and amount
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      keys[i],
+                                      style: TextStyle(
+                                        color: isTouched
+                                            ? Colors.white
+                                            : FuturisticColors.textSecondary,
+                                        fontSize: 12,
+                                        fontWeight: isTouched
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
                                       ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        '₹${values[i].toStringAsFixed(0)}',
-                                        style: TextStyle(
-                                          color: isTouched
-                                              ? color
-                                              : FuturisticColors.textSecondary
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '₹${values[i].toStringAsFixed(0)}',
+                                      style: TextStyle(
+                                        color: isTouched
+                                            ? color
+                                            : FuturisticColors.textSecondary
                                                   .withOpacity(0.7),
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ),
@@ -314,9 +310,7 @@ class _ExpenseBreakdownChartState extends State<ExpenseBreakdownChart> {
         ],
       ),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: FuturisticColors.premiumBlue.withOpacity(0.2),
-      ),
+      border: Border.all(color: FuturisticColors.premiumBlue.withOpacity(0.2)),
       boxShadow: [
         // Premium blue glow
         BoxShadow(

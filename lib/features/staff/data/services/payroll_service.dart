@@ -1,4 +1,3 @@
-
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/session/session_manager.dart';
 import '../repositories/staff_repository.dart';
@@ -86,7 +85,9 @@ class PayrollService {
 
   /// Calculate monthly salary based on attendance
   double _calculateMonthlySalary(
-      StaffModel staff, AttendanceSummary attendance) {
+    StaffModel staff,
+    AttendanceSummary attendance,
+  ) {
     final totalWorkingDays =
         attendance.totalDays - _getWeekOffs(attendance.totalDays);
     if (totalWorkingDays == 0) return 0;
@@ -108,7 +109,9 @@ class PayrollService {
 
   /// Calculate hourly salary
   double _calculateHourlySalary(
-      StaffModel staff, AttendanceSummary attendance) {
+    StaffModel staff,
+    AttendanceSummary attendance,
+  ) {
     return staff.hourlyRate * attendance.totalHoursWorked;
   }
 

@@ -12,7 +12,7 @@ enum IntentType {
   navigate,
   billCreate,
   unknown,
-  conversation
+  conversation,
 }
 
 class AiResponse {
@@ -48,7 +48,7 @@ class IntentService {
       'profit',
       'loss',
       'performance',
-      'analysis'
+      'analysis',
     ],
     'stock': ['stock', 'inventory', 'items', 'saman', 'mal'],
     'settings': ['settings', 'menu', 'options', 'profile'],
@@ -114,14 +114,19 @@ class IntentService {
         lowerText.contains('tumala koni banavle') ||
         lowerText.contains('kisne banaya')) {
       return AiResponse(
-          speech: "I was created by $_creator.", type: IntentType.conversation);
+        speech: "I was created by $_creator.",
+        type: IntentType.conversation,
+      );
     }
 
     if (lowerText.contains('your name') || lowerText.contains('who are you')) {
       return AiResponse(
-          speech: _wrapWithEmotion(
-              "Hello! I am $_name. How can I help you today?", emotion),
-          type: IntentType.conversation);
+        speech: _wrapWithEmotion(
+          "Hello! I am $_name. How can I help you today?",
+          emotion,
+        ),
+        type: IntentType.conversation,
+      );
     }
 
     // 2. Navigation
@@ -135,15 +140,18 @@ class IntentService {
       if (emotion == 'urgent') response = "Opening $dest right away.";
       if (emotion == 'happy') response = "Sure! Let's check the $dest.";
       return AiResponse(
-          speech: response, type: IntentType.navigate, data: navIndex);
+        speech: response,
+        type: IntentType.navigate,
+        data: navIndex,
+      );
     }
 
     // 3. Actions
     if (_matches(lowerText, _actionKeywords['bill']!)) {
       return AiResponse(
-          speech:
-              _wrapWithEmotion("Opening the bill creation screen.", emotion),
-          type: IntentType.billCreate);
+        speech: _wrapWithEmotion("Opening the bill creation screen.", emotion),
+        type: IntentType.billCreate,
+      );
     }
 
     // 4. Stock
@@ -175,15 +183,17 @@ class IntentService {
         lowerText.contains('hi') ||
         lowerText.contains('namaste')) {
       return AiResponse(
-          speech:
-              "Hello! I am $_name. I'm here to help you manage your business.",
-          type: IntentType.conversation);
+        speech:
+            "Hello! I am $_name. I'm here to help you manage your business.",
+        type: IntentType.conversation,
+      );
     }
 
     if (lowerText.contains('thank')) {
       return AiResponse(
-          speech: "You're clearly welcome! I'm happy to help.",
-          type: IntentType.conversation);
+        speech: "You're clearly welcome! I'm happy to help.",
+        type: IntentType.conversation,
+      );
     }
 
     return AiResponse(
@@ -226,7 +236,10 @@ class IntentService {
   }
 
   Future<AiResponse> _handleStockIntent(
-      String text, String ownerId, String emotion) async {
+    String text,
+    String ownerId,
+    String emotion,
+  ) async {
     final result = await _productsRepository.getAll(userId: ownerId);
     final stockList = result.data ?? [];
 
@@ -238,15 +251,17 @@ class IntentService {
           .toList();
       if (lowStock.isEmpty) {
         return AiResponse(
-            speech: "Good news! All your stock levels are healthy.",
-            type: IntentType.stock);
+          speech: "Good news! All your stock levels are healthy.",
+          type: IntentType.stock,
+        );
       }
       final names = lowStock.map((e) => e.name).join(", ");
       return AiResponse(
-          speech:
-              "I'm concerned about a few items. ${lowStock.length} items are running low: $names. Should we order more?",
-          type: IntentType.stock,
-          data: lowStock);
+        speech:
+            "I'm concerned about a few items. ${lowStock.length} items are running low: $names. Should we order more?",
+        type: IntentType.stock,
+        data: lowStock,
+      );
     }
 
     for (var item in stockList) {
@@ -262,14 +277,17 @@ class IntentService {
     }
 
     return AiResponse(
-        speech:
-            "You currently have ${stockList.length} items in your inventory.",
-        type: IntentType.stock,
-        data: stockList);
+      speech: "You currently have ${stockList.length} items in your inventory.",
+      type: IntentType.stock,
+      data: stockList,
+    );
   }
 
   Future<AiResponse> _handleSalesIntent(
-      String text, String ownerId, String emotion) async {
+    String text,
+    String ownerId,
+    String emotion,
+  ) async {
     final billsResult = await _billsRepository.getAll(userId: ownerId);
     final bills = billsResult.data ?? [];
     DateTime now = DateTime.now();
@@ -284,13 +302,17 @@ class IntentService {
     }
 
     final periodBills = bills
-        .where((b) =>
-            b.date.isAfter(start) &&
-            b.date.isBefore(start.add(const Duration(days: 1))))
+        .where(
+          (b) =>
+              b.date.isAfter(start) &&
+              b.date.isBefore(start.add(const Duration(days: 1))),
+        )
         .toList();
     double total = periodBills.fold(0, (sum, b) => sum + b.grandTotal);
-    String formatted =
-        NumberFormat.currency(symbol: '₹', locale: 'en_IN').format(total);
+    String formatted = NumberFormat.currency(
+      symbol: '₹',
+      locale: 'en_IN',
+    ).format(total);
     String speech = "$label's total sales are $formatted.";
 
     if (total == 0) {
@@ -303,11 +325,17 @@ class IntentService {
     }
 
     return AiResponse(
-        speech: speech, type: IntentType.sales, data: periodBills);
+      speech: speech,
+      type: IntentType.sales,
+      data: periodBills,
+    );
   }
 
   Future<AiResponse> _handleCustomerIntent(
-      String text, String ownerId, String emotion) async {
+    String text,
+    String ownerId,
+    String emotion,
+  ) async {
     final result = await _customersRepository.getAll(userId: ownerId);
     final customers = result.data ?? [];
 
@@ -317,9 +345,9 @@ class IntentService {
 
       if (dues.isEmpty) {
         return AiResponse(
-            speech:
-                "Everything looks good! No pending payments from customers.",
-            type: IntentType.customer);
+          speech: "Everything looks good! No pending payments from customers.",
+          type: IntentType.customer,
+        );
       }
 
       final top = dues
@@ -327,23 +355,26 @@ class IntentService {
           .map((e) => "${e.name} (${e.totalDues.toInt()})")
           .join(", ");
       return AiResponse(
-          speech:
-              "There are ${dues.length} customers with pending dues. The top ones are: $top",
-          type: IntentType.customer,
-          data: dues);
+        speech:
+            "There are ${dues.length} customers with pending dues. The top ones are: $top",
+        type: IntentType.customer,
+        data: dues,
+      );
     }
 
     for (var c in customers) {
       if (text.contains(c.name.toLowerCase())) {
         return AiResponse(
-            speech: "${c.name} has a pending amount of ₹${c.totalDues}.",
-            type: IntentType.customer,
-            data: [c]);
+          speech: "${c.name} has a pending amount of ₹${c.totalDues}.",
+          type: IntentType.customer,
+          data: [c],
+        );
       }
     }
 
     return AiResponse(
-        speech: "Which customer would you like to know about?",
-        type: IntentType.customer);
+      speech: "Which customer would you like to know about?",
+      type: IntentType.customer,
+    );
   }
 }

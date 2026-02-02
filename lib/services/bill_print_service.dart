@@ -27,16 +27,37 @@ class BillPrintService {
     pw.Widget pageContent;
     switch (theme) {
       case BillTheme.modern:
-        pageContent = _buildModernPage(bill, customerName, ownerName,
-            ownerPhone, ownerAddress, billDate, billTime);
+        pageContent = _buildModernPage(
+          bill,
+          customerName,
+          ownerName,
+          ownerPhone,
+          ownerAddress,
+          billDate,
+          billTime,
+        );
         break;
       case BillTheme.minimal:
-        pageContent = _buildMinimalPage(bill, customerName, ownerName,
-            ownerPhone, ownerAddress, billDate, billTime);
+        pageContent = _buildMinimalPage(
+          bill,
+          customerName,
+          ownerName,
+          ownerPhone,
+          ownerAddress,
+          billDate,
+          billTime,
+        );
         break;
       case BillTheme.standard:
-        pageContent = _buildStandardPage(bill, customerName, ownerName,
-            ownerPhone, ownerAddress, billDate, billTime);
+        pageContent = _buildStandardPage(
+          bill,
+          customerName,
+          ownerName,
+          ownerPhone,
+          ownerAddress,
+          billDate,
+          billTime,
+        );
         break;
     }
 
@@ -91,10 +112,7 @@ class BillPrintService {
                 style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 2),
-              pw.Text(
-                ownerAddress,
-                style: const pw.TextStyle(fontSize: 10),
-              ),
+              pw.Text(ownerAddress, style: const pw.TextStyle(fontSize: 10)),
               pw.Text(
                 'Mobile: $ownerPhone',
                 style: const pw.TextStyle(fontSize: 10),
@@ -114,21 +132,31 @@ class BillPrintService {
             pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text('BILL TO:',
-                    style: pw.TextStyle(
-                        fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                pw.Text(
+                  'BILL TO:',
+                  style: pw.TextStyle(
+                    fontSize: 11,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
                 pw.SizedBox(height: 3),
-                pw.Text('Customer: $customerName',
-                    style: const pw.TextStyle(fontSize: 10)),
+                pw.Text(
+                  'Customer: $customerName',
+                  style: const pw.TextStyle(fontSize: 10),
+                ),
               ],
             ),
             pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.end,
               children: [
-                pw.Text('Bill Date: $billDate',
-                    style: const pw.TextStyle(fontSize: 10)),
-                pw.Text('Bill Time: $billTime',
-                    style: const pw.TextStyle(fontSize: 10)),
+                pw.Text(
+                  'Bill Date: $billDate',
+                  style: const pw.TextStyle(fontSize: 10),
+                ),
+                pw.Text(
+                  'Bill Time: $billTime',
+                  style: const pw.TextStyle(fontSize: 10),
+                ),
               ],
             ),
           ],
@@ -148,8 +176,9 @@ class BillPrintService {
           children: [
             // Header row
             pw.TableRow(
-              decoration:
-                  const pw.BoxDecoration(color: PdfColor.fromInt(0xFF4CAF50)),
+              decoration: const pw.BoxDecoration(
+                color: PdfColor.fromInt(0xFF4CAF50),
+              ),
               children: [
                 _headerCell('Vegetable Name'),
                 _headerCell('Price/KG', align: pw.TextAlign.center),
@@ -162,8 +191,9 @@ class BillPrintService {
               final index = entry.key;
               final item = entry.value;
               final isEven = index % 2 == 0;
-              final bgColor =
-                  isEven ? const PdfColor.fromInt(0xFFF5F5F5) : PdfColors.white;
+              final bgColor = isEven
+                  ? const PdfColor.fromInt(0xFFF5F5F5)
+                  : PdfColors.white;
 
               return pw.TableRow(
                 decoration: pw.BoxDecoration(color: bgColor),
@@ -200,8 +230,11 @@ class BillPrintService {
               children: [
                 _summaryRow('Subtotal:', bill.subtotal),
                 if (bill.discountApplied > 0)
-                  _summaryRow('Discount:', -bill.discountApplied,
-                      isNegative: true),
+                  _summaryRow(
+                    'Discount:',
+                    -bill.discountApplied,
+                    isNegative: true,
+                  ),
                 pw.SizedBox(height: 8),
                 pw.Container(
                   padding: const pw.EdgeInsets.all(8),
@@ -210,8 +243,10 @@ class BillPrintService {
                     color: const PdfColor.fromInt(0xFFE8F5E9),
                   ),
                   child: _summaryRow(
-                      'TOTAL:', bill.subtotal - bill.discountApplied,
-                      isBold: true),
+                    'TOTAL:',
+                    bill.subtotal - bill.discountApplied,
+                    isBold: true,
+                  ),
                 ),
               ],
             ),
@@ -264,18 +299,26 @@ class BillPrintService {
                   pw.Text(
                     'Vegetable Supplier',
                     style: const pw.TextStyle(
-                        fontSize: 12, color: PdfColors.white),
+                      fontSize: 12,
+                      color: PdfColors.white,
+                    ),
                   ),
                 ],
               ),
               pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
-                  pw.Text(ownerPhone,
-                      style: const pw.TextStyle(color: PdfColors.white)),
-                  pw.Text(ownerAddress,
-                      style: const pw.TextStyle(
-                          fontSize: 10, color: PdfColors.white)),
+                  pw.Text(
+                    ownerPhone,
+                    style: const pw.TextStyle(color: PdfColors.white),
+                  ),
+                  pw.Text(
+                    ownerAddress,
+                    style: const pw.TextStyle(
+                      fontSize: 10,
+                      color: PdfColors.white,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -291,18 +334,26 @@ class BillPrintService {
             pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text('INVOICE TO',
-                    style: const pw.TextStyle(color: PdfColors.grey)),
-                pw.Text(customerName,
-                    style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold, fontSize: 14)),
+                pw.Text(
+                  'INVOICE TO',
+                  style: const pw.TextStyle(color: PdfColors.grey),
+                ),
+                pw.Text(
+                  customerName,
+                  style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
               ],
             ),
             pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.end,
               children: [
-                pw.Text('INVOICE NO: ${bill.id.substring(0, 8).toUpperCase()}',
-                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                pw.Text(
+                  'INVOICE NO: ${bill.id.substring(0, 8).toUpperCase()}',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                ),
                 pw.Text('Date: $billDate $billTime'),
               ],
             ),
@@ -323,49 +374,72 @@ class BillPrintService {
             pw.TableRow(
               decoration: const pw.BoxDecoration(
                 color: accentColor,
-                borderRadius:
-                    pw.BorderRadius.vertical(top: pw.Radius.circular(4)),
+                borderRadius: pw.BorderRadius.vertical(
+                  top: pw.Radius.circular(4),
+                ),
               ),
               children: [
                 pw.Padding(
-                    padding: const pw.EdgeInsets.all(8),
-                    child: pw.Text('Item',
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  padding: const pw.EdgeInsets.all(8),
+                  child: pw.Text(
+                    'Item',
+                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                  ),
+                ),
                 pw.Padding(
-                    padding: const pw.EdgeInsets.all(8),
-                    child: pw.Text('Price',
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  padding: const pw.EdgeInsets.all(8),
+                  child: pw.Text(
+                    'Price',
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                  ),
+                ),
                 pw.Padding(
-                    padding: const pw.EdgeInsets.all(8),
-                    child: pw.Text('Qty',
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  padding: const pw.EdgeInsets.all(8),
+                  child: pw.Text(
+                    'Qty',
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                  ),
+                ),
                 pw.Padding(
-                    padding: const pw.EdgeInsets.all(8),
-                    child: pw.Text('Total',
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  padding: const pw.EdgeInsets.all(8),
+                  child: pw.Text(
+                    'Total',
+                    textAlign: pw.TextAlign.right,
+                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                  ),
+                ),
               ],
             ),
             ...bill.items.map((item) {
               return pw.TableRow(
                 children: [
                   pw.Padding(
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text(item.vegName)),
+                    padding: const pw.EdgeInsets.all(8),
+                    child: pw.Text(item.vegName),
+                  ),
                   pw.Padding(
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('₹${item.pricePerKg.toStringAsFixed(0)}',
-                          textAlign: pw.TextAlign.center)),
+                    padding: const pw.EdgeInsets.all(8),
+                    child: pw.Text(
+                      '₹${item.pricePerKg.toStringAsFixed(0)}',
+                      textAlign: pw.TextAlign.center,
+                    ),
+                  ),
                   pw.Padding(
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text(item.qtyKg.toStringAsFixed(2),
-                          textAlign: pw.TextAlign.center)),
+                    padding: const pw.EdgeInsets.all(8),
+                    child: pw.Text(
+                      item.qtyKg.toStringAsFixed(2),
+                      textAlign: pw.TextAlign.center,
+                    ),
+                  ),
                   pw.Padding(
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('₹${item.total.toStringAsFixed(2)}',
-                          textAlign: pw.TextAlign.right)),
+                    padding: const pw.EdgeInsets.all(8),
+                    child: pw.Text(
+                      '₹${item.total.toStringAsFixed(2)}',
+                      textAlign: pw.TextAlign.right,
+                    ),
+                  ),
                 ],
               );
             }),
@@ -384,12 +458,17 @@ class BillPrintService {
               children: [
                 _summaryRow('Subtotal', bill.subtotal),
                 if (bill.discountApplied > 0)
-                  _summaryRow('Discount', -bill.discountApplied,
-                      isNegative: true),
+                  _summaryRow(
+                    'Discount',
+                    -bill.discountApplied,
+                    isNegative: true,
+                  ),
                 pw.Divider(),
                 _summaryRow(
-                    'Total Amount', bill.subtotal - bill.discountApplied,
-                    isBold: true),
+                  'Total Amount',
+                  bill.subtotal - bill.discountApplied,
+                  isBold: true,
+                ),
               ],
             ),
           ),
@@ -415,8 +494,10 @@ class BillPrintService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         // Minimal Header
-        pw.Text(ownerName.toUpperCase(),
-            style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+        pw.Text(
+          ownerName.toUpperCase(),
+          style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+        ),
         pw.Text(ownerAddress),
         pw.Text('Phone: $ownerPhone'),
 
@@ -440,17 +521,20 @@ class BillPrintService {
         pw.Divider(thickness: 2),
 
         // Simple List
-        ...bill.items.map((item) => pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(vertical: 4),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Expanded(child: pw.Text(item.vegName)),
-                  pw.Text(
-                      '${item.qtyKg} kg x ₹${item.pricePerKg} = ₹${item.total.toStringAsFixed(2)}'),
-                ],
-              ),
-            )),
+        ...bill.items.map(
+          (item) => pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: 4),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Expanded(child: pw.Text(item.vegName)),
+                pw.Text(
+                  '${item.qtyKg} kg x ₹${item.pricePerKg} = ₹${item.total.toStringAsFixed(2)}',
+                ),
+              ],
+            ),
+          ),
+        ),
 
         pw.Divider(thickness: 2),
         pw.SizedBox(height: 10),
@@ -458,13 +542,14 @@ class BillPrintService {
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Total',
-                style:
-                    pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
             pw.Text(
-                '₹${(bill.subtotal - bill.discountApplied).toStringAsFixed(2)}',
-                style:
-                    pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              'Total',
+              style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+            ),
+            pw.Text(
+              '₹${(bill.subtotal - bill.discountApplied).toStringAsFixed(2)}',
+              style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+            ),
           ],
         ),
 
@@ -593,9 +678,7 @@ class BillPrintService {
             height: 30,
             width: 80,
             decoration: const pw.BoxDecoration(
-              border: pw.Border(
-                top: pw.BorderSide(width: 0.5),
-              ),
+              border: pw.Border(top: pw.BorderSide(width: 0.5)),
             ),
           ),
           pw.SizedBox(height: 2),

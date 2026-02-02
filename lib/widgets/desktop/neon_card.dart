@@ -48,10 +48,7 @@ class NeonCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
           hoverColor: Colors.white.withOpacity(0.02),
-          child: Padding(
-            padding: padding,
-            child: child,
-          ),
+          child: Padding(padding: padding, child: child),
         ),
       ),
     );

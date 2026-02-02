@@ -9,15 +9,18 @@ import '../../../../services/role_management_service.dart';
 
 // Repositories & Services
 final shortcutsRepositoryProvider = Provider((ref) => ShortcutsRepository());
-final shortcutServiceProvider = Provider((ref) =>
-    ShortcutService(repository: ref.watch(shortcutsRepositoryProvider)));
+final shortcutServiceProvider = Provider(
+  (ref) => ShortcutService(repository: ref.watch(shortcutsRepositoryProvider)),
+);
 final shortcutDataProviderProvider = Provider((ref) => ShortcutDataProvider());
-final keyboardShortcutManagerProvider =
-    Provider((ref) => KeyboardShortcutManager());
+final keyboardShortcutManagerProvider = Provider(
+  (ref) => KeyboardShortcutManager(),
+);
 
 // User's configured shortcuts stream
-final userShortcutsStreamProvider =
-    StreamProvider<List<UserShortcutConfig>>((ref) {
+final userShortcutsStreamProvider = StreamProvider<List<UserShortcutConfig>>((
+  ref,
+) {
   final userId = ref.watch(currentUserProvider)?.uid;
   if (userId == null) return const Stream.empty();
 
@@ -26,8 +29,9 @@ final userShortcutsStreamProvider =
 });
 
 // Final filtered shortcuts visible to the user
-final visibleShortcutsProvider =
-    Provider<AsyncValue<List<UserShortcutConfig>>>((ref) {
+final visibleShortcutsProvider = Provider<AsyncValue<List<UserShortcutConfig>>>((
+  ref,
+) {
   final shortcutsAsync = ref.watch(userShortcutsStreamProvider);
   final service = ref.watch(shortcutServiceProvider);
   final businessTypeVal = ref.watch(businessTypeProvider);
@@ -63,12 +67,12 @@ final visibleShortcutsProvider =
 // Real-time badge data
 final shortcutBadgeDataProvider =
     StreamProvider<Map<String, ShortcutBadgeData>>((ref) {
-  final userId = ref.watch(currentUserProvider)?.uid;
-  if (userId == null) return const Stream.empty();
+      final userId = ref.watch(currentUserProvider)?.uid;
+      if (userId == null) return const Stream.empty();
 
-  final dataProvider = ref.watch(shortcutDataProviderProvider);
-  return dataProvider.watchBadgeData(userId);
-});
+      final dataProvider = ref.watch(shortcutDataProviderProvider);
+      return dataProvider.watchBadgeData(userId);
+    });
 
 // Initialize shortcuts on app start
 final shortcutInitializerProvider = FutureProvider<void>((ref) async {

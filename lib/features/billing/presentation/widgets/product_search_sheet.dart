@@ -95,8 +95,9 @@ class _ProductSearchSheetState extends State<ProductSearchSheet> {
                 hintText: 'Search by name or SKU...',
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor:
-                    isDark ? Colors.black26 : Colors.white.withOpacity(0.5),
+                fillColor: isDark
+                    ? Colors.black26
+                    : Colors.white.withOpacity(0.5),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -118,15 +119,15 @@ class _ProductSearchSheetState extends State<ProductSearchSheet> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredProducts.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        itemCount: _filteredProducts.length,
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (context, index) {
-                          final p = _filteredProducts[index];
-                          return _buildProductTile(p, isDark);
-                        },
-                      ),
+                ? _buildEmptyState()
+                : ListView.builder(
+                    itemCount: _filteredProducts.length,
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (context, index) {
+                      final p = _filteredProducts[index];
+                      return _buildProductTile(p, isDark);
+                    },
+                  ),
           ),
         ],
       ),
@@ -142,8 +143,9 @@ class _ProductSearchSheetState extends State<ProductSearchSheet> {
         color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color:
-              isLowStock ? Colors.orange.withOpacity(0.3) : Colors.transparent,
+          color: isLowStock
+              ? Colors.orange.withOpacity(0.3)
+              : Colors.transparent,
         ),
       ),
       child: ListTile(
@@ -153,7 +155,9 @@ class _ProductSearchSheetState extends State<ProductSearchSheet> {
           child: Text(
             p.name[0].toUpperCase(),
             style: const TextStyle(
-                color: Colors.blue, fontWeight: FontWeight.bold),
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         title: Text(
@@ -169,12 +173,15 @@ class _ProductSearchSheetState extends State<ProductSearchSheet> {
             const SizedBox(width: 12),
             if (p.size != null || p.color != null) ...[
               Text(
-                  [p.size, p.color]
-                      .where((e) => e != null && e.isNotEmpty)
-                      .join(' • '),
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: isDark ? Colors.white70 : Colors.black87)),
+                [
+                  p.size,
+                  p.color,
+                ].where((e) => e != null && e.isNotEmpty).join(' • '),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
               const SizedBox(width: 12),
             ],
             Container(

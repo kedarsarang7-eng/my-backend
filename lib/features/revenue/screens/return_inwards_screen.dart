@@ -42,8 +42,11 @@ class ReturnInwardsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.assignment_return,
-                      size: 80, color: Colors.grey[400]),
+                  Icon(
+                    Icons.assignment_return,
+                    size: 80,
+                    color: Colors.grey[400],
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'No Returns Recorded',
@@ -68,7 +71,9 @@ class ReturnInwardsScreen extends ConsumerWidget {
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -92,9 +97,7 @@ class ReturnInwardsScreen extends ConsumerWidget {
   void _showAddReturnSheet(BuildContext context, String ownerId, bool isDark) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => _AddReturnScreen(ownerId: ownerId),
-      ),
+      MaterialPageRoute(builder: (_) => _AddReturnScreen(ownerId: ownerId)),
     );
   }
 }
@@ -108,8 +111,11 @@ class _ReturnCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMM yyyy');
-    final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
 
     return GlassCard(
       child: Column(
@@ -127,8 +133,11 @@ class _ReturnCard extends StatelessWidget {
                       color: Colors.red.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.assignment_return,
-                        color: Colors.red, size: 20),
+                    child: const Icon(
+                      Icons.assignment_return,
+                      color: Colors.red,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(
@@ -153,8 +162,10 @@ class _ReturnCard extends StatelessWidget {
                 ],
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.green.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
@@ -179,38 +190,44 @@ class _ReturnCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Against Bill: ${returnData.billNumber}',
-                style:
-                    TextStyle(color: isDark ? Colors.white54 : Colors.black45),
+                style: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.black45,
+                ),
               ),
               const Spacer(),
               Text(
                 dateFormat.format(returnData.date),
-                style:
-                    TextStyle(color: isDark ? Colors.white38 : Colors.black38),
+                style: TextStyle(
+                  color: isDark ? Colors.white38 : Colors.black38,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 12),
 
           // Items
-          ...returnData.items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '↩ ${item.itemName} × ${item.quantity.toStringAsFixed(0)}',
-                      style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black45),
+          ...returnData.items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '↩ ${item.itemName} × ${item.quantity.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      color: isDark ? Colors.white54 : Colors.black45,
                     ),
-                    Text(
-                      currencyFormat.format(item.amount),
-                      style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black45),
+                  ),
+                  Text(
+                    currencyFormat.format(item.amount),
+                    style: TextStyle(
+                      color: isDark ? Colors.white54 : Colors.black45,
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           const Divider(height: 24),
 
           // Total
@@ -247,14 +264,19 @@ class _ReturnCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline,
-                        size: 16, color: Colors.orange),
+                    const Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: Colors.orange,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Reason: ${returnData.reason}',
-                        style:
-                            const TextStyle(color: Colors.orange, fontSize: 12),
+                        style: const TextStyle(
+                          color: Colors.orange,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ],
@@ -426,9 +448,10 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
                               Text(
                                 _selectedBill!.customerName,
                                 style: TextStyle(
-                                    color: isDark
-                                        ? Colors.white54
-                                        : Colors.black45),
+                                  color: isDark
+                                      ? Colors.white54
+                                      : Colors.black45,
+                                ),
                               ),
                             ],
                           ),
@@ -436,7 +459,9 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
                         Text(
                           '₹${_selectedBill!.grandTotal.toStringAsFixed(0)}',
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.blue),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
                         ),
                       ],
                     )
@@ -481,27 +506,31 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
               ),
               subtitle: Text(
                 'Qty: ${item.qty} × ₹${item.unitPrice}',
-                style:
-                    TextStyle(color: isDark ? Colors.white54 : Colors.black45),
+                style: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.black45,
+                ),
               ),
               secondary: Text(
                 '₹${item.totalAmount.toStringAsFixed(0)}',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: isDark ? Colors.white : Colors.black),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
               ),
               value: isSelected,
               onChanged: (val) {
                 setState(() {
                   if (val == true) {
-                    _returnItems.add(ReturnItem(
-                      itemId: item.vegId,
-                      itemName: item.itemName,
-                      quantity: item.qty,
-                      rate: item.unitPrice,
-                      amount: item.totalAmount,
-                    ));
+                    _returnItems.add(
+                      ReturnItem(
+                        itemId: item.vegId,
+                        itemName: item.itemName,
+                        quantity: item.qty,
+                        rate: item.unitPrice,
+                        amount: item.totalAmount,
+                      ),
+                    );
                   } else {
                     _returnItems.removeWhere((r) => r.itemId == item.vegId);
                   }
@@ -533,8 +562,9 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
             maxLines: 2,
             decoration: InputDecoration(
               hintText: 'E.g., Damaged goods, wrong item, quality issue',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             validator: (val) =>
                 val?.isEmpty == true ? 'Please specify reason' : null,
@@ -555,8 +585,9 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
             children: [
               Text(
                 'Items to Return',
-                style:
-                    TextStyle(color: isDark ? Colors.white54 : Colors.black45),
+                style: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.black45,
+                ),
               ),
               Text(
                 '${_returnItems.length}',
@@ -619,8 +650,9 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
           foregroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         child: _isSaving
             ? const CircularProgressIndicator(color: Colors.white)
@@ -688,8 +720,10 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
                               color: Colors.blue.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child:
-                                const Icon(Icons.receipt, color: Colors.blue),
+                            child: const Icon(
+                              Icons.receipt,
+                              color: Colors.blue,
+                            ),
                           ),
                           title: Text(
                             bill.invoiceNumber,
@@ -699,8 +733,9 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
                           trailing: Text(
                             '₹${bill.grandTotal.toStringAsFixed(0)}',
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
                           ),
                           onTap: () {
                             Navigator.pop(ctx, bill);
@@ -750,8 +785,9 @@ class _AddReturnScreenState extends ConsumerState<_AddReturnScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Return processed! Credit note generated.'),
-              backgroundColor: Colors.green),
+            content: Text('Return processed! Credit note generated.'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.pop(context, true);
       }

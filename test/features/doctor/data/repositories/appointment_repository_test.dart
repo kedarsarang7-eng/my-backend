@@ -35,29 +35,31 @@ void main() {
   });
 
   group('AppointmentRepository Tests', () {
-    test('createAppointment should insert into database and enqueue sync',
-        () async {
-      final appointment = AppointmentModel(
-        id: const Uuid().v4(),
-        doctorId: 'doctor-123',
-        patientId: 'patient-456',
-        scheduledTime: DateTime.now().add(const Duration(hours: 2)),
-        status: AppointmentStatus.scheduled,
-        purpose: 'General Checkup',
-        notes: 'First visit',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+    test(
+      'createAppointment should insert into database and enqueue sync',
+      () async {
+        final appointment = AppointmentModel(
+          id: const Uuid().v4(),
+          doctorId: 'doctor-123',
+          patientId: 'patient-456',
+          scheduledTime: DateTime.now().add(const Duration(hours: 2)),
+          status: AppointmentStatus.scheduled,
+          purpose: 'General Checkup',
+          notes: 'First visit',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
 
-      await repository.createAppointment(appointment);
+        await repository.createAppointment(appointment);
 
-      // Verify sync was enqueued
-      expect(spySyncManager.enqueuedItems.length, 1);
-      final syncItem = spySyncManager.enqueuedItems.first;
-      expect(syncItem.operationType, SyncOperationType.create);
-      expect(syncItem.targetCollection, 'appointments');
-      expect(syncItem.documentId, appointment.id);
-    });
+        // Verify sync was enqueued
+        expect(spySyncManager.enqueuedItems.length, 1);
+        final syncItem = spySyncManager.enqueuedItems.first;
+        expect(syncItem.operationType, SyncOperationType.create);
+        expect(syncItem.targetCollection, 'appointments');
+        expect(syncItem.documentId, appointment.id);
+      },
+    );
 
     test('updateAppointment should update database and enqueue sync', () async {
       // First create an appointment
@@ -181,8 +183,9 @@ void main() {
       await repository.createAppointment(appointment);
 
       // Transition to completed
-      final completed =
-          appointment.copyWith(status: AppointmentStatus.completed);
+      final completed = appointment.copyWith(
+        status: AppointmentStatus.completed,
+      );
       await repository.updateAppointment(completed);
 
       // Verify the status was updated
@@ -209,8 +212,9 @@ void main() {
       await repository.createAppointment(appointment);
 
       // Cancel the appointment
-      final cancelled =
-          appointment.copyWith(status: AppointmentStatus.cancelled);
+      final cancelled = appointment.copyWith(
+        status: AppointmentStatus.cancelled,
+      );
       await repository.updateAppointment(cancelled);
 
       final results = await repository.getAppointmentsForDoctor(

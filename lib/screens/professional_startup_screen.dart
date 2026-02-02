@@ -201,10 +201,7 @@ class _ProfessionalStartupScreenState extends State<ProfessionalStartupScreen>
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white.withOpacity(0.15),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.4),
-          width: 3,
-        ),
+        border: Border.all(color: Colors.white.withOpacity(0.4), width: 3),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -324,11 +321,7 @@ class _ProfessionalStartupScreenState extends State<ProfessionalStartupScreen>
                               color: Colors.white.withOpacity(0.8),
                             ),
                           )
-                        : Icon(
-                            icon,
-                            color: Colors.white,
-                            size: 32,
-                          ),
+                        : Icon(icon, color: Colors.white, size: 32),
                   ),
                   const SizedBox(width: 20),
 

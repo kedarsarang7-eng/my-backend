@@ -23,7 +23,9 @@ void main() {
         expect(Validators.isValidPhone('98765-43210'), true);
         expect(Validators.isValidPhone('(987) 654-3210'), true);
         expect(
-            Validators.isValidPhone('+1 9876543210'), false); // +1 adds digit
+          Validators.isValidPhone('+1 9876543210'),
+          false,
+        ); // +1 adds digit
         expect(Validators.isValidPhone('987 654 3210'), true);
       });
 
@@ -35,8 +37,10 @@ void main() {
       });
 
       test('should handle edge cases', () {
-        expect(Validators.isValidPhone('0000000000'),
-            true); // technically 10 digits
+        expect(
+          Validators.isValidPhone('0000000000'),
+          true,
+        ); // technically 10 digits
         expect(Validators.isValidPhone(' 9876543210 '), true); // with spaces
       });
     });
@@ -54,8 +58,10 @@ void main() {
         expect(Validators.isValidEmail('test@'), false);
         expect(Validators.isValidEmail('@example.com'), false);
         expect(Validators.isValidEmail('test@.com'), false);
-        expect(Validators.isValidEmail('test example@test.com'),
-            false); // has space
+        expect(
+          Validators.isValidEmail('test example@test.com'),
+          false,
+        ); // has space
       });
 
       test('should handle edge cases', () {
@@ -78,12 +84,16 @@ void main() {
       });
 
       test('should handle edge cases', () {
-        expect(Validators.isValidPassword('    '),
-            true); // 4 spaces - technically valid
         expect(
-            Validators.isValidPassword(
-                '1234567890123456789012345678901234567890'),
-            true); // long password
+          Validators.isValidPassword('    '),
+          true,
+        ); // 4 spaces - technically valid
+        expect(
+          Validators.isValidPassword(
+            '1234567890123456789012345678901234567890',
+          ),
+          true,
+        ); // long password
       });
     });
 
@@ -102,7 +112,9 @@ void main() {
 
       test('should handle edge cases', () {
         expect(
-            Validators.isValidName('  '), true); // 2 spaces - technically valid
+          Validators.isValidName('  '),
+          true,
+        ); // 2 spaces - technically valid
         expect(Validators.isValidName('日本語'), true); // unicode name
         expect(Validators.isValidName('123'), true); // numbers also >= 2 chars
       });
@@ -270,8 +282,10 @@ void main() {
 
     test('validators with special characters', () {
       expect(Validators.isValidPhone('!@#\$%^&*()'), false); // No digits
-      expect(Validators.isValidEmail('test@exam!ple.com'),
-          true); // ! is allowed by current regex
+      expect(
+        Validators.isValidEmail('test@exam!ple.com'),
+        true,
+      ); // ! is allowed by current regex
     });
 
     test('validators with unicode', () {

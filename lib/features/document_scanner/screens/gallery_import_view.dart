@@ -20,11 +20,16 @@ class GalleryImportView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.photo_library_outlined,
-              size: 64, color: Colors.grey),
+          const Icon(
+            Icons.photo_library_outlined,
+            size: 64,
+            color: Colors.grey,
+          ),
           const SizedBox(height: 16),
-          const Text("Import from Gallery",
-              style: TextStyle(color: Colors.grey, fontSize: 16)),
+          const Text(
+            "Import from Gallery",
+            style: TextStyle(color: Colors.grey, fontSize: 16),
+          ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => _pickImages(),
@@ -35,7 +40,7 @@ class GalleryImportView extends StatelessWidget {
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
-          )
+          ),
         ],
       ),
     );

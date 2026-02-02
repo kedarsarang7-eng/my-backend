@@ -15,8 +15,10 @@ class BiometricService {
       final canCheck = await _auth.canCheckBiometrics;
       return isSupported && canCheck;
     } catch (e) {
-      developer.log('Error checking biometrics support: $e',
-          name: 'BiometricService');
+      developer.log(
+        'Error checking biometrics support: $e',
+        name: 'BiometricService',
+      );
       return false;
     }
   }
@@ -26,8 +28,10 @@ class BiometricService {
     try {
       return await _auth.getAvailableBiometrics();
     } catch (e) {
-      developer.log('Error getting available biometrics: $e',
-          name: 'BiometricService');
+      developer.log(
+        'Error getting available biometrics: $e',
+        name: 'BiometricService',
+      );
       return [];
     }
   }
@@ -45,8 +49,10 @@ class BiometricService {
         localizedReason: 'Please authenticate to login securely',
       );
     } on PlatformException catch (e) {
-      developer.log('Biometric auth error: ${e.message}',
-          name: 'BiometricService');
+      developer.log(
+        'Biometric auth error: ${e.message}',
+        name: 'BiometricService',
+      );
       return false;
     } catch (e) {
       developer.log('Biometric auth error: $e', name: 'BiometricService');

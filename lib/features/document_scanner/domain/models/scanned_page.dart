@@ -34,6 +34,11 @@ class ScannedPage extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, originalImagePath, processedImagePath, filter, cropPoints];
+  List<Object?> get props => [
+    id,
+    originalImagePath,
+    processedImagePath,
+    filter,
+    cropPoints,
+  ];
 }

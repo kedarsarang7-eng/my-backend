@@ -15,17 +15,17 @@ class DataIntegrityService {
     int checkedCount = 0;
 
     // 1. Get all active products
-    final products = await (database.select(database.products)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull()))
-        .get();
+    final products = await (database.select(
+      database.products,
+    )..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())).get();
 
     for (final product in products) {
       checkedCount++;
 
       // 2. Sum movements (IN - OUT)
-      final movements = await (database.select(database.stockMovements)
-            ..where((t) => t.productId.equals(product.id)))
-          .get();
+      final movements = await (database.select(
+        database.stockMovements,
+      )..where((t) => t.productId.equals(product.id))).get();
 
       double calculatedStock = 0.0;
       for (final m in movements) {
@@ -59,25 +59,28 @@ class DataIntegrityService {
   /// Verify Customer Ledger Integrity
   /// Compares Customer.totalDues with Sum of Unpaid/Partial Bills
   Future<Map<String, dynamic>> verifyCustomerLedgerIntegrity(
-      String userId) async {
+    String userId,
+  ) async {
     final discrepancies = <Map<String, dynamic>>[];
     int checkedCount = 0;
 
     // 1. Get all customers
-    final customers = await (database.select(database.customers)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull()))
-        .get();
+    final customers = await (database.select(
+      database.customers,
+    )..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())).get();
 
     for (final customer in customers) {
       checkedCount++;
 
       // 2. Sum pending bills
-      final bills = await (database.select(database.bills)
-            ..where((t) =>
-                t.customerId.equals(customer.id) &
-                t.userId.equals(userId) &
-                t.deletedAt.isNull()))
-          .get();
+      final bills =
+          await (database.select(database.bills)..where(
+                (t) =>
+                    t.customerId.equals(customer.id) &
+                    t.userId.equals(userId) &
+                    t.deletedAt.isNull(),
+              ))
+              .get();
 
       double calculatedDues = 0.0;
 
@@ -136,22 +139,26 @@ class DataIntegrityService {
         final movementId = const Uuid().v4();
 
         // Create Correction Movement
-        await database.into(database.stockMovements).insert(StockMovementEntity(
-              id: movementId,
-              userId: userId,
-              productId: productId,
-              type: type,
-              reason: 'AUDIT_CORRECTION',
-              quantity: quantity,
-              stockBefore: calculatedStock,
-              stockAfter: currentStock, // Matches snapshot
-              referenceId: 'AUDIT_${now.millisecondsSinceEpoch}',
-              description: 'System Auto-Correction for Missing History',
-              date: now,
-              createdAt: now,
-              createdBy: 'SYSTEM_AUDIT',
-              isSynced: false,
-            ));
+        await database
+            .into(database.stockMovements)
+            .insert(
+              StockMovementEntity(
+                id: movementId,
+                userId: userId,
+                productId: productId,
+                type: type,
+                reason: 'AUDIT_CORRECTION',
+                quantity: quantity,
+                stockBefore: calculatedStock,
+                stockAfter: currentStock, // Matches snapshot
+                referenceId: 'AUDIT_${now.millisecondsSinceEpoch}',
+                description: 'System Auto-Correction for Missing History',
+                date: now,
+                createdAt: now,
+                createdBy: 'SYSTEM_AUDIT',
+                isSynced: false,
+              ),
+            );
 
         fixedCount++;
       }
@@ -170,26 +177,29 @@ class DataIntegrityService {
   /// Reconcile customer balance by comparing cached totalDues with calculated
   /// Returns reconciliation report with any corrections made
   Future<IntegrityReconciliationResult> reconcileCustomerBalance(
-      String userId) async {
+    String userId,
+  ) async {
     final corrections = <CustomerCorrectionSnapshot>[];
     int checkedCount = 0;
 
     // 1. Get all customers
-    final customers = await (database.select(database.customers)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull()))
-        .get();
+    final customers = await (database.select(
+      database.customers,
+    )..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())).get();
 
     await database.transaction(() async {
       for (final customer in customers) {
         checkedCount++;
 
         // 2. Calculate actual dues from bills
-        final bills = await (database.select(database.bills)
-              ..where((t) =>
-                  t.customerId.equals(customer.id) &
-                  t.userId.equals(userId) &
-                  t.deletedAt.isNull()))
-            .get();
+        final bills =
+            await (database.select(database.bills)..where(
+                  (t) =>
+                      t.customerId.equals(customer.id) &
+                      t.userId.equals(userId) &
+                      t.deletedAt.isNull(),
+                ))
+                .get();
 
         double calculatedDues = 0.0;
         double calculatedBilled = 0.0;
@@ -208,24 +218,28 @@ class DataIntegrityService {
 
         if (duesMismatch || billedMismatch) {
           // 4. Log snapshot before correction
-          corrections.add(CustomerCorrectionSnapshot(
-            customerId: customer.id,
-            customerName: customer.name,
-            beforeTotalDues: customer.totalDues,
-            afterTotalDues: calculatedDues,
-            beforeTotalBilled: customer.totalBilled,
-            afterTotalBilled: calculatedBilled,
-            correctedAt: DateTime.now(),
-          ));
+          corrections.add(
+            CustomerCorrectionSnapshot(
+              customerId: customer.id,
+              customerName: customer.name,
+              beforeTotalDues: customer.totalDues,
+              afterTotalDues: calculatedDues,
+              beforeTotalBilled: customer.totalBilled,
+              afterTotalBilled: calculatedBilled,
+              correctedAt: DateTime.now(),
+            ),
+          );
 
           // 5. Apply correction
-          await (database.update(database.customers)
-                ..where((t) => t.id.equals(customer.id)))
-              .write(CustomersCompanion(
-            totalDues: Value(calculatedDues),
-            totalBilled: Value(calculatedBilled),
-            updatedAt: Value(DateTime.now()),
-          ));
+          await (database.update(
+            database.customers,
+          )..where((t) => t.id.equals(customer.id))).write(
+            CustomersCompanion(
+              totalDues: Value(calculatedDues),
+              totalBilled: Value(calculatedBilled),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
         }
       }
     });
@@ -289,8 +303,8 @@ class DataIntegrityService {
         final severity = diff <= minorThreshold
             ? StockMismatchSeverity.minor
             : (diff > alertThreshold
-                ? StockMismatchSeverity.major
-                : StockMismatchSeverity.moderate);
+                  ? StockMismatchSeverity.major
+                  : StockMismatchSeverity.moderate);
 
         // Create correction record
         final correctionRecord = StockCorrectionRecord(
@@ -305,41 +319,45 @@ class DataIntegrityService {
 
         if (severity == StockMismatchSeverity.major) {
           // Log alert for large mismatches (do NOT auto-fix)
-          alerts.add(StockAlertRecord(
-            productId: productId,
-            productName: productName,
-            snapshotStock: currentStock,
-            calculatedStock: calculatedStock,
-            difference: currentStock - calculatedStock,
-            alertedAt: now,
-            message:
-                'LARGE STOCK DISCREPANCY: $productName has ${diff.toStringAsFixed(2)} unit mismatch. Manual review required.',
-          ));
+          alerts.add(
+            StockAlertRecord(
+              productId: productId,
+              productName: productName,
+              snapshotStock: currentStock,
+              calculatedStock: calculatedStock,
+              difference: currentStock - calculatedStock,
+              alertedAt: now,
+              message:
+                  'LARGE STOCK DISCREPANCY: $productName has ${diff.toStringAsFixed(2)} unit mismatch. Manual review required.',
+            ),
+          );
         } else {
           // Auto-fix minor/moderate mismatches
           final movementId = const Uuid().v4();
 
           await database
               .into(database.stockMovements)
-              .insert(StockMovementEntity(
-                id: movementId,
-                userId: userId,
-                productId: productId,
-                type: type,
-                reason: severity == StockMismatchSeverity.minor
-                    ? 'AUTO_CORRECTION_MINOR'
-                    : 'AUTO_CORRECTION_MODERATE',
-                quantity: quantity,
-                stockBefore: calculatedStock,
-                stockAfter: currentStock,
-                referenceId: 'INTEGRITY_${now.millisecondsSinceEpoch}',
-                description:
-                    'Auto-correction for ${severity.name} stock discrepancy',
-                date: now,
-                createdAt: now,
-                createdBy: 'SYSTEM_INTEGRITY',
-                isSynced: false,
-              ));
+              .insert(
+                StockMovementEntity(
+                  id: movementId,
+                  userId: userId,
+                  productId: productId,
+                  type: type,
+                  reason: severity == StockMismatchSeverity.minor
+                      ? 'AUTO_CORRECTION_MINOR'
+                      : 'AUTO_CORRECTION_MODERATE',
+                  quantity: quantity,
+                  stockBefore: calculatedStock,
+                  stockAfter: currentStock,
+                  referenceId: 'INTEGRITY_${now.millisecondsSinceEpoch}',
+                  description:
+                      'Auto-correction for ${severity.name} stock discrepancy',
+                  date: now,
+                  createdAt: now,
+                  createdBy: 'SYSTEM_INTEGRITY',
+                  isSynced: false,
+                ),
+              );
 
           fixes.add(correctionRecord);
         }
@@ -349,8 +367,9 @@ class DataIntegrityService {
     return StockIntegrityResult(
       status: alerts.isNotEmpty ? 'ALERTS_PENDING' : 'CORRECTED',
       checkedCount: report['checkedCount'] as int,
-      minorFixCount:
-          fixes.where((f) => f.severity == StockMismatchSeverity.minor).length,
+      minorFixCount: fixes
+          .where((f) => f.severity == StockMismatchSeverity.minor)
+          .length,
       majorAlertCount: alerts.length,
       fixes: fixes,
       alerts: alerts,
@@ -380,12 +399,12 @@ class IntegrityReconciliationResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'status': status,
-        'checkedCount': checkedCount,
-        'correctionCount': correctionCount,
-        'corrections': corrections.map((c) => c.toJson()).toList(),
-        'timestamp': timestamp.toIso8601String(),
-      };
+    'status': status,
+    'checkedCount': checkedCount,
+    'correctionCount': correctionCount,
+    'corrections': corrections.map((c) => c.toJson()).toList(),
+    'timestamp': timestamp.toIso8601String(),
+  };
 }
 
 /// Snapshot of customer correction for audit
@@ -409,14 +428,14 @@ class CustomerCorrectionSnapshot {
   });
 
   Map<String, dynamic> toJson() => {
-        'customerId': customerId,
-        'customerName': customerName,
-        'beforeTotalDues': beforeTotalDues,
-        'afterTotalDues': afterTotalDues,
-        'beforeTotalBilled': beforeTotalBilled,
-        'afterTotalBilled': afterTotalBilled,
-        'correctedAt': correctedAt.toIso8601String(),
-      };
+    'customerId': customerId,
+    'customerName': customerName,
+    'beforeTotalDues': beforeTotalDues,
+    'afterTotalDues': afterTotalDues,
+    'beforeTotalBilled': beforeTotalBilled,
+    'afterTotalBilled': afterTotalBilled,
+    'correctedAt': correctedAt.toIso8601String(),
+  };
 }
 
 /// Result of enhanced stock integrity check
@@ -440,14 +459,14 @@ class StockIntegrityResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'status': status,
-        'checkedCount': checkedCount,
-        'minorFixCount': minorFixCount,
-        'majorAlertCount': majorAlertCount,
-        'fixes': fixes.map((f) => f.toJson()).toList(),
-        'alerts': alerts.map((a) => a.toJson()).toList(),
-        'timestamp': timestamp.toIso8601String(),
-      };
+    'status': status,
+    'checkedCount': checkedCount,
+    'minorFixCount': minorFixCount,
+    'majorAlertCount': majorAlertCount,
+    'fixes': fixes.map((f) => f.toJson()).toList(),
+    'alerts': alerts.map((a) => a.toJson()).toList(),
+    'timestamp': timestamp.toIso8601String(),
+  };
 }
 
 /// Stock correction record for audit
@@ -471,14 +490,14 @@ class StockCorrectionRecord {
   });
 
   Map<String, dynamic> toJson() => {
-        'productId': productId,
-        'productName': productName,
-        'snapshotStock': snapshotStock,
-        'calculatedStock': calculatedStock,
-        'difference': difference,
-        'severity': severity.name,
-        'correctedAt': correctedAt.toIso8601String(),
-      };
+    'productId': productId,
+    'productName': productName,
+    'snapshotStock': snapshotStock,
+    'calculatedStock': calculatedStock,
+    'difference': difference,
+    'severity': severity.name,
+    'correctedAt': correctedAt.toIso8601String(),
+  };
 }
 
 /// Stock alert record for large mismatches
@@ -502,14 +521,14 @@ class StockAlertRecord {
   });
 
   Map<String, dynamic> toJson() => {
-        'productId': productId,
-        'productName': productName,
-        'snapshotStock': snapshotStock,
-        'calculatedStock': calculatedStock,
-        'difference': difference,
-        'alertedAt': alertedAt.toIso8601String(),
-        'message': message,
-      };
+    'productId': productId,
+    'productName': productName,
+    'snapshotStock': snapshotStock,
+    'calculatedStock': calculatedStock,
+    'difference': difference,
+    'alertedAt': alertedAt.toIso8601String(),
+    'message': message,
+  };
 }
 
 /// Severity levels for stock mismatches

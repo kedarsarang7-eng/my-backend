@@ -79,7 +79,7 @@ class _ProductSalesBreakdownScreenState
           IconButton(
             icon: const Icon(Icons.picture_as_pdf_outlined),
             onPressed: _data.isEmpty ? null : _generatePdf,
-          )
+          ),
         ],
       ),
       body: Column(
@@ -106,46 +106,51 @@ class _ProductSalesBreakdownScreenState
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _data.isEmpty
-                    ? const Center(child: Text('No sales data found'))
-                    : ListView.builder(
-                        itemCount: _data.length,
-                        padding: const EdgeInsets.all(16),
-                        itemBuilder: (context, index) {
-                          final item = _data[index];
-                          final size = item['size'] as String?;
-                          final color = item['color'] as String?;
-                          final hasVars = (size != null && size.isNotEmpty) ||
-                              (color != null && color.isNotEmpty);
+                ? const Center(child: Text('No sales data found'))
+                : ListView.builder(
+                    itemCount: _data.length,
+                    padding: const EdgeInsets.all(16),
+                    itemBuilder: (context, index) {
+                      final item = _data[index];
+                      final size = item['size'] as String?;
+                      final color = item['color'] as String?;
+                      final hasVars =
+                          (size != null && size.isNotEmpty) ||
+                          (color != null && color.isNotEmpty);
 
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            child: ListTile(
-                              title: Text(item['name'],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: hasVars
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Text(
-                                          'Size: ${size ?? '-'} | Color: ${color ?? '-'}'),
-                                    )
-                                  : null,
-                              trailing: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text('Qty: ${item['quantity']}'),
-                                  Text(
-                                      '₹${(item['total'] as double).toStringAsFixed(0)}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16)),
-                                ],
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          title: Text(
+                            item['name'],
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: hasVars
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    'Size: ${size ?? '-'} | Color: ${color ?? '-'}',
+                                  ),
+                                )
+                              : null,
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text('Qty: ${item['quantity']}'),
+                              Text(
+                                '₹${(item['total'] as double).toStringAsFixed(0)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -155,14 +160,18 @@ class _ProductSalesBreakdownScreenState
   Future<void> _generatePdf() async {
     final pdfService = PdfService();
     final pdfData = _data
-        .map((e) => {
-              'label': "${e['name']} ${e['size'] ?? ''} ${e['color'] ?? ''}",
-              'value': e['total'],
-            })
+        .map(
+          (e) => {
+            'label': "${e['name']} ${e['size'] ?? ''} ${e['color'] ?? ''}",
+            'value': e['total'],
+          },
+        )
         .toList();
 
     final bytes = await pdfService.generateReportPdf(
-        "Product Performance", pdfData.cast<Map<String, dynamic>>());
+      "Product Performance",
+      pdfData.cast<Map<String, dynamic>>(),
+    );
     await Printing.layoutPdf(onLayout: (_) async => bytes);
   }
 }

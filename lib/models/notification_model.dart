@@ -19,7 +19,8 @@ class NotificationModel {
       title: map['title'] as String? ?? '',
       body: map['body'] as String? ?? '',
       targetUserId: map['targetUserId'] as String? ?? '',
-      createdAt: DateTime.tryParse(map['createdAt'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(map['createdAt'] as String? ?? '') ??
           DateTime.now(),
     );
   }

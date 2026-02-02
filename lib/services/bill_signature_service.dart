@@ -46,7 +46,8 @@ class BillSignatureService {
     buffer.writeln('DATE:${bill.date.toIso8601String()}');
     buffer.writeln('OWNER:${bill.ownerId}');
     buffer.writeln(
-        'CUSTOMER:${bill.customerId}|${bill.customerName}|${bill.customerGst}');
+      'CUSTOMER:${bill.customerId}|${bill.customerName}|${bill.customerGst}',
+    );
 
     // Items (sorted by productId for consistency)
     final sortedItems = List<BillItem>.from(bill.items)
@@ -54,7 +55,8 @@ class BillSignatureService {
 
     for (final item in sortedItems) {
       buffer.writeln(
-          'ITEM:${item.productId}|${item.productName}|${item.qty}|${item.price}|${item.discount}|${item.cgst}|${item.sgst}|${item.igst}');
+        'ITEM:${item.productId}|${item.productName}|${item.qty}|${item.price}|${item.discount}|${item.cgst}|${item.sgst}|${item.igst}',
+      );
     }
 
     // Totals
@@ -69,7 +71,9 @@ class BillSignatureService {
 
   /// Verify bill signature by comparing stored hash with computed hash
   BillSignatureVerificationResult verifyBillSignature(
-      Bill bill, String storedHash) {
+    Bill bill,
+    String storedHash,
+  ) {
     final computedHash = generateBillHash(bill);
     final isValid = computedHash == storedHash;
 
@@ -108,7 +112,9 @@ class BillSignatureService {
   /// Note: This is a simplified implementation that appends metadata
   /// as a comment. For production, integrate with a proper PDF library.
   Uint8List embedSignatureInPdf(
-      Uint8List pdfBytes, Map<String, String> metadata) {
+    Uint8List pdfBytes,
+    Map<String, String> metadata,
+  ) {
     try {
       // Create signature block as PDF comment
       final signatureBlock = StringBuffer();
@@ -155,11 +161,11 @@ class BillSignatureVerificationResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'isValid': isValid,
-        'billId': billId,
-        'invoiceNumber': invoiceNumber,
-        'storedHash': storedHash,
-        'computedHash': computedHash,
-        'verifiedAt': verifiedAt.toIso8601String(),
-      };
+    'isValid': isValid,
+    'billId': billId,
+    'invoiceNumber': invoiceNumber,
+    'storedHash': storedHash,
+    'computedHash': computedHash,
+    'verifiedAt': verifiedAt.toIso8601String(),
+  };
 }

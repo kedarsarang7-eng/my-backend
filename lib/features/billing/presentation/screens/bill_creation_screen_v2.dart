@@ -185,7 +185,7 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
     }
   }
 
-// ... inside _addItem
+  // ... inside _addItem
 
   void _addItem(Product product) {
     final businessType = ref.read(businessTypeProvider).type;
@@ -213,19 +213,21 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
           sgst: newQty * (existing.price * (existing.gstRate / 200)),
         );
       } else {
-        _items.add(BillItem(
-          productId: product.id,
-          productName: product.name,
-          qty: 1,
-          price: product.sellingPrice,
-          unit: product.unit,
-          gstRate: product.taxRate,
-          cgst: product.sellingPrice * (product.taxRate / 200),
-          sgst: product.sellingPrice * (product.taxRate / 200),
-          size: product.size,
-          color: product.color,
-          drugSchedule: product.drugSchedule, // Map drug schedule
-        ));
+        _items.add(
+          BillItem(
+            productId: product.id,
+            productName: product.name,
+            qty: 1,
+            price: product.sellingPrice,
+            unit: product.unit,
+            gstRate: product.taxRate,
+            cgst: product.sellingPrice * (product.taxRate / 200),
+            sgst: product.sellingPrice * (product.taxRate / 200),
+            size: product.size,
+            color: product.color,
+            drugSchedule: product.drugSchedule, // Map drug schedule
+          ),
+        );
       }
     });
 
@@ -237,7 +239,7 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
     });
   }
 
-// ... inside _updateQuantity
+  // ... inside _updateQuantity
 
   void _updateQuantity(int index, double newQty) {
     if (newQty <= 0) {
@@ -259,8 +261,10 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         sgst: newQty * (item.price * (item.gstRate / 200)),
         // Mandi: Update Net Weight if applicable
         netWeight: (item.grossWeight ?? 0) > 0
-            ? ((item.grossWeight ?? 0) - (item.tareWeight ?? 0))
-                .clamp(0, double.infinity)
+            ? ((item.grossWeight ?? 0) - (item.tareWeight ?? 0)).clamp(
+                0,
+                double.infinity,
+              )
             : item.netWeight,
         commission: item.commission, // Preserve commission
       );
@@ -277,15 +281,20 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
 
   Widget _buildFarmerList() {
     final brokerService = BrokerBillingService(
-        sl<AppDatabase>(), sl(), sl()); // Temp instantiation
+      sl<AppDatabase>(),
+      sl(),
+      sl(),
+    ); // Temp instantiation
     final userId = _session.ownerId ?? '';
 
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const Text("Select Supplier (Farmer)",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          const Text(
+            "Select Supplier (Farmer)",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
           const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder<List<FarmerEntity>>(
@@ -323,7 +332,7 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             },
             icon: const Icon(Icons.add),
             label: const Text("Add New Farmer"),
-          )
+          ),
         ],
       ),
     );
@@ -335,41 +344,51 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
     final villageCtrl = TextEditingController();
 
     showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: const Text("Add New Farmer"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                      controller: nameCtrl,
-                      decoration: const InputDecoration(labelText: "Name")),
-                  TextField(
-                      controller: phoneCtrl,
-                      decoration: const InputDecoration(labelText: "Phone")),
-                  TextField(
-                      controller: villageCtrl,
-                      decoration: const InputDecoration(labelText: "Village")),
-                ],
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: const Text("Cancel")),
-                ElevatedButton(
-                    onPressed: () async {
-                      if (nameCtrl.text.isNotEmpty) {
-                        final ownerId = _session.ownerId ?? '';
-                        if (ownerId.isEmpty) return;
-                        await service.createFarmer(ownerId, nameCtrl.text,
-                            phoneCtrl.text, villageCtrl.text);
-                        Navigator.pop(ctx);
-                        // Auto select?
-                      }
-                    },
-                    child: const Text("Save"))
-              ],
-            ));
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Add New Farmer"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameCtrl,
+              decoration: const InputDecoration(labelText: "Name"),
+            ),
+            TextField(
+              controller: phoneCtrl,
+              decoration: const InputDecoration(labelText: "Phone"),
+            ),
+            TextField(
+              controller: villageCtrl,
+              decoration: const InputDecoration(labelText: "Village"),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (nameCtrl.text.isNotEmpty) {
+                final ownerId = _session.ownerId ?? '';
+                if (ownerId.isEmpty) return;
+                await service.createFarmer(
+                  ownerId,
+                  nameCtrl.text,
+                  phoneCtrl.text,
+                  villageCtrl.text,
+                );
+                Navigator.pop(ctx);
+                // Auto select?
+              }
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
   }
 
   void _applyVoiceIntent(VoiceBillIntent intent) {
@@ -377,22 +396,25 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
       // 1. Map Items
       for (final domainItem in intent.items) {
         // Check if item already exists to merge?
-        final existingIndex = _items.indexWhere((i) =>
-            i.productId == domainItem.productId && i.productId.isNotEmpty);
+        final existingIndex = _items.indexWhere(
+          (i) => i.productId == domainItem.productId && i.productId.isNotEmpty,
+        );
 
         if (existingIndex != -1) {
           final existing = _items[existingIndex];
           final newQty = existing.qty + domainItem.quantity;
           _items[existingIndex] = existing.copyWith(qty: newQty);
         } else {
-          _items.add(BillItem(
-            productId: domainItem.productId,
-            productName: domainItem.name,
-            qty: domainItem.quantity,
-            price: domainItem.rate,
-            unit: domainItem.unit,
-            gstRate: 0, // Default
-          ));
+          _items.add(
+            BillItem(
+              productId: domainItem.productId,
+              productName: domainItem.name,
+              qty: domainItem.quantity,
+              price: domainItem.rate,
+              unit: domainItem.unit,
+              gstRate: 0, // Default
+            ),
+          );
         }
       }
 
@@ -404,8 +426,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         if (intent.paymentMode == VoicePaymentMode.credit) {
           _paymentMode = 'Unpaid';
         } else {
-          _paymentMode =
-              intent.paymentMode == VoicePaymentMode.online ? 'Online' : 'Cash';
+          _paymentMode = intent.paymentMode == VoicePaymentMode.online
+              ? 'Online'
+              : 'Cash';
         }
       }
     });
@@ -441,142 +464,167 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => StatefulBuilder(builder: (context, setSheetState) {
-        double net = (gross - tare).clamp(0, double.infinity);
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setSheetState) {
+          double net = (gross - tare).clamp(0, double.infinity);
 
-        return Container(
-          padding: EdgeInsets.only(
+          return Container(
+            padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom + 20,
               left: 20,
               right: 20,
-              top: 20),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text("Entry for ${product.name}",
+              top: 20,
+            ),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "Entry for ${product.name}",
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      initialValue: lotId,
-                      decoration: const InputDecoration(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: lotId,
+                        decoration: const InputDecoration(
                           labelText: "Lot ID (Optional)",
-                          border: OutlineInputBorder()),
-                      onChanged: (v) => lotId = v,
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (v) => lotId = v,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextFormField(
-                      initialValue:
-                          commission == 0 ? '' : commission.toString(),
-                      decoration: const InputDecoration(
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: commission == 0
+                            ? ''
+                            : commission.toString(),
+                        decoration: const InputDecoration(
                           labelText: "Commission (₹)",
-                          border: OutlineInputBorder()),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (v) => commission = double.tryParse(v) ?? 0,
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        onChanged: (v) => commission = double.tryParse(v) ?? 0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      initialValue: gross == 0 ? '' : gross.toString(),
-                      autofocus: true,
-                      decoration: const InputDecoration(
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: gross == 0 ? '' : gross.toString(),
+                        autofocus: true,
+                        decoration: const InputDecoration(
                           labelText: "Gross Wt (Kg)",
-                          border: OutlineInputBorder()),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (v) {
-                        gross = double.tryParse(v) ?? 0;
-                        setSheetState(() {});
-                      },
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        onChanged: (v) {
+                          gross = double.tryParse(v) ?? 0;
+                          setSheetState(() {});
+                        },
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextFormField(
-                      initialValue: tare == 0 ? '' : tare.toString(),
-                      decoration: const InputDecoration(
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: tare == 0 ? '' : tare.toString(),
+                        decoration: const InputDecoration(
                           labelText: "Tare Wt (Kg)",
-                          border: OutlineInputBorder()),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (v) {
-                        tare = double.tryParse(v) ?? 0;
-                        setSheetState(() {});
-                      },
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        onChanged: (v) {
+                          tare = double.tryParse(v) ?? 0;
+                          setSheetState(() {});
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text("Net Weight: ${net.toStringAsFixed(2)} Kg",
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Net Weight: ${net.toStringAsFixed(2)} Kg",
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.green)),
-              const SizedBox(height: 10),
-              TextFormField(
-                initialValue: rate.toString(),
-                decoration: const InputDecoration(
-                    labelText: "Rate (₹/Kg)", border: OutlineInputBorder()),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                onChanged: (v) {
-                  rate = double.tryParse(v) ?? 0;
-                  setSheetState(() {});
-                },
-              ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () {
-                  // Save Item
-                  setState(() {
-                    // Remove existing if any
-                    if (existingItem != null) {
-                      _items.removeWhere(
-                          (i) => i.productId == existingItem.productId);
-                    }
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  initialValue: rate.toString(),
+                  decoration: const InputDecoration(
+                    labelText: "Rate (₹/Kg)",
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  onChanged: (v) {
+                    rate = double.tryParse(v) ?? 0;
+                    setSheetState(() {});
+                  },
+                ),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    // Save Item
+                    setState(() {
+                      // Remove existing if any
+                      if (existingItem != null) {
+                        _items.removeWhere(
+                          (i) => i.productId == existingItem.productId,
+                        );
+                      }
 
-                    _items.add(BillItem(
-                      productId: product.id,
-                      productName: product.name,
-                      qty: net, // For Mandi, Qty = Net Weight
-                      price: rate,
-                      unit: 'kg',
-                      grossWeight: gross,
-                      tareWeight: tare,
-                      netWeight: net,
-                      commission: commission,
-                      lotId: lotId,
-                      gstRate: 0, // Mandi usually exempt
-                    ));
-                  });
-                  _updateRecommendations();
-                  Navigator.pop(ctx);
-                },
-                child: const Text("Add to Bill"),
-              )
-            ],
-          ),
-        );
-      }),
+                      _items.add(
+                        BillItem(
+                          productId: product.id,
+                          productName: product.name,
+                          qty: net, // For Mandi, Qty = Net Weight
+                          price: rate,
+                          unit: 'kg',
+                          grossWeight: gross,
+                          tareWeight: tare,
+                          netWeight: net,
+                          commission: commission,
+                          lotId: lotId,
+                          gstRate: 0, // Mandi usually exempt
+                        ),
+                      );
+                    });
+                    _updateRecommendations();
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text("Add to Bill"),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
-// ... UI Build methods
+  // ... UI Build methods
 
   Widget _buildItemsList(AppColorPalette palette, bool isDark) {
     if (_items.isEmpty) {
@@ -642,10 +690,14 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                     padding: const EdgeInsets.only(top: 16, bottom: 32),
                     child: TextButton.icon(
                       onPressed: _showProductSearch,
-                      icon: Icon(Icons.add_circle_outline,
-                          color: FuturisticColors.primary),
-                      label: Text('Add More Items',
-                          style: TextStyle(color: FuturisticColors.primary)),
+                      icon: Icon(
+                        Icons.add_circle_outline,
+                        color: FuturisticColors.primary,
+                      ),
+                      label: Text(
+                        'Add More Items',
+                        style: TextStyle(color: FuturisticColors.primary),
+                      ),
                     ),
                   ),
                 );
@@ -663,26 +715,34 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                       children: [
                         TextButton.icon(
                           onPressed: _showProductSearch,
-                          icon: Icon(Icons.add_circle_outline,
-                              color: FuturisticColors.primary),
-                          label: Text('Add Items',
-                              style:
-                                  TextStyle(color: FuturisticColors.primary)),
+                          icon: Icon(
+                            Icons.add_circle_outline,
+                            color: FuturisticColors.primary,
+                          ),
+                          label: Text(
+                            'Add Items',
+                            style: TextStyle(color: FuturisticColors.primary),
+                          ),
                         ),
                         const SizedBox(width: 20),
                         TextButton.icon(
                           onPressed: _handleBarcodeScan,
-                          icon: Icon(Icons.qr_code_scanner,
-                              color: FuturisticColors.secondary),
-                          label: Text('Scan',
-                              style:
-                                  TextStyle(color: FuturisticColors.secondary)),
+                          icon: Icon(
+                            Icons.qr_code_scanner,
+                            color: FuturisticColors.secondary,
+                          ),
+                          label: Text(
+                            'Scan',
+                            style: TextStyle(color: FuturisticColors.secondary),
+                          ),
                         ),
                         const SizedBox(width: 10),
                         IconButton(
                           onPressed: _handleCameraOcr,
-                          icon: const Icon(Icons.camera_alt,
-                              color: Colors.blueGrey),
+                          icon: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.blueGrey,
+                          ),
                           tooltip: 'OCR',
                         ),
                       ],
@@ -712,11 +772,15 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ActionChip(
-              avatar:
-                  const Icon(Icons.auto_awesome, size: 14, color: Colors.amber),
+              avatar: const Icon(
+                Icons.auto_awesome,
+                size: 14,
+                color: Colors.amber,
+              ),
               label: Text("Add ${product.name}"),
-              backgroundColor:
-                  isDark ? Colors.white10 : Colors.blue.withOpacity(0.05),
+              backgroundColor: isDark
+                  ? Colors.white10
+                  : Colors.blue.withOpacity(0.05),
               side: BorderSide(color: Colors.blue.withOpacity(0.2)),
               labelStyle: TextStyle(
                 fontSize: 12,
@@ -733,7 +797,11 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
   }
 
   Widget _buildItemCard(
-      BillItem item, int index, AppColorPalette palette, bool isDark) {
+    BillItem item,
+    int index,
+    AppColorPalette palette,
+    bool isDark,
+  ) {
     final businessType = ref.watch(businessTypeProvider).type;
     return AdaptiveItemCard(
       item: item,
@@ -763,8 +831,8 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
     if (!capabilities.supportsBarcodeScan) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content:
-                Text('Barcode scanning not enabled for this business type')),
+          content: Text('Barcode scanning not enabled for this business type'),
+        ),
       );
       return;
     }
@@ -780,20 +848,23 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
       // 1. Search for product
       // We need to access ProductsRepository directly to search by barcode
       // The current _addItem method takes a Product object
-      final products =
-          await sl<ProductsRepository>().search(barcode, userId: ownerId);
+      final products = await sl<ProductsRepository>().search(
+        barcode,
+        userId: ownerId,
+      );
 
       if (products.data != null && products.data!.isNotEmpty) {
         // Exact match found!
         // If multiple found (rare but possible with exact match on name vs barcode), pick first exact barcode match
         final exactMatch = products.data!.firstWhere(
-            (p) => p.barcode == barcode || p.altBarcodes.contains(barcode),
-            orElse: () => products.data!.first);
+          (p) => p.barcode == barcode || p.altBarcodes.contains(barcode),
+          orElse: () => products.data!.first,
+        );
 
         _addItem(exactMatch);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Added ${exactMatch.name}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Added ${exactMatch.name}')));
       } else {
         // 2. Not found -> Prompt to Add
         if (mounted) {
@@ -802,9 +873,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error scanning: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error scanning: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -841,9 +912,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -868,8 +939,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
     }
 
     final nameController = TextEditingController(text: name);
-    final priceController =
-        TextEditingController(text: price > 0 ? price.toString() : '');
+    final priceController = TextEditingController(
+      text: price > 0 ? price.toString() : '',
+    );
     final qtyController = TextEditingController(text: '1');
     // ... add more controllers for other fields if needed
 
@@ -884,26 +956,34 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
-                    labelText: 'Product Name', border: OutlineInputBorder()),
+                  labelText: 'Product Name',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
-                      child: TextField(
-                    controller: priceController,
-                    decoration: const InputDecoration(
-                        labelText: 'Price', border: OutlineInputBorder()),
-                    keyboardType: TextInputType.number,
-                  )),
+                    child: TextField(
+                      controller: priceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Price',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
-                      child: TextField(
-                    controller: qtyController,
-                    decoration: const InputDecoration(
-                        labelText: 'Qty', border: OutlineInputBorder()),
-                    keyboardType: TextInputType.number,
-                  )),
+                    child: TextField(
+                      controller: qtyController,
+                      decoration: const InputDecoration(
+                        labelText: 'Qty',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
                 ],
               ),
               if (result.isPharmacyType || batch != null) ...[
@@ -915,8 +995,10 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 ExpansionTile(
                   title: const Text('View Raw Text'),
                   children: [
-                    Text(result.genericResult.rawText,
-                        style: const TextStyle(fontSize: 10))
+                    Text(
+                      result.genericResult.rawText,
+                      style: const TextStyle(fontSize: 10),
+                    ),
                   ],
                 ),
             ],
@@ -924,7 +1006,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               // Add item
@@ -956,7 +1040,8 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
       builder: (ctx) => AlertDialog(
         title: const Text('Product Not Found'),
         content: Text(
-            'No product found for barcode: $barcode.\nDo you want to add it?'),
+          'No product found for barcode: $barcode.\nDo you want to add it?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -1004,8 +1089,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
           setState(() {
             // Check if we need to merge with existing item (by name)
             // For manual entry, we usually treat them as distinct unless name matches exactly
-            final existingIndex = _items.indexWhere((i) =>
-                i.productId.isEmpty && i.productName == item.productName);
+            final existingIndex = _items.indexWhere(
+              (i) => i.productId.isEmpty && i.productName == item.productName,
+            );
 
             if (existingIndex != -1) {
               final existing = _items[existingIndex];
@@ -1044,14 +1130,21 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total Items',
-                    style: GoogleFonts.inter(
-                        color: FuturisticColors.textSecondary, fontSize: 13)),
-                Text('${_items.length}',
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: FuturisticColors.textPrimary)),
+                Text(
+                  'Total Items',
+                  style: GoogleFonts.inter(
+                    color: FuturisticColors.textSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+                Text(
+                  '${_items.length}',
+                  style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: FuturisticColors.textPrimary,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -1061,16 +1154,18 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 Text(
                   'Grand Total',
                   style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 18,
-                      color: FuturisticColors.textPrimary),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: FuturisticColors.textPrimary,
+                  ),
                 ),
                 Text(
                   '₹${_grandTotal.toStringAsFixed(2)}',
                   style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
-                      color: FuturisticColors.success),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                    color: FuturisticColors.success,
+                  ),
                 ),
               ],
             ),
@@ -1080,29 +1175,41 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 4), // Compact padding
+                horizontal: 16,
+                vertical: 4,
+              ), // Compact padding
               decoration: BoxDecoration(
                 color: _sendEmail
                     ? FuturisticColors.primary.withOpacity(0.1)
                     : Colors.white.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: _sendEmail
-                        ? FuturisticColors.primary.withOpacity(0.3)
-                        : Colors.white.withOpacity(0.05)),
+                  color: _sendEmail
+                      ? FuturisticColors.primary.withOpacity(0.3)
+                      : Colors.white.withOpacity(0.05),
+                ),
               ),
               child: SwitchListTile(
-                title: Text("Send Invoice via Email",
-                    style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13)),
+                title: Text(
+                  "Send Invoice via Email",
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
                 subtitle: _sendEmail
-                    ? Text(GmailService().userEmail ?? "Connected via Gmail",
+                    ? Text(
+                        GmailService().userEmail ?? "Connected via Gmail",
                         style: TextStyle(
-                            color: FuturisticColors.primary, fontSize: 11))
-                    : const Text("Requires Gmail Sign-in",
-                        style: TextStyle(color: Colors.grey, fontSize: 11)),
+                          color: FuturisticColors.primary,
+                          fontSize: 11,
+                        ),
+                      )
+                    : const Text(
+                        "Requires Gmail Sign-in",
+                        style: TextStyle(color: Colors.grey, fontSize: 11),
+                      ),
                 value: _sendEmail,
                 onChanged: (val) async {
                   if (val) {
@@ -1113,14 +1220,17 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                         await gmail.signIn();
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Gmail Connected!")));
+                            const SnackBar(content: Text("Gmail Connected!")),
+                          );
                         }
                       } catch (e) {
                         if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
                               content: Text("Failed to connect Gmail: $e"),
-                              backgroundColor: Colors.red));
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                         }
                         return; // Do not enable if failed
                       } finally {
@@ -1165,8 +1275,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                       palette: palette,
                     ),
                   ),
-                  if (FeatureResolver(ref.read(businessTypeProvider).type)
-                      .showCreditLedger) ...[
+                  if (FeatureResolver(
+                    ref.read(businessTypeProvider).type,
+                  ).showCreditLedger) ...[
                     const SizedBox(width: 4),
                     Expanded(
                       child: _PaymentModeChip(
@@ -1177,7 +1288,7 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                         palette: palette,
                       ),
                     ),
-                  ]
+                  ],
                 ],
               ),
             ),
@@ -1190,8 +1301,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   gradient: FuturisticColors.primaryGradient,
-                  boxShadow:
-                      FuturisticColors.neonShadow(FuturisticColors.primary),
+                  boxShadow: FuturisticColors.neonShadow(
+                    FuturisticColors.primary,
+                  ),
                 ),
                 child: ElevatedButton(
                   onPressed: _handleSave,
@@ -1199,7 +1311,8 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1217,7 +1330,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                       ),
                       const SizedBox(width: 8),
                       const ShortcutPill(
-                          shortcut: 'Ctrl+S', color: Colors.white70),
+                        shortcut: 'Ctrl+S',
+                        color: Colors.white70,
+                      ),
                     ],
                   ),
                 ),
@@ -1288,22 +1403,24 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         customerEmail: _selectedCustomer!.email, // Populate Email
         date: DateTime.now(),
         items: _items
-            .map((e) => BillItem(
-                  productId: e.productId,
-                  productName: e.productName,
-                  qty: e.quantity,
-                  price: e.unitPrice,
-                  unit: e.unit,
-                  hsn: e.hsn,
-                  gstRate: e.gstRate,
-                  cgst: e.cgst,
-                  sgst: e.sgst,
-                  igst: e.igst,
-                  discount: e.discount,
-                  // Copy business specific fields if needed
-                  batchNo: e.batchNo,
-                  expiryDate: e.expiryDate,
-                ))
+            .map(
+              (e) => BillItem(
+                productId: e.productId,
+                productName: e.productName,
+                qty: e.quantity,
+                price: e.unitPrice,
+                unit: e.unit,
+                hsn: e.hsn,
+                gstRate: e.gstRate,
+                cgst: e.cgst,
+                sgst: e.sgst,
+                igst: e.igst,
+                discount: e.discount,
+                // Copy business specific fields if needed
+                batchNo: e.batchNo,
+                expiryDate: e.expiryDate,
+              ),
+            )
             .toList(),
         subtotal: _subtotal,
         discountApplied: 0, // Fixed name
@@ -1323,8 +1440,10 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         fuelType: _headerBill.fuelType,
         // Mandi Logic
         brokerId: _selectedFarmer?.id, // Mapping Farmer ID to brokerId field
-        commissionAmount:
-            _items.fold(0, (sum, item) => sum + (item.commission ?? 0)),
+        commissionAmount: _items.fold(
+          0,
+          (sum, item) => sum + (item.commission ?? 0),
+        ),
       );
 
       await _billsRepo.createBill(newBill);
@@ -1334,7 +1453,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         try {
           final serviceJobService = ServiceJobService(AppDatabase.instance);
           await serviceJobService.linkBillToJob(
-              widget.serviceJobId!, tempBillId);
+            widget.serviceJobId!,
+            tempBillId,
+          );
         } catch (e) {
           debugPrint("Failed to link bill to service job: $e");
         }
@@ -1369,18 +1490,20 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             );
 
             final invoiceItems = newBill.items
-                .map((i) => InvoiceItem(
-                      name: i.productName,
-                      quantity: i.qty,
-                      unit: i.unit,
-                      unitPrice: i.price,
-                      taxPercent: i.gstRate,
-                      // discountPercent? BillItem has discount amount not percent usually,
-                      // but InvoiceItem expects percent? Or I need to map carefully.
-                      // BillItem has `discount` (amount). InvoiceItem has `discountPercent`.
-                      // Let's use 0 percent for now or calculate if possible.
-                      // Assuming discount is 0 for simplicity or handled in price.
-                    ))
+                .map(
+                  (i) => InvoiceItem(
+                    name: i.productName,
+                    quantity: i.qty,
+                    unit: i.unit,
+                    unitPrice: i.price,
+                    taxPercent: i.gstRate,
+                    // discountPercent? BillItem has discount amount not percent usually,
+                    // but InvoiceItem expects percent? Or I need to map carefully.
+                    // BillItem has `discount` (amount). InvoiceItem has `discountPercent`.
+                    // Let's use 0 percent for now or calculate if possible.
+                    // Assuming discount is 0 for simplicity or handled in price.
+                  ),
+                )
                 .toList();
 
             // 2. Generate PDF
@@ -1407,8 +1530,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                    content: Text('Invoice sent via Email!'),
-                    backgroundColor: Colors.green),
+                  content: Text('Invoice sent via Email!'),
+                  backgroundColor: Colors.green,
+                ),
               );
             }
           } catch (e) {
@@ -1417,8 +1541,9 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               // Non-blocking error
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                    content: Text('Bill saved, but Email failed: $e'),
-                    backgroundColor: Colors.orange),
+                  content: Text('Bill saved, but Email failed: $e'),
+                  backgroundColor: Colors.orange,
+                ),
               );
             }
           }
@@ -1489,7 +1614,8 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                       _buildDesktopHeader(isDark),
                       const SizedBox(height: 16),
                       Expanded(
-                          child: _buildDesktopProductBrowser(palette, isDark)),
+                        child: _buildDesktopProductBrowser(palette, isDark),
+                      ),
                     ],
                   ),
                 ),
@@ -1539,14 +1665,17 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             child: TextField(
               decoration: InputDecoration(
                 hintText: "Search products (Ctrl+F)",
-                hintStyle:
-                    GoogleFonts.inter(color: FuturisticColors.textSecondary),
+                hintStyle: GoogleFonts.inter(
+                  color: FuturisticColors.textSecondary,
+                ),
                 border: InputBorder.none,
                 isDense: true,
               ),
               focusNode: _itemSearchFocusNode,
               style: GoogleFonts.inter(
-                  color: FuturisticColors.textPrimary, fontSize: 16),
+                color: FuturisticColors.textPrimary,
+                fontSize: 16,
+              ),
               onTap: _showProductSearch,
             ),
           ),
@@ -1557,8 +1686,10 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             margin: const EdgeInsets.symmetric(horizontal: 16),
           ),
           IconButton(
-            icon: const Icon(Icons.qr_code_scanner,
-                color: FuturisticColors.accent1),
+            icon: const Icon(
+              Icons.qr_code_scanner,
+              color: FuturisticColors.accent1,
+            ),
             onPressed: _handleBarcodeScan,
             tooltip: "Scan Barcode (F2)",
           ),
@@ -1584,19 +1715,24 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text("Quick Suggestions",
-                    style: GoogleFonts.outfit(
-                        color: FuturisticColors.textSecondary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14)),
+                child: Text(
+                  "Quick Suggestions",
+                  style: GoogleFonts.outfit(
+                    color: FuturisticColors.textSecondary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
               ),
 
               // Mandi: Show Farmer Selection Button
               if (businessType == BusinessType.vegetablesBroker)
                 TextButton.icon(
                   icon: const Icon(Icons.agriculture, size: 16),
-                  label: Text(_selectedFarmer?.name ?? "Select Supplier",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  label: Text(
+                    _selectedFarmer?.name ?? "Select Supplier",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   onPressed: _showFarmerSearch,
                   style: TextButton.styleFrom(foregroundColor: Colors.green),
                 ),
@@ -1608,7 +1744,7 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 style: TextButton.styleFrom(
                   foregroundColor: FuturisticColors.primary,
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -1620,19 +1756,27 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inventory_2_outlined,
-                      size: 80,
-                      color: FuturisticColors.textSecondary.withOpacity(0.1)),
+                  Icon(
+                    Icons.inventory_2_outlined,
+                    size: 80,
+                    color: FuturisticColors.textSecondary.withOpacity(0.1),
+                  ),
                   const SizedBox(height: 16),
-                  Text("Ready to Bill",
-                      style: GoogleFonts.outfit(
-                          color: FuturisticColors.textPrimary,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    "Ready to Bill",
+                    style: GoogleFonts.outfit(
+                      color: FuturisticColors.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  Text("Search, Scan or Speak to add items",
-                      style: GoogleFonts.inter(
-                          color: FuturisticColors.textSecondary)),
+                  Text(
+                    "Search, Scan or Speak to add items",
+                    style: GoogleFonts.inter(
+                      color: FuturisticColors.textSecondary,
+                    ),
+                  ),
                   const SizedBox(height: 24),
 
                   // Quick Actions Grid
@@ -1642,26 +1786,41 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                     alignment: WrapAlignment.center,
                     children: [
                       _buildQuickActionButton(
-                          Icons.search, "Search", _showProductSearch),
+                        Icons.search,
+                        "Search",
+                        _showProductSearch,
+                      ),
                       _buildQuickActionButton(
-                          Icons.qr_code_scanner, "Scan", _handleBarcodeScan),
+                        Icons.qr_code_scanner,
+                        "Scan",
+                        _handleBarcodeScan,
+                      ),
                       _buildQuickActionButton(
-                          Icons.mic, "Voice", _openVoiceAssistant),
+                        Icons.mic,
+                        "Voice",
+                        _openVoiceAssistant,
+                      ),
                       _buildQuickActionButton(
-                          Icons.edit_note, "Manual", _showManualItemEntry),
+                        Icons.edit_note,
+                        "Manual",
+                        _showManualItemEntry,
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   Widget _buildQuickActionButton(
-      IconData icon, String label, VoidCallback onTap) {
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -1677,9 +1836,13 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
           children: [
             Icon(icon, color: FuturisticColors.accent1, size: 28),
             const SizedBox(height: 8),
-            Text(label,
-                style: GoogleFonts.inter(
-                    color: FuturisticColors.textSecondary, fontSize: 12)),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                color: FuturisticColors.textSecondary,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),
@@ -1704,13 +1867,16 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 Text(
                   _selectedCustomer?.name ?? "Walk-in Customer",
                   style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.bold),
+                    color: isDark ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   _selectedCustomer?.phone ?? "No Phone Linked",
                   style: const TextStyle(
-                      color: FuturisticColors.textSecondary, fontSize: 12),
+                    color: FuturisticColors.textSecondary,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -1734,7 +1900,7 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               );
             },
             child: const Text("Change (F4)"),
-          )
+          ),
         ],
       ),
     );
@@ -1746,12 +1912,16 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.shopping_cart_outlined,
-                size: 48,
-                color: FuturisticColors.textSecondary.withOpacity(0.5)),
+            Icon(
+              Icons.shopping_cart_outlined,
+              size: 48,
+              color: FuturisticColors.textSecondary.withOpacity(0.5),
+            ),
             const SizedBox(height: 12),
-            Text("Cart is empty",
-                style: TextStyle(color: FuturisticColors.textSecondary)),
+            Text(
+              "Cart is empty",
+              style: TextStyle(color: FuturisticColors.textSecondary),
+            ),
           ],
         ),
       );
@@ -1776,14 +1946,20 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.productName,
-                        style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w500)),
-                    Text("₹${item.price.toStringAsFixed(1)} / ${item.unit}",
-                        style: const TextStyle(
-                            color: FuturisticColors.textSecondary,
-                            fontSize: 12)),
+                    Text(
+                      item.productName,
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      "₹${item.price.toStringAsFixed(1)} / ${item.unit}",
+                      style: const TextStyle(
+                        color: FuturisticColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1792,21 +1968,30 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.remove_circle_outline,
-                        size: 20, color: FuturisticColors.textSecondary),
+                    icon: const Icon(
+                      Icons.remove_circle_outline,
+                      size: 20,
+                      color: FuturisticColors.textSecondary,
+                    ),
                     onPressed: () => _updateQuantity(index, item.qty - 1),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
                   const SizedBox(width: 12),
-                  Text("${item.qty}",
-                      style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    "${item.qty}",
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   IconButton(
-                    icon: const Icon(Icons.add_circle_outline,
-                        size: 20, color: FuturisticColors.textSecondary),
+                    icon: const Icon(
+                      Icons.add_circle_outline,
+                      size: 20,
+                      color: FuturisticColors.textSecondary,
+                    ),
                     onPressed: () => _updateQuantity(index, item.qty + 1),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -1821,10 +2006,11 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                   "₹${item.total.toStringAsFixed(0)}",
                   textAlign: TextAlign.end,
                   style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.bold),
+                    color: isDark ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -1844,47 +2030,62 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Subtotal",
-                  style:
-                      GoogleFonts.inter(color: FuturisticColors.textSecondary)),
-              Text("₹${_subtotal.toStringAsFixed(2)}",
-                  style: GoogleFonts.inter(
-                      color: FuturisticColors.textPrimary,
-                      fontWeight: FontWeight.w600)),
+              Text(
+                "Subtotal",
+                style: GoogleFonts.inter(color: FuturisticColors.textSecondary),
+              ),
+              Text(
+                "₹${_subtotal.toStringAsFixed(2)}",
+                style: GoogleFonts.inter(
+                  color: FuturisticColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Tax (GST)",
-                  style:
-                      GoogleFonts.inter(color: FuturisticColors.textSecondary)),
-              Text("₹${_totalTax.toStringAsFixed(2)}",
-                  style: GoogleFonts.inter(
-                      color: FuturisticColors.textPrimary,
-                      fontWeight: FontWeight.w600)),
+              Text(
+                "Tax (GST)",
+                style: GoogleFonts.inter(color: FuturisticColors.textSecondary),
+              ),
+              Text(
+                "₹${_totalTax.toStringAsFixed(2)}",
+                style: GoogleFonts.inter(
+                  color: FuturisticColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
           const Divider(height: 32, color: Colors.white10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Grand Total",
-                  style: GoogleFonts.outfit(
-                      color: FuturisticColors.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-              Text("₹${_grandTotal.toStringAsFixed(2)}",
-                  style: GoogleFonts.outfit(
-                      color: FuturisticColors.success,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      shadows: [
-                        Shadow(
-                            color: FuturisticColors.success.withOpacity(0.5),
-                            blurRadius: 10)
-                      ])),
+              Text(
+                "Grand Total",
+                style: GoogleFonts.outfit(
+                  color: FuturisticColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "₹${_grandTotal.toStringAsFixed(2)}",
+                style: GoogleFonts.outfit(
+                  color: FuturisticColors.success,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  shadows: [
+                    Shadow(
+                      color: FuturisticColors.success.withOpacity(0.5),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -1895,15 +2096,17 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 gradient: FuturisticColors.primaryGradient,
-                boxShadow:
-                    FuturisticColors.neonShadow(FuturisticColors.primary),
+                boxShadow: FuturisticColors.neonShadow(
+                  FuturisticColors.primary,
+                ),
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
                 onPressed: _items.isEmpty ? null : () => _showPaymentDialog(),
                 child: _isLoading
@@ -1913,17 +2116,20 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                         children: [
                           Icon(Icons.payment, color: Colors.white),
                           SizedBox(width: 8),
-                          Text("PROCEED TO PAY",
-                              style: GoogleFonts.outfit(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 1)),
+                          Text(
+                            "PROCEED TO PAY",
+                            style: GoogleFonts.outfit(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 1,
+                            ),
+                          ),
                         ],
                       ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -1997,14 +2203,17 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
               // Customer Header
               if (_selectedCustomer != null)
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: ModernCard(
                     padding: EdgeInsets.zero,
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor:
-                            FuturisticColors.primary.withOpacity(0.1),
+                        backgroundColor: FuturisticColors.primary.withOpacity(
+                          0.1,
+                        ),
                         child: Text(
                           _selectedCustomer!.name[0].toUpperCase(),
                           style: TextStyle(color: FuturisticColors.primary),
@@ -2013,13 +2222,15 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                       title: Text(
                         _selectedCustomer!.name,
                         style: AppTypography.bodyLarge.copyWith(
-                            color: isDark ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.bold),
+                          color: isDark ? Colors.white : Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       subtitle: Text(
                         _selectedCustomer!.phone ?? '',
                         style: TextStyle(
-                            color: isDark ? Colors.white54 : Colors.grey),
+                          color: isDark ? Colors.white54 : Colors.grey,
+                        ),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -2038,14 +2249,18 @@ class _BillCreationScreenV2State extends ConsumerState<BillCreationScreenV2>
                 )
               else
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: ModernCard(
                     // Using ModernCard instead of plain ListTile
                     padding: EdgeInsets.zero,
                     child: ListTile(
-                      leading: Icon(Icons.person_outline,
-                          color: FuturisticColors.primary),
+                      leading: Icon(
+                        Icons.person_outline,
+                        color: FuturisticColors.primary,
+                      ),
                       title: const Text('Select Customer'),
                       subtitle: const Text('Required for billing'),
                       onTap: () {
@@ -2155,9 +2370,11 @@ class _PaymentModeChip extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon,
-                size: 20,
-                color: isSelected ? FuturisticColors.primary : Colors.grey),
+            Icon(
+              icon,
+              size: 20,
+              color: isSelected ? FuturisticColors.primary : Colors.grey,
+            ),
             const SizedBox(width: 8),
             Text(
               label,

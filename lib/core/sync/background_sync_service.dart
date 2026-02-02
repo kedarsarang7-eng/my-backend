@@ -42,12 +42,12 @@ class BackgroundSyncConfig {
   });
 
   Map<String, dynamic> toJson() => {
-        'minIntervalMinutes': minIntervalMinutes,
-        'wifiOnly': wifiOnly,
-        'requiresCharging': requiresCharging,
-        'maxRetries': maxRetries,
-        'enabled': enabled,
-      };
+    'minIntervalMinutes': minIntervalMinutes,
+    'wifiOnly': wifiOnly,
+    'requiresCharging': requiresCharging,
+    'maxRetries': maxRetries,
+    'enabled': enabled,
+  };
 
   factory BackgroundSyncConfig.fromJson(Map<String, dynamic> json) {
     return BackgroundSyncConfig(
@@ -89,13 +89,13 @@ class BackgroundSyncResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'success': success,
-        'itemsSynced': itemsSynced,
-        'itemsFailed': itemsFailed,
-        'durationMs': duration.inMilliseconds,
-        'timestamp': timestamp.toIso8601String(),
-        'error': error,
-      };
+    'success': success,
+    'itemsSynced': itemsSynced,
+    'itemsFailed': itemsFailed,
+    'durationMs': duration.inMilliseconds,
+    'timestamp': timestamp.toIso8601String(),
+    'error': error,
+  };
 }
 
 /// Background Sync Service - Production Ready with WorkManager
@@ -159,8 +159,11 @@ class BackgroundSyncService {
     await _initializeWorkManager();
 
     _isInitialized = true;
-    monitoring.info('BackgroundSync', 'Initialized with WorkManager',
-        metadata: _config.toJson());
+    monitoring.info(
+      'BackgroundSync',
+      'Initialized with WorkManager',
+      metadata: _config.toJson(),
+    );
 
     if (_config.enabled) {
       await schedulePeriodicSync();
@@ -178,8 +181,12 @@ class BackgroundSyncService {
       );
       monitoring.info('BackgroundSync', 'WorkManager initialized');
     } catch (e, stack) {
-      monitoring.error('BackgroundSync', 'Failed to initialize WorkManager',
-          error: e, stackTrace: stack);
+      monitoring.error(
+        'BackgroundSync',
+        'Failed to initialize WorkManager',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -204,8 +211,9 @@ class BackgroundSyncService {
         BackgroundTaskIds.periodicSync,
         frequency: Duration(minutes: _config.minIntervalMinutes),
         constraints: Constraints(
-          networkType:
-              _config.wifiOnly ? NetworkType.unmetered : NetworkType.connected,
+          networkType: _config.wifiOnly
+              ? NetworkType.unmetered
+              : NetworkType.connected,
           requiresCharging: _config.requiresCharging,
           requiresBatteryNotLow: true,
         ),
@@ -219,14 +227,22 @@ class BackgroundSyncService {
       );
       _updateStatus(BackgroundSyncStatus.scheduled);
 
-      monitoring.info('BackgroundSync', 'Scheduled periodic sync', metadata: {
-        'nextSync': _nextScheduledSync?.toIso8601String(),
-        'intervalMinutes': _config.minIntervalMinutes,
-        'wifiOnly': _config.wifiOnly,
-      });
+      monitoring.info(
+        'BackgroundSync',
+        'Scheduled periodic sync',
+        metadata: {
+          'nextSync': _nextScheduledSync?.toIso8601String(),
+          'intervalMinutes': _config.minIntervalMinutes,
+          'wifiOnly': _config.wifiOnly,
+        },
+      );
     } catch (e, stack) {
-      monitoring.error('BackgroundSync', 'Failed to schedule sync',
-          error: e, stackTrace: stack);
+      monitoring.error(
+        'BackgroundSync',
+        'Failed to schedule sync',
+        error: e,
+        stackTrace: stack,
+      );
       // Fallback to timer-based on failure
       await _scheduleTimerBased();
     }
@@ -238,15 +254,17 @@ class BackgroundSyncService {
       await Workmanager().registerOneOffTask(
         BackgroundTaskIds.immediateSync,
         BackgroundTaskIds.immediateSync,
-        constraints: Constraints(
-          networkType: NetworkType.connected,
-        ),
+        constraints: Constraints(networkType: NetworkType.connected),
         existingWorkPolicy: ExistingWorkPolicy.replace,
       );
       monitoring.info('BackgroundSync', 'Immediate sync scheduled');
     } catch (e, stack) {
-      monitoring.error('BackgroundSync', 'Failed to schedule immediate sync',
-          error: e, stackTrace: stack);
+      monitoring.error(
+        'BackgroundSync',
+        'Failed to schedule immediate sync',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -271,8 +289,12 @@ class BackgroundSyncService {
       _updateStatus(BackgroundSyncStatus.idle);
       monitoring.info('BackgroundSync', 'Cancelled all scheduled syncs');
     } catch (e, stack) {
-      monitoring.error('BackgroundSync', 'Failed to cancel syncs',
-          error: e, stackTrace: stack);
+      monitoring.error(
+        'BackgroundSync',
+        'Failed to cancel syncs',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -284,7 +306,9 @@ class BackgroundSyncService {
   Future<BackgroundSyncResult> executeSyncTask() async {
     if (_status == BackgroundSyncStatus.running) {
       monitoring.warning(
-          'BackgroundSync', 'Sync already in progress, skipping');
+        'BackgroundSync',
+        'Sync already in progress, skipping',
+      );
       return BackgroundSyncResult(
         success: false,
         itemsSynced: 0,
@@ -328,7 +352,8 @@ class BackgroundSyncService {
       }
 
       // Perform sync
-      final result = await _performSync?.call() ??
+      final result =
+          await _performSync?.call() ??
           BackgroundSyncResult(
             success: false,
             itemsSynced: 0,
@@ -340,17 +365,26 @@ class BackgroundSyncService {
 
       stopwatch.stop();
       await _recordResult(result);
-      _updateStatus(result.success
-          ? BackgroundSyncStatus.completed
-          : BackgroundSyncStatus.failed);
+      _updateStatus(
+        result.success
+            ? BackgroundSyncStatus.completed
+            : BackgroundSyncStatus.failed,
+      );
 
-      monitoring.info('BackgroundSync', 'Sync completed',
-          metadata: result.toJson());
+      monitoring.info(
+        'BackgroundSync',
+        'Sync completed',
+        metadata: result.toJson(),
+      );
       return result;
     } catch (e, stack) {
       stopwatch.stop();
-      monitoring.error('BackgroundSync', 'Sync failed',
-          error: e, stackTrace: stack);
+      monitoring.error(
+        'BackgroundSync',
+        'Sync failed',
+        error: e,
+        stackTrace: stack,
+      );
 
       final result = BackgroundSyncResult(
         success: false,
@@ -395,7 +429,9 @@ class BackgroundSyncService {
       _lastSyncTime = result.timestamp;
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(
-          'lastBackgroundSyncTime', _lastSyncTime!.millisecondsSinceEpoch);
+        'lastBackgroundSyncTime',
+        _lastSyncTime!.millisecondsSinceEpoch,
+      );
     }
   }
 
@@ -416,8 +452,11 @@ class BackgroundSyncService {
       _updateStatus(BackgroundSyncStatus.disabled);
     }
 
-    monitoring.info('BackgroundSync', 'Config updated',
-        metadata: config.toJson());
+    monitoring.info(
+      'BackgroundSync',
+      'Config updated',
+      metadata: config.toJson(),
+    );
   }
 
   BackgroundSyncConfig get config => _config;
@@ -435,8 +474,10 @@ class BackgroundSyncService {
     final avgDuration = _syncHistory.isEmpty
         ? 0
         : _syncHistory.fold<int>(
-                0, (sum, r) => sum + r.duration.inMilliseconds) ~/
-            _syncHistory.length;
+                0,
+                (sum, r) => sum + r.duration.inMilliseconds,
+              ) ~/
+              _syncHistory.length;
 
     return {
       'totalSyncs': _syncHistory.length,

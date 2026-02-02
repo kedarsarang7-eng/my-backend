@@ -41,7 +41,8 @@ class SidebarModeNotifier extends Notifier<SidebarModeState> {
 /// Provider for sidebar mode state
 final sidebarModeProvider =
     NotifierProvider<SidebarModeNotifier, SidebarModeState>(
-        SidebarModeNotifier.new);
+      SidebarModeNotifier.new,
+    );
 
 /// Expanded sections state
 class ExpandedSectionsState {
@@ -76,7 +77,8 @@ class ExpandedSectionsNotifier extends Notifier<ExpandedSectionsState> {
 /// Provider for expanded sections
 final expandedSectionsProvider =
     NotifierProvider<ExpandedSectionsNotifier, ExpandedSectionsState>(
-        ExpandedSectionsNotifier.new);
+      ExpandedSectionsNotifier.new,
+    );
 
 /// Enterprise Desktop Sidebar - Complete collapsible navigation
 class EnterpriseDesktopSidebar extends ConsumerStatefulWidget {
@@ -176,12 +178,7 @@ class _EnterpriseDesktopSidebarState
       width: sidebarWidth,
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
-        border: Border(
-          right: BorderSide(
-            color: theme.dividerColor,
-            width: 1,
-          ),
-        ),
+        border: Border(right: BorderSide(color: theme.dividerColor, width: 1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -230,15 +227,10 @@ class _EnterpriseDesktopSidebarState
 
     return Container(
       height: 72,
-      padding: EdgeInsets.symmetric(
-        horizontal: isExpanded ? 20 : 12,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: isExpanded ? 20 : 12),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
+          bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1),
         ),
       ),
       child: Row(
@@ -329,7 +321,10 @@ class _EnterpriseDesktopSidebarState
   }
 
   Widget _buildSection(
-      SidebarSection section, SidebarMode mode, bool isExpanded) {
+    SidebarSection section,
+    SidebarMode mode,
+    bool isExpanded,
+  ) {
     final isFullMode = mode == SidebarMode.expanded;
     final isMiniMode = mode == SidebarMode.mini;
 
@@ -376,14 +371,16 @@ class _EnterpriseDesktopSidebarState
                     width: isMiniMode ? 28 : 32,
                     height: isMiniMode ? 28 : 32,
                     decoration: BoxDecoration(
-                      color: section.accentColor!
-                          .withOpacity(isExpanded ? 0.2 : 0.15),
+                      color: section.accentColor!.withOpacity(
+                        isExpanded ? 0.2 : 0.15,
+                      ),
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: isExpanded
                           ? [
                               BoxShadow(
-                                color: FuturisticColors.premiumBlue
-                                    .withOpacity(0.3),
+                                color: FuturisticColors.premiumBlue.withOpacity(
+                                  0.3,
+                                ),
                                 blurRadius: 10,
                                 spreadRadius: 1,
                               ),
@@ -460,7 +457,10 @@ class _EnterpriseDesktopSidebarState
   }
 
   Widget _buildMenuItem(
-      SidebarMenuItem item, SidebarSection section, SidebarMode mode) {
+    SidebarMenuItem item,
+    SidebarSection section,
+    SidebarMode mode,
+  ) {
     return SidebarMenuItemWidget(
       key: ValueKey('${section.index}_${item.id}'), // STABLE KEY is critical
       item: item,

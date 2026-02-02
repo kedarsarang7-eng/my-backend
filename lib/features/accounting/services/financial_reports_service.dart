@@ -12,7 +12,7 @@ class FinancialReportsService {
   final AccountingRepository _repo;
 
   FinancialReportsService({AccountingRepository? repo})
-      : _repo = repo ?? AccountingRepository();
+    : _repo = repo ?? AccountingRepository();
 
   // ============================================================================
   // TRIAL BALANCE
@@ -25,10 +25,7 @@ class FinancialReportsService {
     required DateTime asOfDate,
   }) async {
     final ledgers = await _repo.getAllLedgerAccounts(userId);
-    final entries = await _repo.getAllJournalEntries(
-      userId,
-      endDate: asOfDate,
-    );
+    final entries = await _repo.getAllJournalEntries(userId, endDate: asOfDate);
 
     // Calculate running balance for each ledger
     final balances = <String, double>{};
@@ -62,14 +59,16 @@ class FinancialReportsService {
         totalCredit += absBalance;
       }
 
-      items.add(TrialBalanceItem(
-        ledgerId: ledger.id,
-        ledgerName: ledger.name,
-        group: ledger.group,
-        type: ledger.type,
-        debit: isDebitBalance ? absBalance : 0,
-        credit: isDebitBalance ? 0 : absBalance,
-      ));
+      items.add(
+        TrialBalanceItem(
+          ledgerId: ledger.id,
+          ledgerName: ledger.name,
+          group: ledger.group,
+          type: ledger.type,
+          debit: isDebitBalance ? absBalance : 0,
+          credit: isDebitBalance ? 0 : absBalance,
+        ),
+      );
     }
 
     // Sort by group then name
@@ -106,10 +105,12 @@ class FinancialReportsService {
     );
 
     // Separate income and expense ledgers
-    final incomeLedgers =
-        ledgers.where((l) => l.group == AccountGroup.income).toList();
-    final expenseLedgers =
-        ledgers.where((l) => l.group == AccountGroup.expenses).toList();
+    final incomeLedgers = ledgers
+        .where((l) => l.group == AccountGroup.income)
+        .toList();
+    final expenseLedgers = ledgers
+        .where((l) => l.group == AccountGroup.expenses)
+        .toList();
 
     // Calculate balances for the period
     final balances = <String, double>{};
@@ -127,11 +128,13 @@ class FinancialReportsService {
       final amount = balances[ledger.id] ?? 0;
       if (amount == 0) continue;
       totalIncome += amount;
-      incomeItems.add(ProfitLossItem(
-        ledgerId: ledger.id,
-        ledgerName: ledger.name,
-        amount: amount,
-      ));
+      incomeItems.add(
+        ProfitLossItem(
+          ledgerId: ledger.id,
+          ledgerName: ledger.name,
+          amount: amount,
+        ),
+      );
     }
 
     // Build expense items
@@ -141,11 +144,13 @@ class FinancialReportsService {
       final amount = -(balances[ledger.id] ?? 0); // Negate for expenses
       if (amount == 0) continue;
       totalExpenses += amount;
-      expenseItems.add(ProfitLossItem(
-        ledgerId: ledger.id,
-        ledgerName: ledger.name,
-        amount: amount,
-      ));
+      expenseItems.add(
+        ProfitLossItem(
+          ledgerId: ledger.id,
+          ledgerName: ledger.name,
+          amount: amount,
+        ),
+      );
     }
 
     return ProfitLossReport(
@@ -170,10 +175,7 @@ class FinancialReportsService {
     required DateTime asOfDate,
   }) async {
     final ledgers = await _repo.getAllLedgerAccounts(userId);
-    final entries = await _repo.getAllJournalEntries(
-      userId,
-      endDate: asOfDate,
-    );
+    final entries = await _repo.getAllJournalEntries(userId, endDate: asOfDate);
 
     // Calculate running balance for each ledger
     final balances = <String, double>{};
@@ -207,28 +209,33 @@ class FinancialReportsService {
       final balance = balances[ledger.id] ?? 0;
       if (balance == 0) continue;
       totalAssets += balance;
-      assetItems.add(BalanceSheetItem(
-        ledgerId: ledger.id,
-        ledgerName: ledger.name,
-        type: ledger.type,
-        amount: balance,
-      ));
+      assetItems.add(
+        BalanceSheetItem(
+          ledgerId: ledger.id,
+          ledgerName: ledger.name,
+          type: ledger.type,
+          amount: balance,
+        ),
+      );
     }
 
     // Build liability items
     final liabilityItems = <BalanceSheetItem>[];
     double totalLiabilities = 0;
-    for (final ledger
-        in ledgers.where((l) => l.group == AccountGroup.liabilities)) {
+    for (final ledger in ledgers.where(
+      (l) => l.group == AccountGroup.liabilities,
+    )) {
       final balance = -(balances[ledger.id] ?? 0); // Negate for display
       if (balance == 0) continue;
       totalLiabilities += balance;
-      liabilityItems.add(BalanceSheetItem(
-        ledgerId: ledger.id,
-        ledgerName: ledger.name,
-        type: ledger.type,
-        amount: balance,
-      ));
+      liabilityItems.add(
+        BalanceSheetItem(
+          ledgerId: ledger.id,
+          ledgerName: ledger.name,
+          type: ledger.type,
+          amount: balance,
+        ),
+      );
     }
 
     // Build equity items
@@ -238,21 +245,25 @@ class FinancialReportsService {
       final balance = -(balances[ledger.id] ?? 0);
       if (balance == 0) continue;
       totalEquity += balance;
-      equityItems.add(BalanceSheetItem(
-        ledgerId: ledger.id,
-        ledgerName: ledger.name,
-        type: ledger.type,
-        amount: balance,
-      ));
+      equityItems.add(
+        BalanceSheetItem(
+          ledgerId: ledger.id,
+          ledgerName: ledger.name,
+          type: ledger.type,
+          amount: balance,
+        ),
+      );
     }
 
     // Add current period P&L to equity
-    equityItems.add(BalanceSheetItem(
-      ledgerId: 'current_pl',
-      ledgerName: 'Current Period Profit/Loss',
-      type: AccountType.reserve,
-      amount: netProfit,
-    ));
+    equityItems.add(
+      BalanceSheetItem(
+        ledgerId: 'current_pl',
+        ledgerName: 'Current Period Profit/Loss',
+        type: AccountType.reserve,
+        amount: netProfit,
+      ),
+    );
     totalEquity += netProfit;
 
     return BalanceSheetReport(
@@ -306,15 +317,17 @@ class FinancialReportsService {
 
       for (final line in entry.entries.where((l) => l.ledgerId == ledgerId)) {
         runningBalance += line.debit - line.credit;
-        transactions.add(LedgerTransaction(
-          date: entry.entryDate,
-          voucherNumber: entry.voucherNumber,
-          voucherType: entry.voucherType,
-          narration: entry.narration ?? '',
-          debit: line.debit,
-          credit: line.credit,
-          balance: runningBalance,
-        ));
+        transactions.add(
+          LedgerTransaction(
+            date: entry.entryDate,
+            voucherNumber: entry.voucherNumber,
+            voucherType: entry.voucherType,
+            narration: entry.narration ?? '',
+            debit: line.debit,
+            credit: line.credit,
+            balance: runningBalance,
+          ),
+        );
       }
     }
 

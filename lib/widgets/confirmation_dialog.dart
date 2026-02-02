@@ -37,7 +37,8 @@ class ConfirmationDialog extends StatelessWidget {
       barrierDismissible: false,
       builder: (ctx) => ConfirmationDialog(
         title: 'Delete $itemName?',
-        message: customMessage ??
+        message:
+            customMessage ??
             'This action cannot be undone. Are you sure you want to delete this $itemName?',
         confirmText: 'Delete',
         confirmColor: FuturisticColors.error,
@@ -90,7 +91,8 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final effectiveConfirmColor = confirmColor ??
+    final effectiveConfirmColor =
+        confirmColor ??
         (isDangerous ? FuturisticColors.error : FuturisticColors.primary);
 
     return Dialog(
@@ -101,10 +103,7 @@ class ConfirmationDialog extends StatelessWidget {
         tween: Tween(begin: 0.8, end: 1.0),
         curve: Curves.easeOutBack,
         builder: (context, value, child) {
-          return Transform.scale(
-            scale: value,
-            child: child,
-          );
+          return Transform.scale(scale: value, child: child);
         },
         child: GlassContainer(
           borderRadius: 24,
@@ -115,11 +114,11 @@ class ConfirmationDialog extends StatelessWidget {
             colors: isDangerous
                 ? [
                     effectiveConfirmColor.withOpacity(0.5),
-                    effectiveConfirmColor.withOpacity(0.1)
+                    effectiveConfirmColor.withOpacity(0.1),
                   ]
                 : [
                     Colors.white.withOpacity(0.4),
-                    Colors.white.withOpacity(0.1)
+                    Colors.white.withOpacity(0.1),
                   ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -143,7 +142,7 @@ class ConfirmationDialog extends StatelessWidget {
                         color: effectiveConfirmColor.withOpacity(0.2),
                         blurRadius: 20,
                         spreadRadius: 2,
-                      )
+                      ),
                     ],
                   ),
                   child: Icon(icon, color: effectiveConfirmColor, size: 32),

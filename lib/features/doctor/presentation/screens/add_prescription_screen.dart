@@ -18,8 +18,11 @@ import '../../models/prescription_model.dart';
 class AddPrescriptionScreen extends ConsumerStatefulWidget {
   final String? preSelectedPatientId;
   final String? visitId;
-  const AddPrescriptionScreen(
-      {this.preSelectedPatientId, this.visitId, super.key});
+  const AddPrescriptionScreen({
+    this.preSelectedPatientId,
+    this.visitId,
+    super.key,
+  });
 
   @override
   ConsumerState<AddPrescriptionScreen> createState() =>
@@ -54,8 +57,10 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
 
   Future<void> _loadTemplates() async {
     final docId = _sessionManager.ownerId ?? 'SYSTEM';
-    final templates =
-        await _templateRepo.getTemplatesByType(docId, 'PRESCRIPTION');
+    final templates = await _templateRepo.getTemplatesByType(
+      docId,
+      'PRESCRIPTION',
+    );
     if (mounted) setState(() => _rxTemplates = templates);
   }
 
@@ -63,7 +68,8 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
     if (_items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Add medicines first to save as template')),
+          content: Text('Add medicines first to save as template'),
+        ),
       );
       return;
     }
@@ -74,8 +80,10 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: FuturisticColors.surface,
-        title: const Text('Save Protocol Template',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Save Protocol Template',
+          style: TextStyle(color: Colors.white),
+        ),
         content: TextField(
           controller: nameCtrl,
           style: const TextStyle(color: Colors.white),
@@ -83,7 +91,8 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
             labelText: 'Protocol Name',
             labelStyle: TextStyle(color: Colors.grey),
             enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
           ),
         ),
         actions: [
@@ -118,9 +127,9 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
 
     await _templateRepo.createTemplate(template);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Protocol saved!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Protocol saved!')));
       _loadTemplates();
     }
   }
@@ -128,8 +137,9 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
   void _applyTemplate(MedicalTemplateModel template) {
     try {
       final List<dynamic> list = jsonDecode(template.content);
-      final newItems =
-          list.map((e) => PrescriptionItemModel.fromMap(e)).toList();
+      final newItems = list
+          .map((e) => PrescriptionItemModel.fromMap(e))
+          .toList();
 
       setState(() {
         // Create new IDs for imported items to avoid conflicts
@@ -142,9 +152,9 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
         _items.addAll(newItems);
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load template: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to load template: $e')));
     }
   }
 
@@ -186,13 +196,14 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: _rxTemplates.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final t = _rxTemplates[index];
                       return ActionChip(
                         label: Text(t.title),
-                        backgroundColor:
-                            FuturisticColors.primary.withOpacity(0.2),
+                        backgroundColor: FuturisticColors.primary.withOpacity(
+                          0.2,
+                        ),
                         labelStyle: const TextStyle(color: Colors.white),
                         onPressed: () => _applyTemplate(t),
                       );
@@ -224,7 +235,8 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
                   hintText: 'e.g. Drink plenty of water, Rest for 2 days...',
                   hintStyle: TextStyle(color: Colors.grey.shade500),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -234,8 +246,10 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
                 children: [
                   TextButton.icon(
                     onPressed: _saveAsTemplate,
-                    icon: const Icon(Icons.bookmark_add,
-                        color: FuturisticColors.primary),
+                    icon: const Icon(
+                      Icons.bookmark_add,
+                      color: FuturisticColors.primary,
+                    ),
                     label: const Text('Save as Protocol'),
                   ),
                 ],
@@ -249,11 +263,14 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title,
-        style: GoogleFonts.inter(
-            color: FuturisticColors.textSecondary,
-            fontSize: 14,
-            fontWeight: FontWeight.w600));
+    return Text(
+      title,
+      style: GoogleFonts.inter(
+        color: FuturisticColors.textSecondary,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+      ),
+    );
   }
 
   Widget _buildPatientDropdown() {
@@ -272,18 +289,27 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
             filled: true,
             fillColor: FuturisticColors.surface,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            prefixIcon:
-                const Icon(Icons.person, color: FuturisticColors.primary),
+            prefixIcon: const Icon(
+              Icons.person,
+              color: FuturisticColors.primary,
+            ),
           ),
           items: patients
-              .map((p) => DropdownMenuItem(
+              .map(
+                (p) => DropdownMenuItem(
                   value: p.id,
-                  child: Text(p.name,
-                      style: const TextStyle(color: Colors.white))))
+                  child: Text(
+                    p.name,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
               .toList(),
           onChanged: (val) => setState(() => _selectedPatientId = val),
-          hint: const Text('Choose Patient',
-              style: TextStyle(color: Colors.grey)),
+          hint: const Text(
+            'Choose Patient',
+            style: TextStyle(color: Colors.grey),
+          ),
           validator: (val) => val == null ? 'Please select a patient' : null,
         );
       },
@@ -295,15 +321,19 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
       optionsBuilder: (textEditingValue) async {
         if (textEditingValue.text.length < 2) return [];
         final userId = _sessionManager.ownerId ?? '';
-        final result =
-            await _productsRepo.search(textEditingValue.text, userId: userId);
+        final result = await _productsRepo.search(
+          textEditingValue.text,
+          userId: userId,
+        );
         // Filter to show medicines preferentially, but also include all products
         final products = result.data ?? [];
         // Sort: medicines first, then by name
         products.sort((a, b) {
-          final aIsMedicine = a.category?.toLowerCase() == 'medicine' ||
+          final aIsMedicine =
+              a.category?.toLowerCase() == 'medicine' ||
               a.category?.toLowerCase() == 'medicines';
-          final bIsMedicine = b.category?.toLowerCase() == 'medicine' ||
+          final bIsMedicine =
+              b.category?.toLowerCase() == 'medicine' ||
               b.category?.toLowerCase() == 'medicines';
           if (aIsMedicine && !bIsMedicine) return -1;
           if (!aIsMedicine && bIsMedicine) return 1;
@@ -322,8 +352,10 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
             fillColor: FuturisticColors.surface,
             hintText: 'Search Medicine...',
             hintStyle: TextStyle(color: Colors.grey.shade500),
-            prefixIcon: const Icon(Icons.medication_outlined,
-                color: FuturisticColors.primary),
+            prefixIcon: const Icon(
+              Icons.medication_outlined,
+              color: FuturisticColors.primary,
+            ),
             suffixIcon: controller.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear, color: Colors.grey),
@@ -351,7 +383,7 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
                   final option = options.elementAt(index);
                   final isMedicine =
                       option.category?.toLowerCase() == 'medicine' ||
-                          option.category?.toLowerCase() == 'medicines';
+                      option.category?.toLowerCase() == 'medicines';
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundColor: isMedicine
@@ -359,13 +391,16 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
                           : Colors.grey.withOpacity(0.2),
                       child: Icon(
                         isMedicine ? Icons.medication : Icons.inventory_2,
-                        color:
-                            isMedicine ? FuturisticColors.primary : Colors.grey,
+                        color: isMedicine
+                            ? FuturisticColors.primary
+                            : Colors.grey,
                         size: 20,
                       ),
                     ),
-                    title: Text(option.name,
-                        style: const TextStyle(color: Colors.white)),
+                    title: Text(
+                      option.name,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                     subtitle: Text(
                       '₹${option.sellingPrice.toStringAsFixed(2)} • ${option.unit}',
                       style: const TextStyle(color: Colors.grey, fontSize: 12),
@@ -393,14 +428,18 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: _items.length,
-        separatorBuilder: (_, __) =>
+        separatorBuilder: (_, _) =>
             const Divider(color: Colors.white10, height: 1),
         itemBuilder: (context, index) {
           final item = _items[index];
           return ListTile(
-            title: Text(item.medicineName,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            title: Text(
+              item.medicineName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             subtitle: Text(
               '${item.dosage ?? ""} • ${item.duration ?? ""} • ${item.instructions ?? ""}',
               style: TextStyle(color: Colors.grey.shade400),
@@ -443,21 +482,24 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _items.add(PrescriptionItemModel(
-                  id: const Uuid().v4(),
-                  prescriptionId: '', // Set on save
-                  medicineName: product.name,
-                  productId: product.id,
-                  dosage: dosageCtrl.text,
-                  duration: durationCtrl.text,
-                  instructions: instructionCtrl.text,
-                  frequency: 'Daily', // Default or add field
-                ));
+                _items.add(
+                  PrescriptionItemModel(
+                    id: const Uuid().v4(),
+                    prescriptionId: '', // Set on save
+                    medicineName: product.name,
+                    productId: product.id,
+                    dosage: dosageCtrl.text,
+                    duration: durationCtrl.text,
+                    instructions: instructionCtrl.text,
+                    frequency: 'Daily', // Default or add field
+                  ),
+                );
               });
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: FuturisticColors.primary),
+              backgroundColor: FuturisticColors.primary,
+            ),
             child: const Text('Add'),
           ),
         ],
@@ -473,9 +515,11 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
         labelText: label,
         labelStyle: const TextStyle(color: Colors.grey),
         enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
         focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: FuturisticColors.primary)),
+          borderSide: BorderSide(color: FuturisticColors.primary),
+        ),
       ),
     );
   }
@@ -504,7 +548,8 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
         id: prescriptionId,
         doctorId: docId,
         patientId: _selectedPatientId!,
-        visitId: widget.visitId ??
+        visitId:
+            widget.visitId ??
             const Uuid().v4(), // Use provided visitId or generate
         date: DateTime.now(),
         advice: _adviceController.text,
@@ -520,13 +565,15 @@ class _AddPrescriptionScreenState extends ConsumerState<AddPrescriptionScreen> {
           const SnackBar(content: Text('Prescription Saved Successfully!')),
         );
         Navigator.pop(
-            context, prescriptionId); // Return prescriptionId to caller
+          context,
+          prescriptionId,
+        ); // Return prescriptionId to caller
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);

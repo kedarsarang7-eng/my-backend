@@ -30,12 +30,15 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
   Future<void> _loadSettings() async {
     setState(() => _isLoading = true);
     try {
-      final cloudSyncEnabled =
-          await _cloudService.isCloudSyncEnabled(ownerId: widget.ownerId);
-      final devices =
-          await _cloudService.getActiveDevices(ownerId: widget.ownerId);
-      final syncStatus =
-          await _cloudService.getSyncStatus(ownerId: widget.ownerId);
+      final cloudSyncEnabled = await _cloudService.isCloudSyncEnabled(
+        ownerId: widget.ownerId,
+      );
+      final devices = await _cloudService.getActiveDevices(
+        ownerId: widget.ownerId,
+      );
+      final syncStatus = await _cloudService.getSyncStatus(
+        ownerId: widget.ownerId,
+      );
 
       setState(() {
         _isCloudSyncEnabled = cloudSyncEnabled;
@@ -65,17 +68,18 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
         setState(() => _isCloudSyncEnabled = enabled);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text(enabled ? 'Cloud sync enabled' : 'Cloud sync disabled'),
+            content: Text(
+              enabled ? 'Cloud sync enabled' : 'Cloud sync disabled',
+            ),
             backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
       }
     }
   }
@@ -83,7 +87,9 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
   Future<void> _signOutFromDevice(String deviceId) async {
     try {
       await _cloudService.signOutFromCloud(
-          ownerId: widget.ownerId, deviceId: deviceId);
+        ownerId: widget.ownerId,
+        deviceId: deviceId,
+      );
       if (mounted) {
         _loadSettings();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -95,9 +101,9 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
       }
     }
   }
@@ -164,7 +170,9 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
                           const Text(
                             'Cloud Sync',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           const Text(
@@ -205,11 +213,14 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
                                   )
                                 else ...[
                                   Text(
-                                      '📊 Owner: ${_syncStatus['owner'] ?? 'unknown'}'),
+                                    '📊 Owner: ${_syncStatus['owner'] ?? 'unknown'}',
+                                  ),
                                   Text(
-                                      '👥 Customers: ${_syncStatus['customers'] ?? 'unknown'}'),
+                                    '👥 Customers: ${_syncStatus['customers'] ?? 'unknown'}',
+                                  ),
                                   Text(
-                                      '📄 Bills: ${_syncStatus['bills'] ?? 'unknown'}'),
+                                    '📄 Bills: ${_syncStatus['bills'] ?? 'unknown'}',
+                                  ),
                                 ],
                               ],
                             ),
@@ -245,10 +256,13 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
                         final device = _activeDevices[idx];
                         return Card(
                           child: ListTile(
-                            leading:
-                                const Icon(Icons.devices, color: Colors.green),
-                            title:
-                                Text(device['deviceName'] ?? 'Unknown Device'),
+                            leading: const Icon(
+                              Icons.devices,
+                              color: Colors.green,
+                            ),
+                            title: Text(
+                              device['deviceName'] ?? 'Unknown Device',
+                            ),
                             subtitle: Text(
                               'Last login: ${device['lastLogin']?.toDate() ?? 'Unknown'}',
                               maxLines: 1,
@@ -310,7 +324,9 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
                           const Text(
                             'Multi-Device Features',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           _featureItem('✅', 'Login on multiple devices'),
@@ -325,13 +341,16 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
                               onPressed: _logout,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                               ),
                               child: const Text(
                                 'Logout from all Devices',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
@@ -355,7 +374,9 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
                         Text(
                           'ℹ️ Data Safety',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
                         SizedBox(height: 8),
                         Text(
@@ -435,10 +456,7 @@ class _CloudSyncSettingsScreenState extends State<CloudSyncSettingsScreen> {
         children: [
           Text(icon, style: const TextStyle(fontSize: 18)),
           const SizedBox(width: 12),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 14),
-          ),
+          Text(text, style: const TextStyle(fontSize: 14)),
         ],
       ),
     );

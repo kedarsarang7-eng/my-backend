@@ -37,29 +37,33 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   // Mock Data
   final List<ShopUser> _users = [
     ShopUser(
-        id: 'u1',
-        name: 'Sarang (Owner)',
-        role: 'Admin',
-        isActive: true,
-        lastActive: 'Now'),
+      id: 'u1',
+      name: 'Sarang (Owner)',
+      role: 'Admin',
+      isActive: true,
+      lastActive: 'Now',
+    ),
     ShopUser(
-        id: 'u2',
-        name: 'Ramesh Kumar',
-        role: 'Manager',
-        isActive: true,
-        lastActive: '2h ago'),
+      id: 'u2',
+      name: 'Ramesh Kumar',
+      role: 'Manager',
+      isActive: true,
+      lastActive: '2h ago',
+    ),
     ShopUser(
-        id: 'u3',
-        name: 'Suresh Bill',
-        role: 'Cashier',
-        isActive: true,
-        lastActive: '5m ago'),
+      id: 'u3',
+      name: 'Suresh Bill',
+      role: 'Cashier',
+      isActive: true,
+      lastActive: '5m ago',
+    ),
     ShopUser(
-        id: 'u4',
-        name: 'New Staff',
-        role: 'Cashier',
-        isActive: false,
-        lastActive: 'Never'),
+      id: 'u4',
+      name: 'New Staff',
+      role: 'Cashier',
+      isActive: false,
+      lastActive: 'Never',
+    ),
   ];
 
   @override
@@ -72,7 +76,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
           icon: Icons.person_add,
           tooltip: 'Add Staff',
           onPressed: () => _showAddUserDialog(),
-        )
+        ),
       ],
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -91,8 +95,12 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   Widget _buildSummaryStats() {
     return Row(
       children: [
-        _buildStatCard("Total Staff", "${_users.length}", Icons.people_outline,
-            Colors.blue),
+        _buildStatCard(
+          "Total Staff",
+          "${_users.length}",
+          Icons.people_outline,
+          Colors.blue,
+        ),
         const SizedBox(width: 16),
         _buildStatCard("Active Now", "2", Icons.circle, Colors.green),
       ],
@@ -100,7 +108,11 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   }
 
   Widget _buildStatCard(
-      String title, String value, IconData icon, Color color) {
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -115,16 +127,23 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(value,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white)),
-              Text(title,
-                  style: TextStyle(
-                      fontSize: 12, color: FuturisticColors.textSecondary)),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: FuturisticColors.textSecondary,
+                ),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -138,8 +157,10 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: FuturisticColors.surface,
-        title: Text('Add New Staff',
-            style: TextStyle(color: FuturisticColors.textPrimary)),
+        title: Text(
+          'Add New Staff',
+          style: TextStyle(color: FuturisticColors.textPrimary),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -151,8 +172,9 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                 labelStyle: TextStyle(color: FuturisticColors.textSecondary),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.05),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -165,14 +187,14 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                 labelStyle: TextStyle(color: FuturisticColors.textSecondary),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.05),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               items: ['Admin', 'Manager', 'Cashier']
-                  .map((role) => DropdownMenuItem(
-                        value: role,
-                        child: Text(role),
-                      ))
+                  .map(
+                    (role) => DropdownMenuItem(value: role, child: Text(role)),
+                  )
                   .toList(),
               onChanged: (val) {
                 if (val != null) selectedRole = val;
@@ -183,31 +205,38 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: TextStyle(color: FuturisticColors.textSecondary)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: FuturisticColors.textSecondary),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               if (nameController.text.trim().isNotEmpty) {
                 setState(() {
-                  _users.add(ShopUser(
-                    id: 'u${_users.length + 1}',
-                    name: nameController.text.trim(),
-                    role: selectedRole,
-                    isActive: true,
-                    lastActive: 'Now',
-                  ));
+                  _users.add(
+                    ShopUser(
+                      id: 'u${_users.length + 1}',
+                      name: nameController.text.trim(),
+                      role: selectedRole,
+                      isActive: true,
+                      lastActive: 'Now',
+                    ),
+                  );
                 });
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      content: Text(
-                          '${nameController.text.trim()} added as $selectedRole')),
+                    content: Text(
+                      '${nameController.text.trim()} added as $selectedRole',
+                    ),
+                  ),
                 );
               }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: FuturisticColors.primary),
+              backgroundColor: FuturisticColors.primary,
+            ),
             child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -250,8 +279,9 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                 child: Text(
                   user.name[0],
                   style: TextStyle(
-                      color: _getRoleColor(user.role),
-                      fontWeight: FontWeight.bold),
+                    color: _getRoleColor(user.role),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -262,17 +292,19 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                     Text(
                       user.name,
                       style: TextStyle(
-                          // Removed GoogleFonts
-                          color: FuturisticColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
+                        // Removed GoogleFonts
+                        color: FuturisticColors.textPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
                     ),
                     Text(
                       user.role,
                       style: TextStyle(
-                          // Removed GoogleFonts
-                          color: _getRoleColor(user.role),
-                          fontSize: 12),
+                        // Removed GoogleFonts
+                        color: _getRoleColor(user.role),
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -295,7 +327,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                   });
                 },
                 activeColor: FuturisticColors.success,
-              )
+              ),
             ],
           ),
           const Spacer(),
@@ -306,18 +338,22 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
               Text(
                 "Last active: ${user.lastActive}",
                 style: TextStyle(
-                    // Removed GoogleFonts
-                    color: FuturisticColors.textSecondary,
-                    fontSize: 12),
+                  // Removed GoogleFonts
+                  color: FuturisticColors.textSecondary,
+                  fontSize: 12,
+                ),
               ),
               IconButton(
-                icon: const Icon(Icons.edit_outlined,
-                    size: 18, color: FuturisticColors.textSecondary),
+                icon: const Icon(
+                  Icons.edit_outlined,
+                  size: 18,
+                  color: FuturisticColors.textSecondary,
+                ),
                 onPressed: () {},
                 tooltip: "Edit Permissions",
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

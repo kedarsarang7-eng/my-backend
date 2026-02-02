@@ -83,9 +83,17 @@ void main() {
         entryDate: date1,
         entries: [
           JournalEntryLine(
-              ledgerId: 'l1', ledgerName: 'L1', debit: 100, credit: 0),
+            ledgerId: 'l1',
+            ledgerName: 'L1',
+            debit: 100,
+            credit: 0,
+          ),
           JournalEntryLine(
-              ledgerId: 'l2', ledgerName: 'L2', debit: 0, credit: 100),
+            ledgerId: 'l2',
+            ledgerName: 'L2',
+            debit: 0,
+            credit: 100,
+          ),
         ],
         totalDebit: 100,
         totalCredit: 100,
@@ -103,9 +111,17 @@ void main() {
         entryDate: date2,
         entries: [
           JournalEntryLine(
-              ledgerId: 'l1', ledgerName: 'L1', debit: 200, credit: 0),
+            ledgerId: 'l1',
+            ledgerName: 'L1',
+            debit: 200,
+            credit: 0,
+          ),
           JournalEntryLine(
-              ledgerId: 'l2', ledgerName: 'L2', debit: 0, credit: 200),
+            ledgerId: 'l2',
+            ledgerName: 'L2',
+            debit: 0,
+            credit: 200,
+          ),
         ],
         totalDebit: 200,
         totalCredit: 200,
@@ -123,9 +139,17 @@ void main() {
         entryDate: date1,
         entries: [
           JournalEntryLine(
-              ledgerId: 'l1', ledgerName: 'L1', debit: 300, credit: 0),
+            ledgerId: 'l1',
+            ledgerName: 'L1',
+            debit: 300,
+            credit: 0,
+          ),
           JournalEntryLine(
-              ledgerId: 'l2', ledgerName: 'L2', debit: 0, credit: 300),
+            ledgerId: 'l2',
+            ledgerName: 'L2',
+            debit: 0,
+            credit: 300,
+          ),
         ],
         totalDebit: 300,
         totalCredit: 300,
@@ -135,7 +159,10 @@ void main() {
       await accRepo.saveJournalEntry(entry3);
 
       final stream = journalService.watchEntriesByDateRange(
-          userId, DateTime(2025, 1, 1), DateTime(2025, 1, 2));
+        userId,
+        DateTime(2025, 1, 1),
+        DateTime(2025, 1, 2),
+      );
       final list = await stream.first;
 
       expect(list.length, 3);
@@ -156,20 +183,21 @@ void main() {
       );
 
       final bill = Bill(
-          id: 'bill_1',
-          ownerId: userId,
-          invoiceNumber: 'INV-001',
-          customerId: '',
-          customerName: 'Cash',
-          date: DateTime.now(),
-          items: [item],
-          subtotal: 100,
-          totalTax: 0,
-          grandTotal: 100,
-          paidAmount: 100,
-          status: 'Paid',
-          paymentType: 'Cash',
-          updatedAt: DateTime.now());
+        id: 'bill_1',
+        ownerId: userId,
+        invoiceNumber: 'INV-001',
+        customerId: '',
+        customerName: 'Cash',
+        date: DateTime.now(),
+        items: [item],
+        subtotal: 100,
+        totalTax: 0,
+        grandTotal: 100,
+        paidAmount: 100,
+        status: 'Paid',
+        paymentType: 'Cash',
+        updatedAt: DateTime.now(),
+      );
 
       await billsRepo.createBill(bill);
 
@@ -192,20 +220,21 @@ void main() {
         discount: 0,
       );
       final bill = Bill(
-          id: 'bill_del',
-          ownerId: userId,
-          invoiceNumber: 'INV-DEL',
-          customerId: '',
-          customerName: 'Cash',
-          date: DateTime.now(),
-          items: [item],
-          subtotal: 500,
-          totalTax: 0,
-          grandTotal: 500,
-          paidAmount: 500,
-          status: 'Paid',
-          paymentType: 'Cash',
-          updatedAt: DateTime.now());
+        id: 'bill_del',
+        ownerId: userId,
+        invoiceNumber: 'INV-DEL',
+        customerId: '',
+        customerName: 'Cash',
+        date: DateTime.now(),
+        items: [item],
+        subtotal: 500,
+        totalTax: 0,
+        grandTotal: 500,
+        paidAmount: 500,
+        status: 'Paid',
+        paymentType: 'Cash',
+        updatedAt: DateTime.now(),
+      );
 
       await billsRepo.createBill(bill);
       var entries = await journalService.getEntriesBySource('BILL', 'bill_del');
@@ -223,16 +252,20 @@ void main() {
       expect(allEntries.length, 2);
 
       final original = allEntries.firstWhere(
-          (e) => e.classification == AccountingEntryClassification.bill);
+        (e) => e.classification == AccountingEntryClassification.bill,
+      );
       final reversal = allEntries.firstWhere(
-          (e) => e.classification != AccountingEntryClassification.bill);
+        (e) => e.classification != AccountingEntryClassification.bill,
+      );
 
       expect(reversal.classification, AccountingEntryClassification.adjustment);
       expect(reversal.totalDebit, original.totalDebit);
 
       // Check narration for 'Reversal' keyword
       expect(
-          allEntries.any((e) => (e.narration ?? '').contains('Revers')), true);
+        allEntries.any((e) => (e.narration ?? '').contains('Revers')),
+        true,
+      );
     });
   });
 }

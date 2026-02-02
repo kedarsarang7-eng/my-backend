@@ -27,8 +27,9 @@ class BatchAllocationService {
       }
 
       // Get valid batches sorted by FEFO (Expiry ASC, Created ASC)
-      final batches =
-          await productBatchRepository.getBatchesForFefo(item.productId);
+      final batches = await productBatchRepository.getBatchesForFefo(
+        item.productId,
+      );
 
       // If no batches found, we can't allocate. Keep original item.
       if (batches.isEmpty) {

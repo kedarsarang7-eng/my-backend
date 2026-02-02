@@ -80,8 +80,9 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
   }
 
   Widget _buildNotificationDestination() {
-    final unreadAsync =
-        ref.watch(customerUnreadNotificationsCountProvider(widget.customerId));
+    final unreadAsync = ref.watch(
+      customerUnreadNotificationsCountProvider(widget.customerId),
+    );
 
     return NavigationDestination(
       icon: unreadAsync.when(
@@ -91,7 +92,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
           child: const Icon(Icons.notifications_outlined),
         ),
         loading: () => const Icon(Icons.notifications_outlined),
-        error: (_, __) => const Icon(Icons.notifications_outlined),
+        error: (_, _) => const Icon(Icons.notifications_outlined),
       ),
       selectedIcon: unreadAsync.when(
         data: (count) => Badge(
@@ -100,7 +101,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
           child: const Icon(Icons.notifications),
         ),
         loading: () => const Icon(Icons.notifications),
-        error: (_, __) => const Icon(Icons.notifications),
+        error: (_, _) => const Icon(Icons.notifications),
       ),
       label: 'Alerts',
     );
@@ -170,9 +171,7 @@ class _HomeTab extends ConsumerWidget {
           // Quick Actions
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverToBoxAdapter(
-              child: _buildQuickActions(context),
-            ),
+            sliver: SliverToBoxAdapter(child: _buildQuickActions(context)),
           ),
 
           // Connected Vendors Header
@@ -195,10 +194,8 @@ class _HomeTab extends ConsumerWidget {
                 ? SliverToBoxAdapter(child: _buildEmptyVendors(context))
                 : SliverList(
                     delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildVendorCard(
-                        context,
-                        vendors[index],
-                      ),
+                      (context, index) =>
+                          _buildVendorCard(context, vendors[index]),
                       childCount: vendors.length,
                     ),
                   ),
@@ -218,7 +215,9 @@ class _HomeTab extends ConsumerWidget {
   }
 
   Widget _buildStatsSection(
-      BuildContext context, CustomerDashboardStats stats) {
+    BuildContext context,
+    CustomerDashboardStats stats,
+  ) {
     return Column(
       children: [
         // Outstanding Balance Card
@@ -236,10 +235,11 @@ class _HomeTab extends ConsumerWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: (stats.totalOutstanding > 0
-                        ? const Color(0xFFFF6B6B)
-                        : const Color(0xFF00B894))
-                    .withOpacity(0.3),
+                color:
+                    (stats.totalOutstanding > 0
+                            ? const Color(0xFFFF6B6B)
+                            : const Color(0xFF00B894))
+                        .withOpacity(0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -250,10 +250,7 @@ class _HomeTab extends ConsumerWidget {
             children: [
               Text(
                 stats.totalOutstanding > 0 ? 'Total Outstanding' : 'All Clear!',
-                style: GoogleFonts.poppins(
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
+                style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
               ),
               const SizedBox(height: 8),
               Text(
@@ -267,10 +264,7 @@ class _HomeTab extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 '${stats.vendorCount} vendors • ${stats.unpaidInvoiceCount} unpaid',
-                style: GoogleFonts.poppins(
-                  color: Colors.white70,
-                  fontSize: 12,
-                ),
+                style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12),
               ),
             ],
           ),
@@ -347,10 +341,7 @@ class _HomeTab extends ConsumerWidget {
           ),
           Text(
             label,
-            style: GoogleFonts.poppins(
-              fontSize: 11,
-              color: Colors.grey,
-            ),
+            style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey),
           ),
         ],
       ),
@@ -465,8 +456,9 @@ class _HomeTab extends ConsumerWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
-          backgroundColor:
-              hasOutstanding ? Colors.red.shade50 : Colors.green.shade50,
+          backgroundColor: hasOutstanding
+              ? Colors.red.shade50
+              : Colors.green.shade50,
           child: Text(
             vendor.vendorName.isNotEmpty
                 ? vendor.vendorName[0].toUpperCase()
@@ -499,10 +491,7 @@ class _HomeTab extends ConsumerWidget {
             ),
             Text(
               hasOutstanding ? 'Outstanding' : 'Paid',
-              style: GoogleFonts.poppins(
-                fontSize: 10,
-                color: Colors.grey,
-              ),
+              style: GoogleFonts.poppins(fontSize: 10, color: Colors.grey),
             ),
           ],
         ),
@@ -575,10 +564,7 @@ class _HomeTab extends ConsumerWidget {
           Icon(Icons.error_outline, color: Colors.red.shade400),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              message,
-              style: TextStyle(color: Colors.red.shade700),
-            ),
+            child: Text(message, style: TextStyle(color: Colors.red.shade700)),
           ),
         ],
       ),

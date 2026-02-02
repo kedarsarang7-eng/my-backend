@@ -91,7 +91,8 @@ class SpeechService {
     if (_isListening) {
       if (_activeFeature != featureName) {
         debugPrint(
-            "⚠️ Mic Conflict: $_activeFeature is already using mic. Stopping it.");
+          "⚠️ Mic Conflict: $_activeFeature is already using mic. Stopping it.",
+        );
         await stopListening(); // Force stop other
       } else {
         // Already listening for this feature

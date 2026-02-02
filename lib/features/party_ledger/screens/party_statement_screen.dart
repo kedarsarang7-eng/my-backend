@@ -77,9 +77,9 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
       debugPrint('Error loading statement: $e');
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -118,15 +118,17 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
 
       // Transform transactions to Map for PDF
       final transactions = _statement!.transactions
-          .map((t) => {
-                'date': DateFormat('dd-MMM-yyyy').format(t.date),
-                'voucher': t.voucherNumber,
-                'type': t.voucherType.displayName,
-                'debit': t.debit,
-                'credit': t.credit,
-                'balance':
-                    t.runningBalance, // Assuming we have this or calculate it
-              })
+          .map(
+            (t) => {
+              'date': DateFormat('dd-MMM-yyyy').format(t.date),
+              'voucher': t.voucherNumber,
+              'type': t.voucherType.displayName,
+              'debit': t.debit,
+              'credit': t.credit,
+              'balance':
+                  t.runningBalance, // Assuming we have this or calculate it
+            },
+          )
           .toList();
 
       // Note: runningBalance might not be in LedgerTransaction directly if not calculated via service.
@@ -155,9 +157,9 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
       );
     } catch (e) {
       debugPrint('PDF Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate PDF: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to generate PDF: $e')));
     }
   }
 
@@ -174,8 +176,8 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
             Text(
               'Statement of Accounts',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           ],
         ),
@@ -206,7 +208,8 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
           }
         },
         label: Text(
-            widget.partyType == 'CUSTOMER' ? 'Receive Payment' : 'Pay Vendor'),
+          widget.partyType == 'CUSTOMER' ? 'Receive Payment' : 'Pay Vendor',
+        ),
         icon: const Icon(Icons.payment),
       ),
       body: Column(
@@ -244,9 +247,8 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _statement == null || _statement!.transactions.isEmpty
-                    ? const Center(
-                        child: Text('No transactions in this period'))
-                    : _buildStatementList(theme),
+                ? const Center(child: Text('No transactions in this period'))
+                : _buildStatementList(theme),
           ),
 
           // Footer Summary (Aging + Closing Bal)
@@ -301,10 +303,7 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
             children: [
               Text(
                 _formatCurrency(amount),
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(color: color, fontWeight: FontWeight.w600),
               ),
               Text(
                 isCredit ? 'Credit' : 'Debit',
@@ -338,8 +337,11 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
                   const SizedBox(width: 8),
                   _buildAgingChip('61-90', _agingReport!.sixtyToNinety),
                   const SizedBox(width: 8),
-                  _buildAgingChip('90+', _agingReport!.ninetyPlus,
-                      isDanger: true),
+                  _buildAgingChip(
+                    '90+',
+                    _agingReport!.ninetyPlus,
+                    isDanger: true,
+                  ),
                 ],
               ),
             ),
@@ -402,8 +404,11 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
 
   String _formatCurrency(double amount) {
     final absAmount = amount.abs();
-    final formatter =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 2,
+    );
     final formatted = formatter.format(absAmount);
     return amount < 0 ? '$formatted Cr' : '$formatted Dr';
   }
@@ -417,12 +422,15 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Transaction #${txn.voucherNumber}',
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'Transaction #${txn.voucherNumber}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 8),
             Text('Date: ${DateFormat('dd MMM yyyy').format(txn.date)}'),
             Text(
-                'Amount: ${_formatCurrency(txn.debit > 0 ? txn.debit : -txn.credit)}'),
+              'Amount: ${_formatCurrency(txn.debit > 0 ? txn.debit : -txn.credit)}',
+            ),
             if (txn.narration.isNotEmpty) Text('Narration: ${txn.narration}'),
             const SizedBox(height: 24),
             // Reminders disabled until fully implemented

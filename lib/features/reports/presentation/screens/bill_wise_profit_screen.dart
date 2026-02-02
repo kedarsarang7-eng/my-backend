@@ -41,8 +41,9 @@ class _BillWiseProfitScreenState extends ConsumerState<BillWiseProfitScreen> {
       final bills = await sl<BillsRepository>().watchAll(userId: ownerId).first;
 
       // Fetch Stock/Products for Cost Price (Approximation)
-      final products =
-          await sl<ProductsRepository>().watchAll(userId: ownerId).first;
+      final products = await sl<ProductsRepository>()
+          .watchAll(userId: ownerId)
+          .first;
       final stockMap = {for (var p in products) p.id: p};
 
       final profitList = <_ProfitItem>[];
@@ -61,11 +62,9 @@ class _BillWiseProfitScreenState extends ConsumerState<BillWiseProfitScreen> {
 
         final profit = totalRevenue - totalCost;
 
-        profitList.add(_ProfitItem(
-          bill: bill,
-          cost: totalCost,
-          profit: profit,
-        ));
+        profitList.add(
+          _ProfitItem(bill: bill, cost: totalCost, profit: profit),
+        );
       }
 
       profitList.sort((a, b) => b.bill.date.compareTo(a.bill.date));

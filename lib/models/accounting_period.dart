@@ -103,7 +103,7 @@ class AccountingPeriod {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
 
     return AccountingPeriod(
@@ -240,12 +240,7 @@ class AccountingPeriod {
 }
 
 /// Types of accounting periods.
-enum PeriodType {
-  monthly,
-  quarterly,
-  annual,
-  custom,
-}
+enum PeriodType { monthly, quarterly, annual, custom }
 
 extension PeriodTypeExtension on PeriodType {
   String get displayName {

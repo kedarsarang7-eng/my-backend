@@ -39,10 +39,7 @@ class AuthErrorScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.red.shade700,
-              Colors.red.shade900,
-            ],
+            colors: [Colors.red.shade700, Colors.red.shade900],
           ),
         ),
         child: SafeArea(
@@ -168,7 +165,8 @@ class AuthErrorScreen extends StatelessWidget {
 
     if (context.mounted) {
       unawaited(
-          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false));
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false),
+      );
     }
   }
 }

@@ -14,15 +14,17 @@ class PrescriptionRepository {
   PrescriptionRepository({
     required AppDatabase db,
     required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  }) : _db = db,
+       _syncManager = syncManager;
 
   /// Create Prescription
   Future<void> createPrescription(PrescriptionModel prescription) async {
     try {
       await _db.transaction(() async {
         // 1. Insert Header
-        await _db.into(_db.prescriptions).insert(
+        await _db
+            .into(_db.prescriptions)
+            .insert(
               PrescriptionsCompanion.insert(
                 id: prescription.id,
                 userId: 'SYSTEM', // Context required
@@ -42,37 +44,45 @@ class PrescriptionRepository {
         for (var item in prescription.items) {
           await _db
               .into(_db.prescriptionItems)
-              .insert(PrescriptionItemsCompanion.insert(
-                id: item.id.isNotEmpty ? item.id : const Uuid().v4(),
-                prescriptionId: prescription.id,
-                medicineName: item.medicineName,
-                dosage: Value(item.dosage),
-                frequency: Value(item.frequency),
-                duration: Value(item.duration),
-                instructions: Value(item.instructions),
-              ));
+              .insert(
+                PrescriptionItemsCompanion.insert(
+                  id: item.id.isNotEmpty ? item.id : const Uuid().v4(),
+                  prescriptionId: prescription.id,
+                  medicineName: item.medicineName,
+                  dosage: Value(item.dosage),
+                  frequency: Value(item.frequency),
+                  duration: Value(item.duration),
+                  instructions: Value(item.instructions),
+                ),
+              );
         }
       });
 
       // 3. Queue Sync
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: 'SYSTEM',
-        operationType: SyncOperationType.create,
-        targetCollection: 'prescriptions',
-        documentId: prescription.id,
-        payload: prescription.toMap(),
-        priority: 1,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: 'SYSTEM',
+          operationType: SyncOperationType.create,
+          targetCollection: 'prescriptions',
+          documentId: prescription.id,
+          payload: prescription.toMap(),
+          priority: 1,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to create prescription');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to create prescription',
+      );
       rethrow;
     }
   }
 
   /// Watch Prescriptions for Patient
   Stream<List<PrescriptionModel>> watchPrescriptionsForPatient(
-      String patientId) {
+    String patientId,
+  ) {
     return (_db.select(_db.prescriptions)
           ..where((t) => t.patientId.equals(patientId))
           ..orderBy([(t) => OrderingTerm.desc(t.date)]))
@@ -82,22 +92,24 @@ class PrescriptionRepository {
 
   /// Get Recent Prescriptions for Doctor (Dashboard/List)
   Future<List<PrescriptionModel>> getRecentPrescriptions(
-      String doctorId) async {
+    String doctorId,
+  ) async {
     // If doctorId is SYSTEM/Admin, might return all, otherwise filter
     // For now, simpler query
-    final rows = await (_db.select(_db.prescriptions)
-          ..orderBy([(t) => OrderingTerm.desc(t.date)])
-          ..limit(50))
-        .get();
+    final rows =
+        await (_db.select(_db.prescriptions)
+              ..orderBy([(t) => OrderingTerm.desc(t.date)])
+              ..limit(50))
+            .get();
 
     return rows.map((row) => _mapToModel(row)).toList();
   }
 
   /// Get Prescription by ID
   Future<PrescriptionModel?> getPrescriptionById(String id) async {
-    final row = await (_db.select(_db.prescriptions)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.prescriptions,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (row == null) return null;
     return _mapToModel(row);
@@ -107,8 +119,9 @@ class PrescriptionRepository {
     List<PrescriptionItemModel> items = [];
     try {
       if (row.medicinesJson.isNotEmpty) {
-        final List<dynamic> jsonList =
-            json_convert.jsonDecode(row.medicinesJson);
+        final List<dynamic> jsonList = json_convert.jsonDecode(
+          row.medicinesJson,
+        );
         items = jsonList.map((e) => PrescriptionItemModel.fromMap(e)).toList();
       }
     } catch (e) {

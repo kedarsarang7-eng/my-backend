@@ -111,11 +111,13 @@ Widget asyncBuilder<T>({
           loading ??
           const DefaultLoadingWidget(),
     AsyncData(:final data) => builder(data),
-    AsyncError<T> asyncError => asyncError.previousData != null
-        ? builder(asyncError.previousData
-            as T) // Show stale data with error indicator
-        : error?.call(asyncError.error) ??
-            DefaultErrorWidget(error: asyncError.error),
+    AsyncError<T> asyncError =>
+      asyncError.previousData != null
+          ? builder(
+              asyncError.previousData as T,
+            ) // Show stale data with error indicator
+          : error?.call(asyncError.error) ??
+                DefaultErrorWidget(error: asyncError.error),
   };
 }
 
@@ -196,11 +198,7 @@ class DefaultErrorWidget extends StatelessWidget {
   final AppError error;
   final VoidCallback? onRetry;
 
-  const DefaultErrorWidget({
-    super.key,
-    required this.error,
-    this.onRetry,
-  });
+  const DefaultErrorWidget({super.key, required this.error, this.onRetry});
 
   @override
   Widget build(BuildContext context) {

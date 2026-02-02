@@ -19,17 +19,20 @@ class CategoriesScreen extends StatelessWidget {
           icon: Icons.add,
           label: 'Add Category',
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("To add a category, assign it to a product."),
-            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("To add a category, assign it to a product."),
+              ),
+            );
           },
         ),
       ],
       child: userId.isEmpty
           ? const Center(child: Text("User not logged in"))
           : StreamBuilder<List<String>>(
-              stream: sl<ProductsRepository>()
-                  .watchUniqueCategories(userId: userId),
+              stream: sl<ProductsRepository>().watchUniqueCategories(
+                userId: userId,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -51,22 +54,27 @@ class CategoriesScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.category_outlined,
-                            size: 64,
-                            color: FuturisticColors.textSecondary
-                                .withOpacity(0.5)),
+                        Icon(
+                          Icons.category_outlined,
+                          size: 64,
+                          color: FuturisticColors.textSecondary.withOpacity(
+                            0.5,
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'No categories found',
-                          style:
-                              TextStyle(color: FuturisticColors.textSecondary),
+                          style: TextStyle(
+                            color: FuturisticColors.textSecondary,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Categories are created automatically when adding products.',
                           style: TextStyle(
-                              color: FuturisticColors.textSecondary,
-                              fontSize: 12),
+                            color: FuturisticColors.textSecondary,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
@@ -82,27 +90,35 @@ class CategoriesScreen extends StatelessWidget {
                       color: FuturisticColors.surface,
                       margin: const EdgeInsets.only(bottom: 12),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor:
-                              FuturisticColors.accent1.withOpacity(0.2),
+                          backgroundColor: FuturisticColors.accent1.withOpacity(
+                            0.2,
+                          ),
                           child: Text(
                             category.isNotEmpty
                                 ? category[0].toUpperCase()
                                 : '?',
                             style: const TextStyle(
-                                color: FuturisticColors.accent1,
-                                fontWeight: FontWeight.bold),
+                              color: FuturisticColors.accent1,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         title: Text(
                           category,
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        trailing: Icon(Icons.arrow_forward_ios,
-                            size: 16, color: FuturisticColors.textSecondary),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: FuturisticColors.textSecondary,
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,

@@ -29,28 +29,30 @@ class DriftSyncRepository implements SyncRepository {
       // We need to map SyncQueueEntry to SyncQueueItem.
 
       return rows
-          .map((row) => SyncQueueItem(
-                operationId: row.operationId,
-                operationType: SyncOperationType.fromString(row.operationType),
-                targetCollection: row.targetCollection,
-                documentId: row.documentId,
-                payload: jsonDecode(row.payload),
-                status: SyncStatus.fromString(row.status),
-                retryCount: row.retryCount,
-                lastError: row.lastError,
-                createdAt: row.createdAt,
-                lastAttemptAt: row.lastAttemptAt,
-                syncedAt: row.syncedAt,
-                priority: row.priority,
-                parentOperationId: row.parentOperationId,
-                stepNumber: row.stepNumber,
-                totalSteps: row.totalSteps,
-                userId: row.userId,
-                deviceId: row.deviceId,
-                payloadHash: row.payloadHash,
-                dependencyGroup: row.dependencyGroup,
-                ownerId: row.ownerId,
-              ))
+          .map(
+            (row) => SyncQueueItem(
+              operationId: row.operationId,
+              operationType: SyncOperationType.fromString(row.operationType),
+              targetCollection: row.targetCollection,
+              documentId: row.documentId,
+              payload: jsonDecode(row.payload),
+              status: SyncStatus.fromString(row.status),
+              retryCount: row.retryCount,
+              lastError: row.lastError,
+              createdAt: row.createdAt,
+              lastAttemptAt: row.lastAttemptAt,
+              syncedAt: row.syncedAt,
+              priority: row.priority,
+              parentOperationId: row.parentOperationId,
+              stepNumber: row.stepNumber,
+              totalSteps: row.totalSteps,
+              userId: row.userId,
+              deviceId: row.deviceId,
+              payloadHash: row.payloadHash,
+              dependencyGroup: row.dependencyGroup,
+              ownerId: row.ownerId,
+            ),
+          )
           .toList();
     });
   }
@@ -118,38 +120,45 @@ class DriftSyncRepository implements SyncRepository {
     // Or simpler: modifying `AppDatabase` is risky without running build_runner.
     // I will fetch from DB using a simple select query first.
 
-    final itemOrNull = await (_db.select(_db.syncQueue)
-          ..where((t) => t.operationId.equals(operationId)))
-        .getSingleOrNull();
+    final itemOrNull = await (_db.select(
+      _db.syncQueue,
+    )..where((t) => t.operationId.equals(operationId))).getSingleOrNull();
 
     if (itemOrNull != null) {
-      final updatedComp = itemOrNull.toCompanion(true).copyWith(
+      final updatedComp = itemOrNull
+          .toCompanion(true)
+          .copyWith(
             status: const Value('IN_PROGRESS'),
             lastAttemptAt: Value(DateTime.now()),
           );
 
-      await (_db.update(_db.syncQueue)
-            ..where((t) => t.operationId.equals(operationId)))
-          .write(updatedComp);
+      await (_db.update(
+        _db.syncQueue,
+      )..where((t) => t.operationId.equals(operationId))).write(updatedComp);
     }
   }
 
   @override
-  Future<void> markSynced(String operationId,
-      {required String collection, required String docId}) async {
-    final itemOrNull = await (_db.select(_db.syncQueue)
-          ..where((t) => t.operationId.equals(operationId)))
-        .getSingleOrNull();
+  Future<void> markSynced(
+    String operationId, {
+    required String collection,
+    required String docId,
+  }) async {
+    final itemOrNull = await (_db.select(
+      _db.syncQueue,
+    )..where((t) => t.operationId.equals(operationId))).getSingleOrNull();
 
     if (itemOrNull != null) {
-      final updatedComp = itemOrNull.toCompanion(true).copyWith(
+      final updatedComp = itemOrNull
+          .toCompanion(true)
+          .copyWith(
             status: const Value('SYNCED'),
             syncedAt: Value(DateTime.now()),
           );
 
-      await (_db.update(_db.syncQueue)
-            ..where((t) => t.operationId.equals(operationId)))
-          .write(updatedComp);
+      await (_db.update(
+        _db.syncQueue,
+      )..where((t) => t.operationId.equals(operationId))).write(updatedComp);
 
       // Mark entity synced
       await _db.markDocumentSynced(collection, docId);
@@ -158,23 +167,28 @@ class DriftSyncRepository implements SyncRepository {
 
   @override
   Future<void> markFailed(
-      String operationId, String error, int currentRetryCount) async {
+    String operationId,
+    String error,
+    int currentRetryCount,
+  ) async {
     // currentRetryCount is passed from engine which tracks it
-    final itemOrNull = await (_db.select(_db.syncQueue)
-          ..where((t) => t.operationId.equals(operationId)))
-        .getSingleOrNull();
+    final itemOrNull = await (_db.select(
+      _db.syncQueue,
+    )..where((t) => t.operationId.equals(operationId))).getSingleOrNull();
 
     if (itemOrNull != null) {
-      final updatedComp = itemOrNull.toCompanion(true).copyWith(
+      final updatedComp = itemOrNull
+          .toCompanion(true)
+          .copyWith(
             status: const Value('RETRY'),
             lastError: Value(error),
             retryCount: Value(currentRetryCount),
             lastAttemptAt: Value(DateTime.now()),
           );
 
-      await (_db.update(_db.syncQueue)
-            ..where((t) => t.operationId.equals(operationId)))
-          .write(updatedComp);
+      await (_db.update(
+        _db.syncQueue,
+      )..where((t) => t.operationId.equals(operationId))).write(updatedComp);
     }
   }
 
@@ -204,9 +218,11 @@ class DriftSyncRepository implements SyncRepository {
     final startOfDay = DateTime(now.year, now.month, now.day);
 
     final syncedQuery = _db.select(_db.syncQueue)
-      ..where((t) =>
-          t.status.equals('SYNCED') &
-          t.syncedAt.isBiggerOrEqualValue(startOfDay));
+      ..where(
+        (t) =>
+            t.status.equals('SYNCED') &
+            t.syncedAt.isBiggerOrEqualValue(startOfDay),
+      );
     final syncedCount = (await syncedQuery.get()).length;
 
     final failedQuery = _db.select(_db.syncQueue)
@@ -230,33 +246,35 @@ class DriftSyncRepository implements SyncRepository {
 
   @override
   Future<List<SyncQueueItem>> getFailedItems() async {
-    final rows = await (_db.select(_db.syncQueue)
-          ..where((t) => t.status.isIn(['FAILED', 'RETRY'])))
-        .get();
+    final rows = await (_db.select(
+      _db.syncQueue,
+    )..where((t) => t.status.isIn(['FAILED', 'RETRY']))).get();
 
     return rows
-        .map((row) => SyncQueueItem(
-              operationId: row.operationId,
-              operationType: SyncOperationType.fromString(row.operationType),
-              targetCollection: row.targetCollection,
-              documentId: row.documentId,
-              payload: jsonDecode(row.payload),
-              status: SyncStatus.fromString(row.status),
-              retryCount: row.retryCount,
-              lastError: row.lastError,
-              createdAt: row.createdAt,
-              lastAttemptAt: row.lastAttemptAt,
-              syncedAt: row.syncedAt,
-              priority: row.priority,
-              parentOperationId: row.parentOperationId,
-              stepNumber: row.stepNumber,
-              totalSteps: row.totalSteps,
-              userId: row.userId,
-              deviceId: row.deviceId,
-              payloadHash: row.payloadHash,
-              dependencyGroup: row.dependencyGroup,
-              ownerId: row.ownerId,
-            ))
+        .map(
+          (row) => SyncQueueItem(
+            operationId: row.operationId,
+            operationType: SyncOperationType.fromString(row.operationType),
+            targetCollection: row.targetCollection,
+            documentId: row.documentId,
+            payload: jsonDecode(row.payload),
+            status: SyncStatus.fromString(row.status),
+            retryCount: row.retryCount,
+            lastError: row.lastError,
+            createdAt: row.createdAt,
+            lastAttemptAt: row.lastAttemptAt,
+            syncedAt: row.syncedAt,
+            priority: row.priority,
+            parentOperationId: row.parentOperationId,
+            stepNumber: row.stepNumber,
+            totalSteps: row.totalSteps,
+            userId: row.userId,
+            deviceId: row.deviceId,
+            payloadHash: row.payloadHash,
+            dependencyGroup: row.dependencyGroup,
+            ownerId: row.ownerId,
+          ),
+        )
         .toList();
   }
 }

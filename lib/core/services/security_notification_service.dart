@@ -29,8 +29,8 @@ class SecurityNotificationService {
   SecurityNotificationService({
     required FraudDetectionService fraudService,
     required FraudAlertRepository alertRepository,
-  })  : _fraudService = fraudService,
-        _alertRepository = alertRepository;
+  }) : _fraudService = fraudService,
+       _alertRepository = alertRepository;
 
   /// Stream of security notifications for UI
   Stream<SecurityNotification> get notifications =>
@@ -41,7 +41,8 @@ class SecurityNotificationService {
     _subscription?.cancel();
     _subscription = _fraudService.fraudAlerts.listen(_handleAlert);
     debugPrint(
-        'SecurityNotificationService: Started listening for fraud alerts');
+      'SecurityNotificationService: Started listening for fraud alerts',
+    );
   }
 
   /// Stop listening for fraud alerts
@@ -70,8 +71,10 @@ class SecurityNotificationService {
       // Emit to stream for UI
       _notificationController.add(notification);
 
-      debugPrint('SecurityNotificationService: Created notification for '
-          '${alert.type.name} (${alert.severity.name})');
+      debugPrint(
+        'SecurityNotificationService: Created notification for '
+        '${alert.type.name} (${alert.severity.name})',
+      );
     } catch (e) {
       debugPrint('SecurityNotificationService: Failed to handle alert: $e');
     }

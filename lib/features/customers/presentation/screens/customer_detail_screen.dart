@@ -238,8 +238,11 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
                         color: Colors.blue.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.credit_score,
-                          color: Colors.blue, size: 20),
+                      child: const Icon(
+                        Icons.credit_score,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -279,7 +282,8 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: (_customer!.creditLimit -
+                            color:
+                                (_customer!.creditLimit -
                                         _customer!.totalDues) >
                                     0
                                 ? Colors.green
@@ -299,8 +303,10 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
               icon: const Icon(Icons.account_balance_wallet),
               label: const Text('View Full Ledger'),
               style: OutlinedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -351,11 +357,14 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
                 // Customer Type Badge
                 if (_customer!.customerType != CustomerType.regular)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
-                      color: _getCustomerTypeColor(_customer!.customerType)
-                          .withOpacity(0.2),
+                      color: _getCustomerTypeColor(
+                        _customer!.customerType,
+                      ).withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -380,10 +389,7 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
                 // Phone
                 Text(
                   _customer!.phone ?? 'No phone',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.white70),
                 ),
               ],
             ),
@@ -404,7 +410,11 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
   }
 
   Widget _buildFinancialStat(
-      String label, String value, Color color, bool isDark) {
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Column(
       children: [
         Text(
@@ -485,9 +495,9 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
 
       if (success) {
         _loadCustomer();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Credit limit updated')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Credit limit updated')));
       }
     }
   }
@@ -502,7 +512,8 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-                'Are you sure you want to block this customer? They will not be able to create new bills on credit.'),
+              'Are you sure you want to block this customer? They will not be able to create new bills on credit.',
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
@@ -544,9 +555,9 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
 
     if (success) {
       _loadCustomer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Customer blocked')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Customer blocked')));
     }
   }
 
@@ -561,9 +572,9 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
 
     if (success) {
       _loadCustomer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Customer unblocked')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Customer unblocked')));
     }
   }
 
@@ -582,8 +593,9 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
       MaterialPageRoute(
         builder: (_) => CustomerPaymentScreen(
           customerId: widget.customerId,
-          suggestedAmount:
-              _customer!.totalDues > 0 ? _customer!.totalDues : null,
+          suggestedAmount: _customer!.totalDues > 0
+              ? _customer!.totalDues
+              : null,
         ),
       ),
     );
@@ -622,9 +634,9 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
               if (remarkController.text.trim().isNotEmpty) {
                 // Save remark - in production, call repository
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Remark saved')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Remark saved')));
               }
             },
             child: const Text('Save'),
@@ -638,21 +650,30 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
     // Route to actual screens where they exist
     switch (feature) {
       case 'Estimate':
-        Navigator.pushNamed(context, '/proforma',
-            arguments: {'customerId': widget.customerId});
+        Navigator.pushNamed(
+          context,
+          '/proforma',
+          arguments: {'customerId': widget.customerId},
+        );
         break;
       case 'Delivery Challan':
-        Navigator.pushNamed(context, '/delivery-challan',
-            arguments: {'customerId': widget.customerId});
+        Navigator.pushNamed(
+          context,
+          '/delivery-challan',
+          arguments: {'customerId': widget.customerId},
+        );
         break;
       case 'Credit Note':
-        Navigator.pushNamed(context, '/return-inwards',
-            arguments: {'customerId': widget.customerId});
+        Navigator.pushNamed(
+          context,
+          '/return-inwards',
+          arguments: {'customerId': widget.customerId},
+        );
         break;
       default:
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Navigate to $feature')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Navigate to $feature')));
     }
   }
 }

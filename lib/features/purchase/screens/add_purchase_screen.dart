@@ -57,136 +57,154 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
     final formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return Container(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-                top: 24,
-                left: 20,
-                right: 20),
-            decoration: const BoxDecoration(
-                color: Color(0xFF1E293B),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Add Item",
-                      style: GoogleFonts.outfit(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 20),
-
-                  // Item Name
-                  TextFormField(
-                    controller: nameCtrl,
-                    style: GoogleFonts.inter(color: Colors.white),
-                    decoration: _inputDecoration("Item Name", Icons.inventory),
-                    validator: (v) => v!.isEmpty ? "Required" : null,
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            top: 24,
+            left: 20,
+            right: 20,
+          ),
+          decoration: const BoxDecoration(
+            color: Color(0xFF1E293B),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Add Item",
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 12),
+                ),
+                const SizedBox(height: 20),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: qtyCtrl,
-                          keyboardType: TextInputType.number,
-                          style: GoogleFonts.inter(color: Colors.white),
-                          decoration:
-                              _inputDecoration("Quantity", Icons.numbers),
-                          validator: (v) {
-                            if (v == null || v.isEmpty) return "Required";
-                            if (double.tryParse(v) == null) return "Invalid";
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: TextFormField(
-                          controller: rateCtrl,
-                          keyboardType: TextInputType.number,
-                          style: GoogleFonts.inter(color: Colors.white),
-                          decoration:
-                              _inputDecoration("Rate", Icons.currency_rupee),
-                          validator: (v) {
-                            if (v == null || v.isEmpty) return "Required";
-                            if (double.tryParse(v) == null) return "Invalid";
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                // Item Name
+                TextFormField(
+                  controller: nameCtrl,
+                  style: GoogleFonts.inter(color: Colors.white),
+                  decoration: _inputDecoration("Item Name", Icons.inventory),
+                  validator: (v) => v!.isEmpty ? "Required" : null,
+                ),
+                const SizedBox(height: 12),
 
-                  SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            final qty = double.parse(qtyCtrl.text);
-                            final rate = double.parse(rateCtrl.text);
-
-                            setState(() {
-                              _items.add(PurchaseItem(
-                                  id: const Uuid().v4(),
-                                  productId: null,
-                                  productName: nameCtrl.text.trim(),
-                                  quantity: qty,
-                                  unit: 'kg',
-                                  costPrice: rate,
-                                  taxRate: 0,
-                                  totalAmount: qty * rate));
-                            });
-                            Navigator.pop(context);
-                          }
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: qtyCtrl,
+                        keyboardType: TextInputType.number,
+                        style: GoogleFonts.inter(color: Colors.white),
+                        decoration: _inputDecoration("Quantity", Icons.numbers),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return "Required";
+                          if (double.tryParse(v) == null) return "Invalid";
+                          return null;
                         },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12))),
-                        child: const Text("ADD TO INVOICE"),
-                      ))
-                ],
-              ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextFormField(
+                        controller: rateCtrl,
+                        keyboardType: TextInputType.number,
+                        style: GoogleFonts.inter(color: Colors.white),
+                        decoration: _inputDecoration(
+                          "Rate",
+                          Icons.currency_rupee,
+                        ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return "Required";
+                          if (double.tryParse(v) == null) return "Invalid";
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        final qty = double.parse(qtyCtrl.text);
+                        final rate = double.parse(rateCtrl.text);
+
+                        setState(() {
+                          _items.add(
+                            PurchaseItem(
+                              id: const Uuid().v4(),
+                              productId: null,
+                              productName: nameCtrl.text.trim(),
+                              quantity: qty,
+                              unit: 'kg',
+                              costPrice: rate,
+                              taxRate: 0,
+                              totalAmount: qty * rate,
+                            ),
+                          );
+                        });
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text("ADD TO INVOICE"),
+                  ),
+                ),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.white54),
-        prefixIcon: Icon(icon, color: Colors.white54),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.white.withOpacity(0.1))),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.green)),
-        filled: true,
-        fillColor: Colors.black12);
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.white54),
+      prefixIcon: Icon(icon, color: Colors.white54),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.green),
+      ),
+      filled: true,
+      fillColor: Colors.black12,
+    );
   }
 
   Future<void> _saveBill(String ownerId) async {
     if (_items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please add at least one item")));
+        const SnackBar(content: Text("Please add at least one item")),
+      );
       return;
     }
     if (_supplierController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please enter supplier name")));
+        const SnackBar(content: Text("Please enter supplier name")),
+      );
       return;
     }
 
@@ -217,8 +235,9 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Invoice Saved!")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Invoice Saved!")));
         Navigator.pop(context);
       }
     } catch (e) {
@@ -229,7 +248,8 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
           msg = "You are offline. Cannot save vendor invoice.";
         }
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(msg), backgroundColor: Colors.red));
+          SnackBar(content: Text(msg), backgroundColor: Colors.red),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -247,23 +267,25 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("New Vendor Invoice",
-            style: GoogleFonts.outfit(color: Colors.white)),
+        title: Text(
+          "New Vendor Invoice",
+          style: GoogleFonts.outfit(color: Colors.white),
+        ),
         leading: const BackButton(color: Colors.white),
       ),
       body: Stack(
         children: [
           Positioned.fill(
-              child: Container(
-            decoration: BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                  const Color(0xFF0F172A),
-                  const Color(0xFF1E293B)
-                ])),
-          )),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [const Color(0xFF0F172A), const Color(0xFF1E293B)],
+                ),
+              ),
+            ),
+          ),
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -282,8 +304,9 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
           ),
           if (_isLoading)
             Container(
-                color: Colors.black54,
-                child: const Center(child: CircularProgressIndicator())),
+              color: Colors.black54,
+              child: const Center(child: CircularProgressIndicator()),
+            ),
           Align(
             alignment: Alignment.bottomCenter,
             child: _buildBottomBar(palette, ownerId),
@@ -299,9 +322,13 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Supplier Details",
-              style: GoogleFonts.inter(
-                  color: Colors.white70, fontWeight: FontWeight.bold)),
+          Text(
+            "Supplier Details",
+            style: GoogleFonts.inter(
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 16),
           TextFormField(
             controller: _supplierController,
@@ -315,15 +342,19 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
                 child: TextFormField(
                   controller: _billNoController,
                   style: GoogleFonts.inter(color: Colors.white),
-                  decoration:
-                      _inputDecoration("Invoice No", Icons.receipt_long),
+                  decoration: _inputDecoration(
+                    "Invoice No",
+                    Icons.receipt_long,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(12),
@@ -331,11 +362,16 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.calendar_today,
-                          color: Colors.white54, size: 20),
+                      const Icon(
+                        Icons.calendar_today,
+                        color: Colors.white54,
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
-                      Text("Today",
-                          style: GoogleFonts.inter(color: Colors.white)),
+                      Text(
+                        "Today",
+                        style: GoogleFonts.inter(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -353,53 +389,70 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Items (${_items.length})",
-                style: GoogleFonts.outfit(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+            Text(
+              "Items (${_items.length})",
+              style: GoogleFonts.outfit(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextButton.icon(
               onPressed: _showAddItemSheet,
               icon: Icon(Icons.add_circle, color: palette.leafGreen),
-              label:
-                  Text("Add Item", style: TextStyle(color: palette.leafGreen)),
+              label: Text(
+                "Add Item",
+                style: TextStyle(color: palette.leafGreen),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ..._items.map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: GlassContainer(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.productName,
-                            style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600)),
-                        Text("${item.quantity} x ₹${item.costPrice}",
-                            style: const TextStyle(color: Colors.white54)),
-                      ],
+        ..._items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: GlassContainer(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.productName,
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "${item.quantity} x ₹${item.costPrice}",
+                        style: const TextStyle(color: Colors.white54),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "₹${item.totalAmount}",
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                    Text("₹${item.totalAmount}",
-                        style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16)),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )),
+            ),
+          ),
+        ),
         if (_items.isEmpty)
           Center(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text("No items added yet",
-                  style: TextStyle(color: Colors.white24)),
+              child: Text(
+                "No items added yet",
+                style: TextStyle(color: Colors.white24),
+              ),
             ),
           ),
       ],
@@ -412,9 +465,13 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Payment Mode",
-              style: GoogleFonts.inter(
-                  color: Colors.white70, fontWeight: FontWeight.bold)),
+          Text(
+            "Payment Mode",
+            style: GoogleFonts.inter(
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -436,13 +493,15 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color:
-              isSelected ? palette.leafGreen : Colors.white.withOpacity(0.05),
+          color: isSelected
+              ? palette.leafGreen
+              : Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: isSelected
-                  ? palette.leafGreen
-                  : Colors.white.withOpacity(0.1)),
+            color: isSelected
+                ? palette.leafGreen
+                : Colors.white.withOpacity(0.1),
+          ),
         ),
         child: Text(
           label,
@@ -467,20 +526,25 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Total Payable",
-                    style: TextStyle(color: Colors.white54, fontSize: 12)),
-                Text("₹${_totalAmount.toStringAsFixed(0)}",
-                    style: GoogleFonts.outfit(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    )),
+                Text(
+                  "Total Payable",
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+                Text(
+                  "₹${_totalAmount.toStringAsFixed(0)}",
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
           GestureDetector(
-            onTap:
-                _items.isEmpty || _isLoading ? null : () => _saveBill(ownerId),
+            onTap: _items.isEmpty || _isLoading
+                ? null
+                : () => _saveBill(ownerId),
             child: NeoGradientCard(
               gradient: (_items.isEmpty || _isLoading)
                   ? const LinearGradient(colors: [Colors.grey, Colors.grey])
@@ -491,9 +555,13 @@ class _AddPurchaseScreenState extends ConsumerState<AddPurchaseScreen> {
                 children: [
                   const Icon(Icons.check, color: Colors.white),
                   const SizedBox(width: 8),
-                  Text("SAVE INVOICE",
-                      style: GoogleFonts.inter(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text(
+                    "SAVE INVOICE",
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),

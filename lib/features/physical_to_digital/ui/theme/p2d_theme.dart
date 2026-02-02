@@ -34,11 +34,7 @@ const Color kP2DTextMuted = Color(0x80FFFFFF);
 const LinearGradient kP2DBackgroundGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [
-    Color(0xFF0B0F14),
-    Color(0xFF111827),
-    Color(0xFF0F172A),
-  ],
+  colors: [Color(0xFF0B0F14), Color(0xFF111827), Color(0xFF0F172A)],
 );
 
 const LinearGradient kP2DAccentGradient = LinearGradient(

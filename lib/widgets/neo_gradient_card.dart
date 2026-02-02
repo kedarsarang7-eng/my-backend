@@ -22,7 +22,8 @@ class NeoGradientCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: borderRadius ?? BorderRadius.circular(20),
-        boxShadow: shadows ??
+        boxShadow:
+            shadows ??
             [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),

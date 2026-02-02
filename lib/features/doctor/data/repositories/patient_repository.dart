@@ -9,17 +9,17 @@ class PatientRepository {
   final AppDatabase _db;
   final SyncManager _syncManager;
 
-  PatientRepository({
-    required AppDatabase db,
-    required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  PatientRepository({required AppDatabase db, required SyncManager syncManager})
+    : _db = db,
+      _syncManager = syncManager;
 
   /// Create a new patient (Offline-First)
   Future<void> createPatient(PatientModel patient) async {
     try {
       // 1. Insert into Local Database
-      await _db.into(_db.patients).insert(
+      await _db
+          .into(_db.patients)
+          .insert(
             PatientsCompanion.insert(
               id: patient.id,
               userId:
@@ -42,18 +42,23 @@ class PatientRepository {
           );
 
       // 2. Queue for Sync
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId:
-            'SYSTEM', // Or specific Doctor ID if we had context here. Using SYSTEM for now.
-        operationType: SyncOperationType.create,
-        targetCollection: 'patients',
-        documentId: patient.id,
-        payload: patient.toMap(),
-        priority: 1,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId:
+              'SYSTEM', // Or specific Doctor ID if we had context here. Using SYSTEM for now.
+          operationType: SyncOperationType.create,
+          targetCollection: 'patients',
+          documentId: patient.id,
+          payload: patient.toMap(),
+          priority: 1,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to create patient');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to create patient',
+      );
       rethrow;
     }
   }
@@ -64,68 +69,75 @@ class PatientRepository {
       final now = DateTime.now();
       patient.updatedAt = now;
 
-      await (_db.update(_db.patients)..where((t) => t.id.equals(patient.id)))
-          .write(PatientsCompanion(
-        name: Value(patient.name),
-        phone: Value(patient.phone),
-        age: Value(patient.age),
-        gender: Value(patient.gender),
-        bloodGroup: Value(patient.bloodGroup),
-        address: Value(patient.address),
-        qrToken: Value(patient.qrToken),
-        chronicConditions: Value(patient.chronicConditions),
-        allergies: Value(patient.allergies),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.patients,
+      )..where((t) => t.id.equals(patient.id))).write(
+        PatientsCompanion(
+          name: Value(patient.name),
+          phone: Value(patient.phone),
+          age: Value(patient.age),
+          gender: Value(patient.gender),
+          bloodGroup: Value(patient.bloodGroup),
+          address: Value(patient.address),
+          qrToken: Value(patient.qrToken),
+          chronicConditions: Value(patient.chronicConditions),
+          allergies: Value(patient.allergies),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: 'SYSTEM',
-        operationType: SyncOperationType.update,
-        targetCollection: 'patients',
-        documentId: patient.id,
-        payload: patient.toMap(),
-        priority: 1,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: 'SYSTEM',
+          operationType: SyncOperationType.update,
+          targetCollection: 'patients',
+          documentId: patient.id,
+          payload: patient.toMap(),
+          priority: 1,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to update patient');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to update patient',
+      );
       rethrow;
     }
   }
 
   /// Get patient by ID
   Future<PatientModel?> getPatientById(String id) async {
-    final row = await (_db.select(_db.patients)..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.patients,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
     if (row == null) return null;
     return _mapToModel(row);
   }
 
   /// Search patients by name or phone
   Future<List<PatientModel>> searchPatients(String query) async {
-    final rows = await (_db.select(_db.patients)
-          ..where((t) => t.name.contains(query) | t.phone.contains(query)))
-        .get();
+    final rows = await (_db.select(
+      _db.patients,
+    )..where((t) => t.name.contains(query) | t.phone.contains(query))).get();
     return rows.map((row) => _mapToModel(row)).toList();
   }
 
   /// Get patient by QR Token
   Future<PatientModel?> getPatientByQrToken(String token) async {
-    final row = await (_db.select(_db.patients)
-          ..where((t) => t.qrToken.equals(token)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.patients,
+    )..where((t) => t.qrToken.equals(token))).getSingleOrNull();
     if (row == null) return null;
     return _mapToModel(row);
   }
 
   /// Watch all patients
   Stream<List<PatientModel>> watchAllPatients() {
-    return (_db.select(_db.patients)
-          ..orderBy([
-            (t) =>
-                OrderingTerm(expression: t.updatedAt, mode: OrderingMode.desc)
-          ]))
+    return (_db.select(_db.patients)..orderBy([
+          (t) => OrderingTerm(expression: t.updatedAt, mode: OrderingMode.desc),
+        ]))
         .watch()
         .map((rows) => rows.map((row) => _mapToModel(row)).toList());
   }

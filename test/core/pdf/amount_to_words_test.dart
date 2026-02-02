@@ -6,8 +6,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dukanx/core/pdf/amount_to_words.dart';
-import 'package:dukanx/services/invoice_pdf_service.dart'
-    show InvoiceLanguage;
+import 'package:dukanx/services/invoice_pdf_service.dart' show InvoiceLanguage;
 
 void main() {
   group('AmountToWords - English', () {

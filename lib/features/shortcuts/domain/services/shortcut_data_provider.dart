@@ -6,11 +6,7 @@ class ShortcutBadgeData {
   final double? amount;
   final bool isWarning;
 
-  const ShortcutBadgeData({
-    this.count,
-    this.amount,
-    this.isWarning = false,
-  });
+  const ShortcutBadgeData({this.count, this.amount, this.isWarning = false});
 
   bool get hasData =>
       (count != null && count! > 0) || (amount != null && amount! > 0);
@@ -52,10 +48,12 @@ class ShortcutDataProvider {
 
     return _db.watchAllBills(userId).map((bills) {
       return bills
-          .where((b) =>
-              b.billDate.isAfter(startOfDay) &&
-              b.status != 'CANCELLED' &&
-              b.status != 'DRAFT')
+          .where(
+            (b) =>
+                b.billDate.isAfter(startOfDay) &&
+                b.status != 'CANCELLED' &&
+                b.status != 'DRAFT',
+          )
           .fold(0.0, (sum, b) => sum + b.grandTotal);
     });
   }

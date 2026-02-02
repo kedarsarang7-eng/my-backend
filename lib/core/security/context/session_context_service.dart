@@ -72,17 +72,17 @@ class SessionContext {
   }
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'businessId': businessId,
-        'loginTime': loginTime.toIso8601String(),
-        'deviceFingerprint': deviceFingerprint,
-        'isNewDevice': isNewDevice,
-        'isOddHours': isOddHours,
-        'isAfterInactivity': isAfterInactivity,
-        'actionCountThisSession': actionCountThisSession,
-        'accessLevel': accessLevel.name,
-        'restrictionReason': restrictionReason,
-      };
+    'userId': userId,
+    'businessId': businessId,
+    'loginTime': loginTime.toIso8601String(),
+    'deviceFingerprint': deviceFingerprint,
+    'isNewDevice': isNewDevice,
+    'isOddHours': isOddHours,
+    'isAfterInactivity': isAfterInactivity,
+    'actionCountThisSession': actionCountThisSession,
+    'accessLevel': accessLevel.name,
+    'restrictionReason': restrictionReason,
+  };
 }
 
 /// Session Context Service - Intelligent session restrictions.
@@ -111,9 +111,8 @@ class SessionContextService {
   /// Max actions before restrictions kick in
   static const int maxActionsPerSession = 100;
 
-  SessionContextService({
-    required TrustedDeviceService deviceService,
-  }) : _deviceService = deviceService;
+  SessionContextService({required TrustedDeviceService deviceService})
+    : _deviceService = deviceService;
 
   /// Get current session context
   SessionContext? get currentContext => _currentContext;
@@ -162,8 +161,10 @@ class SessionContextService {
     // Update last activity
     await _updateLastActivity();
 
-    debugPrint('SessionContextService: Created context. '
-        'Access: ${accessLevel.name}, Reason: ${reason ?? "None"}');
+    debugPrint(
+      'SessionContextService: Created context. '
+      'Access: ${accessLevel.name}, Reason: ${reason ?? "None"}',
+    );
 
     return _currentContext!;
   }

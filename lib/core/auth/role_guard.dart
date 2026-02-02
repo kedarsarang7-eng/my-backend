@@ -21,10 +21,7 @@ import 'auth_loading_screen.dart';
 class VendorRoleGuard extends StatelessWidget {
   final Widget child;
 
-  const VendorRoleGuard({
-    super.key,
-    required this.child,
-  });
+  const VendorRoleGuard({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +38,9 @@ class VendorRoleGuard extends StatelessWidget {
         // Not authenticated
         if (!session.isAuthenticated) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
           });
           return const AuthLoadingScreen(message: 'Redirecting...');
         }
@@ -50,11 +48,13 @@ class VendorRoleGuard extends StatelessWidget {
         // Not a vendor/owner OR App is in Customer Only Mode
         if (!session.isOwner || session.isCustomerOnlyMode) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
           });
           return const AuthLoadingScreen(
-              message: 'Access denied. Redirecting...');
+            message: 'Access denied. Redirecting...',
+          );
         }
 
         // Authorized
@@ -72,10 +72,7 @@ class VendorRoleGuard extends StatelessWidget {
 class CustomerRoleGuard extends StatelessWidget {
   final Widget child;
 
-  const CustomerRoleGuard({
-    super.key,
-    required this.child,
-  });
+  const CustomerRoleGuard({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +89,9 @@ class CustomerRoleGuard extends StatelessWidget {
         // Not authenticated
         if (!session.isAuthenticated) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
           });
           return const AuthLoadingScreen(message: 'Redirecting...');
         }
@@ -101,11 +99,13 @@ class CustomerRoleGuard extends StatelessWidget {
         // Not a customer
         if (!session.isCustomer) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
           });
           return const AuthLoadingScreen(
-              message: 'Access denied. Redirecting...');
+            message: 'Access denied. Redirecting...',
+          );
         }
 
         // Authorized
@@ -119,10 +119,7 @@ class CustomerRoleGuard extends StatelessWidget {
 class AuthenticatedGuard extends StatelessWidget {
   final Widget child;
 
-  const AuthenticatedGuard({
-    super.key,
-    required this.child,
-  });
+  const AuthenticatedGuard({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -139,8 +136,9 @@ class AuthenticatedGuard extends StatelessWidget {
         // Not authenticated
         if (!session.isAuthenticated) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
           });
           return const AuthLoadingScreen(message: 'Redirecting to login...');
         }

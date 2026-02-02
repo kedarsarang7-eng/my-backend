@@ -81,13 +81,13 @@ class OrderItem extends Equatable {
   });
 
   Map<String, dynamic> toJson() => {
-        'menuItemId': menuItemId,
-        'itemName': itemName,
-        'quantity': quantity,
-        'unitPrice': unitPrice,
-        'totalPrice': totalPrice,
-        'specialInstructions': specialInstructions,
-      };
+    'menuItemId': menuItemId,
+    'itemName': itemName,
+    'quantity': quantity,
+    'unitPrice': unitPrice,
+    'totalPrice': totalPrice,
+    'specialInstructions': specialInstructions,
+  };
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
@@ -234,42 +234,42 @@ class FoodOrder extends Equatable {
 
   /// Convert to Firestore map
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'vendorId': vendorId,
-        'customerId': customerId,
-        'customerName': customerName,
-        'customerPhone': customerPhone,
-        'tableId': tableId,
-        'tableNumber': tableNumber,
-        'orderType': orderType.value,
-        'orderStatus': orderStatus.value,
-        'items': items.map((e) => e.toJson()).toList(),
-        'itemCount': itemCount,
-        'subtotal': subtotal,
-        'taxAmount': taxAmount,
-        'serviceCharge': serviceCharge,
-        'discountAmount': discountAmount,
-        'grandTotal': grandTotal,
-        'specialInstructions': specialInstructions,
-        'estimatedPrepTime': estimatedPrepTime,
-        'orderTime': orderTime.toIso8601String(),
-        if (acceptedAt != null) 'acceptedAt': acceptedAt!.toIso8601String(),
-        if (cookingStartedAt != null)
-          'cookingStartedAt': cookingStartedAt!.toIso8601String(),
-        if (readyAt != null) 'readyAt': readyAt!.toIso8601String(),
-        if (servedAt != null) 'servedAt': servedAt!.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-        if (cancelledAt != null) 'cancelledAt': cancelledAt!.toIso8601String(),
-        'cancellationReason': cancellationReason,
-        'billRequested': billRequested,
-        if (billRequestedAt != null)
-          'billRequestedAt': billRequestedAt!.toIso8601String(),
-        'billId': billId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'reviewRating': reviewRating,
-        'reviewText': reviewText,
-      };
+    'id': id,
+    'vendorId': vendorId,
+    'customerId': customerId,
+    'customerName': customerName,
+    'customerPhone': customerPhone,
+    'tableId': tableId,
+    'tableNumber': tableNumber,
+    'orderType': orderType.value,
+    'orderStatus': orderStatus.value,
+    'items': items.map((e) => e.toJson()).toList(),
+    'itemCount': itemCount,
+    'subtotal': subtotal,
+    'taxAmount': taxAmount,
+    'serviceCharge': serviceCharge,
+    'discountAmount': discountAmount,
+    'grandTotal': grandTotal,
+    'specialInstructions': specialInstructions,
+    'estimatedPrepTime': estimatedPrepTime,
+    'orderTime': orderTime.toIso8601String(),
+    if (acceptedAt != null) 'acceptedAt': acceptedAt!.toIso8601String(),
+    if (cookingStartedAt != null)
+      'cookingStartedAt': cookingStartedAt!.toIso8601String(),
+    if (readyAt != null) 'readyAt': readyAt!.toIso8601String(),
+    if (servedAt != null) 'servedAt': servedAt!.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+    if (cancelledAt != null) 'cancelledAt': cancelledAt!.toIso8601String(),
+    'cancellationReason': cancellationReason,
+    'billRequested': billRequested,
+    if (billRequestedAt != null)
+      'billRequestedAt': billRequestedAt!.toIso8601String(),
+    'billId': billId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'reviewRating': reviewRating,
+    'reviewText': reviewText,
+  };
 
   /// Whether the order can have bill requested
   bool get canRequestBill =>
@@ -358,6 +358,11 @@ class FoodOrder extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, vendorId, customerId, orderStatus, grandTotal];
+  List<Object?> get props => [
+    id,
+    vendorId,
+    customerId,
+    orderStatus,
+    grandTotal,
+  ];
 }

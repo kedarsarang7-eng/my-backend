@@ -7,7 +7,7 @@ enum VoiceBillIntentType {
   cancelBill,
   addItems,
   removeItems,
-  unknown
+  unknown,
 }
 
 enum VoicePaymentMode { cash, online, credit, unknown }
@@ -35,15 +35,15 @@ class VoiceBillIntent extends Equatable {
 
   @override
   List<Object?> get props => [
-        type,
-        customerName,
-        items,
-        paymentMode,
-        discount,
-        isGstApplicable,
-        rawText,
-        metadata
-      ];
+    type,
+    customerName,
+    items,
+    paymentMode,
+    discount,
+    isGstApplicable,
+    rawText,
+    metadata,
+  ];
 
   VoiceBillIntent copyWith({
     VoiceBillIntentType? type,

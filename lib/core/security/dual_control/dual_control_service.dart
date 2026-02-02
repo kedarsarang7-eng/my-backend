@@ -30,12 +30,12 @@ class DualControlApproval {
   });
 
   Map<String, dynamic> toMap() => {
-        'approverId': approverId,
-        'approverRole': approverRole,
-        'deviceFingerprint': deviceFingerprint,
-        'approvedAt': approvedAt.toIso8601String(),
-        'comment': comment,
-      };
+    'approverId': approverId,
+    'approverRole': approverRole,
+    'deviceFingerprint': deviceFingerprint,
+    'approvedAt': approvedAt.toIso8601String(),
+    'comment': comment,
+  };
 
   factory DualControlApproval.fromMap(Map<String, dynamic> map) {
     return DualControlApproval(
@@ -127,18 +127,18 @@ class DualControlRequest {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'businessId': businessId,
-        'requestedBy': requestedBy,
-        'actionType': actionType,
-        'actionDetails': actionDetails,
-        'requestedAt': requestedAt.toIso8601String(),
-        'expiresAt': expiresAt.toIso8601String(),
-        'status': status.name,
-        'firstApproval': firstApproval?.toMap(),
-        'secondApproval': secondApproval?.toMap(),
-        'requiredRoles': requiredRoles,
-      };
+    'id': id,
+    'businessId': businessId,
+    'requestedBy': requestedBy,
+    'actionType': actionType,
+    'actionDetails': actionDetails,
+    'requestedAt': requestedAt.toIso8601String(),
+    'expiresAt': expiresAt.toIso8601String(),
+    'status': status.name,
+    'firstApproval': firstApproval?.toMap(),
+    'secondApproval': secondApproval?.toMap(),
+    'requiredRoles': requiredRoles,
+  };
 
   factory DualControlRequest.fromMap(Map<String, dynamic> map) {
     return DualControlRequest(
@@ -155,14 +155,17 @@ class DualControlRequest {
       ),
       firstApproval: map['firstApproval'] != null
           ? DualControlApproval.fromMap(
-              map['firstApproval'] as Map<String, dynamic>)
+              map['firstApproval'] as Map<String, dynamic>,
+            )
           : null,
       secondApproval: map['secondApproval'] != null
           ? DualControlApproval.fromMap(
-              map['secondApproval'] as Map<String, dynamic>)
+              map['secondApproval'] as Map<String, dynamic>,
+            )
           : null,
-      requiredRoles:
-          List<String>.from(map['requiredRoles'] ?? ['owner', 'manager']),
+      requiredRoles: List<String>.from(
+        map['requiredRoles'] ?? ['owner', 'manager'],
+      ),
     );
   }
 }
@@ -197,9 +200,9 @@ class DualControlService {
     FirebaseFirestore? firestore,
     required TrustedDeviceService deviceService,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _deviceService = deviceService,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _deviceService = deviceService,
+       _auditRepository = auditRepository;
 
   /// Check if action requires dual control
   bool requiresDualControl(String actionType) {
@@ -243,8 +246,10 @@ class DualControlService {
       }),
     );
 
-    debugPrint('DualControlService: Created request for $actionType. '
-        'Expires: ${request.expiresAt}');
+    debugPrint(
+      'DualControlService: Created request for $actionType. '
+      'Expires: ${request.expiresAt}',
+    );
 
     return request;
   }
@@ -351,8 +356,9 @@ class DualControlService {
     );
 
     debugPrint(
-        'DualControlService: Approval added by $approverId ($approverRole). '
-        'Complete: ${updatedRequest.isComplete}');
+      'DualControlService: Approval added by $approverId ($approverRole). '
+      'Complete: ${updatedRequest.isComplete}',
+    );
 
     return updatedRequest;
   }
@@ -381,10 +387,13 @@ class DualControlService {
     final query = await _firestore
         .collection('dual_control_requests')
         .where('businessId', isEqualTo: businessId)
-        .where('status', whereIn: [
-          DualControlStatus.waitingFirst.name,
-          DualControlStatus.waitingSecond.name,
-        ])
+        .where(
+          'status',
+          whereIn: [
+            DualControlStatus.waitingFirst.name,
+            DualControlStatus.waitingSecond.name,
+          ],
+        )
         .orderBy('requestedAt', descending: true)
         .get();
 

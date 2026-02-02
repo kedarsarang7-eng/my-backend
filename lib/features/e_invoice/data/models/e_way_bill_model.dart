@@ -1,18 +1,8 @@
 /// e-Way Bill Status
-enum EWayBillStatus {
-  pending,
-  generated,
-  cancelled,
-  expired,
-}
+enum EWayBillStatus { pending, generated, cancelled, expired }
 
 /// Transport Mode
-enum TransportMode {
-  road,
-  rail,
-  air,
-  ship,
-}
+enum TransportMode { road, rail, air, ship }
 
 /// e-Way Bill Model
 /// Represents a GST e-way bill for goods movement

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../../../core/di/service_locator.dart';
 import 'package:intl/intl.dart';
 import '../../../models/shift.dart';
@@ -33,7 +33,8 @@ class ShiftReportScreen extends StatelessWidget {
                 elevation: 2,
                 margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -45,11 +46,15 @@ class ShiftReportScreen extends StatelessWidget {
                           Text(
                             shift.shiftName,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: shift.status == ShiftStatus.open
                                   ? Colors.green.withOpacity(0.1)
@@ -61,11 +66,12 @@ class ShiftReportScreen extends StatelessWidget {
                                   ? 'Active'
                                   : 'Closed',
                               style: TextStyle(
-                                  color: shift.status == ShiftStatus.open
-                                      ? Colors.green
-                                      : Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
+                                color: shift.status == ShiftStatus.open
+                                    ? Colors.green
+                                    : Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ],
@@ -83,16 +89,24 @@ class ShiftReportScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildStat('Total Sales',
-                              'â‚¹${shift.totalSaleAmount.toStringAsFixed(2)}'),
-                          _buildStat('Litres Sold',
-                              '${shift.totalLitresSold.toStringAsFixed(2)} L'),
+                          _buildStat(
+                            'Total Sales',
+                            'â‚¹${shift.totalSaleAmount.toStringAsFixed(2)}',
+                          ),
+                          _buildStat(
+                            'Litres Sold',
+                            '${shift.totalLitresSold.toStringAsFixed(2)} L',
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
-                      const Text('Collected:',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500)),
+                      const Text(
+                        'Collected:',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       const SizedBox(height: 4),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -119,8 +133,10 @@ class ShiftReportScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(value,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
@@ -129,8 +145,10 @@ class ShiftReportScreen extends StatelessWidget {
     return Column(
       children: [
         Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-        Text('â‚¹${val.toStringAsFixed(0)}',
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+        Text(
+          'â‚¹${val.toStringAsFixed(0)}',
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }

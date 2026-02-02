@@ -1,8 +1,4 @@
-enum AppointmentStatus {
-  scheduled,
-  completed,
-  cancelled,
-}
+enum AppointmentStatus { scheduled, completed, cancelled }
 
 class AppointmentModel {
   String id;
@@ -46,16 +42,16 @@ class AppointmentModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'doctorId': doctorId,
-        'patientId': patientId,
-        'scheduledTime': scheduledTime.toIso8601String(),
-        'status': status.name,
-        'purpose': purpose,
-        'notes': notes,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'doctorId': doctorId,
+    'patientId': patientId,
+    'scheduledTime': scheduledTime.toIso8601String(),
+    'status': status.name,
+    'purpose': purpose,
+    'notes': notes,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   AppointmentModel copyWith({
     String? id,

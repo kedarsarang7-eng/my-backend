@@ -21,14 +21,18 @@ class BillingService {
         .where('date', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
         .where('date', isLessThanOrEqualTo: endOfDay.toIso8601String())
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Bill.fromMap(doc.id, doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Bill.fromMap(doc.id, doc.data()))
+              .toList(),
+        );
   }
 
   // Calculate daily summary from list of bills
   static DailyBillSummary calculateDailySummary(
-      List<Bill> bills, DateTime date) {
+    List<Bill> bills,
+    DateTime date,
+  ) {
     int totalBills = bills.length;
     double totalRevenue = 0;
     double totalPaid = 0;
@@ -58,7 +62,9 @@ class BillingService {
 
   // Get daily bill summary
   static Future<DailyBillSummary> getDailyBillSummary(
-      String ownerId, DateTime date) async {
+    String ownerId,
+    DateTime date,
+  ) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
@@ -83,13 +89,17 @@ class BillingService {
 
   // Get weekly summary
   static Future<Map<String, DailyBillSummary>> getWeeklyBillSummary(
-      String ownerId, DateTime startDate) async {
+    String ownerId,
+    DateTime startDate,
+  ) async {
     try {
       final summaries = <String, DailyBillSummary>{};
       for (int i = 0; i < 7; i++) {
         final date = startDate.add(Duration(days: i));
-        summaries[date.toString().split(' ')[0]] =
-            await getDailyBillSummary(ownerId, date);
+        summaries[date.toString().split(' ')[0]] = await getDailyBillSummary(
+          ownerId,
+          date,
+        );
       }
       return summaries;
     } catch (e) {
@@ -99,15 +109,20 @@ class BillingService {
 
   // Get monthly summary
   static Future<Map<String, DailyBillSummary>> getMonthlySummary(
-      String ownerId, int year, int month) async {
+    String ownerId,
+    int year,
+    int month,
+  ) async {
     try {
       final summaries = <String, DailyBillSummary>{};
       final daysInMonth = DateTime(year, month + 1, 0).day;
 
       for (int i = 1; i <= daysInMonth; i++) {
         final date = DateTime(year, month, i);
-        summaries[date.toString().split(' ')[0]] =
-            await getDailyBillSummary(ownerId, date);
+        summaries[date.toString().split(' ')[0]] = await getDailyBillSummary(
+          ownerId,
+          date,
+        );
       }
       return summaries;
     } catch (e) {
@@ -117,7 +132,8 @@ class BillingService {
 
   // Get payment history for customer
   static Future<List<PaymentHistory>> getPaymentHistory(
-      String customerId) async {
+    String customerId,
+  ) async {
     try {
       final snapshot = await _db
           .collection('payments')
@@ -135,7 +151,8 @@ class BillingService {
 
   // Get blacklisted customers
   static Future<List<BlacklistedCustomer>> getBlacklistedCustomers(
-      String ownerId) async {
+    String ownerId,
+  ) async {
     try {
       // Assuming blacklisted customers are stored in a subcollection or queried by status
       // For now, let's query customers with isBlacklisted=true
@@ -168,15 +185,20 @@ class BillingService {
 
   // Get blacklist by date range
   static Future<List<BlacklistedCustomer>> getBlacklistByDateRange(
-      String ownerId, DateTime start, DateTime end) async {
+    String ownerId,
+    DateTime start,
+    DateTime end,
+  ) async {
     try {
       final snapshot = await _db
           .collection('owners')
           .doc(ownerId)
           .collection('customers')
           .where('isBlacklisted', isEqualTo: true)
-          .where('blacklistDate',
-              isGreaterThanOrEqualTo: start.toIso8601String())
+          .where(
+            'blacklistDate',
+            isGreaterThanOrEqualTo: start.toIso8601String(),
+          )
           .where('blacklistDate', isLessThanOrEqualTo: end.toIso8601String())
           .get();
 
@@ -199,7 +221,9 @@ class BillingService {
 
   // Remove from blacklist
   static Future<void> removeFromBlacklist(
-      String ownerId, String customerId) async {
+    String ownerId,
+    String customerId,
+  ) async {
     try {
       await _db
           .collection('owners')
@@ -207,10 +231,10 @@ class BillingService {
           .collection('customers')
           .doc(customerId)
           .update({
-        'isBlacklisted': false,
-        'blacklistDate': null,
-        'blacklistReason': null,
-      });
+            'isBlacklisted': false,
+            'blacklistDate': null,
+            'blacklistReason': null,
+          });
     } catch (e) {
       rethrow;
     }
@@ -218,7 +242,11 @@ class BillingService {
 
   // Record payment
   static Future<void> recordPayment(
-      String ownerId, String customerId, double amount, String method) async {
+    String ownerId,
+    String customerId,
+    double amount,
+    String method,
+  ) async {
     try {
       final paymentRef = _db.collection('payments').doc();
       final payment = PaymentHistory(
@@ -255,7 +283,11 @@ class BillingService {
 
   // Generate per user report
   static Future<Map<String, dynamic>> generatePerUserReport(
-      String ownerId, String customerId, DateTime start, DateTime end) async {
+    String ownerId,
+    String customerId,
+    DateTime start,
+    DateTime end,
+  ) async {
     try {
       // Fetch bills
       final billsSnap = await _db

@@ -53,30 +53,30 @@ class ShiftReconciliation {
 
   /// Create an empty reconciliation for error cases
   factory ShiftReconciliation.empty() => const ShiftReconciliation(
-        nozzleLitres: 0,
-        billedLitres: 0,
-        tankDeducted: 0,
-        varianceLitres: 0,
-        cashAmount: 0,
-        upiAmount: 0,
-        cardAmount: 0,
-        creditAmount: 0,
-      );
+    nozzleLitres: 0,
+    billedLitres: 0,
+    tankDeducted: 0,
+    varianceLitres: 0,
+    cashAmount: 0,
+    upiAmount: 0,
+    cardAmount: 0,
+    creditAmount: 0,
+  );
 
   Map<String, dynamic> toMap() => {
-        'nozzleLitres': nozzleLitres,
-        'billedLitres': billedLitres,
-        'tankDeducted': tankDeducted,
-        'varianceLitres': varianceLitres,
-        'cashAmount': cashAmount,
-        'upiAmount': upiAmount,
-        'cardAmount': cardAmount,
-        'creditAmount': creditAmount,
-        'totalSalesAmount': totalSalesAmount,
-        'isWithinTolerance': isWithinTolerance,
-        'warnings': warnings,
-        'nozzleBreakdown': nozzleBreakdown.map((n) => n.toMap()).toList(),
-      };
+    'nozzleLitres': nozzleLitres,
+    'billedLitres': billedLitres,
+    'tankDeducted': tankDeducted,
+    'varianceLitres': varianceLitres,
+    'cashAmount': cashAmount,
+    'upiAmount': upiAmount,
+    'cardAmount': cardAmount,
+    'creditAmount': creditAmount,
+    'totalSalesAmount': totalSalesAmount,
+    'isWithinTolerance': isWithinTolerance,
+    'warnings': warnings,
+    'nozzleBreakdown': nozzleBreakdown.map((n) => n.toMap()).toList(),
+  };
 }
 
 /// Per-nozzle reconciliation breakdown
@@ -100,12 +100,12 @@ class NozzleReconciliation {
   });
 
   Map<String, dynamic> toMap() => {
-        'nozzleId': nozzleId,
-        'fuelTypeName': fuelTypeName,
-        'openingReading': openingReading,
-        'closingReading': closingReading,
-        'litresSold': litresSold,
-        'billedLitres': billedLitres,
-        'variance': variance,
-      };
+    'nozzleId': nozzleId,
+    'fuelTypeName': fuelTypeName,
+    'openingReading': openingReading,
+    'closingReading': closingReading,
+    'litresSold': litresSold,
+    'billedLitres': billedLitres,
+    'variance': variance,
+  };
 }

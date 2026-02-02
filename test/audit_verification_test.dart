@@ -29,7 +29,9 @@ class MockSyncManager extends Mock implements SyncManager {
 class MockErrorHandler extends Mock implements ErrorHandler {
   @override
   Future<RepositoryResult<T>> runSafe<T>(
-      Future<T> Function() block, String operation) async {
+    Future<T> Function() block,
+    String operation,
+  ) async {
     final result = await block();
     return RepositoryResult.success(result);
   }
@@ -63,9 +65,15 @@ class MockAccountingService extends Mock implements AccountingService {
       sourceId: referenceId,
       entries: [
         JournalEntryLine(
-            ledgerId: 'acc1', ledgerName: 'Debit A/c', debit: amount),
+          ledgerId: 'acc1',
+          ledgerName: 'Debit A/c',
+          debit: amount,
+        ),
         JournalEntryLine(
-            ledgerId: 'acc2', ledgerName: 'Credit A/c', credit: amount),
+          ledgerId: 'acc2',
+          ledgerName: 'Credit A/c',
+          credit: amount,
+        ),
       ],
       totalDebit: amount,
       totalCredit: amount,
@@ -100,9 +108,15 @@ class MockAccountingService extends Mock implements AccountingService {
       sourceId: billId,
       entries: [
         JournalEntryLine(
-            ledgerId: 'acc1', ledgerName: 'Debit A/c', debit: totalAmount),
+          ledgerId: 'acc1',
+          ledgerName: 'Debit A/c',
+          debit: totalAmount,
+        ),
         JournalEntryLine(
-            ledgerId: 'acc2', ledgerName: 'Credit A/c', credit: totalAmount),
+          ledgerId: 'acc2',
+          ledgerName: 'Credit A/c',
+          credit: totalAmount,
+        ),
       ],
       totalDebit: totalAmount,
       totalCredit: totalAmount,
@@ -112,16 +126,21 @@ class MockAccountingService extends Mock implements AccountingService {
   }
 
   @override
-  Future<bool> isPeriodLocked(
-      {required String userId, required DateTime date}) async {
+  Future<bool> isPeriodLocked({
+    required String userId,
+    required DateTime date,
+  }) async {
     return false;
   }
 }
 
 class MockLockingService extends Mock implements LockingService {
   @override
-  Future<void> validateAction(String userId, DateTime date,
-      {LockOverrideContext? overrideContext}) async {}
+  Future<void> validateAction(
+    String userId,
+    DateTime date, {
+    LockOverrideContext? overrideContext,
+  }) async {}
 }
 
 void main() {
@@ -143,9 +162,10 @@ void main() {
       errorHandler: mockErrorHandler,
     );
     shopLinkRepo = ShopLinkRepository(
-        database: database,
-        syncManager: mockSyncManager,
-        errorHandler: mockErrorHandler);
+      database: database,
+      syncManager: mockSyncManager,
+      errorHandler: mockErrorHandler,
+    );
 
     inventoryService = InventoryService(
       database,
@@ -163,37 +183,49 @@ void main() {
   group('Audit Fix Verification', () {
     test('1. Data Isolation: filtered by businessId', () async {
       // 1. Create two bills for same user but different businesses
-      await database.into(database.bills).insert(BillsCompanion.insert(
-            id: 'bill1',
-            userId: 'user1',
-            invoiceNumber: 'INV1',
-            billDate: DateTime.now(),
-            itemsJson: '[]',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            businessId: const Value('businessA'), // Shop A
-          ));
+      await database
+          .into(database.bills)
+          .insert(
+            BillsCompanion.insert(
+              id: 'bill1',
+              userId: 'user1',
+              invoiceNumber: 'INV1',
+              billDate: DateTime.now(),
+              itemsJson: '[]',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+              businessId: const Value('businessA'), // Shop A
+            ),
+          );
 
-      await database.into(database.bills).insert(BillsCompanion.insert(
-            id: 'bill2',
-            userId: 'user1', // Same User
-            invoiceNumber: 'INV2',
-            billDate: DateTime.now(),
-            itemsJson: '[]',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            businessId: const Value('businessB'), // Shop B
-          ));
+      await database
+          .into(database.bills)
+          .insert(
+            BillsCompanion.insert(
+              id: 'bill2',
+              userId: 'user1', // Same User
+              invoiceNumber: 'INV2',
+              billDate: DateTime.now(),
+              itemsJson: '[]',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+              businessId: const Value('businessB'), // Shop B
+            ),
+          );
 
       // 2. Fetch for Business A
-      final resultA =
-          await billsRepo.getAll(userId: 'user1', businessId: 'businessA');
+      final resultA = await billsRepo.getAll(
+        userId: 'user1',
+        businessId: 'businessA',
+      );
       expect(resultA.data!.length, 1);
       expect(resultA.data!.first.id, 'bill1');
 
       // 3. Fetch for Business B
-      final resultB =
-          await billsRepo.getAll(userId: 'user1', businessId: 'businessB');
+      final resultB = await billsRepo.getAll(
+        userId: 'user1',
+        businessId: 'businessB',
+      );
       expect(resultB.data!.length, 1);
       expect(resultB.data!.first.id, 'bill2');
 
@@ -229,15 +261,19 @@ void main() {
       // (No insert here)
 
       // 2. Add Product with stock 5
-      await database.into(database.products).insert(ProductsCompanion.insert(
-            id: productId,
-            userId: userId,
-            name: 'Test Product',
-            sellingPrice: 100,
-            stockQuantity: const Value(5.0),
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+      await database
+          .into(database.products)
+          .insert(
+            ProductsCompanion.insert(
+              id: productId,
+              userId: userId,
+              name: 'Test Product',
+              sellingPrice: 100,
+              stockQuantity: const Value(5.0),
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       // 3. Try to sell 10 (Should fail - default is false)
       expect(
@@ -249,22 +285,28 @@ void main() {
           quantity: 10.0,
           referenceId: 'ref1',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Negative stock is disabled'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Negative stock is disabled'),
+          ),
+        ),
       );
 
       // 4. Create Shop with allowNegativeStock = TRUE
-      await database.into(database.shops).insert(ShopsCompanion.insert(
-            id: 'shop_neg_verify',
-            name: 'My Shop',
-            ownerId: userId,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            allowNegativeStock: const Value(true),
-          ));
+      await database
+          .into(database.shops)
+          .insert(
+            ShopsCompanion.insert(
+              id: 'shop_neg_verify',
+              name: 'My Shop',
+              ownerId: userId,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+              allowNegativeStock: const Value(true),
+            ),
+          );
 
       // 5. Try to sell 10 again (Should succeed)
       await inventoryService.addStockMovement(
@@ -277,9 +319,9 @@ void main() {
       );
 
       // Verify stock is -5
-      final product = await (database.select(database.products)
-            ..where((t) => t.id.equals(productId)))
-          .getSingle();
+      final product = await (database.select(
+        database.products,
+      )..where((t) => t.id.equals(productId))).getSingle();
       expect(product.stockQuantity, -5.0);
     });
   });

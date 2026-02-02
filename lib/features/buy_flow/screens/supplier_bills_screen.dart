@@ -91,9 +91,12 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
               value: _filterStatus,
               dropdownColor: isDark ? const Color(0xFF1E293B) : Colors.white,
               style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-              items: ['All', 'Unpaid', 'Partial', 'Paid']
-                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                  .toList(),
+              items: [
+                'All',
+                'Unpaid',
+                'Partial',
+                'Paid',
+              ].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
               onChanged: (value) =>
                   setState(() => _filterStatus = value ?? 'All'),
             ),
@@ -127,32 +130,42 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
       child: Row(
         children: [
           Expanded(
-              child: _buildSummaryCard(
-                  'Total Bills',
-                  '₹${_formatAmount(totalBills)}',
-                  const Color(0xFF8B5CF6),
-                  isDark)),
+            child: _buildSummaryCard(
+              'Total Bills',
+              '₹${_formatAmount(totalBills)}',
+              const Color(0xFF8B5CF6),
+              isDark,
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
-              child: _buildSummaryCard(
-                  'Total Paid',
-                  '₹${_formatAmount(totalPaid)}',
-                  const Color(0xFF10B981),
-                  isDark)),
+            child: _buildSummaryCard(
+              'Total Paid',
+              '₹${_formatAmount(totalPaid)}',
+              const Color(0xFF10B981),
+              isDark,
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
-              child: _buildSummaryCard(
-                  'Total Due',
-                  '₹${_formatAmount(totalDue)}',
-                  const Color(0xFFEF4444),
-                  isDark)),
+            child: _buildSummaryCard(
+              'Total Due',
+              '₹${_formatAmount(totalDue)}',
+              const Color(0xFFEF4444),
+              isDark,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSummaryCard(
-      String label, String value, Color color, bool isDark) {
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -163,14 +176,22 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: isDark ? Colors.white60 : Colors.grey[600])),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isDark ? Colors.white60 : Colors.grey[600],
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: color)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
@@ -184,13 +205,19 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.request_quote_outlined,
-                size: 64, color: isDark ? Colors.white24 : Colors.grey[300]),
+            Icon(
+              Icons.request_quote_outlined,
+              size: 64,
+              color: isDark ? Colors.white24 : Colors.grey[300],
+            ),
             const SizedBox(height: 16),
-            Text('No supplier bills',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: isDark ? Colors.white60 : Colors.grey[600])),
+            Text(
+              'No supplier bills',
+              style: TextStyle(
+                fontSize: 18,
+                color: isDark ? Colors.white60 : Colors.grey[600],
+              ),
+            ),
           ],
         ),
       );
@@ -214,7 +241,8 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!),
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -230,16 +258,18 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
                       Text(
                         purchase.vendorName ?? 'Unknown Vendor',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: isDark ? Colors.white : Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         purchase.invoiceNumber ?? 'Bill',
                         style: TextStyle(
-                            fontSize: 13,
-                            color: isDark ? Colors.white60 : Colors.grey[600]),
+                          fontSize: 13,
+                          color: isDark ? Colors.white60 : Colors.grey[600],
+                        ),
                       ),
                     ],
                   ),
@@ -254,15 +284,20 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Bill Amount',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  isDark ? Colors.white60 : Colors.grey[600])),
-                      Text('₹${purchase.totalAmount.toStringAsFixed(0)}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87)),
+                      Text(
+                        'Bill Amount',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isDark ? Colors.white60 : Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '₹${purchase.totalAmount.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -270,15 +305,20 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Paid',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  isDark ? Colors.white60 : Colors.grey[600])),
-                      Text('₹${purchase.paidAmount.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF10B981))),
+                      Text(
+                        'Paid',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isDark ? Colors.white60 : Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '₹${purchase.paidAmount.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF10B981),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -286,17 +326,22 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Due',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  isDark ? Colors.white60 : Colors.grey[600])),
-                      Text('₹${due.toStringAsFixed(0)}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: due > 0
-                                  ? const Color(0xFFEF4444)
-                                  : Colors.grey)),
+                      Text(
+                        'Due',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isDark ? Colors.white60 : Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '₹${due.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: due > 0
+                              ? const Color(0xFFEF4444)
+                              : Colors.grey,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -309,7 +354,9 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
                       backgroundColor: const Color(0xFF10B981),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                     ),
                     child: const Text('Pay'),
                   ),
@@ -319,8 +366,9 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
             Text(
               DateFormat('dd MMM yyyy').format(purchase.createdAt),
               style: TextStyle(
-                  fontSize: 12,
-                  color: isDark ? Colors.white38 : Colors.grey[500]),
+                fontSize: 12,
+                color: isDark ? Colors.white38 : Colors.grey[500],
+              ),
             ),
           ],
         ),
@@ -336,11 +384,14 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
           color: const Color(0xFF10B981).withOpacity(0.1),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: const Text('PAID',
-            style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF10B981))),
+        child: const Text(
+          'PAID',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF10B981),
+          ),
+        ),
       );
     } else if (isPartial) {
       return Container(
@@ -349,11 +400,14 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
           color: const Color(0xFFF59E0B).withOpacity(0.1),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: const Text('PARTIAL',
-            style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFF59E0B))),
+        child: const Text(
+          'PARTIAL',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFF59E0B),
+          ),
+        ),
       );
     } else {
       return Container(
@@ -362,11 +416,14 @@ class _SupplierBillsScreenState extends ConsumerState<SupplierBillsScreen> {
           color: const Color(0xFFEF4444).withOpacity(0.1),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: const Text('UNPAID',
-            style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFEF4444))),
+        child: const Text(
+          'UNPAID',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFEF4444),
+          ),
+        ),
       );
     }
   }

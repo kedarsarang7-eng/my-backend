@@ -87,10 +87,7 @@ class PremiumCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: FuturisticColors.surface,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: color.withOpacity(0.25),
-          width: 1,
-        ),
+        border: Border.all(color: color.withOpacity(0.25), width: 1),
         boxShadow: showGlow
             ? [
                 BoxShadow(

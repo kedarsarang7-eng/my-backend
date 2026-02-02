@@ -68,20 +68,31 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.grocery,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Item', widthFlex: 3.0),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.8, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.8,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Unit', widthFlex: 0.6, alignment: pw.Alignment.center),
+          header: 'Unit',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Rate',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Rate',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 1.2,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 1.2,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       footerNote: 'Thank you for your purchase!',
     ),
@@ -93,22 +104,31 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.restaurant,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Dish', widthFlex: 3.0),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.6, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Type',
-            widthFlex: 0.6,
-            alignment: pw.Alignment.center), // Half/Full
+          header: 'Type',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.center,
+        ), // Half/Full
         InvoiceColumn(
-            header: 'Rate',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Rate',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 1.2,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 1.2,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showTableColumn: true,
       specialSections: ['serviceCharge'],
@@ -122,20 +142,36 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.pharmacy,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Medicine', widthFlex: 2.5),
         InvoiceColumn(
-            header: 'Batch', widthFlex: 0.8, alignment: pw.Alignment.center),
+          header: 'Batch',
+          widthFlex: 0.8,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Expiry', widthFlex: 0.7, alignment: pw.Alignment.center),
+          header: 'Expiry',
+          widthFlex: 0.7,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.5, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'MRP', widthFlex: 0.8, alignment: pw.Alignment.centerRight),
+          header: 'MRP',
+          widthFlex: 0.8,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showBatchColumn: true,
       showExpiryColumn: true,
@@ -151,22 +187,36 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.clothing,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Item', widthFlex: 2.5),
         InvoiceColumn(
-            header: 'Size', widthFlex: 0.5, alignment: pw.Alignment.center),
+          header: 'Size',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Color', widthFlex: 0.7, alignment: pw.Alignment.center),
+          header: 'Color',
+          widthFlex: 0.7,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.5, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Price',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Price',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showSizeColumn: true,
       showColorColumn: true,
@@ -180,24 +230,41 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.hardware,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Item', widthFlex: 2.2),
         InvoiceColumn(
-            header: 'HSN', widthFlex: 0.7, alignment: pw.Alignment.center),
+          header: 'HSN',
+          widthFlex: 0.7,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.5, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Unit', widthFlex: 0.5, alignment: pw.Alignment.center),
+          header: 'Unit',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Rate',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Rate',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'GST%', widthFlex: 0.5, alignment: pw.Alignment.center),
+          header: 'GST%',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showHsnColumn: true,
       footerNote: 'Goods once sold will not be taken back.',
@@ -210,22 +277,36 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.electronics,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Product', widthFlex: 2.0),
         InvoiceColumn(
-            header: 'IMEI/Serial',
-            widthFlex: 1.2,
-            alignment: pw.Alignment.center),
+          header: 'IMEI/Serial',
+          widthFlex: 1.2,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Warranty', widthFlex: 0.6, alignment: pw.Alignment.center),
+          header: 'Warranty',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.4, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.4,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'MRP', widthFlex: 0.9, alignment: pw.Alignment.centerRight),
+          header: 'MRP',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showSerialColumn: true,
       showWarrantyColumn: true,
@@ -241,20 +322,26 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.service,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Service Description', widthFlex: 2.5),
         InvoiceColumn(
-            header: 'Labor',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Labor',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Parts',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Parts',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Total',
-            widthFlex: 1.0,
-            alignment: pw.Alignment.centerRight),
+          header: 'Total',
+          widthFlex: 1.0,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showLaborColumn: true,
       showPartsColumn: true,
@@ -269,36 +356,51 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.vegetablesBroker,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Item', widthFlex: 1.8),
         InvoiceColumn(
-            header: 'Lot', widthFlex: 0.6, alignment: pw.Alignment.center),
+          header: 'Lot',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Gross',
-            widthFlex: 0.6,
-            alignment: pw.Alignment.centerRight),
+          header: 'Gross',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Tare',
-            widthFlex: 0.5,
-            alignment: pw.Alignment.centerRight),
+          header: 'Tare',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Net', widthFlex: 0.6, alignment: pw.Alignment.centerRight),
+          header: 'Net',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Rate',
-            widthFlex: 0.7,
-            alignment: pw.Alignment.centerRight),
+          header: 'Rate',
+          widthFlex: 0.7,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Comm.',
-            widthFlex: 0.6,
-            alignment: pw.Alignment.centerRight),
+          header: 'Comm.',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Mkt Fee',
-            widthFlex: 0.6,
-            alignment: pw.Alignment.centerRight),
+          header: 'Mkt Fee',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       footerNote:
           'Weights as per electronic scale. Commission rates as agreed.',
@@ -311,20 +413,36 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.mobileShop,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Product', widthFlex: 1.8),
         InvoiceColumn(
-            header: 'IMEI', widthFlex: 1.4, alignment: pw.Alignment.center),
+          header: 'IMEI',
+          widthFlex: 1.4,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Warranty', widthFlex: 0.6, alignment: pw.Alignment.center),
+          header: 'Warranty',
+          widthFlex: 0.6,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.4, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.4,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'MRP', widthFlex: 0.8, alignment: pw.Alignment.centerRight),
+          header: 'MRP',
+          widthFlex: 0.8,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showSerialColumn: true,
       showWarrantyColumn: true,
@@ -340,24 +458,36 @@ class AdaptivePdfLayoutRegistry {
       businessType: BusinessType.computerShop,
       columns: [
         InvoiceColumn(
-            header: '#', widthFlex: 0.3, alignment: pw.Alignment.center),
+          header: '#',
+          widthFlex: 0.3,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(header: 'Product', widthFlex: 2.0),
         InvoiceColumn(
-            header: 'Serial No',
-            widthFlex: 1.2,
-            alignment: pw.Alignment.center),
+          header: 'Serial No',
+          widthFlex: 1.2,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Warranty', widthFlex: 0.5, alignment: pw.Alignment.center),
+          header: 'Warranty',
+          widthFlex: 0.5,
+          alignment: pw.Alignment.center,
+        ),
         InvoiceColumn(
-            header: 'Qty', widthFlex: 0.4, alignment: pw.Alignment.centerRight),
+          header: 'Qty',
+          widthFlex: 0.4,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Rate',
-            widthFlex: 0.8,
-            alignment: pw.Alignment.centerRight),
+          header: 'Rate',
+          widthFlex: 0.8,
+          alignment: pw.Alignment.centerRight,
+        ),
         InvoiceColumn(
-            header: 'Amount',
-            widthFlex: 0.9,
-            alignment: pw.Alignment.centerRight),
+          header: 'Amount',
+          widthFlex: 0.9,
+          alignment: pw.Alignment.centerRight,
+        ),
       ],
       showSerialColumn: true,
       showWarrantyColumn: true,
@@ -458,9 +588,11 @@ class AdaptiveTableRowBuilder {
           row.add(batchNo ?? '-');
           break;
         case 'Expiry':
-          row.add(expiryDate != null
-              ? '${expiryDate.month.toString().padLeft(2, '0')}/${expiryDate.year % 100}'
-              : '-');
+          row.add(
+            expiryDate != null
+                ? '${expiryDate.month.toString().padLeft(2, '0')}/${expiryDate.year % 100}'
+                : '-',
+          );
           break;
         case 'IMEI/Serial':
         case 'IMEI':
@@ -496,21 +628,24 @@ class AdaptiveTableRowBuilder {
           row.add(lotId ?? '-');
           break;
         case 'Gross':
-          row.add(grossWeight != null
-              ? '${grossWeight.toStringAsFixed(2)} kg'
-              : '-');
+          row.add(
+            grossWeight != null ? '${grossWeight.toStringAsFixed(2)} kg' : '-',
+          );
           break;
         case 'Tare':
           row.add(
-              tareWeight != null ? '${tareWeight.toStringAsFixed(2)} kg' : '-');
+            tareWeight != null ? '${tareWeight.toStringAsFixed(2)} kg' : '-',
+          );
           break;
         case 'Net':
           row.add(
-              netWeight != null ? '${netWeight.toStringAsFixed(2)} kg' : '-');
+            netWeight != null ? '${netWeight.toStringAsFixed(2)} kg' : '-',
+          );
           break;
         case 'Comm.':
           row.add(
-              commission != null ? '₹${commission.toStringAsFixed(0)}' : '-');
+            commission != null ? '₹${commission.toStringAsFixed(0)}' : '-',
+          );
           break;
         case 'Mkt Fee':
           row.add(marketFee != null ? '₹${marketFee.toStringAsFixed(0)}' : '-');

@@ -101,7 +101,8 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
       if (errorStr.contains('firebase-app-check-token-is-invalid') ||
           errorStr.contains('app-check')) {
         _showError(
-            'Security verification failed. Please restart the app and try again.');
+          'Security verification failed. Please restart the app and try again.',
+        );
         debugPrint('App Check Error: $e');
       } else {
         _showError(errorStr.replaceAll('Exception: ', ''));
@@ -159,8 +160,8 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
       _session.isOwner
           ? 'vendor'
           : _session.isCustomer
-              ? 'customer'
-              : null,
+          ? 'customer'
+          : null,
     );
 
     if (validationResult == RoleValidationResult.mismatch) {
@@ -179,8 +180,9 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
     // SUCCESS: Clear intent and navigate to AuthGate for role-based routing
     await _linkToLockedShopIfNeeded();
     await authIntent.clearIntent();
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/auth_gate', (route) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil('/auth_gate', (route) => false);
   }
 
   /// Auto-link to the locked vendor if in Customer-Only Mode
@@ -202,7 +204,8 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
 
       if (!isLinked) {
         debugPrint(
-            '[CustomerAuth] Auto-linking to locked vendor: $lockedVendorId');
+          '[CustomerAuth] Auto-linking to locked vendor: $lockedVendorId',
+        );
         // Retrieve shop details if possible (or use placeholders until sync)
         // For now we use the ID as name placeholder if we can't fetch it
         // In a real scenario, we might want to fetch public shop profile first
@@ -237,11 +240,11 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
     // Set Intent BEFORE creating user
     await authIntent.setCustomerIntent();
 
-    final userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    final userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
     final user = userCredential.user!;
     debugPrint('CustomerAuth: Firebase user created: ${user.uid}');
 
@@ -271,38 +274,41 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
   void _navigateToDashboard() {
     debugPrint('CustomerAuth: Navigating to dashboard...');
     // Show quick success message
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.white),
-          const SizedBox(width: 12),
-          Text("Account created successfully!", style: GoogleFonts.outfit()),
-        ],
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text("Account created successfully!", style: GoogleFonts.outfit()),
+          ],
+        ),
+        backgroundColor: const Color(0xFF00FF88).withOpacity(0.9),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
-      backgroundColor: const Color(0xFF00FF88).withOpacity(0.9),
-      behavior: SnackBarBehavior.floating,
-      duration: const Duration(seconds: 2),
-    ));
+    );
 
     // Check for security upgrade
     _checkSecurityUpgrade().then((_) async {
       if (!mounted) return;
       await _linkToLockedShopIfNeeded();
       // Navigate to AuthGate - let it handle role-based routing
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/auth_gate',
-        (route) => false,
-      );
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/auth_gate', (route) => false);
     });
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message, style: GoogleFonts.outfit(color: Colors.white)),
-      backgroundColor: Colors.red.withOpacity(0.9),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: GoogleFonts.outfit(color: Colors.white)),
+        backgroundColor: Colors.red.withOpacity(0.9),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   @override
@@ -333,8 +339,9 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
 
                           // Glowing logo
                           _GlowingLogo(
-                              controller: _glowController,
-                              accentColor: _primaryPurple),
+                            controller: _glowController,
+                            accentColor: _primaryPurple,
+                          ),
 
                           const SizedBox(height: 30),
 
@@ -415,11 +422,7 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
               ),
             ),
           ),
-          Icon(
-            Icons.menu,
-            color: Colors.white.withOpacity(0.7),
-            size: 28,
-          ),
+          Icon(Icons.menu, color: Colors.white.withOpacity(0.7), size: 28),
         ],
       ),
     );
@@ -431,10 +434,7 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white.withOpacity(0.05),
-        border: Border.all(
-          color: _primaryPurple.withOpacity(0.3),
-          width: 1,
-        ),
+        border: Border.all(color: _primaryPurple.withOpacity(0.3), width: 1),
       ),
       child: Form(
         key: _formKey,
@@ -487,8 +487,11 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
                   _passwordController.text.length < 8)
                 Row(
                   children: [
-                    Icon(Icons.error_outline,
-                        color: Colors.orange.shade400, size: 14),
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.orange.shade400,
+                      size: 14,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       "Password must be at least 8 characters",
@@ -509,15 +512,19 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
                 isPassword: true,
                 obscure: _obscureConfirmPassword,
                 onVisToggle: () => setState(
-                    () => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                ),
               ),
               const SizedBox(height: 8),
               if (_confirmPasswordController.text.isNotEmpty &&
                   _confirmPasswordController.text != _passwordController.text)
                 Row(
                   children: [
-                    Icon(Icons.error_outline,
-                        color: Colors.orange.shade400, size: 14),
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.orange.shade400,
+                      size: 14,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       "Passwords do not match",
@@ -536,15 +543,17 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
                 onBiometricSuccess: () async {
                   await _session.refreshSession();
                   if (mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/auth_gate', (r) => false);
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/auth_gate', (r) => false);
                   }
                 },
                 onPinSuccess: () async {
                   await _session.refreshSession();
                   if (mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/auth_gate', (r) => false);
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/auth_gate', (r) => false);
                   }
                 },
               ),
@@ -658,8 +667,9 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
         onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: Colors.white.withOpacity(0.3)),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           backgroundColor: Colors.white.withOpacity(0.05),
         ),
         child: _isGoogleLoading
@@ -667,7 +677,9 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white),
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -730,8 +742,11 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.black.withOpacity(0.3),
-            prefixIcon:
-                Icon(icon, color: _primaryPurple.withOpacity(0.7), size: 20),
+            prefixIcon: Icon(
+              icon,
+              color: _primaryPurple.withOpacity(0.7),
+              size: 20,
+            ),
             prefixText: prefixText,
             prefixStyle: GoogleFonts.outfit(color: Colors.white70),
             suffixIcon: isPassword
@@ -744,9 +759,12 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
                     onPressed: onVisToggle,
                   )
                 : (controller.text.isNotEmpty
-                    ? Icon(Icons.check_circle,
-                        color: _primaryPurple.withOpacity(0.7), size: 20)
-                    : null),
+                      ? Icon(
+                          Icons.check_circle,
+                          color: _primaryPurple.withOpacity(0.7),
+                          size: 20,
+                        )
+                      : null),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
@@ -759,8 +777,10 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: _primaryPurple.withOpacity(0.5)),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 16,
+            ),
           ),
         ),
       ],
@@ -777,8 +797,9 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           padding: EdgeInsets.zero,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: Ink(
           decoration: BoxDecoration(
@@ -800,7 +821,9 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
-                        color: Colors.white, strokeWidth: 2),
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
                   )
                 : Text(
                     _isLogin ? "Login" : "Create Account",
@@ -856,9 +879,8 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen>
         await showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => SecurityUpgradePrompt(
-            onDismiss: () => Navigator.pop(context),
-          ),
+          builder: (context) =>
+              SecurityUpgradePrompt(onDismiss: () => Navigator.pop(context)),
         );
       }
     }
@@ -965,8 +987,9 @@ class _GlowRingPainter extends CustomPainter {
     );
 
     final paint = Paint()
-      ..shader =
-          gradient.createShader(Rect.fromCircle(center: center, radius: radius))
+      ..shader = gradient.createShader(
+        Rect.fromCircle(center: center, radius: radius),
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
@@ -992,11 +1015,7 @@ class _SpaceBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0B0D1F),
-            Color(0xFF150F2D),
-            Color(0xFF0B0D1F),
-          ],
+          colors: [Color(0xFF0B0D1F), Color(0xFF150F2D), Color(0xFF0B0D1F)],
         ),
       ),
       child: Stack(
@@ -1011,8 +1030,9 @@ class _SpaceBackground extends StatelessWidget {
                 height: random.nextDouble() * 2 + 1,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      Colors.white.withOpacity(random.nextDouble() * 0.5 + 0.2),
+                  color: Colors.white.withOpacity(
+                    random.nextDouble() * 0.5 + 0.2,
+                  ),
                 ),
               ),
             );
@@ -1026,10 +1046,7 @@ class _SpaceBackground extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
-                  colors: [
-                    accentColor.withOpacity(0.2),
-                    Colors.transparent,
-                  ],
+                  colors: [accentColor.withOpacity(0.2), Colors.transparent],
                 ),
               ),
             ),
@@ -1068,11 +1085,7 @@ class _BottomGlow extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2),
             gradient: LinearGradient(
-              colors: [
-                Colors.transparent,
-                accentColor,
-                Colors.transparent,
-              ],
+              colors: [Colors.transparent, accentColor, Colors.transparent],
             ),
           ),
         ),
@@ -1186,8 +1199,10 @@ class _SuccessScreenState extends State<_SuccessScreen>
                 const Spacer(),
                 Container(
                   margin: const EdgeInsets.all(24),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white.withOpacity(0.05),
@@ -1196,8 +1211,11 @@ class _SuccessScreenState extends State<_SuccessScreen>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.check,
-                          color: const Color(0xFF00FF88), size: 20),
+                      Icon(
+                        Icons.check,
+                        color: const Color(0xFF00FF88),
+                        size: 20,
+                      ),
                       const SizedBox(width: 10),
                       Text(
                         widget.subMessage,

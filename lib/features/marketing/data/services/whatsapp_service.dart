@@ -25,8 +25,9 @@ class WhatsAppService {
       final encodedMessage = Uri.encodeComponent(message);
 
       // Build WhatsApp URL
-      final Uri whatsappUrl =
-          Uri.parse('https://wa.me/$cleanNumber?text=$encodedMessage');
+      final Uri whatsappUrl = Uri.parse(
+        'https://wa.me/$cleanNumber?text=$encodedMessage',
+      );
 
       // Try to open WhatsApp
       if (await canLaunchUrl(whatsappUrl)) {
@@ -119,7 +120,8 @@ class WhatsAppService {
     required double amount,
     DateTime? dueDate,
   }) {
-    final message = '''नमस्ते $customerName,
+    final message =
+        '''नमस्ते $customerName,
 
 आपके $shopName से ₹${amount.toStringAsFixed(0)} का भुगतान बाकी है।
 

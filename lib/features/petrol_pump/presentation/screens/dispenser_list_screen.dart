@@ -51,17 +51,22 @@ class _DispenserListScreenState extends State<DispenserListScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            leading:
-                const Icon(Icons.settings_input_component, color: Colors.blue),
-            title: Text(dispenser.name,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            leading: const Icon(
+              Icons.settings_input_component,
+              color: Colors.blue,
+            ),
+            title: Text(
+              dispenser.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             // Add Nozzle button removed until fully implemented
           ),
           const Divider(),
           // Nozzles List
           StreamBuilder<List<Nozzle>>(
-            stream:
-                _dispenserService.getNozzlesByDispenser(dispenser.dispenserId),
+            stream: _dispenserService.getNozzlesByDispenser(
+              dispenser.dispenserId,
+            ),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const SizedBox.shrink();
               final nozzles = snapshot.data ?? [];
@@ -69,8 +74,10 @@ class _DispenserListScreenState extends State<DispenserListScreen> {
               if (nozzles.isEmpty) {
                 return const Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Text('No nozzles attached',
-                      style: TextStyle(color: Colors.grey)),
+                  child: Text(
+                    'No nozzles attached',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 );
               }
 
@@ -85,7 +92,8 @@ class _DispenserListScreenState extends State<DispenserListScreen> {
                     leading: const Icon(Icons.local_gas_station, size: 20),
                     title: Text('Nozzle: ${nozzle.fuelTypeName ?? "Fuel"}'),
                     subtitle: Text(
-                        'Current Reading: ${nozzle.closingReading.toStringAsFixed(2)}'),
+                      'Current Reading: ${nozzle.closingReading.toStringAsFixed(2)}',
+                    ),
                   );
                 },
               );

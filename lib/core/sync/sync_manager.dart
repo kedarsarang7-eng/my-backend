@@ -44,7 +44,7 @@ class SyncManager {
   /// Initialize the facade (called from main or background service)
   Future<void> initialize({
     required Object
-        localOperations, // Kept generic to match legacy signature roughly or just AppDatabase
+    localOperations, // Kept generic to match legacy signature roughly or just AppDatabase
     SyncManagerConfig? config,
     dynamic firestore,
     dynamic storage,
@@ -65,7 +65,8 @@ class SyncManager {
     } else {
       // Fallback if injected with something else, though typically it's AppDatabase
       debugPrint(
-          'SyncManager Facade: Warning - localOperations is not AppDatabase');
+        'SyncManager Facade: Warning - localOperations is not AppDatabase',
+      );
     }
 
     debugPrint('SyncManager Facade: Initialized (Delegating to SyncEngine)');
@@ -116,15 +117,19 @@ class SyncManager {
   }
 
   Future<void> resolveConflict(
-      SyncConflict conflict, Map<String, dynamic> resolution) async {
+    SyncConflict conflict,
+    Map<String, dynamic> resolution,
+  ) async {
     debugPrint(
-        'SyncManager Facade: resolveConflict called for ${conflict.operationId}');
+      'SyncManager Facade: resolveConflict called for ${conflict.operationId}',
+    );
     // Update local DB via Engine/Repo hooks if needed
   }
 
   Future<void> restoreFullData(String userId) async {
     debugPrint(
-        'SyncManager Facade: restoreFullData called (Delegating to SyncEngine/Repository)');
+      'SyncManager Facade: restoreFullData called (Delegating to SyncEngine/Repository)',
+    );
     // This logic might be complex to restore fully right now.
     // For now, we log it. It was likely doing a full fetch from Firestore.
   }
@@ -137,8 +142,9 @@ class SyncManager {
 
   /// Legacy Stream (Mapped from Engine Stream)
   Stream<SyncHealthMetrics> get syncStatusStream {
-    return SyncEngine.instance.statsStream
-        .map((stats) => SyncHealthMetrics.fromStats(stats));
+    return SyncEngine.instance.statsStream.map(
+      (stats) => SyncHealthMetrics.fromStats(stats),
+    );
   }
 
   /// Legacy Event Stream
@@ -179,12 +185,12 @@ class SyncHealthMetrics {
 
   // Legacy serialization support if needed
   Map<String, dynamic> toJson() => {
-        'pendingCount': pendingCount,
-        'inProgressCount': inProgressCount,
-        'failedCount': failedCount,
-        'deadLetterCount': deadLetterCount,
-        'syncedTodayCount': syncedTodayCount,
-      };
+    'pendingCount': pendingCount,
+    'inProgressCount': inProgressCount,
+    'failedCount': failedCount,
+    'deadLetterCount': deadLetterCount,
+    'syncedTodayCount': syncedTodayCount,
+  };
 }
 
 // Interface (Restored to satisfy type checks)

@@ -98,13 +98,7 @@ extension ServiceJobStatusExtension on ServiceJobStatus {
 }
 
 /// Device type enum
-enum DeviceType {
-  mobile,
-  laptop,
-  desktop,
-  tablet,
-  other,
-}
+enum DeviceType { mobile, laptop, desktop, tablet, other }
 
 extension DeviceTypeExtension on DeviceType {
   String get value {
@@ -154,12 +148,7 @@ extension DeviceTypeExtension on DeviceType {
 }
 
 /// Priority levels
-enum ServicePriority {
-  low,
-  normal,
-  high,
-  urgent,
-}
+enum ServicePriority { low, normal, high, urgent }
 
 extension ServicePriorityExtension on ServicePriority {
   String get value {
@@ -475,8 +464,9 @@ class ServiceJob {
       originalBillId: map['originalBillId'],
       imeiSerialId: map['imeiSerialId'],
       status: ServiceJobStatusExtension.fromString(map['status'] ?? 'RECEIVED'),
-      priority:
-          ServicePriorityExtension.fromString(map['priority'] ?? 'NORMAL'),
+      priority: ServicePriorityExtension.fromString(
+        map['priority'] ?? 'NORMAL',
+      ),
       assignedTechnicianId: map['assignedTechnicianId'],
       assignedTechnicianName: map['assignedTechnicianName'],
       diagnosis: map['diagnosis'],

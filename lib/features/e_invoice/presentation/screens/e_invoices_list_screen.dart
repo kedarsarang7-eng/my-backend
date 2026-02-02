@@ -68,8 +68,9 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('e-Invoice & e-Way Bills'),
         backgroundColor: Colors.transparent,
@@ -85,10 +86,7 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildInvoicesTab(isDark),
-          _buildEWayBillsTab(isDark),
-        ],
+        children: [_buildInvoicesTab(isDark), _buildEWayBillsTab(isDark)],
       ),
     );
   }
@@ -109,16 +107,16 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _invoices.isEmpty
-                  ? _buildEmptyState(isDark, 'No e-invoices generated')
-                  : RefreshIndicator(
-                      onRefresh: _loadInvoices,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _invoices.length,
-                        itemBuilder: (_, i) =>
-                            _buildInvoiceCard(_invoices[i], isDark),
-                      ),
-                    ),
+              ? _buildEmptyState(isDark, 'No e-invoices generated')
+              : RefreshIndicator(
+                  onRefresh: _loadInvoices,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _invoices.length,
+                    itemBuilder: (_, i) =>
+                        _buildInvoiceCard(_invoices[i], isDark),
+                  ),
+                ),
         ),
       ],
     );
@@ -146,9 +144,7 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
           const SizedBox(height: 8),
           Text(
             'Generate e-way bills when creating invoices',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.grey,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.grey),
             textAlign: TextAlign.center,
           ),
         ],
@@ -158,30 +154,52 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
 
   Widget _buildSummaryCards(bool isDark) {
     int total = _invoices.length;
-    int generated =
-        _invoices.where((i) => i.status == EInvoiceStatus.generated).length;
-    int pending =
-        _invoices.where((i) => i.status == EInvoiceStatus.pending).length;
+    int generated = _invoices
+        .where((i) => i.status == EInvoiceStatus.generated)
+        .length;
+    int pending = _invoices
+        .where((i) => i.status == EInvoiceStatus.pending)
+        .length;
 
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          _buildStatCard('Total', total.toString(), Icons.receipt_long,
-              Colors.blue, isDark),
+          _buildStatCard(
+            'Total',
+            total.toString(),
+            Icons.receipt_long,
+            Colors.blue,
+            isDark,
+          ),
           const SizedBox(width: 12),
-          _buildStatCard('Generated', generated.toString(), Icons.verified,
-              Colors.green, isDark),
+          _buildStatCard(
+            'Generated',
+            generated.toString(),
+            Icons.verified,
+            Colors.green,
+            isDark,
+          ),
           const SizedBox(width: 12),
-          _buildStatCard('Pending', pending.toString(), Icons.pending,
-              Colors.orange, isDark),
+          _buildStatCard(
+            'Pending',
+            pending.toString(),
+            Icons.pending,
+            Colors.orange,
+            isDark,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildStatCard(
-      String label, String value, IconData icon, Color color, bool isDark) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(14),
@@ -244,8 +262,9 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
                 _loadInvoices();
               },
               backgroundColor: isDark ? Colors.white10 : Colors.grey[100],
-              selectedColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              selectedColor: Theme.of(
+                context,
+              ).colorScheme.primary.withOpacity(0.2),
             ),
           );
         }).toList(),
@@ -308,8 +327,9 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
                         ),
                       ),
                       Text(
-                        DateFormat('dd MMM yyyy, hh:mm a')
-                            .format(invoice.createdAt),
+                        DateFormat(
+                          'dd MMM yyyy, hh:mm a',
+                        ).format(invoice.createdAt),
                         style: TextStyle(
                           fontSize: 12,
                           color: isDark ? Colors.white54 : Colors.grey[600],
@@ -321,8 +341,10 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
 
                 // Status Badge
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(6),
@@ -378,8 +400,11 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.error_outline,
-                        size: 14, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 14,
+                      color: Colors.red,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -423,9 +448,7 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
           const SizedBox(height: 8),
           Text(
             'e-Invoices are generated automatically for GST invoices',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.grey,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.grey),
             textAlign: TextAlign.center,
           ),
         ],
@@ -448,9 +471,9 @@ class _EInvoicesListScreenState extends State<EInvoicesListScreen>
 
   Future<void> _retryGeneration(EInvoiceModel invoice) async {
     // Trigger retry
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Retrying generation...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Retrying generation...')));
     // Service would handle retry logic
     _loadInvoices();
   }

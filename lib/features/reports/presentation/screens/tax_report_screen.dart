@@ -55,8 +55,11 @@ class _TaxReportScreenState extends State<TaxReportScreen>
         return;
       }
 
-      final report =
-          await _service.generateReport(userId, _startDate, _endDate);
+      final report = await _service.generateReport(
+        userId,
+        _startDate,
+        _endDate,
+      );
 
       if (mounted) {
         setState(() {
@@ -153,15 +156,15 @@ class _TaxReportScreenState extends State<TaxReportScreen>
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
-                    ? Center(child: Text("Error: $_error"))
-                    : TabBarView(
-                        controller: _tabController,
-                        children: [
-                          _buildB2BTable(),
-                          _buildB2CSTable(),
-                          _buildHSNTable(),
-                        ],
-                      ),
+                ? Center(child: Text("Error: $_error"))
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildB2BTable(),
+                      _buildB2CSTable(),
+                      _buildHSNTable(),
+                    ],
+                  ),
           ),
         ],
       ),
@@ -192,19 +195,21 @@ class _TaxReportScreenState extends State<TaxReportScreen>
             DataColumn(label: Text("SGST")),
           ],
           rows: _data!.b2bInvoices.map((inv) {
-            return DataRow(cells: [
-              DataCell(Text(inv.gstIn)),
-              DataCell(Text(inv.customerName)),
-              DataCell(Text(inv.invoiceNumber)),
-              DataCell(Text(inv.date.toString().split(' ')[0])),
-              DataCell(Text(inv.invoiceValue.toStringAsFixed(2))),
-              DataCell(Text(inv.placeOfSupply)),
-              DataCell(Text("${inv.taxRate}%")),
-              DataCell(Text(inv.taxableValue.toStringAsFixed(2))),
-              DataCell(Text(inv.igst.toStringAsFixed(2))),
-              DataCell(Text(inv.cgst.toStringAsFixed(2))),
-              DataCell(Text(inv.sgst.toStringAsFixed(2))),
-            ]);
+            return DataRow(
+              cells: [
+                DataCell(Text(inv.gstIn)),
+                DataCell(Text(inv.customerName)),
+                DataCell(Text(inv.invoiceNumber)),
+                DataCell(Text(inv.date.toString().split(' ')[0])),
+                DataCell(Text(inv.invoiceValue.toStringAsFixed(2))),
+                DataCell(Text(inv.placeOfSupply)),
+                DataCell(Text("${inv.taxRate}%")),
+                DataCell(Text(inv.taxableValue.toStringAsFixed(2))),
+                DataCell(Text(inv.igst.toStringAsFixed(2))),
+                DataCell(Text(inv.cgst.toStringAsFixed(2))),
+                DataCell(Text(inv.sgst.toStringAsFixed(2))),
+              ],
+            );
           }).toList(),
         ),
       ),
@@ -226,13 +231,15 @@ class _TaxReportScreenState extends State<TaxReportScreen>
           DataColumn(label: Text("Type")),
         ],
         rows: _data!.b2cSmallInvoices.map((inv) {
-          return DataRow(cells: [
-            DataCell(Text(inv.placeOfSupply)),
-            DataCell(Text("${inv.taxRate}%")),
-            DataCell(Text(inv.taxableValue.toStringAsFixed(2))),
-            DataCell(Text(inv.cess.toStringAsFixed(2))),
-            DataCell(Text(inv.type)),
-          ]);
+          return DataRow(
+            cells: [
+              DataCell(Text(inv.placeOfSupply)),
+              DataCell(Text("${inv.taxRate}%")),
+              DataCell(Text(inv.taxableValue.toStringAsFixed(2))),
+              DataCell(Text(inv.cess.toStringAsFixed(2))),
+              DataCell(Text(inv.type)),
+            ],
+          );
         }).toList(),
       ),
     );
@@ -260,17 +267,19 @@ class _TaxReportScreenState extends State<TaxReportScreen>
             DataColumn(label: Text("SGST")),
           ],
           rows: _data!.hsnSummary.map((hsn) {
-            return DataRow(cells: [
-              DataCell(Text(hsn.hsn)),
-              DataCell(Text(hsn.description)),
-              DataCell(Text(hsn.uqc)),
-              DataCell(Text(hsn.totalQuantity.toStringAsFixed(2))),
-              DataCell(Text(hsn.totalValue.toStringAsFixed(2))),
-              DataCell(Text(hsn.taxableValue.toStringAsFixed(2))),
-              DataCell(Text(hsn.igst.toStringAsFixed(2))),
-              DataCell(Text(hsn.cgst.toStringAsFixed(2))),
-              DataCell(Text(hsn.sgst.toStringAsFixed(2))),
-            ]);
+            return DataRow(
+              cells: [
+                DataCell(Text(hsn.hsn)),
+                DataCell(Text(hsn.description)),
+                DataCell(Text(hsn.uqc)),
+                DataCell(Text(hsn.totalQuantity.toStringAsFixed(2))),
+                DataCell(Text(hsn.totalValue.toStringAsFixed(2))),
+                DataCell(Text(hsn.taxableValue.toStringAsFixed(2))),
+                DataCell(Text(hsn.igst.toStringAsFixed(2))),
+                DataCell(Text(hsn.cgst.toStringAsFixed(2))),
+                DataCell(Text(hsn.sgst.toStringAsFixed(2))),
+              ],
+            );
           }).toList(),
         ),
       ),

@@ -74,9 +74,7 @@ void main() {
       expect(retry1.retryCount, equals(1));
       expect(retry1.lastError, equals('Network timeout'));
 
-      final retry2 = retry1.copyWith(
-        retryCount: retry1.retryCount + 1,
-      );
+      final retry2 = retry1.copyWith(retryCount: retry1.retryCount + 1);
 
       expect(retry2.retryCount, equals(2));
     });
@@ -128,12 +126,18 @@ void main() {
         retryCount: 0,
       );
 
-      final retry1 =
-          retry0.copyWith(retryCount: 1, lastAttemptAt: DateTime.now());
-      final retry2 =
-          retry0.copyWith(retryCount: 2, lastAttemptAt: DateTime.now());
-      final retry3 =
-          retry0.copyWith(retryCount: 3, lastAttemptAt: DateTime.now());
+      final retry1 = retry0.copyWith(
+        retryCount: 1,
+        lastAttemptAt: DateTime.now(),
+      );
+      final retry2 = retry0.copyWith(
+        retryCount: 2,
+        lastAttemptAt: DateTime.now(),
+      );
+      final retry3 = retry0.copyWith(
+        retryCount: 3,
+        lastAttemptAt: DateTime.now(),
+      );
 
       final next1 = retry1.calculateNextRetryTime();
       final next2 = retry2.calculateNextRetryTime();
@@ -154,14 +158,22 @@ void main() {
     });
 
     test('should deserialize from string correctly', () {
-      expect(SyncOperationType.fromString('CREATE'),
-          equals(SyncOperationType.create));
-      expect(SyncOperationType.fromString('UPDATE'),
-          equals(SyncOperationType.update));
-      expect(SyncOperationType.fromString('DELETE'),
-          equals(SyncOperationType.delete));
-      expect(SyncOperationType.fromString('UPLOAD_FILE'),
-          equals(SyncOperationType.uploadFile));
+      expect(
+        SyncOperationType.fromString('CREATE'),
+        equals(SyncOperationType.create),
+      );
+      expect(
+        SyncOperationType.fromString('UPDATE'),
+        equals(SyncOperationType.update),
+      );
+      expect(
+        SyncOperationType.fromString('DELETE'),
+        equals(SyncOperationType.delete),
+      );
+      expect(
+        SyncOperationType.fromString('UPLOAD_FILE'),
+        equals(SyncOperationType.uploadFile),
+      );
     });
 
     test('should handle unknown operation type gracefully', () {
@@ -186,12 +198,16 @@ void main() {
     test('should deserialize from string correctly', () {
       expect(SyncStatus.fromString('PENDING'), equals(SyncStatus.pending));
       expect(
-          SyncStatus.fromString('IN_PROGRESS'), equals(SyncStatus.inProgress));
+        SyncStatus.fromString('IN_PROGRESS'),
+        equals(SyncStatus.inProgress),
+      );
       expect(SyncStatus.fromString('SYNCED'), equals(SyncStatus.synced));
       expect(SyncStatus.fromString('FAILED'), equals(SyncStatus.failed));
       expect(SyncStatus.fromString('RETRY'), equals(SyncStatus.retry));
       expect(
-          SyncStatus.fromString('DEAD_LETTER'), equals(SyncStatus.deadLetter));
+        SyncStatus.fromString('DEAD_LETTER'),
+        equals(SyncStatus.deadLetter),
+      );
     });
   });
 

@@ -66,8 +66,9 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
       setState(() => _request = newRequest);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -78,13 +79,15 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
       await _service.createBillFromRequest(_request);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Bill Created & Stock Adjusted!')));
+          const SnackBar(content: Text('Bill Created & Stock Adjusted!')),
+        );
         Navigator.pop(context); // Go back to list
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to create Bill: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to create Bill: $e')));
       }
     } finally {
       if (mounted) {
@@ -98,14 +101,17 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
   @override
   Widget build(BuildContext context) {
     // Logic: Can create bill if there is at least one (Approved Item with Qty > 0)
-    final canCreateBill = _request.items
-        .any((i) => i.status == ItemStatus.approved && i.approvedQty > 0);
+    final canCreateBill = _request.items.any(
+      (i) => i.status == ItemStatus.approved && i.approvedQty > 0,
+    );
     final isBilled = _request.status == RequestStatus.billed;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Request Details',
-            style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+        title: Text(
+          'Request Details',
+          style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: [
@@ -143,11 +149,14 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Customer ID',
-                      style:
-                          GoogleFonts.outfit(fontSize: 12, color: Colors.grey)),
-                  Text(_request.customerId.substring(0, 10),
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Customer ID',
+                    style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey),
+                  ),
+                  Text(
+                    _request.customerId.substring(0, 10),
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               const Spacer(),
@@ -160,7 +169,10 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
   }
 
   Widget _buildItemRow(
-      CustomerItemRequestItem item, int index, bool isReadOnly) {
+    CustomerItemRequestItem item,
+    int index,
+    bool isReadOnly,
+  ) {
     final isApproved = item.status == ItemStatus.approved;
     final isRejected = item.status == ItemStatus.cancelled;
 
@@ -188,16 +200,24 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.productName,
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w600, fontSize: 16)),
+                Text(
+                  item.productName,
+                  style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text('Requested: ',
-                        style: GoogleFonts.outfit(color: Colors.grey)),
-                    Text('${item.requestedQty} ${item.unit}',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                    Text(
+                      'Requested: ',
+                      style: GoogleFonts.outfit(color: Colors.grey),
+                    ),
+                    Text(
+                      '${item.requestedQty} ${item.unit}',
+                      style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
                 if (isApproved)
@@ -205,12 +225,17 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Row(
                       children: [
-                        Text('Approved: ',
-                            style: GoogleFonts.outfit(color: Colors.green)),
-                        Text('${item.approvedQty} ${item.unit}',
-                            style: GoogleFonts.outfit(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green)),
+                        Text(
+                          'Approved: ',
+                          style: GoogleFonts.outfit(color: Colors.green),
+                        ),
+                        Text(
+                          '${item.approvedQty} ${item.unit}',
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -248,7 +273,9 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
                     onPressed: () => _showEditQtyDialog(index, item),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 0),
+                        horizontal: 8,
+                        vertical: 0,
+                      ),
                       minimumSize: const Size(0, 32),
                     ),
                     child: const Text('Edit Qty'),
@@ -267,9 +294,10 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5))
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
         ],
       ),
       child: SizedBox(
@@ -280,17 +308,23 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
           child: _isLoading
               ? const SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(
-                      color: Colors.white, strokeWidth: 2))
-              : const Text('CREATE BILL & PROCESS',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Text(
+                  'CREATE BILL & PROCESS',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
         ),
       ),
     );
@@ -313,8 +347,9 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               final val = double.tryParse(controller.text);
@@ -324,7 +359,7 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
               Navigator.pop(context);
             },
             child: const Text('Save'),
-          )
+          ),
         ],
       ),
     );
@@ -347,9 +382,14 @@ class _VendorRequestDetailScreenState extends State<VendorRequestDetailScreen> {
         break;
     }
     return Chip(
-      label: Text(status.name.toUpperCase(),
-          style: const TextStyle(
-              color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+      label: Text(
+        status.name.toUpperCase(),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       backgroundColor: color,
       padding: EdgeInsets.zero,
       labelPadding: const EdgeInsets.symmetric(horizontal: 8),

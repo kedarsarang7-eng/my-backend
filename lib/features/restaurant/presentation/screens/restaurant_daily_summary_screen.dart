@@ -13,10 +13,7 @@ import '../../data/models/food_order_model.dart';
 class RestaurantDailySummaryScreen extends StatefulWidget {
   final String vendorId;
 
-  const RestaurantDailySummaryScreen({
-    super.key,
-    required this.vendorId,
-  });
+  const RestaurantDailySummaryScreen({super.key, required this.vendorId});
 
   @override
   State<RestaurantDailySummaryScreen> createState() =>
@@ -55,16 +52,20 @@ class _RestaurantDailySummaryScreenState
 
     try {
       // Get today's orders
-      final ordersResult =
-          await _orderRepo.getOrdersByDate(widget.vendorId, _selectedDate);
+      final ordersResult = await _orderRepo.getOrdersByDate(
+        widget.vendorId,
+        _selectedDate,
+      );
       if (ordersResult.success && ordersResult.data != null) {
         final orders = ordersResult.data!;
         _processOrders(orders);
       }
 
       // Get today's revenue
-      final revenueResult =
-          await _billRepo.getDailyRevenue(widget.vendorId, _selectedDate);
+      final revenueResult = await _billRepo.getDailyRevenue(
+        widget.vendorId,
+        _selectedDate,
+      );
       if (revenueResult.success && revenueResult.data != null) {
         _totalRevenue = revenueResult.data!;
       }
@@ -78,24 +79,32 @@ class _RestaurantDailySummaryScreenState
   void _processOrders(List<FoodOrder> orders) {
     _totalOrders = orders.length;
     _completedOrders = orders
-        .where((o) =>
-            o.orderStatus == FoodOrderStatus.completed ||
-            o.orderStatus == FoodOrderStatus.served)
+        .where(
+          (o) =>
+              o.orderStatus == FoodOrderStatus.completed ||
+              o.orderStatus == FoodOrderStatus.served,
+        )
         .length;
-    _cancelledOrders =
-        orders.where((o) => o.orderStatus == FoodOrderStatus.cancelled).length;
+    _cancelledOrders = orders
+        .where((o) => o.orderStatus == FoodOrderStatus.cancelled)
+        .length;
 
     _dineInCount = orders.where((o) => o.orderType == OrderType.dineIn).length;
-    _takeawayCount =
-        orders.where((o) => o.orderType == OrderType.takeaway).length;
+    _takeawayCount = orders
+        .where((o) => o.orderType == OrderType.takeaway)
+        .length;
 
     // Calculate average order value
     if (_completedOrders > 0) {
-      final completedOrders = orders.where((o) =>
-          o.orderStatus == FoodOrderStatus.completed ||
-          o.orderStatus == FoodOrderStatus.served);
-      final totalValue =
-          completedOrders.fold<double>(0, (sum, o) => sum + o.grandTotal);
+      final completedOrders = orders.where(
+        (o) =>
+            o.orderStatus == FoodOrderStatus.completed ||
+            o.orderStatus == FoodOrderStatus.served,
+      );
+      final totalValue = completedOrders.fold<double>(
+        0,
+        (sum, o) => sum + o.grandTotal,
+      );
       _averageOrderValue = totalValue / _completedOrders;
     }
 
@@ -123,11 +132,13 @@ class _RestaurantDailySummaryScreenState
     }
 
     // Average prep time
-    final completedWithPrepTime = orders.where((o) =>
-        o.acceptedAt != null &&
-        o.readyAt != null &&
-        (o.orderStatus == FoodOrderStatus.completed ||
-            o.orderStatus == FoodOrderStatus.served));
+    final completedWithPrepTime = orders.where(
+      (o) =>
+          o.acceptedAt != null &&
+          o.readyAt != null &&
+          (o.orderStatus == FoodOrderStatus.completed ||
+              o.orderStatus == FoodOrderStatus.served),
+    );
     if (completedWithPrepTime.isNotEmpty) {
       final totalPrepMinutes = completedWithPrepTime.fold<int>(0, (sum, o) {
         return sum + o.readyAt!.difference(o.acceptedAt!).inMinutes;
@@ -206,7 +217,8 @@ class _RestaurantDailySummaryScreenState
   }
 
   Widget _buildDateHeader() {
-    final isToday = _selectedDate.day == DateTime.now().day &&
+    final isToday =
+        _selectedDate.day == DateTime.now().day &&
         _selectedDate.month == DateTime.now().month &&
         _selectedDate.year == DateTime.now().year;
 
@@ -219,8 +231,9 @@ class _RestaurantDailySummaryScreenState
               icon: const Icon(Icons.chevron_left),
               onPressed: () {
                 setState(() {
-                  _selectedDate =
-                      _selectedDate.subtract(const Duration(days: 1));
+                  _selectedDate = _selectedDate.subtract(
+                    const Duration(days: 1),
+                  );
                 });
                 _loadData();
               },
@@ -231,8 +244,8 @@ class _RestaurantDailySummaryScreenState
                   Text(
                     isToday ? 'Today' : _formatDate(_selectedDate),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     _formatFullDate(_selectedDate),
@@ -249,8 +262,9 @@ class _RestaurantDailySummaryScreenState
                   ? null
                   : () {
                       setState(() {
-                        _selectedDate =
-                            _selectedDate.add(const Duration(days: 1));
+                        _selectedDate = _selectedDate.add(
+                          const Duration(days: 1),
+                        );
                       });
                       _loadData();
                     },
@@ -318,9 +332,7 @@ class _RestaurantDailySummaryScreenState
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(icon, color: color, size: 24),
-              ],
+              children: [Icon(icon, color: color, size: 24)],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,9 +363,9 @@ class _RestaurantDailySummaryScreenState
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+      style: Theme.of(
+        context,
+      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
@@ -517,7 +529,11 @@ class _RestaurantDailySummaryScreenState
   }
 
   Widget _buildLegendItem(
-      String label, int count, String percent, Color color) {
+    String label,
+    int count,
+    String percent,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -561,10 +577,7 @@ class _RestaurantDailySummaryScreenState
                 children: [
                   Expanded(
                     flex: 2,
-                    child: Text(
-                      entry.key,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    child: Text(entry.key, overflow: TextOverflow.ellipsis),
                   ),
                   Expanded(
                     flex: 3,
@@ -625,8 +638,8 @@ class _RestaurantDailySummaryScreenState
                     color: _avgPrepTime < 20
                         ? FuturisticColors.success
                         : _avgPrepTime < 30
-                            ? Colors.orange
-                            : FuturisticColors.error,
+                        ? Colors.orange
+                        : FuturisticColors.error,
                   ),
                 ),
               ],
@@ -657,10 +670,7 @@ class _RestaurantDailySummaryScreenState
         const SizedBox(width: 12),
         Text(
           value,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: color),
         ),
       ],
     );
@@ -697,7 +707,7 @@ class _RestaurantDailySummaryScreenState
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

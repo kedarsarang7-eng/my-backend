@@ -182,9 +182,11 @@ class HealthScoreCard extends ConsumerWidget {
           const Icon(Icons.error_outline, color: FuturisticColors.error),
           const SizedBox(width: 12),
           Expanded(
-              child: Text('Could not calculate health score: $error',
-                  style:
-                      GoogleFonts.inter(color: FuturisticColors.textPrimary))),
+            child: Text(
+              'Could not calculate health score: $error',
+              style: GoogleFonts.inter(color: FuturisticColors.textPrimary),
+            ),
+          ),
         ],
       ),
     );

@@ -16,8 +16,9 @@ final mlOcrServiceProvider = Provider<MLKitOcrService>((ref) {
 });
 
 /// Provider for language detection service
-final languageDetectionServiceProvider =
-    Provider<LanguageDetectionService>((ref) {
+final languageDetectionServiceProvider = Provider<LanguageDetectionService>((
+  ref,
+) {
   final service = LanguageDetectionService();
   ref.onDispose(() => service.dispose());
   return service;

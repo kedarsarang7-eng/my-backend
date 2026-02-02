@@ -28,8 +28,9 @@ class EncryptionService {
         _encryptionIV = encrypt.IV.fromBase64(existingIv);
       } else {
         // Generate new key and IV
-        _encryptionKey =
-            encrypt.Key.fromSecureRandom(32); // 256-bit key for AES
+        _encryptionKey = encrypt.Key.fromSecureRandom(
+          32,
+        ); // 256-bit key for AES
         _encryptionIV = encrypt.IV.fromSecureRandom(16); // 128-bit IV
 
         // Store key and IV securely
@@ -126,10 +127,7 @@ class EncryptionService {
       }
 
       final decryptedData = await decryptData(encryptedData);
-      return {
-        ...decryptedData,
-        'id': encryptedRecord['id'],
-      };
+      return {...decryptedData, 'id': encryptedRecord['id']};
     } catch (e) {
       debugPrint('[EncryptionService.decryptCustomerRecord] error: $e');
       rethrow;
@@ -185,10 +183,7 @@ class EncryptionService {
       }
 
       final decryptedData = await decryptData(encryptedData);
-      return {
-        ...decryptedData,
-        'id': encryptedRecord['id'],
-      };
+      return {...decryptedData, 'id': encryptedRecord['id']};
     } catch (e) {
       debugPrint('[EncryptionService.decryptBillRecord] error: $e');
       rethrow;
@@ -244,10 +239,7 @@ class EncryptionService {
         key: _encryptionKeyStore,
         value: newKey.base64,
       );
-      await _secureStorage.write(
-        key: _encryptionIvStore,
-        value: newIV.base64,
-      );
+      await _secureStorage.write(key: _encryptionIvStore, value: newIV.base64);
 
       _encryptionKey = newKey;
       _encryptionIV = newIV;

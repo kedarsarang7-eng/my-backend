@@ -19,20 +19,21 @@ class CloudStorageService {
     required Map<String, dynamic> ownerData,
   }) async {
     try {
-      await _firestore.collection('owners').doc(ownerId).set(
-        {
-          ...ownerData,
-          'lastUpdated': FieldValue.serverTimestamp(),
-          'syncStatus': 'synced',
-        },
-        SetOptions(merge: true),
+      await _firestore.collection('owners').doc(ownerId).set({
+        ...ownerData,
+        'lastUpdated': FieldValue.serverTimestamp(),
+        'syncStatus': 'synced',
+      }, SetOptions(merge: true));
+      developer.log(
+        'Owner data saved to cloud: $ownerId',
+        name: 'CloudStorageService',
       );
-      developer.log('Owner data saved to cloud: $ownerId',
-          name: 'CloudStorageService');
       return true;
     } catch (e) {
-      developer.log('Error saving owner to cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error saving owner to cloud: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }
@@ -48,26 +49,27 @@ class CloudStorageService {
           .doc(ownerId)
           .collection('customers')
           .doc(customer.id)
-          .set(
-        {
-          'id': customer.id,
-          'name': customer.name,
-          'phone': customer.phone,
-          'address': customer.address,
-          'totalDues': customer.totalDues,
-          'cashDues': customer.cashDues,
-          'onlineDues': customer.onlineDues,
-          'lastUpdated': FieldValue.serverTimestamp(),
-          'syncStatus': 'synced',
-        },
-        SetOptions(merge: true),
+          .set({
+            'id': customer.id,
+            'name': customer.name,
+            'phone': customer.phone,
+            'address': customer.address,
+            'totalDues': customer.totalDues,
+            'cashDues': customer.cashDues,
+            'onlineDues': customer.onlineDues,
+            'lastUpdated': FieldValue.serverTimestamp(),
+            'syncStatus': 'synced',
+          }, SetOptions(merge: true));
+      developer.log(
+        'Customer saved to cloud: ${customer.id}',
+        name: 'CloudStorageService',
       );
-      developer.log('Customer saved to cloud: ${customer.id}',
-          name: 'CloudStorageService');
       return true;
     } catch (e) {
-      developer.log('Error saving customer to cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error saving customer to cloud: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }
@@ -83,27 +85,28 @@ class CloudStorageService {
           .doc(ownerId)
           .collection('bills')
           .doc(bill.id)
-          .set(
-        {
-          'id': bill.id,
-          'customerId': bill.customerId,
-          'subtotal': bill.subtotal,
-          'paidAmount': bill.paidAmount,
-          'dueAmount': bill.subtotal - bill.paidAmount,
-          'items': bill.items.map((e) => e.toMap()).toList(),
-          'status': bill.status,
-          'date': bill.date.toIso8601String(),
-          'lastUpdated': FieldValue.serverTimestamp(),
-          'syncStatus': 'synced',
-        },
-        SetOptions(merge: true),
+          .set({
+            'id': bill.id,
+            'customerId': bill.customerId,
+            'subtotal': bill.subtotal,
+            'paidAmount': bill.paidAmount,
+            'dueAmount': bill.subtotal - bill.paidAmount,
+            'items': bill.items.map((e) => e.toMap()).toList(),
+            'status': bill.status,
+            'date': bill.date.toIso8601String(),
+            'lastUpdated': FieldValue.serverTimestamp(),
+            'syncStatus': 'synced',
+          }, SetOptions(merge: true));
+      developer.log(
+        'Bill saved to cloud: ${bill.id}',
+        name: 'CloudStorageService',
       );
-      developer.log('Bill saved to cloud: ${bill.id}',
-          name: 'CloudStorageService');
       return true;
     } catch (e) {
-      developer.log('Error saving bill to cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error saving bill to cloud: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }
@@ -115,14 +118,18 @@ class CloudStorageService {
     try {
       final doc = await _firestore.collection('owners').doc(ownerId).get();
       if (doc.exists) {
-        developer.log('Owner data fetched from cloud: $ownerId',
-            name: 'CloudStorageService');
+        developer.log(
+          'Owner data fetched from cloud: $ownerId',
+          name: 'CloudStorageService',
+        );
         return doc.data();
       }
       return null;
     } catch (e) {
-      developer.log('Error fetching owner from cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error fetching owner from cloud: $e',
+        name: 'CloudStorageService',
+      );
       return null;
     }
   }
@@ -151,20 +158,22 @@ class CloudStorageService {
         );
       }).toList();
 
-      developer.log('Fetched ${customers.length} customers from cloud',
-          name: 'CloudStorageService');
+      developer.log(
+        'Fetched ${customers.length} customers from cloud',
+        name: 'CloudStorageService',
+      );
       return customers;
     } catch (e) {
-      developer.log('Error fetching customers from cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error fetching customers from cloud: $e',
+        name: 'CloudStorageService',
+      );
       return [];
     }
   }
 
   /// Fetch all bills for owner from cloud
-  Future<List<Bill>> getBillsFromCloud({
-    required String ownerId,
-  }) async {
+  Future<List<Bill>> getBillsFromCloud({required String ownerId}) async {
     try {
       final snapshot = await _firestore
           .collection('owners')
@@ -180,7 +189,8 @@ class CloudStorageService {
           date: data['date'] != null
               ? DateTime.parse(data['date'])
               : DateTime.now(),
-          items: (data['items'] as List<dynamic>?)
+          items:
+              (data['items'] as List<dynamic>?)
                   ?.map((e) => BillItem.fromMap(Map<String, dynamic>.from(e)))
                   .toList() ??
               [],
@@ -190,12 +200,16 @@ class CloudStorageService {
         );
       }).toList();
 
-      developer.log('Fetched ${bills.length} bills from cloud',
-          name: 'CloudStorageService');
+      developer.log(
+        'Fetched ${bills.length} bills from cloud',
+        name: 'CloudStorageService',
+      );
       return bills;
     } catch (e) {
-      developer.log('Error fetching bills from cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error fetching bills from cloud: $e',
+        name: 'CloudStorageService',
+      );
       return [];
     }
   }
@@ -212,21 +226,22 @@ class CloudStorageService {
           .doc(ownerId)
           .collection('devices')
           .doc(deviceId)
-          .set(
-        {
-          'deviceId': deviceId,
-          'deviceName': deviceName,
-          'lastLogin': FieldValue.serverTimestamp(),
-          'isActive': true,
-        },
-        SetOptions(merge: true),
+          .set({
+            'deviceId': deviceId,
+            'deviceName': deviceName,
+            'lastLogin': FieldValue.serverTimestamp(),
+            'isActive': true,
+          }, SetOptions(merge: true));
+      developer.log(
+        'Device registered for owner: $ownerId',
+        name: 'CloudStorageService',
       );
-      developer.log('Device registered for owner: $ownerId',
-          name: 'CloudStorageService');
       return true;
     } catch (e) {
-      developer.log('Error registering device: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error registering device: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }
@@ -245,8 +260,10 @@ class CloudStorageService {
 
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
-      developer.log('Error fetching active devices: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error fetching active devices: $e',
+        name: 'CloudStorageService',
+      );
       return [];
     }
   }
@@ -263,20 +280,22 @@ class CloudStorageService {
           .collection('devices')
           .doc(deviceId)
           .update({'isActive': false});
-      developer.log('Device signed out from cloud: $ownerId',
-          name: 'CloudStorageService');
+      developer.log(
+        'Device signed out from cloud: $ownerId',
+        name: 'CloudStorageService',
+      );
       return true;
     } catch (e) {
-      developer.log('Error signing out from cloud: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error signing out from cloud: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }
 
   /// Get sync status of all data
-  Future<Map<String, String>> getSyncStatus({
-    required String ownerId,
-  }) async {
+  Future<Map<String, String>> getSyncStatus({required String ownerId}) async {
     try {
       final ownerDoc = await _firestore.collection('owners').doc(ownerId).get();
       final ownerSyncStatus = ownerDoc.data()?['syncStatus'] ?? 'unknown';
@@ -307,8 +326,10 @@ class CloudStorageService {
         'bills': '$syncedBills/${billsSnapshot.docs.length}',
       };
     } catch (e) {
-      developer.log('Error getting sync status: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error getting sync status: $e',
+        name: 'CloudStorageService',
+      );
       return {'error': 'Failed to get sync status'};
     }
   }
@@ -320,12 +341,16 @@ class CloudStorageService {
         'cloudSyncEnabled': true,
         'lastCloudSync': FieldValue.serverTimestamp(),
       });
-      developer.log('Cloud sync enabled for owner: $ownerId',
-          name: 'CloudStorageService');
+      developer.log(
+        'Cloud sync enabled for owner: $ownerId',
+        name: 'CloudStorageService',
+      );
       return true;
     } catch (e) {
-      developer.log('Error enabling cloud sync: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error enabling cloud sync: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }
@@ -336,12 +361,16 @@ class CloudStorageService {
       await _firestore.collection('owners').doc(ownerId).update({
         'cloudSyncEnabled': false,
       });
-      developer.log('Cloud sync disabled for owner: $ownerId',
-          name: 'CloudStorageService');
+      developer.log(
+        'Cloud sync disabled for owner: $ownerId',
+        name: 'CloudStorageService',
+      );
       return true;
     } catch (e) {
-      developer.log('Error disabling cloud sync: $e',
-          name: 'CloudStorageService');
+      developer.log(
+        'Error disabling cloud sync: $e',
+        name: 'CloudStorageService',
+      );
       return false;
     }
   }

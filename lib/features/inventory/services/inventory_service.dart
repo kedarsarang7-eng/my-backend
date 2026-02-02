@@ -58,23 +58,27 @@ class InventoryService {
     }
 
     // CHECK PHARMACY COMPLIANCE
-    final shop = await (_db.select(_db.shops)
-          ..where((t) => t.ownerId.equals(userId)))
-        .getSingleOrNull();
+    final shop = await (_db.select(
+      _db.shops,
+    )..where((t) => t.ownerId.equals(userId))).getSingleOrNull();
 
-    final isPharmacy = shop?.businessType == 'pharmacy' ||
+    final isPharmacy =
+        shop?.businessType == 'pharmacy' ||
         shop?.businessType == 'medical_store';
 
     if (isPharmacy && (batchId == null || batchId.isEmpty)) {
       throw Exception(
-          'Pharmacy Compliance Error: Batch ID is mandatory for stock movement.');
+        'Pharmacy Compliance Error: Batch ID is mandatory for stock movement.',
+      );
     }
 
     await _db.transaction(() async {
       // Fetch Product to check current stock and cost
-      final product = await (_db.select(_db.products)
-            ..where((t) => t.id.equals(productId) & t.userId.equals(userId)))
-          .getSingleOrNull();
+      final product =
+          await (_db.select(
+                _db.products,
+              )..where((t) => t.id.equals(productId) & t.userId.equals(userId)))
+              .getSingleOrNull();
 
       if (product == null) {
         throw Exception('Product not found: $productId');
@@ -83,7 +87,8 @@ class InventoryService {
       // HIS AUDIT: Service Items (Consultations, Lab Tests) do not track stock
       // We check category convention since we cannot migrate schema for 'type' column yet.
       final category = product.category?.toLowerCase() ?? '';
-      final isService = category.startsWith('service') ||
+      final isService =
+          category.startsWith('service') ||
           category == 'consultation' ||
           category == 'lab test' ||
           category == 'opd';
@@ -100,7 +105,8 @@ class InventoryService {
       double newStock = currentStock;
 
       debugPrint(
-          'DEBUG: Product: ${product.name}, Current Stock: $currentStock, Selling: $quantity');
+        'DEBUG: Product: ${product.name}, Current Stock: $currentStock, Selling: $quantity',
+      );
 
       // RULE 2: Calculate New Stock and Check Availability (for OUT)
       if (type == 'OUT') {
@@ -109,10 +115,12 @@ class InventoryService {
         if (currentStock < quantity) {
           if (!allowNegative) {
             throw Exception(
-                'Insufficient Stock: ${product.name} (Available: $currentStock, Required: $quantity). Negative stock is disabled.');
+              'Insufficient Stock: ${product.name} (Available: $currentStock, Required: $quantity). Negative stock is disabled.',
+            );
           }
           debugPrint(
-              'WARNING: Negative Stock Sale! Available: $currentStock, Selling: $quantity');
+            'WARNING: Negative Stock Sale! Available: $currentStock, Selling: $quantity',
+          );
         }
         newStock = currentStock - quantity;
       } else {
@@ -141,13 +149,16 @@ class InventoryService {
         await _batchRepo.updateBatchStock(batchId, delta);
       }
 
-      await (_db.update(_db.products)..where((t) => t.id.equals(productId)))
-          .write(ProductsCompanion(
-        stockQuantity: Value(newStock),
-        costPrice: Value(updatedCostPrice),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.products,
+      )..where((t) => t.id.equals(productId))).write(
+        ProductsCompanion(
+          stockQuantity: Value(newStock),
+          costPrice: Value(updatedCostPrice),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       // Queue Product Sync
       final payload = {
@@ -158,13 +169,15 @@ class InventoryService {
         payload['costPrice'] = newCostPrice;
       }
 
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'products',
-        documentId: productId,
-        payload: payload,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'products',
+          documentId: productId,
+          payload: payload,
+        ),
+      );
 
       // Insert Immutable Movement Record
       final movement = StockMovementEntity(
@@ -190,29 +203,31 @@ class InventoryService {
       await _db.into(_db.stockMovements).insert(movement);
 
       // Queue Stock Movement Sync
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'stock_movements',
-        documentId: movementId,
-        payload: {
-          'id': movementId,
-          'userId': userId,
-          'productId': productId,
-          'type': type,
-          'reason': reason,
-          'quantity': quantity,
-          'stockBefore': currentStock,
-          'stockAfter': newStock,
-          'referenceId': referenceId,
-          'description': description,
-          'batchId': batchId,
-          'batchNumber': batchNumber,
-          'date': movementDate.toIso8601String(),
-          'createdAt': now.toIso8601String(),
-          'createdBy': createdBy ?? 'SYSTEM',
-        },
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'stock_movements',
+          documentId: movementId,
+          payload: {
+            'id': movementId,
+            'userId': userId,
+            'productId': productId,
+            'type': type,
+            'reason': reason,
+            'quantity': quantity,
+            'stockBefore': currentStock,
+            'stockAfter': newStock,
+            'referenceId': referenceId,
+            'description': description,
+            'batchId': batchId,
+            'batchNumber': batchNumber,
+            'date': movementDate.toIso8601String(),
+            'createdAt': now.toIso8601String(),
+            'createdBy': createdBy ?? 'SYSTEM',
+          },
+        ),
+      );
 
       // RULE 4: Accounting Link
       final accountingCost = newCostPrice ?? product.costPrice;
@@ -270,9 +285,10 @@ class InventoryService {
     // Assuming caller handles FEFO selection and passes batchId if required.
 
     // Fetch Product - NO transaction wrapper here, we're inside parent's transaction
-    final product = await (_db.select(_db.products)
-          ..where((t) => t.id.equals(productId) & t.userId.equals(userId)))
-        .getSingleOrNull();
+    final product =
+        await (_db.select(_db.products)
+              ..where((t) => t.id.equals(productId) & t.userId.equals(userId)))
+            .getSingleOrNull();
 
     if (product == null) {
       throw Exception('Product not found: $productId');
@@ -280,7 +296,8 @@ class InventoryService {
 
     // HIS AUDIT: Service Items (Consultations, Lab Tests) do not track stock
     final category = product.category?.toLowerCase() ?? '';
-    final isService = category.startsWith('service') ||
+    final isService =
+        category.startsWith('service') ||
         category == 'consultation' ||
         category == 'lab test' ||
         category == 'opd';
@@ -296,17 +313,19 @@ class InventoryService {
     if (currentStock < quantity) {
       // Fetch shop settings inside transaction (cached or quick fetch)
       // Note: In high throughput, we might want to pass this in.
-      final shop = await (_db.select(_db.shops)
-            ..where((t) => t.ownerId.equals(userId)))
-          .getSingleOrNull();
+      final shop = await (_db.select(
+        _db.shops,
+      )..where((t) => t.ownerId.equals(userId))).getSingleOrNull();
       final allowNegative = shop?.allowNegativeStock ?? false;
 
       if (!allowNegative) {
         throw Exception(
-            'Insufficient Stock: ${product.name} (Available: $currentStock, Required: $quantity). Negative stock is disabled.');
+          'Insufficient Stock: ${product.name} (Available: $currentStock, Required: $quantity). Negative stock is disabled.',
+        );
       }
       debugPrint(
-          'WARNING: Negative Stock Sale for ${product.name}! Available: $currentStock, Selling: $quantity');
+        'WARNING: Negative Stock Sale for ${product.name}! Available: $currentStock, Selling: $quantity',
+      );
     }
 
     final newStock = currentStock - quantity;
@@ -317,38 +336,46 @@ class InventoryService {
       // and nested transactions are tricky in Drift/SQLite.
       // Better to write raw update here or expose a "danger" method in repo.
       // Let's do direct update here for safety within this transaction scope.
-      final batch = await (_db.select(_db.productBatches)
-            ..where((t) => t.id.equals(batchId)))
-          .getSingle();
+      final batch = await (_db.select(
+        _db.productBatches,
+      )..where((t) => t.id.equals(batchId))).getSingle();
 
       final newBatchStock = batch.stockQuantity - quantity;
-      await (_db.update(_db.productBatches)..where((t) => t.id.equals(batchId)))
-          .write(ProductBatchesCompanion(
-        stockQuantity: Value(newBatchStock),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.productBatches,
+      )..where((t) => t.id.equals(batchId))).write(
+        ProductBatchesCompanion(
+          stockQuantity: Value(newBatchStock),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
     }
 
     // Update Product Stock (within parent transaction)
-    await (_db.update(_db.products)..where((t) => t.id.equals(productId)))
-        .write(ProductsCompanion(
-      stockQuantity: Value(newStock),
-      updatedAt: Value(now),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.products,
+    )..where((t) => t.id.equals(productId))).write(
+      ProductsCompanion(
+        stockQuantity: Value(newStock),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
 
     // Collect sync op for product
-    syncOps.add(SyncQueueItem.create(
-      userId: userId,
-      operationType: SyncOperationType.update,
-      targetCollection: 'products',
-      documentId: productId,
-      payload: {
-        'stockQuantity': newStock,
-        'updatedAt': now.toIso8601String(),
-      },
-    ));
+    syncOps.add(
+      SyncQueueItem.create(
+        userId: userId,
+        operationType: SyncOperationType.update,
+        targetCollection: 'products',
+        documentId: productId,
+        payload: {
+          'stockQuantity': newStock,
+          'updatedAt': now.toIso8601String(),
+        },
+      ),
+    );
 
     // Insert Immutable Movement Record (within parent transaction)
     final movement = StockMovementEntity(
@@ -374,29 +401,31 @@ class InventoryService {
     await _db.into(_db.stockMovements).insert(movement);
 
     // Collect sync op for movement
-    syncOps.add(SyncQueueItem.create(
-      userId: userId,
-      operationType: SyncOperationType.create,
-      targetCollection: 'stock_movements',
-      documentId: movementId,
-      payload: {
-        'id': movementId,
-        'userId': userId,
-        'productId': productId,
-        'type': 'OUT',
-        'reason': reason,
-        'quantity': quantity,
-        'stockBefore': currentStock,
-        'stockAfter': newStock,
-        'referenceId': referenceId,
-        'description': description ?? 'Sale Invoice: $invoiceNumber',
-        'batchId': batchId,
-        'batchNumber': batchNumber,
-        'date': movementDate.toIso8601String(),
-        'createdAt': now.toIso8601String(),
-        'createdBy': 'SYSTEM',
-      },
-    ));
+    syncOps.add(
+      SyncQueueItem.create(
+        userId: userId,
+        operationType: SyncOperationType.create,
+        targetCollection: 'stock_movements',
+        documentId: movementId,
+        payload: {
+          'id': movementId,
+          'userId': userId,
+          'productId': productId,
+          'type': 'OUT',
+          'reason': reason,
+          'quantity': quantity,
+          'stockBefore': currentStock,
+          'stockAfter': newStock,
+          'referenceId': referenceId,
+          'description': description ?? 'Sale Invoice: $invoiceNumber',
+          'batchId': batchId,
+          'batchNumber': batchNumber,
+          'date': movementDate.toIso8601String(),
+          'createdAt': now.toIso8601String(),
+          'createdBy': 'SYSTEM',
+        },
+      ),
+    );
 
     // RULE 4: Accounting Entry (within parent transaction)
     final costValue = quantity * product.costPrice;
@@ -432,32 +461,33 @@ class InventoryService {
 
   /// Get Low Stock Products (Migrated from StockRepository)
   Future<List<Product>> getLowStockProducts(String userId) {
-    return (_db.select(_db.products)
-          ..where((t) =>
+    return (_db.select(_db.products)..where(
+          (t) =>
               t.userId.equals(userId) &
               t.stockQuantity.isSmallerOrEqual(t.lowStockThreshold) &
-              t.deletedAt.isNull()))
+              t.deletedAt.isNull(),
+        ))
         .get()
         .then((rows) => rows.map(_entityToProduct).toList());
   }
 
   Product _entityToProduct(ProductEntity e) => Product(
-        id: e.id,
-        userId: e.userId,
-        name: e.name,
-        sku: e.sku,
-        barcode: e.barcode,
-        category: e.category,
-        unit: e.unit,
-        sellingPrice: e.sellingPrice,
-        costPrice: e.costPrice,
-        taxRate: e.taxRate,
-        stockQuantity: e.stockQuantity,
-        lowStockThreshold: e.lowStockThreshold,
-        isActive: e.isActive,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-        deletedAt: e.deletedAt,
-      );
+    id: e.id,
+    userId: e.userId,
+    name: e.name,
+    sku: e.sku,
+    barcode: e.barcode,
+    category: e.category,
+    unit: e.unit,
+    sellingPrice: e.sellingPrice,
+    costPrice: e.costPrice,
+    taxRate: e.taxRate,
+    stockQuantity: e.stockQuantity,
+    lowStockThreshold: e.lowStockThreshold,
+    isActive: e.isActive,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+    deletedAt: e.deletedAt,
+  );
 }

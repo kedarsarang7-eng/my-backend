@@ -31,8 +31,9 @@ class GmailService {
   /// Sign in explicitly (opens browser/window)
   Future<GoogleSignInAccount?> signIn() async {
     try {
-      final account = await GoogleSignIn.instance
-          .authenticate(scopeHint: [GmailApi.gmailSendScope, 'email']);
+      final account = await GoogleSignIn.instance.authenticate(
+        scopeHint: [GmailApi.gmailSendScope, 'email'],
+      );
       _currentUser = account;
       debugPrint('[GmailService] User signed in: ${account.email}');
       return account;
@@ -66,8 +67,9 @@ class GmailService {
     }
 
     // authorizeScopes returns a response with accessToken
-    final response = await _currentUser!.authorizationClient
-        .authorizeScopes([GmailApi.gmailSendScope]);
+    final response = await _currentUser!.authorizationClient.authorizeScopes([
+      GmailApi.gmailSendScope,
+    ]);
 
     return response.accessToken;
   }

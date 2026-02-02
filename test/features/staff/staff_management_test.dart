@@ -44,9 +44,15 @@ void main() {
     auditRepo = MockAuditRepository();
     sessionManager = MockSessionManager();
     staffService = StaffService(
-        db: db, auditRepo: auditRepo, sessionManager: sessionManager);
+      db: db,
+      auditRepo: auditRepo,
+      sessionManager: sessionManager,
+    );
     shiftService = ShiftService(
-        db: db, auditRepo: auditRepo, sessionManager: sessionManager);
+      db: db,
+      auditRepo: auditRepo,
+      sessionManager: sessionManager,
+    );
   });
 
   tearDown(() async {
@@ -55,71 +61,95 @@ void main() {
 
   test('Staff Creation and Nozzle Assignment', () async {
     // 1. Create Staff
-    final staffId = await staffService.createStaff(StaffMembersCompanion(
-      name: Value('Ramesh'),
-      role: Value('Attendant'),
-      userId: Value('test_owner'),
-      joinedAt: Value(DateTime.now()),
-    ));
+    final staffId = await staffService.createStaff(
+      StaffMembersCompanion(
+        name: Value('Ramesh'),
+        role: Value('Attendant'),
+        userId: Value('test_owner'),
+        joinedAt: Value(DateTime.now()),
+      ),
+    );
 
     // 0. Setup Dependencies (Foreign Keys)
     // User
-    await db.into(db.users).insert(UsersCompanion(
-          id: Value('test_owner'),
-          role: Value('OWNER'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion(
+            id: Value('test_owner'),
+            role: Value('OWNER'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
     // Product (Fuel Type)
-    await db.into(db.products).insert(ProductsCompanion(
-          id: Value('petrol'),
-          name: Value('Petrol'),
-          userId: Value('test_owner'),
-          sellingPrice: Value(100.0),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.products)
+        .insert(
+          ProductsCompanion(
+            id: Value('petrol'),
+            name: Value('Petrol'),
+            userId: Value('test_owner'),
+            sellingPrice: Value(100.0),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
     // Tank
-    await db.into(db.tanks).insert(TanksCompanion(
-          tankId: Value('tank_1'),
-          ownerId: Value('test_owner'),
-          name: Value('Tank 1'),
-          fuelTypeId: Value('petrol'), // Matches Product ID
-          capacity: Value(10000.0),
-          currentStock: Value(5000.0),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.tanks)
+        .insert(
+          TanksCompanion(
+            tankId: Value('tank_1'),
+            ownerId: Value('test_owner'),
+            name: Value('Tank 1'),
+            fuelTypeId: Value('petrol'), // Matches Product ID
+            capacity: Value(10000.0),
+            currentStock: Value(5000.0),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
     // Dispenser
-    await db.into(db.dispensers).insert(DispensersCompanion(
-          id: Value('dispenser_1'),
-          ownerId: Value('test_owner'),
-          name: Value('Dispenser 1'),
-          linkedTankId: Value('tank_1'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.dispensers)
+        .insert(
+          DispensersCompanion(
+            id: Value('dispenser_1'),
+            ownerId: Value('test_owner'),
+            name: Value('Dispenser 1'),
+            linkedTankId: Value('tank_1'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     // Insert dummy nozzle for FK constraint
-    await db.into(db.nozzles).insert(NozzlesCompanion(
-          nozzleId: Value('nozzle_1'),
-          name: Value('Nozzle 1'),
-          ownerId: Value('test_owner'),
-          dispenserId: Value('dispenser_1'),
-          fuelTypeId: Value('petrol'),
-          fuelTypeName: Value('Petrol'),
-          openingReading: Value(1000.0),
-          closingReading: Value(1000.0),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.nozzles)
+        .insert(
+          NozzlesCompanion(
+            nozzleId: Value('nozzle_1'),
+            name: Value('Nozzle 1'),
+            ownerId: Value('test_owner'),
+            dispenserId: Value('dispenser_1'),
+            fuelTypeId: Value('petrol'),
+            fuelTypeName: Value('Petrol'),
+            openingReading: Value(1000.0),
+            closingReading: Value(1000.0),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     expect(staffId, isNotNull);
 
     // 2. Open Shift
     try {
       await shiftService.openShift('Morning Shift', [staffId]);
-    } catch (_) {} // Might fail on 'return' if not careful with mock db, but schema check matters
+    } catch (
+      _
+    ) {} // Might fail on 'return' if not careful with mock db, but schema check matters
 
     final shifts = await db.select(db.shifts).get();
     expect(shifts.isNotEmpty, true);
@@ -139,45 +169,61 @@ void main() {
     final staffId = 'staff_1';
 
     // 0. Setup Dependencies
-    await db.into(db.users).insert(UsersCompanion(
-          id: Value('test_owner'),
-          role: Value('OWNER'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
-    await db.into(db.staffMembers).insert(StaffMembersCompanion(
-          id: Value(staffId),
-          userId: Value('test_owner'),
-          name: Value('Staff 1'),
-          role: Value('Attendant'),
-          joinedAt: Value(DateTime.now()),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
-    await db.into(db.shifts).insert(ShiftsCompanion(
-          shiftId: Value(shiftId),
-          ownerId: Value('test_owner'),
-          shiftName: Value('Test Shift'),
-          startTime: Value(DateTime.now()),
-          assignedEmployeeIds: Value('[]'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion(
+            id: Value('test_owner'),
+            role: Value('OWNER'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
+    await db
+        .into(db.staffMembers)
+        .insert(
+          StaffMembersCompanion(
+            id: Value(staffId),
+            userId: Value('test_owner'),
+            name: Value('Staff 1'),
+            role: Value('Attendant'),
+            joinedAt: Value(DateTime.now()),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
+    await db
+        .into(db.shifts)
+        .insert(
+          ShiftsCompanion(
+            shiftId: Value(shiftId),
+            ownerId: Value('test_owner'),
+            shiftName: Value('Test Shift'),
+            startTime: Value(DateTime.now()),
+            assignedEmployeeIds: Value('[]'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     // Insert dummy bill
-    await db.into(db.bills).insert(BillsCompanion(
-          id: Value('bill_1'),
-          userId: Value('test_owner'),
-          invoiceNumber: Value('INV-001'),
-          billDate: Value(DateTime.now()),
-          grandTotal: Value(1000.0),
-          paymentMode: Value('CASH'),
-          shiftId: Value(shiftId),
-          attendantId: Value(staffId), // Direct Link
-          itemsJson: Value('[{"qty": 10.0}]'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.bills)
+        .insert(
+          BillsCompanion(
+            id: Value('bill_1'),
+            userId: Value('test_owner'),
+            invoiceNumber: Value('INV-001'),
+            billDate: Value(DateTime.now()),
+            grandTotal: Value(1000.0),
+            paymentMode: Value('CASH'),
+            shiftId: Value(shiftId),
+            attendantId: Value(staffId), // Direct Link
+            itemsJson: Value('[{"qty": 10.0}]'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     final sales = await shiftService.calculateStaffSales(shiftId);
     expect(sales.length, 1);

@@ -24,19 +24,27 @@ class NotificationController {
         sound: true,
         provisional: false,
       );
-      developer.log('FCM Permission: ${settings.authorizationStatus}',
-          name: 'NotificationController');
+      developer.log(
+        'FCM Permission: ${settings.authorizationStatus}',
+        name: 'NotificationController',
+      );
 
       // 2. Init Local Notifications (Native only)
       if (!kIsWeb) {
-        const androidInit =
-            AndroidInitializationSettings('@mipmap/ic_launcher');
+        const androidInit = AndroidInitializationSettings(
+          '@mipmap/ic_launcher',
+        );
         const iosInit = DarwinInitializationSettings();
         await _local.initialize(
-          const InitializationSettings(android: androidInit, iOS: iosInit),
+          settings: const InitializationSettings(
+            android: androidInit,
+            iOS: iosInit,
+          ),
           onDidReceiveNotificationResponse: (response) {
-            developer.log('Local Notification Clicked: ${response.payload}',
-                name: 'NotificationController');
+            developer.log(
+              'Local Notification Clicked: ${response.payload}',
+              name: 'NotificationController',
+            );
             // Handle navigation here if needed
           },
         );
@@ -44,8 +52,10 @@ class NotificationController {
 
       // 3. Foreground Listener
       FirebaseMessaging.onMessage.listen((message) {
-        developer.log('Foreground Message: ${message.messageId}',
-            name: 'NotificationController');
+        developer.log(
+          'Foreground Message: ${message.messageId}',
+          name: 'NotificationController',
+        );
         final notification = message.notification;
         if (notification != null) {
           showLocal(
@@ -57,8 +67,10 @@ class NotificationController {
 
       // 4. Background Open Listener
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
-        developer.log('Message Opened App: ${message.messageId}',
-            name: 'NotificationController');
+        developer.log(
+          'Message Opened App: ${message.messageId}',
+          name: 'NotificationController',
+        );
         // Navigate to specific screen if needed
       });
     } catch (e) {
@@ -98,7 +110,12 @@ class NotificationController {
       const detail = NotificationDetails(android: android, iOS: ios);
 
       // using hashCode of title as ID to allow multiple distinct notifications, or 0 for single slot
-      await _local.show(DateTime.now().millisecond, title, body, detail);
+      await _local.show(
+        id: DateTime.now().millisecond,
+        title: title,
+        body: body,
+        notificationDetails: detail,
+      );
     } catch (e) {
       developer.log('Show Local Error: $e', name: 'NotificationController');
     }
@@ -112,10 +129,10 @@ class NotificationController {
   /// Helper: Save token to Firestore
   Future<void> _saveTokenToFirestore(String uid, String token) async {
     try {
-      await _db.collection('users').doc(uid).set(
-        {'fcmToken': token, 'tokenUpdatedAt': FieldValue.serverTimestamp()},
-        SetOptions(merge: true),
-      );
+      await _db.collection('users').doc(uid).set({
+        'fcmToken': token,
+        'tokenUpdatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
     } catch (e) {
       developer.log('Save Token Error: $e', name: 'NotificationController');
     }
@@ -123,10 +140,13 @@ class NotificationController {
 
   /// Schedule a specific reminder (Example usage)
   Future<void> schedulePaymentReminder(
-      String customerName, double amount) async {
+    String customerName,
+    double amount,
+  ) async {
     await showLocal(
-        title: 'Payment Reminder',
-        body:
-            'Review pending dues for $customerName: ₹${amount.toStringAsFixed(0)}');
+      title: 'Payment Reminder',
+      body:
+          'Review pending dues for $customerName: ₹${amount.toStringAsFixed(0)}',
+    );
   }
 }

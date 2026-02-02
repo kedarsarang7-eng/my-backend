@@ -14,10 +14,7 @@ import '../../data/business_health_engine.dart';
 class HealthScoreDetailScreen extends StatelessWidget {
   final HealthScoreResult health;
 
-  const HealthScoreDetailScreen({
-    super.key,
-    required this.health,
-  });
+  const HealthScoreDetailScreen({super.key, required this.health});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +22,9 @@ class HealthScoreDetailScreen extends StatelessWidget {
     final color = Color(health.grade.colorValue);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0D1B2A) : const Color(0xFFF3F4F6),
+      backgroundColor: isDark
+          ? const Color(0xFF0D1B2A)
+          : const Color(0xFFF3F4F6),
       body: CustomScrollView(
         slivers: [
           _buildAppBar(context, isDark, color),
@@ -74,10 +72,7 @@ class HealthScoreDetailScreen extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                color,
-                color.withOpacity(0.8),
-              ],
+              colors: [color, color.withOpacity(0.8)],
             ),
           ),
           child: Column(
@@ -101,8 +96,10 @@ class HealthScoreDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -155,34 +152,36 @@ class HealthScoreDetailScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ...health.recommendations.map((rec) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 6),
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Colors.amber,
-                        shape: BoxShape.circle,
+          ...health.recommendations.map(
+            (rec) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: Colors.amber,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      rec,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: isDark ? Colors.white70 : Colors.black87,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        rec,
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.5,
-                          color: isDark ? Colors.white70 : Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -302,8 +301,10 @@ class HealthScoreDetailScreen extends StatelessWidget {
 
               // Status Badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _getScoreColor(factor.score).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),

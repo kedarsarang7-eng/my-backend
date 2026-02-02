@@ -127,16 +127,26 @@ void main() {
   group('BackgroundSyncStatus', () {
     test('should have all expected statuses', () {
       expect(BackgroundSyncStatus.values, contains(BackgroundSyncStatus.idle));
-      expect(BackgroundSyncStatus.values,
-          contains(BackgroundSyncStatus.scheduled));
       expect(
-          BackgroundSyncStatus.values, contains(BackgroundSyncStatus.running));
-      expect(BackgroundSyncStatus.values,
-          contains(BackgroundSyncStatus.completed));
+        BackgroundSyncStatus.values,
+        contains(BackgroundSyncStatus.scheduled),
+      );
       expect(
-          BackgroundSyncStatus.values, contains(BackgroundSyncStatus.failed));
+        BackgroundSyncStatus.values,
+        contains(BackgroundSyncStatus.running),
+      );
       expect(
-          BackgroundSyncStatus.values, contains(BackgroundSyncStatus.disabled));
+        BackgroundSyncStatus.values,
+        contains(BackgroundSyncStatus.completed),
+      );
+      expect(
+        BackgroundSyncStatus.values,
+        contains(BackgroundSyncStatus.failed),
+      );
+      expect(
+        BackgroundSyncStatus.values,
+        contains(BackgroundSyncStatus.disabled),
+      );
     });
   });
 

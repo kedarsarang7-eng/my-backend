@@ -80,8 +80,9 @@ class _RevenueAnalyticsGraphState extends State<RevenueAnalyticsGraph> {
           startDate = now.subtract(const Duration(days: 30));
           break;
         case 'Monthly':
-          startDate =
-              now.subtract(const Duration(days: 90)); // Show last 3 months
+          startDate = now.subtract(
+            const Duration(days: 90),
+          ); // Show last 3 months
           break;
         default:
           startDate = now.subtract(const Duration(days: 30));
@@ -146,15 +147,16 @@ class _RevenueAnalyticsGraphState extends State<RevenueAnalyticsGraph> {
           x: i,
           barRods: [
             BarChartRodData(
-                toY: _chartData[sortedKeys[i]]!,
-                color: FuturisticColors.primary.withOpacity(0.15),
-                width: 12,
-                borderRadius: BorderRadius.circular(2),
-                backDrawRodData: BackgroundBarChartRodData(
-                  show: true,
-                  toY: _maxY, // Fill height for "grid" effect
-                  color: Colors.transparent,
-                )),
+              toY: _chartData[sortedKeys[i]]!,
+              color: FuturisticColors.primary.withOpacity(0.15),
+              width: 12,
+              borderRadius: BorderRadius.circular(2),
+              backDrawRodData: BackgroundBarChartRodData(
+                show: true,
+                toY: _maxY, // Fill height for "grid" effect
+                color: Colors.transparent,
+              ),
+            ),
           ],
         ),
       );
@@ -201,16 +203,16 @@ class _RevenueAnalyticsGraphState extends State<RevenueAnalyticsGraph> {
                   Text(
                     'Revenue Analytics',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: FuturisticColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: FuturisticColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Revenue vs Time',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: FuturisticColors.textSecondary,
-                        ),
+                      color: FuturisticColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -236,19 +238,24 @@ class _RevenueAnalyticsGraphState extends State<RevenueAnalyticsGraph> {
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: isSelected
                               ? FuturisticColors.primary.withOpacity(0.2)
                               : null,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(filter == 'Daily' ? 8 : 0),
-                            bottomLeft:
-                                Radius.circular(filter == 'Daily' ? 8 : 0),
-                            topRight:
-                                Radius.circular(filter == 'Monthly' ? 8 : 0),
-                            bottomRight:
-                                Radius.circular(filter == 'Monthly' ? 8 : 0),
+                            bottomLeft: Radius.circular(
+                              filter == 'Daily' ? 8 : 0,
+                            ),
+                            topRight: Radius.circular(
+                              filter == 'Monthly' ? 8 : 0,
+                            ),
+                            bottomRight: Radius.circular(
+                              filter == 'Monthly' ? 8 : 0,
+                            ),
                           ),
                         ),
                         child: Text(
@@ -278,160 +285,157 @@ class _RevenueAnalyticsGraphState extends State<RevenueAnalyticsGraph> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                    ? Center(
-                        child: Text(_errorMessage!,
-                            style:
-                                const TextStyle(color: FuturisticColors.error)))
-                    : _chartData.isEmpty
-                        ? const Center(
-                            child: Text('No revenue data available',
-                                style: TextStyle(
-                                    color: FuturisticColors.textSecondary)))
-                        : Stack(
-                            children: [
-                              // Layer 1: Bar Chart (Background for Volume)
-                              BarChart(
-                                BarChartData(
-                                  barTouchData: BarTouchData(
-                                      enabled:
-                                          false), // Disable touch on bars to let Line accept it
-                                  titlesData: FlTitlesData(show: false),
-                                  borderData: FlBorderData(show: false),
-                                  gridData: FlGridData(show: false),
-                                  minY: 0,
-                                  maxY: _maxY,
-                                  barGroups: _getBarGroups(),
+                ? Center(
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: FuturisticColors.error),
+                    ),
+                  )
+                : _chartData.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No revenue data available',
+                      style: TextStyle(color: FuturisticColors.textSecondary),
+                    ),
+                  )
+                : Stack(
+                    children: [
+                      // Layer 1: Bar Chart (Background for Volume)
+                      BarChart(
+                        BarChartData(
+                          barTouchData: BarTouchData(
+                            enabled: false,
+                          ), // Disable touch on bars to let Line accept it
+                          titlesData: FlTitlesData(show: false),
+                          borderData: FlBorderData(show: false),
+                          gridData: FlGridData(show: false),
+                          minY: 0,
+                          maxY: _maxY,
+                          barGroups: _getBarGroups(),
+                        ),
+                      ),
+
+                      // Layer 2: Line Chart (Foreground for Trend)
+                      LineChart(
+                        LineChartData(
+                          gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: false,
+                            horizontalInterval: _maxY / 5,
+                            getDrawingHorizontalLine: (value) {
+                              return FlLine(
+                                color: FuturisticColors.divider.withOpacity(
+                                  0.05,
+                                ), // Faint grid
+                                strokeWidth: 1,
+                              );
+                            },
+                          ),
+                          titlesData: FlTitlesData(
+                            show: true,
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      _getBottomTitle(value),
+                                      style: const TextStyle(
+                                        color: FuturisticColors.textSecondary,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                reservedSize: 30,
+                              ),
+                            ),
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                interval: _maxY / 5,
+                                getTitlesWidget: (value, meta) {
+                                  return Text(
+                                    NumberFormat.compact().format(value),
+                                    style: const TextStyle(
+                                      color: FuturisticColors.textSecondary,
+                                      fontSize: 10,
+                                    ),
+                                  );
+                                },
+                                reservedSize: 40,
+                              ),
+                            ),
+                          ),
+                          borderData: FlBorderData(show: false),
+                          minX: 0,
+                          maxX: _chartData.length.toDouble() - 1,
+                          minY: 0,
+                          maxY: _maxY,
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: _getLineSpots(),
+                              isCurved: true,
+                              color: FuturisticColors.accent1,
+                              barWidth: 3,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                              belowBarData: BarAreaData(
+                                show: true,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    FuturisticColors.accent1.withOpacity(0.2),
+                                    FuturisticColors.accent1.withOpacity(0.0),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
                                 ),
                               ),
-
-                              // Layer 2: Line Chart (Foreground for Trend)
-                              LineChart(
-                                LineChartData(
-                                  gridData: FlGridData(
-                                    show: true,
-                                    drawVerticalLine: false,
-                                    horizontalInterval: _maxY / 5,
-                                    getDrawingHorizontalLine: (value) {
-                                      return FlLine(
-                                        color: FuturisticColors.divider
-                                            .withOpacity(0.05), // Faint grid
-                                        strokeWidth: 1,
-                                      );
-                                    },
-                                  ),
-                                  titlesData: FlTitlesData(
-                                    show: true,
-                                    rightTitles: const AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false)),
-                                    topTitles: const AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false)),
-                                    bottomTitles: AxisTitles(
-                                      sideTitles: SideTitles(
-                                        showTitles: true,
-                                        getTitlesWidget: (value, meta) {
-                                          return Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                              _getBottomTitle(value),
-                                              style: const TextStyle(
-                                                color: FuturisticColors
-                                                    .textSecondary,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        reservedSize: 30,
-                                      ),
+                            ),
+                          ],
+                          lineTouchData: LineTouchData(
+                            touchTooltipData: LineTouchTooltipData(
+                              getTooltipColor: (_) =>
+                                  FuturisticColors.surface.withOpacity(0.9),
+                              tooltipPadding: const EdgeInsets.all(8),
+                              getTooltipItems: (touchedSpots) {
+                                return touchedSpots.map((
+                                  LineBarSpot touchedSpot,
+                                ) {
+                                  return LineTooltipItem(
+                                    '${_getBottomTitle(touchedSpot.x)}\n',
+                                    const TextStyle(
+                                      color: FuturisticColors.textSecondary,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    leftTitles: AxisTitles(
-                                      sideTitles: SideTitles(
-                                        showTitles: true,
-                                        interval: _maxY / 5,
-                                        getTitlesWidget: (value, meta) {
-                                          return Text(
-                                            NumberFormat.compact()
-                                                .format(value),
-                                            style: const TextStyle(
-                                              color: FuturisticColors
-                                                  .textSecondary,
-                                              fontSize: 10,
-                                            ),
-                                          );
-                                        },
-                                        reservedSize: 40,
-                                      ),
-                                    ),
-                                  ),
-                                  borderData: FlBorderData(show: false),
-                                  minX: 0,
-                                  maxX: _chartData.length.toDouble() - 1,
-                                  minY: 0,
-                                  maxY: _maxY,
-                                  lineBarsData: [
-                                    LineChartBarData(
-                                      spots: _getLineSpots(),
-                                      isCurved: true,
-                                      color: FuturisticColors.accent1,
-                                      barWidth: 3,
-                                      isStrokeCapRound: true,
-                                      dotData: const FlDotData(show: false),
-                                      belowBarData: BarAreaData(
-                                        show: true,
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            FuturisticColors.accent1
-                                                .withOpacity(0.2),
-                                            FuturisticColors.accent1
-                                                .withOpacity(0.0),
-                                          ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
+                                    children: [
+                                      TextSpan(
+                                        text: NumberFormat.currency(
+                                          symbol: '₹',
+                                        ).format(touchedSpot.y),
+                                        style: const TextStyle(
+                                          color: FuturisticColors.accent1,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                  lineTouchData: LineTouchData(
-                                    touchTooltipData: LineTouchTooltipData(
-                                      getTooltipColor: (_) => FuturisticColors
-                                          .surface
-                                          .withOpacity(0.9),
-                                      tooltipPadding: const EdgeInsets.all(8),
-                                      getTooltipItems: (touchedSpots) {
-                                        return touchedSpots
-                                            .map((LineBarSpot touchedSpot) {
-                                          return LineTooltipItem(
-                                            '${_getBottomTitle(touchedSpot.x)}\n',
-                                            const TextStyle(
-                                              color: FuturisticColors
-                                                  .textSecondary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: NumberFormat.currency(
-                                                        symbol: '₹')
-                                                    .format(touchedSpot.y),
-                                                style: const TextStyle(
-                                                  color:
-                                                      FuturisticColors.accent1,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        }).toList();
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                    ],
+                                  );
+                                }).toList();
+                              },
+                            ),
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),

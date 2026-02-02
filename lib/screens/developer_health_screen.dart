@@ -80,7 +80,8 @@ class _DeveloperHealthScreenState extends State<DeveloperHealthScreen> {
 
       final stats = await SyncEngine.instance.getStats();
       setState(() {
-        _firebaseResult = 'Sync triggered. Current Stats:\n'
+        _firebaseResult =
+            'Sync triggered. Current Stats:\n'
             'Pending: ${stats.pendingCount}\n'
             'In Progress: ${stats.inProgressCount}\n'
             'Failed: ${stats.failedCount}\n'
@@ -130,8 +131,10 @@ class _DeveloperHealthScreenState extends State<DeveloperHealthScreen> {
       return Scaffold(
         appBar: AppBar(title: const Text('Developer Health')),
         body: const Center(
-            child: Text(
-                'Developer Health screen is available only to owners or in debug builds.')),
+          child: Text(
+            'Developer Health screen is available only to owners or in debug builds.',
+          ),
+        ),
       );
     }
 
@@ -147,13 +150,14 @@ class _DeveloperHealthScreenState extends State<DeveloperHealthScreen> {
                   ? const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.storage),
-              label: Text(_runningSql
-                  ? 'Running SQLite Check...'
-                  : 'Run SQLite Health Check'),
+              label: Text(
+                _runningSql
+                    ? 'Running SQLite Check...'
+                    : 'Run SQLite Health Check',
+              ),
               onPressed: _runningSql ? null : _runSqliteCheck,
             ),
             const SizedBox(height: 12),
@@ -180,13 +184,14 @@ class _DeveloperHealthScreenState extends State<DeveloperHealthScreen> {
                   ? const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.cloud),
-              label: Text(_runningFirebase
-                  ? 'Running Firebase Check...'
-                  : 'Run Firebase Health Check'),
+              label: Text(
+                _runningFirebase
+                    ? 'Running Firebase Check...'
+                    : 'Run Firebase Health Check',
+              ),
               onPressed: _runningFirebase ? null : _runFirebaseCheck,
             ),
             const SizedBox(height: 12),

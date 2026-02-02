@@ -41,14 +41,16 @@ class PdfExportAdapter implements ExportAdapter {
     );
 
     final items = data.items
-        .map((item) => InvoiceItem(
-              name: item.name,
-              description: item.description,
-              quantity: item.quantity,
-              unit: item.unit,
-              unitPrice: item.unitPrice,
-              taxPercent: item.taxRate, // Assuming taxRate is %
-            ))
+        .map(
+          (item) => InvoiceItem(
+            name: item.name,
+            description: item.description,
+            quantity: item.quantity,
+            unit: item.unit,
+            unitPrice: item.unitPrice,
+            taxPercent: item.taxRate, // Assuming taxRate is %
+          ),
+        )
         .toList();
 
     final bytes = await _pdfService.generateInvoicePdf(

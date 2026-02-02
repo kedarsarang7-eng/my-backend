@@ -133,8 +133,10 @@ class VendorProfileService extends ChangeNotifier {
       }
 
       // Fallback: try to get from owners collection
-      final ownerDoc =
-          await _firestore.collection('owners').doc(vendorId).get();
+      final ownerDoc = await _firestore
+          .collection('owners')
+          .doc(vendorId)
+          .get();
 
       if (ownerDoc.exists) {
         return VendorProfile.fromFirestore(ownerDoc);
@@ -193,19 +195,21 @@ class VendorProfileService extends ChangeNotifier {
       */
 
       // Enqueue sync operation
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: vendorId,
-        operationType: SyncOperationType.update,
-        targetCollection:
-            'vendors/$vendorId/profile', // Special path handling might be needed in SyncManager, or standard collection/doc
-        // Standard SyncManager expects collection and documentId.
-        // If collection is nested 'vendors/{id}/profile', we should pass that.
-        // Let's assume SyncManager handles path-like collections or we pass 'profile' and rely on implicit vendorId hierarchy?
-        // Based on SyncManager implementation, it constructs path: collection(targetCollection).doc(documentId).
-        // So targetCollection should be 'vendors/$vendorId/profile'.
-        documentId: 'main',
-        payload: profile.toFirestore(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendorId,
+          operationType: SyncOperationType.update,
+          targetCollection:
+              'vendors/$vendorId/profile', // Special path handling might be needed in SyncManager, or standard collection/doc
+          // Standard SyncManager expects collection and documentId.
+          // If collection is nested 'vendors/{id}/profile', we should pass that.
+          // Let's assume SyncManager handles path-like collections or we pass 'profile' and rely on implicit vendorId hierarchy?
+          // Based on SyncManager implementation, it constructs path: collection(targetCollection).doc(documentId).
+          // So targetCollection should be 'vendors/$vendorId/profile'.
+          documentId: 'main',
+          payload: profile.toFirestore(),
+        ),
+      );
 
       // Also update owners collection for backward compatibility
       await _firestore.collection('owners').doc(vendorId).set({
@@ -238,18 +242,22 @@ class VendorProfileService extends ChangeNotifier {
 
   /// Save version history
   Future<void> _saveVersionHistory(
-      String vendorId, VendorProfile oldProfile) async {
+    String vendorId,
+    VendorProfile oldProfile,
+  ) async {
     try {
       await _firestore
           .collection('vendors')
           .doc(vendorId)
           .collection('profile_history')
-          .add(ProfileHistoryEntry(
-            version: oldProfile.version,
-            timestamp: DateTime.now(),
-            changes: oldProfile.toMap(),
-            changedBy: vendorId,
-          ).toMap());
+          .add(
+            ProfileHistoryEntry(
+              version: oldProfile.version,
+              timestamp: DateTime.now(),
+              changes: oldProfile.toMap(),
+              changedBy: vendorId,
+            ).toMap(),
+          );
     } catch (e) {
       debugPrint('Failed to save version history: $e');
     }
@@ -268,10 +276,7 @@ class VendorProfileService extends ChangeNotifier {
       final fileName = 'shop_logo_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('vendors/$vendorId/logos/$fileName');
 
-      await ref.putData(
-        bytes,
-        SettableMetadata(contentType: 'image/jpeg'),
-      );
+      await ref.putData(bytes, SettableMetadata(contentType: 'image/jpeg'));
 
       final downloadUrl = await ref.getDownloadURL();
 
@@ -321,7 +326,9 @@ class VendorProfileService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_profileCacheKey, jsonEncode(profile.toMap()));
       await prefs.setString(
-          _profileTimestampKey, DateTime.now().toIso8601String());
+        _profileTimestampKey,
+        DateTime.now().toIso8601String(),
+      );
     } catch (e) {
       debugPrint('Cache save error: $e');
     }
@@ -368,14 +375,14 @@ class VendorProfileService extends ChangeNotifier {
         .doc('main')
         .snapshots()
         .map((doc) {
-      if (doc.exists) {
-        final profile = VendorProfile.fromFirestore(doc);
-        _cachedProfile = profile;
-        _saveToCache(profile); // Update cache
-        return profile;
-      }
-      return null;
-    });
+          if (doc.exists) {
+            final profile = VendorProfile.fromFirestore(doc);
+            _cachedProfile = profile;
+            _saveToCache(profile); // Update cache
+            return profile;
+          }
+          return null;
+        });
   }
 
   /// Get profile history (version history)

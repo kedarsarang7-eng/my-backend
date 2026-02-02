@@ -1,10 +1,6 @@
 import '../../models/export_data.dart';
 
-enum ExportFormat {
-  pdf,
-  excel,
-  word,
-}
+enum ExportFormat { pdf, excel, word }
 
 abstract class ExportAdapter {
   /// Generates the document and returns the file bytes.

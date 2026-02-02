@@ -75,8 +75,10 @@ class TaxSummaryPanel extends StatelessWidget {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: FuturisticColors.success.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -199,10 +201,7 @@ class TaxSummaryPanel extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,
                 shadows: [
-                  Shadow(
-                    color: color.withOpacity(0.3),
-                    blurRadius: 10,
-                  ),
+                  Shadow(color: color.withOpacity(0.3), blurRadius: 10),
                 ],
               ),
             ),
@@ -266,7 +265,9 @@ class TaxSummaryPanel extends StatelessWidget {
     if (value >= 100000) {
       return '${(value / 100000).toStringAsFixed(2)}L';
     } else if (value >= 1000) {
-      return value.toStringAsFixed(0).replaceAllMapped(
+      return value
+          .toStringAsFixed(0)
+          .replaceAllMapped(
             RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
             (Match m) => '${m[1]},',
           );

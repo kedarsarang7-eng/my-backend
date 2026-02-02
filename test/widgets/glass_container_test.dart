@@ -17,9 +17,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: GlassContainer(
-              child: const Text('Test Content'),
-            ),
+            body: GlassContainer(child: const Text('Test Content')),
           ),
         ),
       );
@@ -34,10 +32,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: GlassContainer(
-              blur: 20.0,
-              child: const Text('Blurred'),
-            ),
+            body: GlassContainer(blur: 20.0, child: const Text('Blurred')),
           ),
         ),
       );
@@ -49,10 +44,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: GlassContainer(
-              opacity: 0.5,
-              child: const Text('Opaque'),
-            ),
+            body: GlassContainer(opacity: 0.5, child: const Text('Opaque')),
           ),
         ),
       );
@@ -118,8 +110,9 @@ void main() {
         ),
       );
 
-      final container =
-          tester.widget<GlassContainer>(find.byType(GlassContainer));
+      final container = tester.widget<GlassContainer>(
+        find.byType(GlassContainer),
+      );
       expect(container.width, 200);
       expect(container.height, 100);
     });
@@ -187,10 +180,7 @@ void main() {
           home: Scaffold(
             body: GlassContainer(
               padding: const EdgeInsets.all(16),
-              child: GlassContainer(
-                opacity: 0.3,
-                child: const Text('Nested'),
-              ),
+              child: GlassContainer(opacity: 0.3, child: const Text('Nested')),
             ),
           ),
         ),
@@ -202,14 +192,13 @@ void main() {
   });
 
   group('Widget Accessibility Tests', () {
-    testWidgets('GlassContainer content should be visible and accessible',
-        (tester) async {
+    testWidgets('GlassContainer content should be visible and accessible', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: GlassContainer(
-              child: const Text('Accessible Content'),
-            ),
+            body: GlassContainer(child: const Text('Accessible Content')),
           ),
         ),
       );

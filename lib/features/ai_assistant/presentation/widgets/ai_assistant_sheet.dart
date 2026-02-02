@@ -28,7 +28,9 @@ class _AiAssistantSheetState extends ConsumerState<AiAssistantSheet>
   void initState() {
     super.initState();
     _pulseController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
     _pulseController.repeat(reverse: true);
   }
 
@@ -102,12 +104,16 @@ class _AiAssistantSheetState extends ConsumerState<AiAssistantSheet>
       if (intent.type == VoiceIntentType.navigateToBill) {
         // Close sheet first then navigate
         Navigator.pop(context);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const BillCreationScreenV2()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const BillCreationScreenV2()),
+        );
       } else if (intent.type == VoiceIntentType.navigateToReports) {
         Navigator.pop(context);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const BillingReportsScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const BillingReportsScreen()),
+        );
       }
     }
   }
@@ -204,8 +210,9 @@ class _AiAssistantSheetState extends ConsumerState<AiAssistantSheet>
                     boxShadow: [
                       if (_isListening)
                         BoxShadow(
-                          color: Colors.redAccent
-                              .withOpacity(0.5 * _pulseController.value),
+                          color: Colors.redAccent.withOpacity(
+                            0.5 * _pulseController.value,
+                          ),
                           blurRadius: 20 + (10 * _pulseController.value),
                           spreadRadius: 5 * _pulseController.value,
                         )

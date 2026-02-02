@@ -55,8 +55,11 @@ class ConflictResolutionDialog extends StatelessWidget {
                     color: Colors.orange.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.cloud_off_rounded,
-                      color: Colors.orange, size: 28),
+                  child: const Icon(
+                    Icons.cloud_off_rounded,
+                    color: Colors.orange,
+                    size: 28,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -141,22 +144,28 @@ class ConflictResolutionDialog extends StatelessWidget {
                   color: isDark ? const Color(0xFF2A2A35) : Colors.grey[50],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: isDark ? Colors.white10 : Colors.grey[200]!),
+                    color: isDark ? Colors.white10 : Colors.grey[200]!,
+                  ),
                 ),
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: conflict.differingFields.length
-                      .clamp(0, 4), // Max 4 lines
-                  separatorBuilder: (_, __) => Divider(
-                      height: 1,
-                      color: isDark ? Colors.white10 : Colors.grey[200]),
+                  itemCount: conflict.differingFields.length.clamp(
+                    0,
+                    4,
+                  ), // Max 4 lines
+                  separatorBuilder: (_, _) => Divider(
+                    height: 1,
+                    color: isDark ? Colors.white10 : Colors.grey[200],
+                  ),
                   itemBuilder: (context, index) {
                     final field = conflict.differingFields[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
@@ -178,25 +187,34 @@ class ConflictResolutionDialog extends StatelessWidget {
                                 Flexible(
                                   child: Text(
                                     _truncate(
-                                        conflict.localData[field].toString(),
-                                        10),
+                                      conflict.localData[field].toString(),
+                                      10,
+                                    ),
                                     style: GoogleFonts.robotoMono(
-                                        fontSize: 12, color: Colors.blue),
+                                      fontSize: 12,
+                                      color: Colors.blue,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 4),
-                                  child: Icon(Icons.arrow_forward_rounded,
-                                      size: 14, color: Colors.grey),
+                                  child: Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: 14,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                                 Flexible(
                                   child: Text(
                                     _truncate(
-                                        conflict.serverData[field].toString(),
-                                        10),
+                                      conflict.serverData[field].toString(),
+                                      10,
+                                    ),
                                     style: GoogleFonts.robotoMono(
-                                        fontSize: 12, color: Colors.purple),
+                                      fontSize: 12,
+                                      color: Colors.purple,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -215,8 +233,10 @@ class ConflictResolutionDialog extends StatelessWidget {
                   child: Center(
                     child: Text(
                       '+ ${conflict.differingFields.length - 4} other fields',
-                      style:
-                          GoogleFonts.poppins(fontSize: 11, color: Colors.grey),
+                      style: GoogleFonts.poppins(
+                        fontSize: 11,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -234,7 +254,8 @@ class ConflictResolutionDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       side: BorderSide(color: Colors.grey[300]!),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: Text(
                       'Keep Mine',
@@ -255,7 +276,8 @@ class ConflictResolutionDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       side: BorderSide(color: Colors.grey[300]!),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: Text(
                       'Use Cloud',
@@ -278,7 +300,8 @@ class ConflictResolutionDialog extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -288,7 +311,9 @@ class ConflictResolutionDialog extends StatelessWidget {
                   Text(
                     'Smart Merge (Recommended)',
                     style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.w600),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),

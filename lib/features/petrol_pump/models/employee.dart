@@ -50,13 +50,13 @@ class EmployeePermissions {
   }
 
   Map<String, dynamic> toMap() => {
-        'canOpenShift': canOpenShift,
-        'canCloseShift': canCloseShift,
-        'canEditReadings': canEditReadings,
-        'canAddPurchase': canAddPurchase,
-        'canViewReports': canViewReports,
-        'canManageCredit': canManageCredit,
-      };
+    'canOpenShift': canOpenShift,
+    'canCloseShift': canCloseShift,
+    'canEditReadings': canEditReadings,
+    'canAddPurchase': canAddPurchase,
+    'canViewReports': canViewReports,
+    'canManageCredit': canManageCredit,
+  };
 
   factory EmployeePermissions.fromMap(Map<String, dynamic>? map) {
     if (map == null) return const EmployeePermissions();
@@ -99,8 +99,8 @@ class Employee {
     DateTime? updatedAt,
     this.isActive = true,
     this.role,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Check if employee is currently assigned to an open shift
   bool get isOnShift => assignedShiftIds.isNotEmpty;
@@ -160,19 +160,19 @@ class Employee {
   }
 
   Map<String, dynamic> toMap() => {
-        'employeeId': employeeId,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'assignedNozzleIds': assignedNozzleIds,
-        'assignedShiftIds': assignedShiftIds,
-        'permissions': permissions.toMap(),
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'isActive': isActive,
-        'role': role,
-      };
+    'employeeId': employeeId,
+    'name': name,
+    'phone': phone,
+    'email': email,
+    'assignedNozzleIds': assignedNozzleIds,
+    'assignedShiftIds': assignedShiftIds,
+    'permissions': permissions.toMap(),
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'isActive': isActive,
+    'role': role,
+  };
 
   factory Employee.fromMap(String id, Map<String, dynamic> map) {
     return Employee(
@@ -180,16 +180,19 @@ class Employee {
       name: map['name'] as String? ?? '',
       phone: map['phone'] as String? ?? '',
       email: map['email'] as String?,
-      assignedNozzleIds: (map['assignedNozzleIds'] as List<dynamic>?)
+      assignedNozzleIds:
+          (map['assignedNozzleIds'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
-      assignedShiftIds: (map['assignedShiftIds'] as List<dynamic>?)
+      assignedShiftIds:
+          (map['assignedShiftIds'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
       permissions: EmployeePermissions.fromMap(
-          map['permissions'] as Map<String, dynamic>?),
+        map['permissions'] as Map<String, dynamic>?,
+      ),
       ownerId: map['ownerId'] as String? ?? '',
       createdAt: _parseDateTime(map['createdAt']),
       updatedAt: _parseDateTime(map['updatedAt']),

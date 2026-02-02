@@ -23,7 +23,10 @@ class _ShortcutPanelState extends ConsumerState<ShortcutPanel> {
   }
 
   void _handleReorder(
-      int oldIndex, int newIndex, List<UserShortcutConfig> shortcuts) {
+    int oldIndex,
+    int newIndex,
+    List<UserShortcutConfig> shortcuts,
+  ) {
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
@@ -66,11 +69,13 @@ class _ShortcutPanelState extends ConsumerState<ShortcutPanel> {
           builder: (context) => AlertDialog(
             title: Text(def.label),
             content: const Text(
-                "Configure this shortcut in Settings → Shortcuts to enable full functionality."),
+              "Configure this shortcut in Settings → Shortcuts to enable full functionality.",
+            ),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Close"))
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Close"),
+              ),
             ],
           ),
         );
@@ -142,7 +147,8 @@ class _ShortcutPanelState extends ConsumerState<ShortcutPanel> {
                               ? 'Remove Priority'
                               : 'Mark as Priority',
                           style: const TextStyle(
-                              color: FuturisticColors.textPrimary),
+                            color: FuturisticColors.textPrimary,
+                          ),
                         ),
                         onTap: () {
                           // Toggle priority logic
@@ -152,13 +158,20 @@ class _ShortcutPanelState extends ConsumerState<ShortcutPanel> {
                         },
                       ),
                       PopupMenuItem(
-                        child: const Text('Remove Shortcut',
-                            style: TextStyle(color: FuturisticColors.error)),
+                        child: const Text(
+                          'Remove Shortcut',
+                          style: TextStyle(color: FuturisticColors.error),
+                        ),
                         onTap: () {
                           final userId = ref.read(currentUserProvider)?.uid;
                           if (userId != null) {
-                            ref.read(shortcutServiceProvider).toggleShortcut(
-                                userId, shortcut.definition.id, false);
+                            ref
+                                .read(shortcutServiceProvider)
+                                .toggleShortcut(
+                                  userId,
+                                  shortcut.definition.id,
+                                  false,
+                                );
                           }
                         },
                       ),
@@ -170,10 +183,12 @@ class _ShortcutPanelState extends ConsumerState<ShortcutPanel> {
           );
         },
         loading: () => const Center(
-            child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2))),
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
         error: (e, s) => SizedBox.shrink(), // Fail silently in UI
       ),
     );

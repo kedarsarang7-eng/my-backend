@@ -176,4 +176,5 @@ class NavigationController extends Notifier<NavigationState> {
 /// Riverpod provider for the NavigationController
 final navigationControllerProvider =
     NotifierProvider<NavigationController, NavigationState>(
-        NavigationController.new);
+      NavigationController.new,
+    );

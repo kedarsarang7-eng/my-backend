@@ -42,9 +42,10 @@ class QrDisplayScreen extends ConsumerWidget {
         elevation: 0,
         iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
         titleTextStyle: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 20),
+          color: isDark ? Colors.white : Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
       body: Stack(
         children: [
@@ -59,10 +60,7 @@ class QrDisplayScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
-                    colors: [
-                      Colors.blue.withOpacity(0.2),
-                      Colors.transparent,
-                    ],
+                    colors: [Colors.blue.withOpacity(0.2), Colors.transparent],
                   ),
                 ),
               ),
@@ -125,18 +123,17 @@ class QrDisplayScreen extends ConsumerWidget {
                       const SizedBox(height: 5),
                       Text(
                         "Share this Qr with your customers",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 40),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: isDark
                         ? Colors.white.withOpacity(0.1)
@@ -146,14 +143,17 @@ class QrDisplayScreen extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.perm_identity,
-                          color: isDark ? Colors.white70 : Colors.black54),
+                      Icon(
+                        Icons.perm_identity,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
                       const SizedBox(width: 10),
                       SelectableText(
                         "Shop ID: $ownerUid",
                         style: TextStyle(
-                            color: isDark ? Colors.white70 : Colors.black54,
-                            fontWeight: FontWeight.w500),
+                          color: isDark ? Colors.white70 : Colors.black54,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),

@@ -59,10 +59,12 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
       // Ideally these reports should be reactive streams, but keeping existing structure for now.
 
       final bills = await sl<BillsRepository>().watchAll(userId: ownerId).first;
-      final purchases =
-          await sl<PurchaseRepository>().watchAll(userId: ownerId).first;
-      final expenses =
-          await sl<ExpensesRepository>().watchAll(userId: ownerId).first;
+      final purchases = await sl<PurchaseRepository>()
+          .watchAll(userId: ownerId)
+          .first;
+      final expenses = await sl<ExpensesRepository>()
+          .watchAll(userId: ownerId)
+          .first;
 
       // Reset
       _totalIn = 0;
@@ -75,13 +77,15 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
         if (!_isInRange(b.date)) continue;
         if (b.paidAmount > 0) {
           _totalIn += b.paidAmount;
-          _inItems.add(_FlowItem(
-            date: b.date,
-            title: b.customerName.isEmpty ? 'Cash Sale' : b.customerName,
-            subtitle: 'Inv #${b.invoiceNumber}',
-            amount: b.paidAmount,
-            isCash: b.paymentMode == 'Cash',
-          ));
+          _inItems.add(
+            _FlowItem(
+              date: b.date,
+              title: b.customerName.isEmpty ? 'Cash Sale' : b.customerName,
+              subtitle: 'Inv #${b.invoiceNumber}',
+              amount: b.paidAmount,
+              isCash: b.paymentMode == 'Cash',
+            ),
+          );
         }
       }
 
@@ -90,13 +94,15 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
         if (!_isInRange(p.purchaseDate)) continue;
         if (p.paidAmount > 0) {
           _totalOut += p.paidAmount;
-          _outItems.add(_FlowItem(
-            date: p.purchaseDate,
-            title: p.vendorName ?? 'Unknown Vendor',
-            subtitle: 'Bill #${p.invoiceNumber ?? 'N/A'}',
-            amount: p.paidAmount,
-            isCash: false,
-          ));
+          _outItems.add(
+            _FlowItem(
+              date: p.purchaseDate,
+              title: p.vendorName ?? 'Unknown Vendor',
+              subtitle: 'Bill #${p.invoiceNumber ?? 'N/A'}',
+              amount: p.paidAmount,
+              isCash: false,
+            ),
+          );
         }
       }
 
@@ -104,13 +110,15 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
       for (var e in expenses) {
         if (!_isInRange(e.date)) continue;
         _totalOut += e.amount;
-        _outItems.add(_FlowItem(
-          date: e.date,
-          title: e.category,
-          subtitle: e.description,
-          amount: e.amount,
-          isCash: true,
-        ));
+        _outItems.add(
+          _FlowItem(
+            date: e.date,
+            title: e.category,
+            subtitle: e.description,
+            amount: e.amount,
+            isCash: true,
+          ),
+        );
       }
 
       // Sort
@@ -182,7 +190,8 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
               color: isDark ? const Color(0xFF1E293B) : Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                  color: isDark ? Colors.white10 : Colors.grey.shade200),
+                color: isDark ? Colors.white10 : Colors.grey.shade200,
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,25 +199,31 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Net Flow (Selected Period)',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: isDark ? Colors.white70 : Colors.grey)),
+                    Text(
+                      'Net Flow (Selected Period)',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isDark ? Colors.white70 : Colors.grey,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Text(
                       '₹${(_totalIn - _totalOut).toStringAsFixed(0)}',
                       style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: (_totalIn - _totalOut) >= 0
-                              ? FuturisticColors.success
-                              : FuturisticColors.error),
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: (_totalIn - _totalOut) >= 0
+                            ? FuturisticColors.success
+                            : FuturisticColors.error,
+                      ),
                     ),
                   ],
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: FuturisticColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -244,7 +259,8 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
   Widget _buildList(List<_FlowItem> items, Color amountColor, bool isDark) {
     if (items.isEmpty) {
       return Center(
-          child: Text("No transactions", style: TextStyle(color: Colors.grey)));
+        child: Text("No transactions", style: TextStyle(color: Colors.grey)),
+      );
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -255,34 +271,45 @@ class _CashflowScreenState extends ConsumerState<CashflowScreen>
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-              color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 5)
-              ]),
+            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 5),
+            ],
+          ),
           child: Row(
             children: [
-              Icon(item.isCash ? Icons.money : Icons.credit_card,
-                  color: isDark ? Colors.white54 : Colors.grey),
+              Icon(
+                item.isCash ? Icons.money : Icons.credit_card,
+                color: isDark ? Colors.white54 : Colors.grey,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black87)),
-                    Text(DateFormat('dd MMM hh:mm a').format(item.date),
-                        style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      item.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('dd MMM hh:mm a').format(item.date),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                   ],
                 ),
               ),
-              Text('₹${item.amount.toStringAsFixed(0)}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: amountColor)),
+              Text(
+                '₹${item.amount.toStringAsFixed(0)}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: amountColor,
+                ),
+              ),
             ],
           ),
         );
@@ -314,10 +341,11 @@ class _FlowItem {
   final double amount;
   final bool isCash;
 
-  _FlowItem(
-      {required this.date,
-      required this.title,
-      required this.subtitle,
-      required this.amount,
-      required this.isCash});
+  _FlowItem({
+    required this.date,
+    required this.title,
+    required this.subtitle,
+    required this.amount,
+    required this.isCash,
+  });
 }

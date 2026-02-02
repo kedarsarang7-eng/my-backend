@@ -94,7 +94,10 @@ class GSTR1Service {
   GSTR1Service(this._billsRepository, this._customersRepository);
 
   Future<GSTR1Data> generateReport(
-      String userId, DateTime from, DateTime to) async {
+    String userId,
+    DateTime from,
+    DateTime to,
+  ) async {
     // 1. Fetch Bills
     // We fetch all because repo doesn't support date range filtering natively yet in getAll
     // Ideally we would optimize this to fetch by date range at SQL level.
@@ -102,7 +105,8 @@ class GSTR1Service {
     final result = await _billsRepository.getAll(userId: userId);
     if (result.isFailure) throw Exception(result.error);
 
-    final bills = result.data?.where((b) {
+    final bills =
+        result.data?.where((b) {
           final date = b.date; // already DateTime
           return date.isAfter(from.subtract(const Duration(seconds: 1))) &&
               date.isBefore(to.add(const Duration(days: 1)));
@@ -180,21 +184,23 @@ class GSTR1Service {
             sgst += i.sgst;
           }
 
-          b2bList.add(B2BInvoice(
-            gstIn: gstIn,
-            customerName: bill.customerName,
-            invoiceNumber: bill.invoiceNumber,
-            date: bill.date,
-            invoiceValue: bill
-                .grandTotal, // This repeats for rows of same invoice, standard practice in some CSVs, or just map once.
-            // Actually, Invoice Value is total bill value. Taxable is split.
-            placeOfSupply: _deducePOS(gstIn, bill.shopAddress),
-            taxableValue: taxable,
-            taxRate: rate,
-            igst: igst,
-            cgst: cgst,
-            sgst: sgst,
-          ));
+          b2bList.add(
+            B2BInvoice(
+              gstIn: gstIn,
+              customerName: bill.customerName,
+              invoiceNumber: bill.invoiceNumber,
+              date: bill.date,
+              invoiceValue: bill
+                  .grandTotal, // This repeats for rows of same invoice, standard practice in some CSVs, or just map once.
+              // Actually, Invoice Value is total bill value. Taxable is split.
+              placeOfSupply: _deducePOS(gstIn, bill.shopAddress),
+              taxableValue: taxable,
+              taxRate: rate,
+              igst: igst,
+              cgst: cgst,
+              sgst: sgst,
+            ),
+          );
         }
       } else {
         // B2C Small
@@ -216,11 +222,13 @@ class GSTR1Service {
           // Let's add raw for now, data processing is easier.
           // Actually, better to aggregate here.
 
-          b2csList.add(B2CSInvoice(
-            placeOfSupply: "State", // Default, should parse form address
-            taxRate: rate,
-            taxableValue: taxable,
-          ));
+          b2csList.add(
+            B2CSInvoice(
+              placeOfSupply: "State", // Default, should parse form address
+              taxRate: rate,
+              taxableValue: taxable,
+            ),
+          );
         }
       }
     }

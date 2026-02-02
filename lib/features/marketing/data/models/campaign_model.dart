@@ -1,28 +1,11 @@
 /// Campaign Status
-enum CampaignStatus {
-  draft,
-  scheduled,
-  running,
-  completed,
-  cancelled,
-  failed,
-}
+enum CampaignStatus { draft, scheduled, running, completed, cancelled, failed }
 
 /// Campaign Type
-enum CampaignType {
-  whatsapp,
-  sms,
-  both,
-}
+enum CampaignType { whatsapp, sms, both }
 
 /// Target Segment
-enum TargetSegment {
-  all,
-  highValue,
-  inactive,
-  overdue,
-  custom,
-}
+enum TargetSegment { all, highValue, inactive, overdue, custom }
 
 /// Marketing Campaign Model
 class CampaignModel {

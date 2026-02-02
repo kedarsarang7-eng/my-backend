@@ -124,20 +124,13 @@ class FocusTrap extends StatelessWidget {
   final Widget child;
   final FocusNode? initialFocus;
 
-  const FocusTrap({
-    super.key,
-    required this.child,
-    this.initialFocus,
-  });
+  const FocusTrap({super.key, required this.child, this.initialFocus});
 
   @override
   Widget build(BuildContext context) {
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
-      child: Focus(
-        autofocus: true,
-        child: child,
-      ),
+      child: Focus(autofocus: true, child: child),
     );
   }
 }

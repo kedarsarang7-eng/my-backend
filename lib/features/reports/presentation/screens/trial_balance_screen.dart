@@ -39,14 +39,18 @@ class _TrialBalanceScreenState extends ConsumerState<TrialBalanceScreen> {
 
       // Fetch All Data from local repositories
       final bills = await sl<BillsRepository>().watchAll(userId: ownerId).first;
-      final purchases =
-          await sl<PurchaseRepository>().watchAll(userId: ownerId).first;
-      final expenses =
-          await sl<ExpensesRepository>().watchAll(userId: ownerId).first;
-      final products =
-          await sl<ProductsRepository>().watchAll(userId: ownerId).first;
-      final customers =
-          await sl<CustomersRepository>().watchAll(userId: ownerId).first;
+      final purchases = await sl<PurchaseRepository>()
+          .watchAll(userId: ownerId)
+          .first;
+      final expenses = await sl<ExpensesRepository>()
+          .watchAll(userId: ownerId)
+          .first;
+      final products = await sl<ProductsRepository>()
+          .watchAll(userId: ownerId)
+          .first;
+      final customers = await sl<CustomersRepository>()
+          .watchAll(userId: ownerId)
+          .first;
 
       double sales = 0;
       double purch = 0;
@@ -209,22 +213,32 @@ class _TrialBalanceScreenState extends ConsumerState<TrialBalanceScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Total",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16)),
+                      const Text(
+                        "Total",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                       Row(
                         children: [
-                          Text("Dr: ${_totalDebit.toStringAsFixed(2)}",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent)),
+                          Text(
+                            "Dr: ${_totalDebit.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent,
+                            ),
+                          ),
                           const SizedBox(width: 16),
-                          Text("Cr: ${_totalCredit.toStringAsFixed(2)}",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green)),
+                          Text(
+                            "Cr: ${_totalCredit.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

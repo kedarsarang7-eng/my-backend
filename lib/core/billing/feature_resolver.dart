@@ -38,17 +38,25 @@ class FeatureResolver {
   /// Should show Supplier/Farmer management?
   bool get showSupplierManagement =>
       iso.FeatureResolver.canAccess(
-          type.name, BusinessCapability.useStockManagement) ||
+        type.name,
+        BusinessCapability.useStockManagement,
+      ) ||
       iso.FeatureResolver.canAccess(
-          type.name, BusinessCapability.useCommission);
+        type.name,
+        BusinessCapability.useCommission,
+      );
 
   /// Should show Commission logic?
   bool get showCommissionLogic => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useCommission);
+    type.name,
+    BusinessCapability.useCommission,
+  );
 
   /// Should show Weight-First billing (Gross/Tare)?
   bool get showWeightBilling => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useCommission);
+    type.name,
+    BusinessCapability.useCommission,
+  );
 
   /// Should show MRP/Retail Price logic?
   bool get showRetailPriceLogic =>
@@ -56,7 +64,9 @@ class FeatureResolver {
 
   /// Should show Barcode Scanner?
   bool get showBarcodeScanner => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useBarcodeScanner);
+    type.name,
+    BusinessCapability.useBarcodeScanner,
+  );
 
   /// Should show generic "Add Item" button?
   bool get showGenericAddItem => !isMandiMode; // Layout preference
@@ -66,33 +76,51 @@ class FeatureResolver {
 
   /// Should show Wastage Tracker?
   bool get showWastageTracker => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useStockManagement);
+    type.name,
+    BusinessCapability.useStockManagement,
+  );
 
   /// Should show Inventory/Stock Management features?
   bool get showStockManagement => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useStockManagement);
+    type.name,
+    BusinessCapability.useStockManagement,
+  );
 
   /// Should show Udhar/Credit Ledger?
   bool get showCreditLedger => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useCreditManagement);
+    type.name,
+    BusinessCapability.useCreditManagement,
+  );
 
   // --- NEW GRANULAR TOGGLES (Post-Refactor) ---
 
   bool get showRevenueOverview => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useRevenueOverview);
+    type.name,
+    BusinessCapability.useRevenueOverview,
+  );
 
   bool get showLowStockAlerts => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useLowStockAlert);
+    type.name,
+    BusinessCapability.useLowStockAlert,
+  );
 
   bool get showDailySnapshot => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useDailySnapshot);
+    type.name,
+    BusinessCapability.useDailySnapshot,
+  );
 
   bool get showPurchaseFlow => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.usePurchaseOrder);
+    type.name,
+    BusinessCapability.usePurchaseOrder,
+  );
 
   bool get showProductTax => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useProductTax);
+    type.name,
+    BusinessCapability.useProductTax,
+  );
 
   bool get showBatchExpiry => iso.FeatureResolver.canAccess(
-      type.name, BusinessCapability.useBatchExpiry);
+    type.name,
+    BusinessCapability.useBatchExpiry,
+  );
 }

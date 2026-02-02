@@ -58,8 +58,8 @@ class VendorProfile {
     DateTime? createdAt,
     DateTime? updatedAt,
     this.version = 1,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Empty profile for new vendors
   factory VendorProfile.empty(String vendorId) {
@@ -86,8 +86,9 @@ class VendorProfile {
       shopMobile: data['shopMobile'] ?? data['mobileNumber'] ?? '',
       gstin: data['gstin'],
       shopLogoUrl: data['shopLogoUrl'],
-      avatar:
-          data['avatar'] != null ? AvatarData.fromMap(data['avatar']) : null,
+      avatar: data['avatar'] != null
+          ? AvatarData.fromMap(data['avatar'])
+          : null,
       fssaiNumber: data['fssaiNumber'],
       businessTagline: data['businessTagline'],
       stampImageUrl: data['stampImageUrl'],
@@ -244,8 +245,9 @@ class VendorProfile {
   static bool isValidGstin(String gstin) {
     // GSTIN format: 2 digits state code + 10 char PAN + 1 entity code + Z + 1 checksum
     final regex = RegExp(
-        r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
-        caseSensitive: false);
+      r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
+      caseSensitive: false,
+    );
     return gstin.isEmpty || regex.hasMatch(gstin.toUpperCase());
   }
 
@@ -300,10 +302,7 @@ class AvatarData {
   final String avatarId;
   final String category;
 
-  const AvatarData({
-    required this.avatarId,
-    required this.category,
-  });
+  const AvatarData({required this.avatarId, required this.category});
 
   factory AvatarData.fromMap(Map<String, dynamic> map) {
     return AvatarData(
@@ -313,10 +312,7 @@ class AvatarData {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'avatarId': avatarId,
-      'category': category,
-    };
+    return {'avatarId': avatarId, 'category': category};
   }
 
   // Helper to get asset path dynamically

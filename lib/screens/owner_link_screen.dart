@@ -44,22 +44,22 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
         isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('✅ Code generated: $shortCode')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('✅ Code generated: $shortCode')));
     } catch (e) {
       setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 
   void _copyCode() {
     if (generatedCode == null) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Code copied to clipboard')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Code copied to clipboard')));
   }
 
   @override
@@ -99,8 +99,9 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
               decoration: InputDecoration(
                 hintText: '10-digit mobile',
                 prefixIcon: const Icon(Icons.phone, color: Colors.blue),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 filled: true,
                 fillColor: Colors.blue.shade50,
                 counterText: '',
@@ -121,13 +122,18 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
                         width: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
-                    : const Text('Generate Code',
+                    : const Text(
+                        'Generate Code',
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
 
@@ -141,11 +147,14 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('✅ Link Code Generated',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: FuturisticColors.success)),
+                      const Text(
+                        '✅ Link Code Generated',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: FuturisticColors.success,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -153,8 +162,9 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              color: FuturisticColors.success.withOpacity(0.6),
-                              width: 2),
+                            color: FuturisticColors.success.withOpacity(0.6),
+                            width: 2,
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,10 +172,11 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
                             Text(
                               generatedCode!,
                               style: const TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 4,
-                                  color: FuturisticColors.success),
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 4,
+                                color: FuturisticColors.success,
+                              ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.copy, color: Colors.blue),
@@ -203,21 +214,31 @@ class _OwnerLinkScreenState extends State<OwnerLinkScreen> {
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('ℹ️ How it works:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                  SizedBox(height: 8),
-                  Text('1. Enter customer phone number',
-                      style: TextStyle(fontSize: 11)),
-                  Text('2. Click "Generate Code"',
-                      style: TextStyle(fontSize: 11)),
-                  Text('3. Share the 6-digit code with customer',
-                      style: TextStyle(fontSize: 11)),
-                  Text('4. Customer enters code in their app to link profile',
-                      style: TextStyle(fontSize: 11)),
                   Text(
-                      '5. Bills created for that phone will auto-sync to their profile',
-                      style: TextStyle(fontSize: 11)),
+                    'ℹ️ How it works:',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '1. Enter customer phone number',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Text(
+                    '2. Click "Generate Code"',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Text(
+                    '3. Share the 6-digit code with customer',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Text(
+                    '4. Customer enters code in their app to link profile',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Text(
+                    '5. Bills created for that phone will auto-sync to their profile',
+                    style: TextStyle(fontSize: 11),
+                  ),
                 ],
               ),
             ),

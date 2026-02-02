@@ -29,9 +29,9 @@ class UserRepository {
   /// Get user record by ID
   Future<RepositoryResult<UserEntity?>> getUser(String userId) async {
     return await errorHandler.runSafe<UserEntity?>(() async {
-      return await (database.select(database.users)
-            ..where((t) => t.id.equals(userId)))
-          .getSingleOrNull();
+      return await (database.select(
+        database.users,
+      )..where((t) => t.id.equals(userId))).getSingleOrNull();
     }, 'getUser');
   }
 
@@ -41,39 +41,47 @@ class UserRepository {
       final now = DateTime.now();
 
       // Ensure user exists locally first
-      final existing = await (database.select(database.users)
-            ..where((t) => t.id.equals(userId)))
-          .getSingleOrNull();
+      final existing = await (database.select(
+        database.users,
+      )..where((t) => t.id.equals(userId))).getSingleOrNull();
       if (existing == null) {
-        await database.into(database.users).insert(UsersCompanion.insert(
-              id: userId,
-              hasSeenLoginOnboarding: const Value(true),
-              loginOnboardingSeenAt: Value(now),
-              createdAt: now,
-              updatedAt: now,
-            ));
+        await database
+            .into(database.users)
+            .insert(
+              UsersCompanion.insert(
+                id: userId,
+                hasSeenLoginOnboarding: const Value(true),
+                loginOnboardingSeenAt: Value(now),
+                createdAt: now,
+                updatedAt: now,
+              ),
+            );
       } else {
-        await (database.update(database.users)
-              ..where((t) => t.id.equals(userId)))
-            .write(UsersCompanion(
-          hasSeenLoginOnboarding: const Value(true),
-          loginOnboardingSeenAt: Value(now),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-        ));
+        await (database.update(
+          database.users,
+        )..where((t) => t.id.equals(userId))).write(
+          UsersCompanion(
+            hasSeenLoginOnboarding: const Value(true),
+            loginOnboardingSeenAt: Value(now),
+            updatedAt: Value(now),
+            isSynced: const Value(false),
+          ),
+        );
       }
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: userId,
-        payload: {
-          'hasSeenLoginOnboarding': true,
-          'loginOnboardingSeenAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: userId,
+          payload: {
+            'hasSeenLoginOnboarding': true,
+            'loginOnboardingSeenAt': now.toIso8601String(),
+          },
+        ),
+      );
     }, 'markLoginOnboardingSeen');
   }
 
@@ -99,9 +107,9 @@ class UserRepository {
 
       await database.into(database.users).insertOnConflictUpdate(companion);
 
-      return await (database.select(database.users)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      return await (database.select(
+        database.users,
+      )..where((t) => t.id.equals(id))).getSingle();
     }, 'syncUserLocally');
   }
 }

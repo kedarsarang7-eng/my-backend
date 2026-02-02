@@ -67,8 +67,9 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('Payroll'),
         backgroundColor: Colors.transparent,
@@ -94,18 +95,16 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _staffList.isEmpty
-                    ? _buildEmptyState(isDark)
-                    : RefreshIndicator(
-                        onRefresh: _loadData,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _staffList.length,
-                          itemBuilder: (_, i) => _buildStaffSalaryCard(
-                            _staffList[i],
-                            isDark,
-                          ),
-                        ),
-                      ),
+                ? _buildEmptyState(isDark)
+                : RefreshIndicator(
+                    onRefresh: _loadData,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: _staffList.length,
+                      itemBuilder: (_, i) =>
+                          _buildStaffSalaryCard(_staffList[i], isDark),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -145,9 +144,9 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
                   style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 Text(
-                  DateFormat('MMMM yyyy').format(
-                    DateTime(_selectedYear, _selectedMonth),
-                  ),
+                  DateFormat(
+                    'MMMM yyyy',
+                  ).format(DateTime(_selectedYear, _selectedMonth)),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -274,10 +273,12 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
   Widget _buildStaffSalaryCard(StaffModel staff, bool isDark) {
     // Find salary record for this staff and selected month
     final salaryRecord = _salaryRecords
-        .where((s) =>
-            s.staffId == staff.id &&
-            s.month == _selectedMonth &&
-            s.year == _selectedYear)
+        .where(
+          (s) =>
+              s.staffId == staff.id &&
+              s.month == _selectedMonth &&
+              s.year == _selectedYear,
+        )
         .firstOrNull;
 
     final netSalary = salaryRecord?.netSalary ?? staff.baseSalary;
@@ -366,8 +367,10 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
             // Status & Action
             if (isPaid)
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.green.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
@@ -387,8 +390,10 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isPartial ? Colors.orange : Colors.blue,
                   foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -423,9 +428,7 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
           const SizedBox(height: 8),
           Text(
             'Add staff to manage payroll',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.grey,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.grey),
           ),
         ],
       ),
@@ -504,8 +507,9 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
 
   void _showPayDialog(StaffModel staff, double netSalary, double paidAmount) {
     final remaining = netSalary - paidAmount;
-    final amountController =
-        TextEditingController(text: remaining.toStringAsFixed(0));
+    final amountController = TextEditingController(
+      text: remaining.toStringAsFixed(0),
+    );
     String paymentMode = 'CASH';
 
     showDialog(
@@ -557,10 +561,12 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
               if (amount > 0) {
                 // Find or create salary record
                 final existingSalary = _salaryRecords
-                    .where((s) =>
-                        s.staffId == staff.id &&
-                        s.month == _selectedMonth &&
-                        s.year == _selectedYear)
+                    .where(
+                      (s) =>
+                          s.staffId == staff.id &&
+                          s.month == _selectedMonth &&
+                          s.year == _selectedYear,
+                    )
                     .firstOrNull;
 
                 if (existingSalary != null) {
@@ -576,7 +582,8 @@ class _StaffPayrollScreenState extends State<StaffPayrollScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          'Paid ₹${amount.toStringAsFixed(0)} to ${staff.name}'),
+                        'Paid ₹${amount.toStringAsFixed(0)} to ${staff.name}',
+                      ),
                       backgroundColor: Colors.green,
                     ),
                   );

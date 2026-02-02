@@ -19,10 +19,7 @@ import 'package:flutter/material.dart';
 class AuthLoadingScreen extends StatelessWidget {
   final String? message;
 
-  const AuthLoadingScreen({
-    super.key,
-    this.message,
-  });
+  const AuthLoadingScreen({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {

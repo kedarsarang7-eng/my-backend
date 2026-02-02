@@ -66,9 +66,11 @@ class CustomerModel {
       marketTicket: (map['marketTicket'] as num?)?.toDouble() ?? 0.0,
       isBlacklisted: (map['isBlacklisted'] as int?) == 1,
       createdAt: DateTime.parse(
-          map['createdAt'] as String? ?? DateTime.now().toIso8601String()),
+        map['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      ),
       updatedAt: DateTime.parse(
-          map['updatedAt'] as String? ?? DateTime.now().toIso8601String()),
+        map['updatedAt'] as String? ?? DateTime.now().toIso8601String(),
+      ),
       syncStatus: (map['syncStatus'] as int?) == 1,
       firestoreDocId: map['firestoreDocId'] as String?,
     );

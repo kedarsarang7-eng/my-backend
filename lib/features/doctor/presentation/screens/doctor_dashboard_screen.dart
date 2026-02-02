@@ -81,11 +81,14 @@ class _DoctorDashboardScreenState extends ConsumerState<DoctorDashboardScreen> {
               ],
             ),
             const SizedBox(height: 32),
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(child: _buildWeeklyAnalytics()),
-              const SizedBox(width: 24),
-              Expanded(child: _buildMonthlyAnalytics()),
-            ]),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _buildWeeklyAnalytics()),
+                const SizedBox(width: 24),
+                Expanded(child: _buildMonthlyAnalytics()),
+              ],
+            ),
           ],
         ),
       ),
@@ -103,8 +106,10 @@ class _DoctorDashboardScreenState extends ConsumerState<DoctorDashboardScreen> {
           children: [
             const Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
             const SizedBox(width: 8),
-            Text('Emergency / Walk-in',
-                style: GoogleFonts.inter(color: Colors.white)),
+            Text(
+              'Emergency / Walk-in',
+              style: GoogleFonts.inter(color: Colors.white),
+            ),
           ],
         ),
         content: Column(
@@ -142,8 +147,10 @@ class _DoctorDashboardScreenState extends ConsumerState<DoctorDashboardScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, nameController.text.trim()),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-            child: const Text('Start Visit',
-                style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Start Visit',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -182,9 +189,7 @@ class _DoctorDashboardScreenState extends ConsumerState<DoctorDashboardScreen> {
       // Navigate to Visit Screen
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => VisitScreen(patientId: newId),
-        ),
+        MaterialPageRoute(builder: (context) => VisitScreen(patientId: newId)),
       );
     } catch (e) {
       if (mounted) {
@@ -234,33 +239,51 @@ class _DoctorDashboardScreenState extends ConsumerState<DoctorDashboardScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: FuturisticColors.surface,
-        title: Text('Patient Details',
-            style: GoogleFonts.inter(color: FuturisticColors.textPrimary)),
+        title: Text(
+          'Patient Details',
+          style: GoogleFonts.inter(color: FuturisticColors.textPrimary),
+        ),
         content: patient == null
-            ? Text('Patient not found',
-                style: GoogleFonts.inter(color: FuturisticColors.textSecondary))
+            ? Text(
+                'Patient not found',
+                style: GoogleFonts.inter(color: FuturisticColors.textSecondary),
+              )
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name: ${patient.name}',
-                      style: GoogleFonts.inter(
-                          color: FuturisticColors.textPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    'Name: ${patient.name}',
+                    style: GoogleFonts.inter(
+                      color: FuturisticColors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Phone: ${patient.phone ?? "--"}',
-                      style: GoogleFonts.inter(
-                          color: FuturisticColors.textSecondary)),
-                  Text('Age: ${patient.age ?? "--"}',
-                      style: GoogleFonts.inter(
-                          color: FuturisticColors.textSecondary)),
-                  Text('Gender: ${patient.gender ?? "--"}',
-                      style: GoogleFonts.inter(
-                          color: FuturisticColors.textSecondary)),
+                  Text(
+                    'Phone: ${patient.phone ?? "--"}',
+                    style: GoogleFonts.inter(
+                      color: FuturisticColors.textSecondary,
+                    ),
+                  ),
+                  Text(
+                    'Age: ${patient.age ?? "--"}',
+                    style: GoogleFonts.inter(
+                      color: FuturisticColors.textSecondary,
+                    ),
+                  ),
+                  Text(
+                    'Gender: ${patient.gender ?? "--"}',
+                    style: GoogleFonts.inter(
+                      color: FuturisticColors.textSecondary,
+                    ),
+                  ),
                   const SizedBox(height: 16),
-                  Text('Allergies: ${patient.allergies ?? "None"}',
-                      style: GoogleFonts.inter(color: FuturisticColors.error)),
+                  Text(
+                    'Allergies: ${patient.allergies ?? "None"}',
+                    style: GoogleFonts.inter(color: FuturisticColors.error),
+                  ),
                 ],
               ),
         actions: [
@@ -276,14 +299,17 @@ class _DoctorDashboardScreenState extends ConsumerState<DoctorDashboardScreen> {
                 ),
               );
             },
-            child: Text('Prescribe',
-                style: GoogleFonts.inter(color: FuturisticColors.primary)),
+            child: Text(
+              'Prescribe',
+              style: GoogleFonts.inter(color: FuturisticColors.primary),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close',
-                style:
-                    GoogleFonts.inter(color: FuturisticColors.textSecondary)),
+            child: Text(
+              'Close',
+              style: GoogleFonts.inter(color: FuturisticColors.textSecondary),
+            ),
           ),
         ],
       ),

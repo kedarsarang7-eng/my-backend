@@ -63,34 +63,33 @@ class CashClosing {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'businessId': businessId,
-        'closingDate': closingDate.toIso8601String(),
-        'expectedCash': expectedCash,
-        'actualCash': actualCash,
-        'variance': variance,
-        'closedBy': closedBy,
-        'status': status.name,
-        'approvedBy': approvedBy,
-        'approvalReason': approvalReason,
-        'createdAt': createdAt.toIso8601String(),
-        'approvedAt': approvedAt?.toIso8601String(),
-      };
+    'id': id,
+    'businessId': businessId,
+    'closingDate': closingDate.toIso8601String(),
+    'expectedCash': expectedCash,
+    'actualCash': actualCash,
+    'variance': variance,
+    'closedBy': closedBy,
+    'status': status.name,
+    'approvedBy': approvedBy,
+    'approvalReason': approvalReason,
+    'createdAt': createdAt.toIso8601String(),
+    'approvedAt': approvedAt?.toIso8601String(),
+  };
 
   Map<String, dynamic> toFirestore() => {
-        'businessId': businessId,
-        'closingDate': Timestamp.fromDate(closingDate),
-        'expectedCash': expectedCash,
-        'actualCash': actualCash,
-        'variance': variance,
-        'closedBy': closedBy,
-        'status': status.name,
-        'approvedBy': approvedBy,
-        'approvalReason': approvalReason,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'approvedAt':
-            approvedAt != null ? Timestamp.fromDate(approvedAt!) : null,
-      };
+    'businessId': businessId,
+    'closingDate': Timestamp.fromDate(closingDate),
+    'expectedCash': expectedCash,
+    'actualCash': actualCash,
+    'variance': variance,
+    'closedBy': closedBy,
+    'status': status.name,
+    'approvedBy': approvedBy,
+    'approvalReason': approvalReason,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'approvedAt': approvedAt != null ? Timestamp.fromDate(approvedAt!) : null,
+  };
 
   CashClosing copyWith({
     CashClosingStatus? status,
@@ -156,10 +155,10 @@ class CashClosingService {
     required OwnerPinService pinService,
     required FraudDetectionService fraudService,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _pinService = pinService,
-        _fraudService = fraudService,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _pinService = pinService,
+       _fraudService = fraudService,
+       _auditRepository = auditRepository;
 
   /// Record daily cash closing
   Future<CashClosing> recordDayClose({
@@ -176,7 +175,8 @@ class CashClosingService {
     final existing = await getTodayClosing(businessId);
     if (existing != null) {
       throw CashClosingException(
-          'Day already closed for ${closingDate.toIso8601String().split('T')[0]}');
+        'Day already closed for ${closingDate.toIso8601String().split('T')[0]}',
+      );
     }
 
     // Determine status based on variance
@@ -239,8 +239,10 @@ class CashClosingService {
     String? reason,
   }) async {
     // Get closing
-    final doc =
-        await _firestore.collection('cash_closings').doc(closingId).get();
+    final doc = await _firestore
+        .collection('cash_closings')
+        .doc(closingId)
+        .get();
     if (!doc.exists) {
       throw CashClosingException('Closing not found');
     }
@@ -297,12 +299,17 @@ class CashClosingService {
   /// Check if day closing is pending for previous day
   Future<bool> isDayClosePending(String businessId) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    final yesterdayDate =
-        DateTime(yesterday.year, yesterday.month, yesterday.day);
+    final yesterdayDate = DateTime(
+      yesterday.year,
+      yesterday.month,
+      yesterday.day,
+    );
 
     final closingId = '${businessId}_${yesterdayDate.millisecondsSinceEpoch}';
-    final doc =
-        await _firestore.collection('cash_closings').doc(closingId).get();
+    final doc = await _firestore
+        .collection('cash_closings')
+        .doc(closingId)
+        .get();
 
     return !doc.exists;
   }
@@ -330,8 +337,10 @@ class CashClosingService {
     final today = DateTime(now.year, now.month, now.day);
     final closingId = '${businessId}_${today.millisecondsSinceEpoch}';
 
-    final doc =
-        await _firestore.collection('cash_closings').doc(closingId).get();
+    final doc = await _firestore
+        .collection('cash_closings')
+        .doc(closingId)
+        .get();
 
     if (!doc.exists) {
       _todayClosingCache[businessId] = null;
@@ -369,7 +378,8 @@ class CashClosingService {
     // This would query bills and payments for the day
     // For now, return opening cash (to be implemented with BillsRepository)
     debugPrint(
-        'CashClosingService: calculateExpectedCash - to be implemented with billing data');
+      'CashClosingService: calculateExpectedCash - to be implemented with billing data',
+    );
     return openingCash;
   }
 

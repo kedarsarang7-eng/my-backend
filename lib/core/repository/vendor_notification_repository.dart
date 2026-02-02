@@ -114,9 +114,8 @@ class VendorNotification {
 class VendorNotificationRepository {
   final AppDatabase _db;
 
-  VendorNotificationRepository({
-    AppDatabase? db,
-  }) : _db = db ?? sl<AppDatabase>();
+  VendorNotificationRepository({AppDatabase? db})
+    : _db = db ?? sl<AppDatabase>();
 
   /// Create a new notification
   Future<VendorNotification> createNotification({
@@ -144,7 +143,9 @@ class VendorNotificationRepository {
 
     // Insert into local database using CustomerNotifications table
     // (Reusing existing table structure)
-    await _db.into(_db.customerNotifications).insert(
+    await _db
+        .into(_db.customerNotifications)
+        .insert(
           CustomerNotificationsCompanion(
             id: Value(id),
             customerId: Value(userId), // Using customerId field for userId
@@ -229,18 +230,20 @@ class VendorNotificationRepository {
 
     return query.watch().map((rows) {
       return rows
-          .map((row) => VendorNotification(
-                id: row.id,
-                userId: row.customerId,
-                type: VendorNotificationType.fromString(row.notificationType),
-                title: row.title,
-                message: row.body,
-                actionType: row.actionType,
-                actionId: row.actionId,
-                isRead: row.isRead,
-                createdAt: row.createdAt,
-                readAt: row.readAt,
-              ))
+          .map(
+            (row) => VendorNotification(
+              id: row.id,
+              userId: row.customerId,
+              type: VendorNotificationType.fromString(row.notificationType),
+              title: row.title,
+              message: row.body,
+              actionType: row.actionType,
+              actionId: row.actionId,
+              isRead: row.isRead,
+              createdAt: row.createdAt,
+              readAt: row.readAt,
+            ),
+          )
           .toList();
     });
   }
@@ -266,11 +269,14 @@ class VendorNotificationRepository {
   Future<void> markAsRead(String id) async {
     final now = DateTime.now();
 
-    await (_db.update(_db.customerNotifications)..where((t) => t.id.equals(id)))
-        .write(CustomerNotificationsCompanion(
-      isRead: const Value(true),
-      readAt: Value(now),
-    ));
+    await (_db.update(
+      _db.customerNotifications,
+    )..where((t) => t.id.equals(id))).write(
+      CustomerNotificationsCompanion(
+        isRead: const Value(true),
+        readAt: Value(now),
+      ),
+    );
   }
 
   /// Mark all as read
@@ -279,21 +285,25 @@ class VendorNotificationRepository {
 
     await (_db.update(_db.customerNotifications)
           ..where((t) => t.customerId.equals(userId) & t.isRead.equals(false)))
-        .write(CustomerNotificationsCompanion(
-      isRead: const Value(true),
-      readAt: Value(now),
-    ));
+        .write(
+          CustomerNotificationsCompanion(
+            isRead: const Value(true),
+            readAt: Value(now),
+          ),
+        );
   }
 
   /// Delete old notifications (cleanup)
   Future<int> deleteOldNotifications(String userId, {int daysOld = 30}) async {
     final cutoff = DateTime.now().subtract(Duration(days: daysOld));
 
-    final deleted = await (_db.delete(_db.customerNotifications)
-          ..where((t) =>
-              t.customerId.equals(userId) &
-              t.createdAt.isSmallerThanValue(cutoff)))
-        .go();
+    final deleted =
+        await (_db.delete(_db.customerNotifications)..where(
+              (t) =>
+                  t.customerId.equals(userId) &
+                  t.createdAt.isSmallerThanValue(cutoff),
+            ))
+            .go();
 
     return deleted;
   }

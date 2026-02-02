@@ -13,7 +13,7 @@ class IMEIValidationResult {
   final List<String> errors;
   final List<String> warnings;
   final Map<String, String>
-      imeiToProductMap; // IMEI -> Product ID for valid IMEIs
+  imeiToProductMap; // IMEI -> Product ID for valid IMEIs
 
   IMEIValidationResult({
     required this.isValid,
@@ -82,14 +82,16 @@ class IMEIValidationService {
         switch (existingIMEI.status) {
           case IMEISerialStatus.sold:
             errors.add(
-                'IMEI $serialNo already sold on ${_formatDate(existingIMEI.soldDate)}');
+              'IMEI $serialNo already sold on ${_formatDate(existingIMEI.soldDate)}',
+            );
             break;
           case IMEISerialStatus.inService:
             errors.add('IMEI $serialNo is currently in service');
             break;
           case IMEISerialStatus.returned:
             warnings.add(
-                'IMEI $serialNo was previously returned - verify condition');
+              'IMEI $serialNo was previously returned - verify condition',
+            );
             validImeiMap[serialNo] = existingIMEI.id;
             break;
           case IMEISerialStatus.inStock:
@@ -104,7 +106,8 @@ class IMEIValidationService {
         // IMEI not in our system - add a warning but allow sale
         // (It may be a new stock item not yet added to IMEISerials)
         warnings.add(
-            'IMEI $serialNo not found in inventory - will be auto-registered');
+          'IMEI $serialNo not found in inventory - will be auto-registered',
+        );
       }
     }
 
@@ -159,8 +162,11 @@ class IMEIValidationService {
           soldDate: now,
           warrantyMonths: warrantyMonths,
           warrantyStartDate: now,
-          warrantyEndDate:
-              DateTime(now.year, now.month + warrantyMonths, now.day),
+          warrantyEndDate: DateTime(
+            now.year,
+            now.month + warrantyMonths,
+            now.day,
+          ),
           isUnderWarranty: warrantyMonths > 0,
           productName: item.productName,
           createdAt: now,

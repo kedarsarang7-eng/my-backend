@@ -39,14 +39,18 @@ class SecurityInitializationService {
       _hasValidAppSignature = await _deviceSecurityService.verifyAppSignature();
 
       if (!_isDeviceSafe) {
-        _showCriticalSecurityAlert('Device Jailbroken/Rooted',
-            'This app cannot run on modified devices for security reasons.');
+        _showCriticalSecurityAlert(
+          'Device Jailbroken/Rooted',
+          'This app cannot run on modified devices for security reasons.',
+        );
         return false;
       }
 
       if (!_hasValidAppSignature) {
         _showCriticalSecurityAlert(
-            'App Tampered', 'App integrity check failed. Do not use this app.');
+          'App Tampered',
+          'App integrity check failed. Do not use this app.',
+        );
         return false;
       }
 
@@ -85,8 +89,10 @@ class SecurityInitializationService {
 
       return true;
     } catch (e) {
-      _showCriticalSecurityAlert('Security Initialization Failed',
-          'The app could not initialize security systems. Please reinstall.');
+      _showCriticalSecurityAlert(
+        'Security Initialization Failed',
+        'The app could not initialize security systems. Please reinstall.',
+      );
       return false;
     }
   }
@@ -149,9 +155,7 @@ class SecurityInitializationService {
         reason: 'CRITICAL_SECURITY_VIOLATION',
       );
 
-      FirebaseCrashlytics.instance.log(
-        'SECURITY VIOLATION: $title - $message',
-      );
+      FirebaseCrashlytics.instance.log('SECURITY VIOLATION: $title - $message');
     } catch (e) {
       debugPrint('Failed to log security violation: $e');
     }
@@ -168,7 +172,8 @@ class SecurityInitializationService {
       }
     } else {
       debugPrint(
-          '⚠️ SECURITY ALERT (Debug Mode - Not Exiting): $title - $message');
+        '⚠️ SECURITY ALERT (Debug Mode - Not Exiting): $title - $message',
+      );
     }
   }
 

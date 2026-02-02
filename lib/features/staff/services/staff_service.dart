@@ -60,11 +60,12 @@ class StaffService {
   }
 
   Future<void> updateStaff(String id, StaffMembersCompanion staff) async {
-    await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id)))
-        .write(staff.copyWith(
-      updatedAt: Value(DateTime.now()),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id))).write(
+      staff.copyWith(
+        updatedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
 
     await _auditRepo.logAction(
       userId: _ownerId,
@@ -76,12 +77,13 @@ class StaffService {
   }
 
   Future<void> deleteStaff(String id) async {
-    await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id)))
-        .write(StaffMembersCompanion(
-      isActive: const Value(false),
-      deletedAt: Value(DateTime.now()),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id))).write(
+      StaffMembersCompanion(
+        isActive: const Value(false),
+        deletedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
 
     await _auditRepo.logAction(
       userId: _ownerId,
@@ -112,9 +114,9 @@ class StaffService {
   }
 
   Future<StaffModel?> getStaffById(String id) async {
-    final entity = await (_db.select(_db.staffMembers)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final entity = await (_db.select(
+      _db.staffMembers,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     return entity != null ? StaffModelX.fromEntity(entity) : null;
   }
@@ -129,27 +131,32 @@ class StaffService {
     final id = '${staffId}_${today.millisecondsSinceEpoch}';
 
     // Check if already checked in today
-    final existing = await (_db.select(_db.staffAttendance)
-          ..where((t) => t.staffId.equals(staffId) & t.date.equals(today)))
-        .getSingleOrNull();
+    final existing =
+        await (_db.select(_db.staffAttendance)
+              ..where((t) => t.staffId.equals(staffId) & t.date.equals(today)))
+            .getSingleOrNull();
 
     if (existing != null) {
       throw Exception('Staff already marked attendance for today');
     }
 
-    await _db.into(_db.staffAttendance).insert(StaffAttendanceCompanion(
-          id: Value(id),
-          userId: Value(_ownerId),
-          staffId: Value(staffId),
-          date: Value(today),
-          checkIn: Value(now),
-          checkInTime: Value(now),
-          status: const Value('PRESENT'),
-          method: Value(method),
-          createdAt: Value(now),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-        ));
+    await _db
+        .into(_db.staffAttendance)
+        .insert(
+          StaffAttendanceCompanion(
+            id: Value(id),
+            userId: Value(_ownerId),
+            staffId: Value(staffId),
+            date: Value(today),
+            checkIn: Value(now),
+            checkInTime: Value(now),
+            status: const Value('PRESENT'),
+            method: Value(method),
+            createdAt: Value(now),
+            updatedAt: Value(now),
+            isSynced: const Value(false),
+          ),
+        );
 
     // Audit
     await _auditRepo.logAction(
@@ -165,9 +172,10 @@ class StaffService {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
-    final existing = await (_db.select(_db.staffAttendance)
-          ..where((t) => t.staffId.equals(staffId) & t.date.equals(today)))
-        .getSingleOrNull();
+    final existing =
+        await (_db.select(_db.staffAttendance)
+              ..where((t) => t.staffId.equals(staffId) & t.date.equals(today)))
+            .getSingleOrNull();
 
     if (existing == null) {
       // Auto-create check-in if missed? Strict mode says NO.
@@ -182,15 +190,17 @@ class StaffService {
     final duration = now.difference(existing.checkIn ?? now);
     final hours = duration.inMinutes / 60.0;
 
-    await (_db.update(_db.staffAttendance)
-          ..where((t) => t.id.equals(existing.id)))
-        .write(StaffAttendanceCompanion(
-      checkOut: Value(now),
-      checkOutTime: Value(now),
-      hoursWorked: Value(hours),
-      updatedAt: Value(now),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.staffAttendance,
+    )..where((t) => t.id.equals(existing.id))).write(
+      StaffAttendanceCompanion(
+        checkOut: Value(now),
+        checkOutTime: Value(now),
+        hoursWorked: Value(hours),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
 
     await _auditRepo.logAction(
       userId: _ownerId,
@@ -263,9 +273,11 @@ class StaffService {
     final staffList = await getAllStaff(activeOnly: false);
 
     // Get today's attendance
-    final attendanceList = await (_db.select(_db.staffAttendance)
-          ..where((t) => t.userId.equals(_ownerId) & t.date.equals(startOfDay)))
-        .get();
+    final attendanceList =
+        await (_db.select(_db.staffAttendance)..where(
+              (t) => t.userId.equals(_ownerId) & t.date.equals(startOfDay),
+            ))
+            .get();
 
     final attendanceMap = {for (var a in attendanceList) a.staffId: a};
 
@@ -290,11 +302,16 @@ class StaffService {
     final startOfMonth = DateTime(year, month, 1);
     final endOfMonth = DateTime(year, month + 1, 0);
 
-    final attendanceList = await (_db.select(_db.staffAttendance)
-          ..where((t) =>
-              t.staffId.equals(staffId) &
-              t.date.isBetween(Variable(startOfMonth), Variable(endOfMonth))))
-        .get();
+    final attendanceList =
+        await (_db.select(_db.staffAttendance)..where(
+              (t) =>
+                  t.staffId.equals(staffId) &
+                  t.date.isBetween(
+                    Variable(startOfMonth),
+                    Variable(endOfMonth),
+                  ),
+            ))
+            .get();
 
     int present = 0, absent = 0, halfDay = 0, leave = 0;
     double totalHours = 0, overtime = 0;
@@ -349,8 +366,11 @@ class StaffService {
     if (staff == null) return;
 
     // 2. Fetch Attendance
-    final summary =
-        await getAttendanceSummary(staffId: staffId, month: month, year: year);
+    final summary = await getAttendanceSummary(
+      staffId: staffId,
+      month: month,
+      year: year,
+    );
 
     // 3. Calculate Pay based on Type
     double pay = 0;
@@ -361,7 +381,8 @@ class StaffService {
       final perDay = staff.baseSalary / (workingDays > 0 ? workingDays : 30);
       pay = (summary.presentDays * perDay) + (summary.halfDays * 0.5 * perDay);
     } else if (staff.salaryType == SalaryType.daily) {
-      pay = (summary.presentDays * staff.dailyRate) +
+      pay =
+          (summary.presentDays * staff.dailyRate) +
           (summary.halfDays * 0.5 * staff.dailyRate);
     } else if (staff.salaryType == SalaryType.hourly) {
       pay = summary.totalHoursWorked * staff.hourlyRate;
@@ -398,30 +419,32 @@ class StaffService {
     final recordId = '${staffId}_${year}_$month';
     final now = DateTime.now();
 
-    final existing = await (_db.select(_db.salaryRecords)
-          ..where((t) => t.id.equals(recordId)))
-        .getSingleOrNull();
+    final existing = await (_db.select(
+      _db.salaryRecords,
+    )..where((t) => t.id.equals(recordId))).getSingleOrNull();
 
     await _db
         .into(_db.salaryRecords)
-        .insertOnConflictUpdate(SalaryRecordsCompanion(
-          id: Value(recordId),
-          staffId: Value(staffId),
-          userId: Value(_ownerId),
-          month: Value(month),
-          year: Value(year),
-          baseSalary: Value(staff.baseSalary),
-          grossSalary: Value(gross),
-          netSalary: Value(net),
-          presentDays: Value(summary.presentDays),
-          halfDays: Value(summary.halfDays),
-          absentDays: Value(summary.absentDays),
-          totalHoursWorked: Value(summary.totalHoursWorked),
-          totalDays: Value(summary.totalDays),
-          createdAt: Value(existing?.createdAt ?? now),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-        ));
+        .insertOnConflictUpdate(
+          SalaryRecordsCompanion(
+            id: Value(recordId),
+            staffId: Value(staffId),
+            userId: Value(_ownerId),
+            month: Value(month),
+            year: Value(year),
+            baseSalary: Value(staff.baseSalary),
+            grossSalary: Value(gross),
+            netSalary: Value(net),
+            presentDays: Value(summary.presentDays),
+            halfDays: Value(summary.halfDays),
+            absentDays: Value(summary.absentDays),
+            totalHoursWorked: Value(summary.totalHoursWorked),
+            totalDays: Value(summary.totalDays),
+            createdAt: Value(existing?.createdAt ?? now),
+            updatedAt: Value(now),
+            isSynced: const Value(false),
+          ),
+        );
 
     await _auditRepo.logAction(
       userId: _ownerId,
@@ -433,11 +456,13 @@ class StaffService {
   }
 
   Future<List<SalaryModel>> getPendingSalaries() async {
-    final entities = await (_db.select(_db.salaryRecords)
-          ..where((t) =>
-              t.userId.equals(_ownerId) &
-              t.status.isIn(['PENDING', 'PARTIAL'])))
-        .get();
+    final entities =
+        await (_db.select(_db.salaryRecords)..where(
+              (t) =>
+                  t.userId.equals(_ownerId) &
+                  t.status.isIn(['PENDING', 'PARTIAL']),
+            ))
+            .get();
 
     return entities.map((e) => SalaryModelX.fromEntity(e)).toList();
   }
@@ -447,22 +472,23 @@ class StaffService {
     required double amount,
     required String paymentMode,
   }) async {
-    final record = await (_db.select(_db.salaryRecords)
-          ..where((t) => t.id.equals(id)))
-        .getSingle();
+    final record = await (_db.select(
+      _db.salaryRecords,
+    )..where((t) => t.id.equals(id))).getSingle();
 
     final newPaid = record.paidAmount + amount;
     final status = newPaid >= record.netSalary ? 'PAID' : 'PARTIAL';
 
-    await (_db.update(_db.salaryRecords)..where((t) => t.id.equals(id)))
-        .write(SalaryRecordsCompanion(
-      paidAmount: Value(newPaid),
-      status: Value(status),
-      paymentMode: Value(paymentMode),
-      paidAt: Value(DateTime.now()),
-      updatedAt: Value(DateTime.now()),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(_db.salaryRecords)..where((t) => t.id.equals(id))).write(
+      SalaryRecordsCompanion(
+        paidAmount: Value(newPaid),
+        status: Value(status),
+        paymentMode: Value(paymentMode),
+        paidAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
 
     await _auditRepo.logAction(
       userId: _ownerId,

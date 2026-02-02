@@ -19,8 +19,10 @@ class GoogleSignInService {
   /// Does NOT handle Firestore creation or session management.
   Future<UserCredential?> signIn() async {
     try {
-      developer.log('Starting Google Sign-In flow...',
-          name: 'GoogleSignInService');
+      developer.log(
+        'Starting Google Sign-In flow...',
+        name: 'GoogleSignInService',
+      );
 
       if (kIsWeb) {
         // Web: Use popup (Preferred for Firebase on Web)
@@ -30,17 +32,16 @@ class GoogleSignInService {
         return await _firebaseAuth.signInWithPopup(googleAuthProvider);
       } else {
         // Mobile: Use native Google Sign-In (v7.x Singleton API)
-        final GoogleSignInAccount googleUser =
-            await GoogleSignIn.instance.authenticate(
-          scopeHint: ['email'],
-        );
+        final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+            .authenticate(scopeHint: ['email']);
 
         // v7.x separates Authentication (ID Token) and Authorization (Access Token)
         final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
         // Explicitly authorize scopes to get the access token
-        final authz =
-            await googleUser.authorizationClient.authorizeScopes(['email']);
+        final authz = await googleUser.authorizationClient.authorizeScopes([
+          'email',
+        ]);
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: authz.accessToken,
@@ -50,8 +51,10 @@ class GoogleSignInService {
         return await _firebaseAuth.signInWithCredential(credential);
       }
     } on FirebaseAuthException catch (e) {
-      developer.log('FirebaseAuthException: ${e.code}',
-          name: 'GoogleSignInService');
+      developer.log(
+        'FirebaseAuthException: ${e.code}',
+        name: 'GoogleSignInService',
+      );
       if (e.code == 'account-exists-with-different-credential') {
         throw Exception('Email already linked to another login method.');
       } else if (e.code == 'invalid-credential') {

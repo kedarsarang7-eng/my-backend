@@ -4,8 +4,9 @@ class FirebaseHealthService {
   Future<Map<String, dynamic>> checkHealth() async {
     final start = DateTime.now();
     try {
-      final docRef =
-          FirebaseFirestore.instance.collection('_health').doc('ping');
+      final docRef = FirebaseFirestore.instance
+          .collection('_health')
+          .doc('ping');
       await docRef.set({
         'timestamp': FieldValue.serverTimestamp(),
         'device': 'health_check',

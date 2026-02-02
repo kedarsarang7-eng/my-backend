@@ -28,7 +28,7 @@ class BackupScreen extends ConsumerWidget {
           icon: Icons.sync,
           tooltip: 'Sync Now',
           onPressed: () => _performSync(context),
-        )
+        ),
       ],
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -37,12 +37,14 @@ class BackupScreen extends ConsumerWidget {
           children: [
             _buildSyncStatusCard(context),
             const SizedBox(height: 32),
-            Text("Data Management",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: FuturisticColors.textPrimary,
-                )),
+            Text(
+              "Data Management",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: FuturisticColors.textPrimary,
+              ),
+            ),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -58,14 +60,19 @@ class BackupScreen extends ConsumerWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildActionCard(
-                      context,
-                      "Export Data",
-                      "Download local JSON copy",
-                      Icons.download,
-                      Colors.orange, onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Export started... (Demo)")));
-                  }),
+                    context,
+                    "Export Data",
+                    "Download local JSON copy",
+                    Icons.download,
+                    Colors.orange,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Export started... (Demo)"),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -109,23 +116,33 @@ class BackupScreen extends ConsumerWidget {
               color: FuturisticColors.primary.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.sync_rounded,
-                size: 48, color: FuturisticColors.primary),
+            child: const Icon(
+              Icons.sync_rounded,
+              size: 48,
+              color: FuturisticColors.primary,
+            ),
           ),
           const SizedBox(width: 24),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Sync Status: Online",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
+                const Text(
+                  "Sync Status: Online",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                Text("Last Synced: Just now",
-                    style: TextStyle(
-                        fontSize: 16, color: FuturisticColors.textSecondary)),
+                Text(
+                  "Last Synced: Just now",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: FuturisticColors.textSecondary,
+                  ),
+                ),
               ],
             ),
           ),
@@ -139,9 +156,14 @@ class BackupScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionCard(BuildContext context, String title, String subtitle,
-      IconData icon, Color color,
-      {VoidCallback? onTap}) {
+  Widget _buildActionCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color, {
+    VoidCallback? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -159,17 +181,24 @@ class BackupScreen extends ConsumerWidget {
           children: [
             Icon(icon, color: color, size: 32),
             const Spacer(),
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(subtitle,
-                style: TextStyle(
-                    fontSize: 12, color: FuturisticColors.textSecondary),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12,
+                color: FuturisticColors.textSecondary,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),
@@ -177,20 +206,24 @@ class BackupScreen extends ConsumerWidget {
   }
 
   Future<void> _performSync(BuildContext context) async {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Syncing with cloud...")));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Syncing with cloud...")));
     try {
       await SyncEngine.instance.triggerSync();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Sync Complete! Data is safe."),
-          backgroundColor: Colors.green,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Sync Complete! Data is safe."),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Sync failed: $e")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Sync failed: $e")));
       }
     }
   }

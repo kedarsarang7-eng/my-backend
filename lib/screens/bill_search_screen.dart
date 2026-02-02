@@ -56,8 +56,9 @@ class _BillSearchScreenState extends State<BillSearchScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error: $e'),
-              backgroundColor: FuturisticColors.error),
+            content: Text('Error: $e'),
+            backgroundColor: FuturisticColors.error,
+          ),
         );
       }
       setState(() => isLoading = false);
@@ -69,7 +70,8 @@ class _BillSearchScreenState extends State<BillSearchScreen> {
     setState(() {
       filteredBills = allBills.where((bill) {
         // Text Filter
-        final matchesText = query.isEmpty ||
+        final matchesText =
+            query.isEmpty ||
             bill.customerName.toLowerCase().contains(query) ||
             bill.id.toLowerCase().contains(query) ||
             bill.status.toLowerCase().contains(query);
@@ -77,10 +79,19 @@ class _BillSearchScreenState extends State<BillSearchScreen> {
         // Date Filter
         bool matchesDate = true;
         if (_selectedRange != null) {
-          final start = DateTime(_selectedRange!.start.year,
-              _selectedRange!.start.month, _selectedRange!.start.day);
-          final end = DateTime(_selectedRange!.end.year,
-              _selectedRange!.end.month, _selectedRange!.end.day, 23, 59, 59);
+          final start = DateTime(
+            _selectedRange!.start.year,
+            _selectedRange!.start.month,
+            _selectedRange!.start.day,
+          );
+          final end = DateTime(
+            _selectedRange!.end.year,
+            _selectedRange!.end.month,
+            _selectedRange!.end.day,
+            23,
+            59,
+            59,
+          );
           matchesDate = bill.date.isAfter(start) && bill.date.isBefore(end);
         }
 
@@ -130,8 +141,10 @@ class _BillSearchScreenState extends State<BillSearchScreen> {
               style: const TextStyle(color: FuturisticColors.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Search by Customer, ID, Status...',
-                prefixIcon: const Icon(Icons.search,
-                    color: FuturisticColors.textSecondary),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: FuturisticColors.textSecondary,
+                ),
                 filled: true,
                 fillColor: FuturisticColors.surfaceHighlight,
                 border: OutlineInputBorder(
@@ -228,7 +241,9 @@ class _BillSearchScreenState extends State<BillSearchScreen> {
 
                       return Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: color.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(4),
@@ -237,9 +252,10 @@ class _BillSearchScreenState extends State<BillSearchScreen> {
                         child: Text(
                           b.status.toUpperCase(),
                           style: TextStyle(
-                              color: color,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold),
+                            color: color,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       );
                     },

@@ -17,7 +17,9 @@ class MockErrorHandler extends Mock implements ErrorHandler {
   @override
   @override
   Future<RepositoryResult<T>> runSafe<T>(
-      Future<T> Function() operation, String operationName) async {
+    Future<T> Function() operation,
+    String operationName,
+  ) async {
     final result = await operation();
     return RepositoryResult.success(result);
   }
@@ -56,11 +58,15 @@ void main() {
   group('Business Type Lockdown Tests', () {
     const userId = 'user_123';
 
-    test('isBusinessTypeLocked returns false when no transactions exist',
-        () async {
-      final isLocked = await onboardingRepository.isBusinessTypeLocked(userId);
-      expect(isLocked, isFalse);
-    });
+    test(
+      'isBusinessTypeLocked returns false when no transactions exist',
+      () async {
+        final isLocked = await onboardingRepository.isBusinessTypeLocked(
+          userId,
+        );
+        expect(isLocked, isFalse);
+      },
+    );
 
     test('isBusinessTypeLocked returns true after creating a bill', () async {
       // 1. Create a bill
@@ -68,92 +74,112 @@ void main() {
       final now = DateTime.now();
 
       // First, we need to create a USER (Shop)
-      await database.into(database.shops).insert(ShopsCompanion.insert(
-            id: userId,
-            name: 'Test Shop',
-            ownerId: userId,
-            businessType: const drift.Value('grocery'),
-            createdAt: now,
-            updatedAt: now,
-            isSynced: const drift.Value(false),
-          ));
+      await database
+          .into(database.shops)
+          .insert(
+            ShopsCompanion.insert(
+              id: userId,
+              name: 'Test Shop',
+              ownerId: userId,
+              businessType: const drift.Value('grocery'),
+              createdAt: now,
+              updatedAt: now,
+              isSynced: const drift.Value(false),
+            ),
+          );
 
       // Insert Bill directly into DB to simulate existing data
-      await database.into(database.bills).insert(BillsCompanion.insert(
-            id: billId,
-            userId: userId,
-            invoiceNumber: 'INV001',
-            billDate: now,
-            subtotal: const drift.Value(100.0),
-            taxAmount: const drift.Value(0.0),
-            grandTotal: const drift.Value(100.0),
-            paidAmount: const drift.Value(100.0),
-            businessType: const drift.Value('grocery'),
-            createdAt: now,
-            updatedAt: now,
-            itemsJson: '[]',
-            status: const drift.Value('Paid'),
-            isSynced: const drift.Value(false),
-          ));
+      await database
+          .into(database.bills)
+          .insert(
+            BillsCompanion.insert(
+              id: billId,
+              userId: userId,
+              invoiceNumber: 'INV001',
+              billDate: now,
+              subtotal: const drift.Value(100.0),
+              taxAmount: const drift.Value(0.0),
+              grandTotal: const drift.Value(100.0),
+              paidAmount: const drift.Value(100.0),
+              businessType: const drift.Value('grocery'),
+              createdAt: now,
+              updatedAt: now,
+              itemsJson: '[]',
+              status: const drift.Value('Paid'),
+              isSynced: const drift.Value(false),
+            ),
+          );
 
       // 2. Check lock status
       final isLocked = await onboardingRepository.isBusinessTypeLocked(userId);
       expect(isLocked, isTrue);
     });
 
-    test('BillsRepository blocks creation of mismatched business type',
-        () async {
-      final now = DateTime.now();
+    test(
+      'BillsRepository blocks creation of mismatched business type',
+      () async {
+        final now = DateTime.now();
 
-      // 1. Setup Shop as 'grocery'
-      await database.into(database.shops).insert(ShopsCompanion.insert(
-            id: userId,
-            name: 'Test Shop 2',
-            ownerId: userId,
-            businessType: const drift.Value('grocery'),
-            createdAt: now,
-            updatedAt: now,
-            isSynced: const drift.Value(false),
-          ));
+        // 1. Setup Shop as 'grocery'
+        await database
+            .into(database.shops)
+            .insert(
+              ShopsCompanion.insert(
+                id: userId,
+                name: 'Test Shop 2',
+                ownerId: userId,
+                businessType: const drift.Value('grocery'),
+                createdAt: now,
+                updatedAt: now,
+                isSynced: const drift.Value(false),
+              ),
+            );
 
-      // 2. Try to create a 'pharmacy' bill
-      final bill = Bill(
-        id: 'bill_bad',
-        customerId: 'cust_bad',
-        ownerId: userId,
-        invoiceNumber: 'INV002',
-        date: now,
-        items: [],
-        subtotal: 100,
-        totalTax: 0,
-        grandTotal: 100,
-        paidAmount: 100,
-        businessType: 'pharmacy', // MISMATCH!
-        status: 'Paid',
-        paymentType: 'Cash',
-        source: 'app',
-      );
+        // 2. Try to create a 'pharmacy' bill
+        final bill = Bill(
+          id: 'bill_bad',
+          customerId: 'cust_bad',
+          ownerId: userId,
+          invoiceNumber: 'INV002',
+          date: now,
+          items: [],
+          subtotal: 100,
+          totalTax: 0,
+          grandTotal: 100,
+          paidAmount: 100,
+          businessType: 'pharmacy', // MISMATCH!
+          status: 'Paid',
+          paymentType: 'Cash',
+          source: 'app',
+        );
 
-      // 3. Expect security exception
-      expect(
-        () => billsRepository.createBill(bill),
-        throwsA(predicate((e) => e.toString().contains('Security Violation'))),
-      );
-    });
+        // 3. Expect security exception
+        expect(
+          () => billsRepository.createBill(bill),
+          throwsA(
+            predicate((e) => e.toString().contains('Security Violation')),
+          ),
+        );
+      },
+    );
 
     test('BillsRepository allows creation of matching business type', () async {
       final now = DateTime.now();
 
       // 1. Setup Shop as 'grocery'
-      await database.into(database.shops).insert(ShopsCompanion.insert(
-            id: userId,
-            name: 'Test Shop 3',
-            ownerId: userId,
-            businessType: const drift.Value('grocery'),
-            createdAt: now,
-            updatedAt: now,
-            isSynced: const drift.Value(false),
-          ));
+      await database
+          .into(database.shops)
+          .insert(
+            ShopsCompanion.insert(
+              id: userId,
+              name: 'Test Shop 3',
+              ownerId: userId,
+              businessType: const drift.Value('grocery'),
+              createdAt: now,
+              updatedAt: now,
+              isSynced: const drift.Value(false),
+            ),
+          );
 
       // 2. Try to create a 'grocery' bill
       final bill = Bill(
@@ -182,7 +208,8 @@ void main() {
         // If it throws Security Violation, fail test.
         if (e.toString().contains('Security Violation')) {
           fail(
-              'Should not throw Security Violation for matching business type');
+            'Should not throw Security Violation for matching business type',
+          );
         }
         // Iterate other errors (e.g. unique constraint) are fine for this specific unit test scope
       }

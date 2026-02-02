@@ -16,9 +16,9 @@ class BillPaymentToggle extends StatefulWidget {
   final String status; // 'Paid', 'Pending', 'Partial'
   final List<Map<String, dynamic>> items;
   final Function(String billId, String newStatus, double paidAmount)?
-      onStatusChanged;
+  onStatusChanged;
   final Function(String billId, List<Map<String, dynamic>> updatedItems)?
-      onItemsChanged;
+  onItemsChanged;
   final bool isOwnerView;
 
   const BillPaymentToggle({
@@ -56,8 +56,10 @@ class _BillPaymentToggleState extends State<BillPaymentToggle> {
     final prevStatus = _currentStatus;
     final prevPaidAmount = _currentPaidAmount;
 
-    final targetPaid =
-        _previewPaidAmountForStatus(newStatus, widget.totalAmount);
+    final targetPaid = _previewPaidAmountForStatus(
+      newStatus,
+      widget.totalAmount,
+    );
 
     // Update UI immediately for perceived responsiveness
     setState(() {
@@ -79,11 +81,7 @@ class _BillPaymentToggleState extends State<BillPaymentToggle> {
       final updateResult = await _billsRepository.updateBill(updatedBill);
 
       if (updateResult.isSuccess) {
-        widget.onStatusChanged?.call(
-          widget.billId,
-          newStatus,
-          targetPaid,
-        );
+        widget.onStatusChanged?.call(widget.billId, newStatus, targetPaid);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -160,8 +158,10 @@ class _BillPaymentToggleState extends State<BillPaymentToggle> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete,
-                                color: FuturisticColors.error),
+                            icon: const Icon(
+                              Icons.delete,
+                              color: FuturisticColors.error,
+                            ),
                             onPressed: () {
                               setState(() => _items.removeAt(index));
                               Navigator.pop(context);
@@ -272,8 +272,11 @@ class _BillPaymentToggleState extends State<BillPaymentToggle> {
   }
 
   void handleOperationError(
-      BuildContext context, Object error, StackTrace? stackTrace,
-      {String? customMessage}) {
+    BuildContext context,
+    Object error,
+    StackTrace? stackTrace, {
+    String? customMessage,
+  }) {
     developer.log(
       customMessage ?? 'Operation failed',
       error: error,
@@ -312,10 +315,7 @@ class _BillPaymentToggleState extends State<BillPaymentToggle> {
                 children: [
                   Text(
                     'Total Amount',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                   Text(
                     '₹${widget.totalAmount.toStringAsFixed(2)}',

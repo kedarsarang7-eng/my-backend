@@ -6,7 +6,7 @@ class BillModel {
   final String customerId;
   final double totalAmount;
   final List<Map<String, dynamic>>
-      items; // list of {vegId, name, qtyKg, pricePerKg, amount}
+  items; // list of {vegId, name, qtyKg, pricePerKg, amount}
   final DateTime createdAt;
   final bool paid;
 

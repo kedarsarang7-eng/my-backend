@@ -7,10 +7,7 @@ class CustomerLinkService {
   final AppDatabase database;
   final ErrorHandler errorHandler;
 
-  CustomerLinkService({
-    required this.database,
-    required this.errorHandler,
-  });
+  CustomerLinkService({required this.database, required this.errorHandler});
 
   /// Generates a new secure link token for the customer
   /// Returns the full invite URL
@@ -24,14 +21,16 @@ class CustomerLinkService {
       final expiresAt = now.add(const Duration(days: 30));
 
       // 3. Update Database
-      await (database.update(database.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .write(CustomersCompanion(
-        linkToken: Value(token),
-        linkExpiresAt: Value(expiresAt),
-        linkStatus: const Value('PENDING'),
-        updatedAt: Value(now),
-      ));
+      await (database.update(
+        database.customers,
+      )..where((t) => t.id.equals(customerId))).write(
+        CustomersCompanion(
+          linkToken: Value(token),
+          linkExpiresAt: Value(expiresAt),
+          linkStatus: const Value('PENDING'),
+          updatedAt: Value(now),
+        ),
+      );
 
       // 4. Construct URL
       // Format: https://dukanx.com/link?c={customerId}&t={token}
@@ -45,14 +44,16 @@ class CustomerLinkService {
   /// Revokes the current link access
   Future<bool> revokeLink(String customerId) async {
     final result = await errorHandler.runSafe(() async {
-      await (database.update(database.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .write(CustomersCompanion(
-        linkToken: const Value(null),
-        linkExpiresAt: const Value(null),
-        linkStatus: const Value('UNLINKED'),
-        updatedAt: Value(DateTime.now()),
-      ));
+      await (database.update(
+        database.customers,
+      )..where((t) => t.id.equals(customerId))).write(
+        CustomersCompanion(
+          linkToken: const Value(null),
+          linkExpiresAt: const Value(null),
+          linkStatus: const Value('UNLINKED'),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
       return true;
     }, 'CustomerLinkService.revokeLink');
     return result.data ?? false;
@@ -60,9 +61,9 @@ class CustomerLinkService {
 
   /// Get current link status
   Future<Map<String, dynamic>> getLinkStatus(String customerId) async {
-    final customer = await (database.select(database.customers)
-          ..where((t) => t.id.equals(customerId)))
-        .getSingleOrNull();
+    final customer = await (database.select(
+      database.customers,
+    )..where((t) => t.id.equals(customerId))).getSingleOrNull();
 
     if (customer == null) return {};
 

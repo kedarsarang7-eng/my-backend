@@ -28,14 +28,8 @@ class GlassCard extends ConsumerWidget {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: isDark
-          ? [
-              Colors.white.withOpacity(0.05),
-              Colors.white.withOpacity(0.02),
-            ]
-          : [
-              Colors.white.withOpacity(0.8),
-              Colors.white.withOpacity(0.6),
-            ],
+          ? [Colors.white.withOpacity(0.05), Colors.white.withOpacity(0.02)]
+          : [Colors.white.withOpacity(0.8), Colors.white.withOpacity(0.6)],
     );
 
     final borderColor = isDark

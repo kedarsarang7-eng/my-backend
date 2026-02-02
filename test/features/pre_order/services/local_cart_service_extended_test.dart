@@ -13,13 +13,15 @@ void main() {
     test('updateQuantity should modify existing item', () {
       service.initializeForVendor('vendor1');
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Test Product',
-        requestedQty: 1,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Test Product',
+          requestedQty: 1,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       service.updateQuantity('p1', 5);
 
@@ -29,13 +31,15 @@ void main() {
     test('updateQuantity should do nothing for non-existent item', () {
       service.initializeForVendor('vendor1');
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Test Product',
-        requestedQty: 1,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Test Product',
+          requestedQty: 1,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       service.updateQuantity('non-existent', 5);
 
@@ -46,21 +50,25 @@ void main() {
     test('removeItem should remove specific item', () {
       service.initializeForVendor('vendor1');
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Product 1',
-        requestedQty: 1,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Product 1',
+          requestedQty: 1,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p2',
-        productName: 'Product 2',
-        requestedQty: 2,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p2',
+          productName: 'Product 2',
+          requestedQty: 2,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       service.removeItem('p1');
 
@@ -73,23 +81,27 @@ void main() {
 
       expect(service.itemCount, 0);
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Product 1',
-        requestedQty: 1,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Product 1',
+          requestedQty: 1,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       expect(service.itemCount, 1);
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p2',
-        productName: 'Product 2',
-        requestedQty: 2,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p2',
+          productName: 'Product 2',
+          requestedQty: 2,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       expect(service.itemCount, 2);
     });
@@ -97,21 +109,25 @@ void main() {
     test('clear should remove all items', () {
       service.initializeForVendor('vendor1');
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Product 1',
-        requestedQty: 1,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Product 1',
+          requestedQty: 1,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p2',
-        productName: 'Product 2',
-        requestedQty: 2,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p2',
+          productName: 'Product 2',
+          requestedQty: 2,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       service.clear();
 
@@ -122,27 +138,33 @@ void main() {
     test('adding duplicate product should update quantity', () {
       service.initializeForVendor('vendor1');
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Product 1',
-        requestedQty: 2,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Product 1',
+          requestedQty: 2,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Product 1',
-        requestedQty: 3,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Product 1',
+          requestedQty: 3,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       // Should either have 1 item with qty 5, or 2 items
       // Depends on implementation - let's check item count
       final p1Items = service.items.where((i) => i.productId == 'p1');
-      final totalQty =
-          p1Items.fold<double>(0, (sum, item) => sum + item.requestedQty);
+      final totalQty = p1Items.fold<double>(
+        0,
+        (sum, item) => sum + item.requestedQty,
+      );
 
       expect(totalQty >= 3, true); // At least the last quantity or combined
     });
@@ -155,13 +177,15 @@ void main() {
         notifyCount++;
       });
 
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Product 1',
-        requestedQty: 1,
-        unit: 'pcs',
-        status: ItemStatus.pending,
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Product 1',
+          requestedQty: 1,
+          unit: 'pcs',
+          status: ItemStatus.pending,
+        ),
+      );
 
       expect(notifyCount, greaterThan(0));
     });

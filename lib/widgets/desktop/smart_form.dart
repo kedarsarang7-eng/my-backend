@@ -5,12 +5,7 @@ class SmartForm extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
 
-  const SmartForm({
-    super.key,
-    this.formKey,
-    required this.child,
-    this.padding,
-  });
+  const SmartForm({super.key, this.formKey, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +80,8 @@ class SmartTextFormField extends StatelessWidget {
             prefixIcon: prefixIcon != null
                 ? IconTheme(
                     data: IconThemeData(color: theme.primaryColor),
-                    child: prefixIcon!)
+                    child: prefixIcon!,
+                  )
                 : null,
             suffixIcon: suffixIcon,
             filled: true,
@@ -100,8 +96,10 @@ class SmartTextFormField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: theme.colorScheme.primary, width: 2),
+              borderSide: BorderSide(
+                color: theme.colorScheme.primary,
+                width: 2,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

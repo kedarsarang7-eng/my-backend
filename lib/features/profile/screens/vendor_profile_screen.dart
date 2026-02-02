@@ -344,8 +344,10 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           children: [
             const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 12),
-            Text(message,
-                style: GoogleFonts.inter(fontWeight: FontWeight.w500)),
+            Text(
+              message,
+              style: GoogleFonts.inter(fontWeight: FontWeight.w500),
+            ),
           ],
         ),
         backgroundColor: const Color(0xFF22C55E),
@@ -364,8 +366,10 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
             const Icon(Icons.error, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(message,
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w500)),
+              child: Text(
+                message,
+                style: GoogleFonts.inter(fontWeight: FontWeight.w500),
+              ),
             ),
           ],
         ),
@@ -399,8 +403,9 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: Text(
           'Vendor Profile',
@@ -443,28 +448,40 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
 
                     // Personal Details Section
                     _buildSectionHeader(
-                        'Vendor Personal Details', Icons.person, isDark),
+                      'Vendor Personal Details',
+                      Icons.person,
+                      isDark,
+                    ),
                     const SizedBox(height: 12),
                     _buildPersonalDetailsCard(isDark),
                     const SizedBox(height: 24),
 
                     // Shop Details Section
                     _buildSectionHeader(
-                        'Shop / Business Details', Icons.store, isDark),
+                      'Shop / Business Details',
+                      Icons.store,
+                      isDark,
+                    ),
                     const SizedBox(height: 12),
                     _buildShopDetailsCard(isDark),
                     const SizedBox(height: 24),
 
                     // Invoice Settings Section
                     _buildSectionHeader(
-                        'Invoice Settings', Icons.settings_outlined, isDark),
+                      'Invoice Settings',
+                      Icons.settings_outlined,
+                      isDark,
+                    ),
                     const SizedBox(height: 12),
                     _buildInvoiceSettingsCard(isDark),
                     const SizedBox(height: 24),
 
                     // Invoice Preview Section
                     _buildSectionHeader(
-                        'Invoice Preview', Icons.receipt_long, isDark),
+                      'Invoice Preview',
+                      Icons.receipt_long,
+                      isDark,
+                    ),
                     const SizedBox(height: 12),
                     _buildInvoicePreview(isDark),
                     const SizedBox(height: 100), // Space for FAB
@@ -612,15 +629,10 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
         height: 120,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return const Center(
-            child: CircularProgressIndicator(strokeWidth: 2),
-          );
+          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
         },
-        errorBuilder: (_, __, ___) => const Icon(
-          Icons.store_rounded,
-          size: 48,
-          color: Colors.grey,
-        ),
+        errorBuilder: (_, _, _) =>
+            const Icon(Icons.store_rounded, size: 48, color: Colors.grey),
       );
     }
 
@@ -635,10 +647,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
         const SizedBox(height: 4),
         Text(
           'Upload Logo',
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            color: Colors.grey.shade500,
-          ),
+          style: GoogleFonts.inter(fontSize: 12, color: Colors.grey.shade500),
         ),
       ],
     );
@@ -703,8 +712,11 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
   Widget _buildSectionHeader(String title, IconData icon, bool isDark) {
     return Row(
       children: [
-        Icon(icon,
-            size: 20, color: isDark ? Colors.white70 : Colors.grey.shade700),
+        Icon(
+          icon,
+          size: 20,
+          color: isDark ? Colors.white70 : Colors.grey.shade700,
+        ),
         const SizedBox(width: 8),
         Text(
           title,
@@ -939,11 +951,13 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
   Widget _buildInvoiceSettingsCard(bool isDark) {
     // Determine visibility based on Business Type
     final type = _selectedBusinessType?.toLowerCase() ?? '';
-    final isFoodBusiness = type.contains('restaurant') ||
+    final isFoodBusiness =
+        type.contains('restaurant') ||
         type.contains('grocery') ||
         type.contains('vegetable') ||
         type.contains('wholesale');
-    final isServiceBusiness = type.contains('service') ||
+    final isServiceBusiness =
+        type.contains('service') ||
         type.contains('clinic') ||
         type.contains('consultancy');
 
@@ -1014,9 +1028,11 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           // Signature and Stamp Section
           Row(
             children: [
-              Icon(Icons.draw,
-                  size: 18,
-                  color: isDark ? Colors.white70 : Colors.grey.shade700),
+              Icon(
+                Icons.draw,
+                size: 18,
+                color: isDark ? Colors.white70 : Colors.grey.shade700,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Digital Signature & Stamp',
@@ -1171,20 +1187,21 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
       textCapitalization: textCapitalization,
       maxLines: maxLines,
       validator: validator,
-      style: GoogleFonts.inter(
-        color: isDark ? Colors.white : Colors.black87,
-      ),
+      style: GoogleFonts.inter(color: isDark ? Colors.white : Colors.black87),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
         prefixIcon: Icon(icon, color: isDark ? Colors.white54 : Colors.grey),
-        labelStyle:
-            TextStyle(color: isDark ? Colors.white70 : Colors.grey.shade700),
-        hintStyle:
-            TextStyle(color: isDark ? Colors.white30 : Colors.grey.shade400),
+        labelStyle: TextStyle(
+          color: isDark ? Colors.white70 : Colors.grey.shade700,
+        ),
+        hintStyle: TextStyle(
+          color: isDark ? Colors.white30 : Colors.grey.shade400,
+        ),
         filled: true,
-        fillColor:
-            isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50,
+        fillColor: isDark
+            ? Colors.white.withOpacity(0.05)
+            : Colors.grey.shade50,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -1203,8 +1220,10 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.red),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
     );
   }

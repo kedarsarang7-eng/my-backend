@@ -46,17 +46,19 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
       // Load existing medicines if prescription exists
       List<Map<String, String>> existingMeds = [];
       if (visit.prescriptionId != null && visit.prescriptionId!.isNotEmpty) {
-        final rxResult =
-            await sl<ClinicalPrescriptionRepository>().getByVisitId(visit.id);
+        final rxResult = await sl<ClinicalPrescriptionRepository>()
+            .getByVisitId(visit.id);
         if (rxResult.isSuccess && rxResult.data != null) {
           final meds = rxResult.data!.medicines;
           existingMeds = meds
-              .map((m) => {
-                    'name': m.name,
-                    'dosage': m.dosage,
-                    'frequency': m.timing,
-                    'duration': m.duration,
-                  })
+              .map(
+                (m) => {
+                  'name': m.name,
+                  'dosage': m.dosage,
+                  'frequency': m.timing,
+                  'duration': m.duration,
+                },
+              )
               .toList();
         }
       }
@@ -84,11 +86,13 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AddMedicineSheet(onAdd: (med) {
-        setState(() {
-          _medicines.add(med);
-        });
-      }),
+      builder: (context) => _AddMedicineSheet(
+        onAdd: (med) {
+          setState(() {
+            _medicines.add(med);
+          });
+        },
+      ),
     );
   }
 
@@ -105,13 +109,15 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
 
     // 1. Create Medicine Items
     final medicines = _medicines
-        .map((m) => MedicineItem(
-              name: m['name']!,
-              dosage: m['dosage']!,
-              timing: m['frequency']!, // Using frequency as timing for now
-              duration: m['duration']!,
-              instructions: '',
-            ))
+        .map(
+          (m) => MedicineItem(
+            name: m['name']!,
+            dosage: m['dosage']!,
+            timing: m['frequency']!, // Using frequency as timing for now
+            duration: m['duration']!,
+            instructions: '',
+          ),
+        )
         .toList();
 
     // 2. Create Prescription Object
@@ -171,7 +177,7 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
             totalOverride: 500.0,
             unit: 'session',
             gstRate: 0,
-          )
+          ),
         ],
         subtotal: 500.0,
         grandTotal: 500.0,
@@ -189,7 +195,8 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => ClinicInvoicePreviewScreen(billId: billId)),
+            builder: (_) => ClinicInvoicePreviewScreen(billId: billId),
+          ),
         );
       }
     } else if (mounted) {
@@ -212,17 +219,21 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
     return Scaffold(
       backgroundColor: FuturisticColors.backgroundDark,
       appBar: AppBar(
-        title: Text('Consultation',
-            style: GoogleFonts.outfit(color: Colors.white)),
+        title: Text(
+          'Consultation',
+          style: GoogleFonts.outfit(color: Colors.white),
+        ),
         backgroundColor: Colors.transparent,
         actions: [
           TextButton(
             onPressed: () {
               // History
             },
-            child: Text('History',
-                style: GoogleFonts.outfit(color: FuturisticColors.neonBlue)),
-          )
+            child: Text(
+              'History',
+              style: GoogleFonts.outfit(color: FuturisticColors.neonBlue),
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -255,8 +266,11 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
             _buildSection(
               title: 'Private Notes',
               icon: Icons.note_outlined,
-              child: _buildTextField(_notesController, 'Internal notes...',
-                  maxLines: 2),
+              child: _buildTextField(
+                _notesController,
+                'Internal notes...',
+                maxLines: 2,
+              ),
             ),
             const SizedBox(height: 32),
 
@@ -270,8 +284,10 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
                       side: BorderSide(color: Colors.white.withOpacity(0.2)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: Text('Save & Close',
-                        style: GoogleFonts.outfit(color: Colors.white)),
+                    child: Text(
+                      'Save & Close',
+                      style: GoogleFonts.outfit(color: Colors.white),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -282,9 +298,13 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
                       backgroundColor: FuturisticColors.neonBlue,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: Text('Generate Bill',
-                        style: GoogleFonts.outfit(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'Generate Bill',
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -318,22 +338,32 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
   Widget _buildVital(String label, String value, String unit) {
     return Column(
       children: [
-        Text(label,
-            style: GoogleFonts.outfit(color: Colors.white60, fontSize: 12)),
+        Text(
+          label,
+          style: GoogleFonts.outfit(color: Colors.white60, fontSize: 12),
+        ),
         const SizedBox(height: 4),
-        Text(value,
-            style: GoogleFonts.outfit(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18)),
-        Text(unit,
-            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 10)),
+        Text(
+          value,
+          style: GoogleFonts.outfit(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        Text(
+          unit,
+          style: GoogleFonts.outfit(color: Colors.white38, fontSize: 10),
+        ),
       ],
     );
   }
 
-  Widget _buildSection(
-      {required String title, required IconData icon, required Widget child}) {
+  Widget _buildSection({
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -341,9 +371,13 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
           children: [
             Icon(icon, size: 18, color: FuturisticColors.neonBlue),
             const SizedBox(width: 8),
-            Text(title,
-                style: GoogleFonts.outfit(
-                    color: Colors.white, fontWeight: FontWeight.w600)),
+            Text(
+              title,
+              style: GoogleFonts.outfit(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -352,8 +386,11 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint,
-      {int maxLines = 1}) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint, {
+    int maxLines = 1,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
@@ -388,13 +425,19 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Prescription / Medicines',
-                  style: GoogleFonts.outfit(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+              Text(
+                'Prescription / Medicines',
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               IconButton(
                 onPressed: _addMedicine,
-                icon: const Icon(Icons.add_circle,
-                    color: FuturisticColors.neonBlue),
+                icon: const Icon(
+                  Icons.add_circle,
+                  color: FuturisticColors.neonBlue,
+                ),
               ),
             ],
           ),
@@ -403,8 +446,11 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Center(
-                  child: Text('No medicines added',
-                      style: GoogleFonts.outfit(color: Colors.white38))),
+                child: Text(
+                  'No medicines added',
+                  style: GoogleFonts.outfit(color: Colors.white38),
+                ),
+              ),
             )
           else
             ListView.builder(
@@ -416,14 +462,20 @@ class _ConsultationScreenState extends ConsumerState<ConsultationScreen> {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.medication, color: Colors.white54),
-                  title: Text(med['name']!,
-                      style: GoogleFonts.outfit(color: Colors.white)),
+                  title: Text(
+                    med['name']!,
+                    style: GoogleFonts.outfit(color: Colors.white),
+                  ),
                   subtitle: Text(
-                      '${med['dosage']} • ${med['frequency']} • ${med['duration']}',
-                      style: GoogleFonts.outfit(color: Colors.white38)),
+                    '${med['dosage']} • ${med['frequency']} • ${med['duration']}',
+                    style: GoogleFonts.outfit(color: Colors.white38),
+                  ),
                   trailing: IconButton(
-                    icon: const Icon(Icons.close,
-                        color: Colors.redAccent, size: 18),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.redAccent,
+                      size: 18,
+                    ),
                     onPressed: () {
                       setState(() {
                         _medicines.removeAt(index);
@@ -457,10 +509,11 @@ class _AddMedicineSheetState extends State<_AddMedicineSheet> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          top: 16,
-          left: 16,
-          right: 16),
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        top: 16,
+        left: 16,
+        right: 16,
+      ),
       decoration: const BoxDecoration(
         color: Color(0xFF0F172A),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -469,19 +522,24 @@ class _AddMedicineSheetState extends State<_AddMedicineSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Add Medicine',
-              style: GoogleFonts.outfit(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            'Add Medicine',
+            style: GoogleFonts.outfit(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 16),
           _buildInput('Medicine Name (e.g. Paracetamol)', _nameCtrl),
           const SizedBox(height: 12),
-          Row(children: [
-            Expanded(child: _buildInput('Dosage (500mg)', _dosageCtrl)),
-            const SizedBox(width: 12),
-            Expanded(child: _buildInput('Frequency (1-0-1)', _freqCtrl)),
-          ]),
+          Row(
+            children: [
+              Expanded(child: _buildInput('Dosage (500mg)', _dosageCtrl)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildInput('Frequency (1-0-1)', _freqCtrl)),
+            ],
+          ),
           const SizedBox(height: 12),
           _buildInput('Duration (3 days)', _durationCtrl),
           const SizedBox(height: 24),
@@ -500,10 +558,13 @@ class _AddMedicineSheetState extends State<_AddMedicineSheet> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: FuturisticColors.neonBlue,
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: const Text('Add to Prescription',
-                  style: TextStyle(color: Colors.white)),
+                backgroundColor: FuturisticColors.neonBlue,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: const Text(
+                'Add to Prescription',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ],

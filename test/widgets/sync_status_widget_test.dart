@@ -150,8 +150,9 @@ class TestPendingChangesIndicator extends StatelessWidget {
 
 void main() {
   group('SyncStatusWidget', () {
-    testWidgets('should show "All synced" when no pending items',
-        (tester) async {
+    testWidgets('should show "All synced" when no pending items', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -168,8 +169,9 @@ void main() {
       expect(find.byIcon(Icons.cloud_done), findsOneWidget);
     });
 
-    testWidgets('should show pending count when items are pending',
-        (tester) async {
+    testWidgets('should show pending count when items are pending', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -224,11 +226,7 @@ void main() {
   group('OfflineBanner', () {
     testWidgets('should display offline message', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: TestOfflineBanner(),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: TestOfflineBanner())),
       );
 
       expect(find.text('Offline - Changes saved locally'), findsOneWidget);
@@ -237,11 +235,7 @@ void main() {
 
     testWidgets('should have orange background', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: TestOfflineBanner(),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: TestOfflineBanner())),
       );
 
       final container = tester.widget<Container>(find.byType(Container).first);
@@ -253,9 +247,7 @@ void main() {
     testWidgets('should be hidden when count is 0', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: TestPendingChangesIndicator(count: 0),
-          ),
+          home: Scaffold(body: TestPendingChangesIndicator(count: 0)),
         ),
       );
 
@@ -266,9 +258,7 @@ void main() {
     testWidgets('should show count when pending > 0', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: TestPendingChangesIndicator(count: 3),
-          ),
+          home: Scaffold(body: TestPendingChangesIndicator(count: 3)),
         ),
       );
 
@@ -279,9 +269,7 @@ void main() {
     testWidgets('should show large counts correctly', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: TestPendingChangesIndicator(count: 150),
-          ),
+          home: Scaffold(body: TestPendingChangesIndicator(count: 150)),
         ),
       );
 
@@ -302,9 +290,8 @@ void main() {
             ),
             body: ListView.builder(
               itemCount: 3,
-              itemBuilder: (context, index) => ListTile(
-                title: Text('Bill ${index + 1}'),
-              ),
+              itemBuilder: (context, index) =>
+                  ListTile(title: Text('Bill ${index + 1}')),
             ),
           ),
         ),
@@ -325,9 +312,8 @@ void main() {
                 Expanded(
                   child: ListView.builder(
                     itemCount: 3,
-                    itemBuilder: (context, index) => ListTile(
-                      title: Text('Bill ${index + 1}'),
-                    ),
+                    itemBuilder: (context, index) =>
+                        ListTile(title: Text('Bill ${index + 1}')),
                   ),
                 ),
               ],

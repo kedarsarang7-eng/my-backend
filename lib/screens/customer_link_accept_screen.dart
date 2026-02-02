@@ -30,16 +30,18 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
     }
 
     if (code.isEmpty || code.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter 6-digit link code')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Enter 6-digit link code')));
       return;
     }
 
     setState(() => isLoading = true);
     try {
-      final success =
-          await sl<ConnectionService>().verifyLinkRequest(phone, code);
+      final success = await sl<ConnectionService>().verifyLinkRequest(
+        phone,
+        code,
+      );
 
       if (success) {
         setState(() {
@@ -69,9 +71,9 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
       }
     } catch (e) {
       setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 
@@ -113,8 +115,9 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
               decoration: InputDecoration(
                 hintText: '10-digit mobile',
                 prefixIcon: const Icon(Icons.phone, color: Colors.purple),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 filled: true,
                 fillColor: Colors.purple.shade50,
                 counterText: '',
@@ -130,8 +133,9 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
               decoration: InputDecoration(
                 hintText: '6-digit code',
                 prefixIcon: const Icon(Icons.vpn_key, color: Colors.purple),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 filled: true,
                 fillColor: Colors.purple.shade50,
                 counterText: '',
@@ -152,13 +156,18 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
                         width: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
-                    : const Text('Accept Link',
+                    : const Text(
+                        'Accept Link',
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
 
@@ -170,23 +179,32 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
                   padding: EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(Icons.check_circle,
-                          color: FuturisticColors.success, size: 32),
+                      Icon(
+                        Icons.check_circle,
+                        color: FuturisticColors.success,
+                        size: 32,
+                      ),
                       SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Profile Linked!',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: FuturisticColors.success)),
+                            Text(
+                              'Profile Linked!',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: FuturisticColors.success,
+                              ),
+                            ),
                             SizedBox(height: 4),
                             Text(
-                                'You will now receive bills and reminders automatically',
-                                style: TextStyle(
-                                    fontSize: 11, color: Colors.grey)),
+                              'You will now receive bills and reminders automatically',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -209,21 +227,27 @@ class _CustomerLinkAcceptScreenState extends State<CustomerLinkAcceptScreen> {
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('ℹ️ About Linking:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  Text(
+                    'ℹ️ About Linking:',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
                   SizedBox(height: 8),
                   Text(
-                      '• Linking connects your phone number to your owner\'s business',
-                      style: TextStyle(fontSize: 11)),
+                    '• Linking connects your phone number to your owner\'s business',
+                    style: TextStyle(fontSize: 11),
+                  ),
                   Text(
-                      '• All bills created for your phone will appear in your portal',
-                      style: TextStyle(fontSize: 11)),
+                    '• All bills created for your phone will appear in your portal',
+                    style: TextStyle(fontSize: 11),
+                  ),
                   Text(
-                      '• You can view pending dues, purchase history, and make payments',
-                      style: TextStyle(fontSize: 11)),
-                  Text('• Codes expire after 30 minutes',
-                      style: TextStyle(fontSize: 11)),
+                    '• You can view pending dues, purchase history, and make payments',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Text(
+                    '• Codes expire after 30 minutes',
+                    style: TextStyle(fontSize: 11),
+                  ),
                 ],
               ),
             ),

@@ -35,7 +35,8 @@ class NicIrpService {
     final config = await NicIrpConfig.fromSecureStorage();
     if (config == null) {
       debugPrint(
-          'NicIrpService: Not configured. Call NicIrpConfig.configure() first.');
+        'NicIrpService: Not configured. Call NicIrpConfig.configure() first.',
+      );
       return null;
     }
     return NicIrpService._(config);
@@ -95,7 +96,8 @@ class NicIrpService {
           return true;
         } else {
           debugPrint(
-              'NicIrpService: Auth Failed: ${authResponse.error?.errorMessage}');
+            'NicIrpService: Auth Failed: ${authResponse.error?.errorMessage}',
+          );
           return false;
         }
       }
@@ -167,7 +169,8 @@ class NicIrpService {
   /// Returns [IrnResponseModel] with IRN, QR code, and signed invoice.
   /// Throws if not authenticated or on API error.
   Future<IrnResponseModel?> generateIrn(
-      Map<String, dynamic> invoiceData) async {
+    Map<String, dynamic> invoiceData,
+  ) async {
     if (!await _ensureAuth()) {
       throw StateError('Authentication failed. Cannot generate IRN.');
     }
@@ -209,7 +212,8 @@ class NicIrpService {
           return IrnResponseModel.fromJson(jsonDecode(response.body));
         } catch (_) {
           debugPrint(
-              'NicIrpService: Generate IRN HTTP Error: ${response.statusCode}');
+            'NicIrpService: Generate IRN HTTP Error: ${response.statusCode}',
+          );
           return null;
         }
       }

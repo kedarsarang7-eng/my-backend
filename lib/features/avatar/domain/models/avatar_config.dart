@@ -8,14 +8,14 @@ class AvatarConfig {
     'medium_01',
     'medium_02',
     'dark_01',
-    'dark_02'
+    'dark_02',
   ];
 
   static const List<String> faceShapes = [
     'oval_01',
     'round_01',
     'square_01',
-    'heart_01'
+    'heart_01',
   ];
 
   static const List<String> hairStyles = [
@@ -24,7 +24,7 @@ class AvatarConfig {
     'medium_01',
     'long_01',
     'curly_01',
-    'bald'
+    'bald',
   ];
 
   static const List<String> hairColors = [
@@ -35,7 +35,7 @@ class AvatarConfig {
     'grey',
     'white',
     'blue',
-    'pink'
+    'pink',
   ];
 
   static const List<String> eyes = ['round_01', 'almond_01', 'narrow_01'];
@@ -44,7 +44,7 @@ class AvatarConfig {
     'natural_01',
     'thick_01',
     'thin_01',
-    'arched_01'
+    'arched_01',
   ];
 
   static const List<String> noses = ['medium_01', 'broad_01', 'pointed_01'];
@@ -55,14 +55,14 @@ class AvatarConfig {
     'none',
     'beard_light',
     'beard_full',
-    'mustache_01'
+    'mustache_01',
   ];
 
   static const List<String> glasses = [
     'none',
     'rect_black',
     'round_gold',
-    'sunglasses'
+    'sunglasses',
   ];
 
   static const List<String> tops = [
@@ -70,7 +70,7 @@ class AvatarConfig {
     'tshirt_black',
     'hoodie_grey',
     'jacket_denim',
-    'shirt_formal'
+    'shirt_formal',
   ];
 
   static const List<String> bottoms = [
@@ -78,21 +78,21 @@ class AvatarConfig {
     'jeans_black',
     'shorts_khaki',
     'joggers_grey',
-    'trousers_formal'
+    'trousers_formal',
   ];
 
   static const List<String> shoes = [
     'sneakers_white',
     'boots_brown',
     'shoes_formal_black',
-    'sandals'
+    'sandals',
   ];
 
   static const List<String> accessories = [
     'none',
     'hat_cap',
     'hat_beanie',
-    'necklace_gold'
+    'necklace_gold',
   ];
 
   // Helper maps for UI labels
@@ -109,6 +109,6 @@ class AvatarConfig {
     'top': 'Top',
     'bottom': 'Pants',
     'shoes': 'Shoes',
-    'acc': 'Extras'
+    'acc': 'Extras',
   };
 }

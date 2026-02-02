@@ -37,7 +37,9 @@ class BillMapper {
   }
 
   static purchase.PurchaseBill toPurchaseBill(
-      domain_bill.Bill domainBill, String ownerId) {
+    domain_bill.Bill domainBill,
+    String ownerId,
+  ) {
     return purchase.PurchaseBill(
       id: '',
       billNumber: '',
@@ -55,7 +57,8 @@ class BillMapper {
   }
 
   static purchase.PurchaseBillItem toPurchaseItem(
-      domain_item.BillItem domainItem) {
+    domain_item.BillItem domainItem,
+  ) {
     return purchase.PurchaseBillItem(
       itemId: domainItem.productId,
       itemName: domainItem.name,
@@ -67,7 +70,9 @@ class BillMapper {
   }
 
   static PurchaseOrder toPurchaseOrder(
-      domain_bill.Bill domainBill, String ownerId) {
+    domain_bill.Bill domainBill,
+    String ownerId,
+  ) {
     return PurchaseOrder(
       id: '',
       userId: ownerId,

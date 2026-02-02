@@ -38,21 +38,26 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                     : FuturisticColors.unpaidBackground,
                 child: Row(
                   children: [
-                    Icon(activeShift != null ? Icons.lock_open : Icons.lock,
-                        color: activeShift != null
-                            ? FuturisticColors.success
-                            : FuturisticColors.error),
+                    Icon(
+                      activeShift != null ? Icons.lock_open : Icons.lock,
+                      color: activeShift != null
+                          ? FuturisticColors.success
+                          : FuturisticColors.error,
+                    ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              activeShift != null
-                                  ? 'Active Shift: ${activeShift.shiftName}'
-                                  : 'No Active Shift',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16)),
+                            activeShift != null
+                                ? 'Active Shift: ${activeShift.shiftName}'
+                                : 'No Active Shift',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
                           if (activeShift != null)
                             Text('Started: ${activeShift.startTime}'),
                         ],
@@ -81,7 +86,8 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      'Closing "${activeShift.shiftName}".\n\nPlease declare the physical cash amount collected during this shift.'),
+                                    'Closing "${activeShift.shiftName}".\n\nPlease declare the physical cash amount collected during this shift.',
+                                  ),
                                   const SizedBox(height: 16),
                                   TextField(
                                     controller: cashController,
@@ -104,15 +110,18 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                                     if (cashController.text.isEmpty) {
                                       ScaffoldMessenger.of(ctx).showSnackBar(
                                         const SnackBar(
-                                            content: Text(
-                                                'Please enter declared cash amount')),
+                                          content: Text(
+                                            'Please enter declared cash amount',
+                                          ),
+                                        ),
                                       );
                                       return;
                                     }
                                     Navigator.pop(ctx, true);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.orange),
+                                    backgroundColor: Colors.orange,
+                                  ),
                                   child: const Text('Close Shift'),
                                 ),
                               ],
@@ -126,9 +135,10 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                               final currentUserId =
                                   sessionManager.userId ?? 'unknown';
 
-                              final declaredCash = double.tryParse(
-                                      cashController.text
-                                          .replaceAll(',', '')) ??
+                              final declaredCash =
+                                  double.tryParse(
+                                    cashController.text.replaceAll(',', ''),
+                                  ) ??
                                   0.0;
 
                               await _shiftService.closeShift(
@@ -140,8 +150,8 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      content:
-                                          Text('Shift closed successfully')),
+                                    content: Text('Shift closed successfully'),
+                                  ),
                                 );
                                 setState(() {}); // Refresh
                               }
@@ -167,19 +177,19 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                                       textColor: Colors.white,
                                       onPressed: () {
                                         showDialog(
-                                            context: context,
-                                            builder: (ctx) => AlertDialog(
-                                                  title: const Text(
-                                                      'Closure Error'),
-                                                  content: Text(e.toString()),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(ctx),
-                                                      child: const Text('OK'),
-                                                    )
-                                                  ],
-                                                ));
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text('Closure Error'),
+                                            content: Text(e.toString()),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(ctx),
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
@@ -229,7 +239,8 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
                       ),
                       title: Text('${shift.shiftName} (${shift.status.name})'),
                       subtitle: Text(
-                          'Sales: ₹${shift.totalSaleAmount.toStringAsFixed(2)}'),
+                        'Sales: ₹${shift.totalSaleAmount.toStringAsFixed(2)}',
+                      ),
                       trailing: Text(shift.startTime.toString().split(' ')[0]),
                     );
                   },
@@ -244,8 +255,9 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
 
   void _showOpenShiftDialog(BuildContext context) async {
     final nameController = TextEditingController(
-        text:
-            'Shift ${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}');
+      text:
+          'Shift ${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+    );
 
     // Fetch active staff
     final allStaff = await _staffService.getAllStaff(activeOnly: true);
@@ -255,105 +267,121 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
 
     showDialog(
       context: context,
-      builder: (ctx) => StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          title: const Text('Open New Shift'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Shift Name',
-                    hintText: 'e.g. Morning Shift',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text('Assign Staff:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                if (allStaff.isEmpty)
-                  const Text('No active staff found.',
-                      style: TextStyle(color: Colors.red))
-                else
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 200),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: allStaff.length,
-                      itemBuilder: (ctx, i) {
-                        final staff = allStaff[i];
-                        final isSelected = selectedStaffIds.contains(staff.id);
-                        return CheckboxListTile(
-                          title: Text(staff.name),
-                          subtitle: Text(staff.role.name),
-                          value: isSelected,
-                          onChanged: (v) {
-                            setState(() {
-                              if (v == true) {
-                                selectedStaffIds.add(staff.id);
-                              } else {
-                                selectedStaffIds.remove(staff.id);
-                              }
-                            });
-                          },
-                        );
-                      },
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Open New Shift'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Shift Name',
+                      hintText: 'e.g. Morning Shift',
                     ),
                   ),
-              ],
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Assign Staff:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  if (allStaff.isEmpty)
+                    const Text(
+                      'No active staff found.',
+                      style: TextStyle(color: Colors.red),
+                    )
+                  else
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 200),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: allStaff.length,
+                        itemBuilder: (ctx, i) {
+                          final staff = allStaff[i];
+                          final isSelected = selectedStaffIds.contains(
+                            staff.id,
+                          );
+                          return CheckboxListTile(
+                            title: Text(staff.name),
+                            subtitle: Text(staff.role.name),
+                            value: isSelected,
+                            onChanged: (v) {
+                              setState(() {
+                                if (v == true) {
+                                  selectedStaffIds.add(staff.id);
+                                } else {
+                                  selectedStaffIds.remove(staff.id);
+                                }
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (selectedStaffIds.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content:
-                            Text('Please select at least one staff member')),
-                  );
-                  return;
-                }
-
-                Navigator.pop(ctx);
-                try {
-                  await _shiftService.openShift(
-                      nameController.text, selectedStaffIds.toList());
-                  if (mounted) {
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (selectedStaffIds.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Shift opened successfully')),
+                        content: Text(
+                          'Please select at least one staff member',
+                        ),
+                      ),
                     );
-                    // Force refresh/rebuild
-                    // In a real app we might watch a provider, assuming setState triggers rebuild via StreamBuilder
-                    Navigator.pushReplacement(
+                    return;
+                  }
+
+                  Navigator.pop(ctx);
+                  try {
+                    await _shiftService.openShift(
+                      nameController.text,
+                      selectedStaffIds.toList(),
+                    );
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Shift opened successfully'),
+                        ),
+                      );
+                      // Force refresh/rebuild
+                      // In a real app we might watch a provider, assuming setState triggers rebuild via StreamBuilder
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const ShiftHistoryScreen()));
+                          builder: (_) => const ShiftHistoryScreen(),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+                    }
                   }
-                } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: $e')),
-                    );
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: FuturisticColors.success),
-              child: const Text('Open Shift'),
-            ),
-          ],
-        );
-      }),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: FuturisticColors.success,
+                ),
+                child: const Text('Open Shift'),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -380,16 +408,17 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
     final dispensers = await _dispenserService.getDispensers().first;
     final allNozzles = <Nozzle>[];
     for (final d in dispensers) {
-      final nozzles =
-          await _dispenserService.getNozzlesByDispenser(d.dispenserId).first;
+      final nozzles = await _dispenserService
+          .getNozzlesByDispenser(d.dispenserId)
+          .first;
       allNozzles.addAll(nozzles);
     }
 
     if (allNozzles.isEmpty) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No nozzles found.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('No nozzles found.')));
       }
       return;
     }
@@ -399,56 +428,65 @@ class _ShiftHistoryScreenState extends State<ShiftHistoryScreen> {
     // 3. Show Dialog
     showDialog(
       context: context,
-      builder: (ctx) => StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          title: const Text('Assign Nozzles to Staff'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: allNozzles.length,
-              separatorBuilder: (_, __) => const Divider(),
-              itemBuilder: (ctx, i) {
-                final nozzle = allNozzles[i];
-                return ListTile(
-                  title: Text('Nozzle: ${nozzle.fuelTypeName}'),
-                  subtitle: Text(
-                      'Current: ${nozzle.closingReading.toStringAsFixed(2)}'),
-                  trailing: DropdownButton<String>(
-                    hint: const Text('Select Staff'),
-                    items: staffList
-                        .map((s) => DropdownMenuItem(
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Assign Nozzles to Staff'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: allNozzles.length,
+                separatorBuilder: (_, _) => const Divider(),
+                itemBuilder: (ctx, i) {
+                  final nozzle = allNozzles[i];
+                  return ListTile(
+                    title: Text('Nozzle: ${nozzle.fuelTypeName}'),
+                    subtitle: Text(
+                      'Current: ${nozzle.closingReading.toStringAsFixed(2)}',
+                    ),
+                    trailing: DropdownButton<String>(
+                      hint: const Text('Select Staff'),
+                      items: staffList
+                          .map(
+                            (s) => DropdownMenuItem(
                               value: s['id'] as String,
                               child: Text(s['name']),
-                            ))
-                        .toList(),
-                    onChanged: (staffId) async {
-                      if (staffId != null) {
-                        await _shiftService.assignNozzleToStaff(
-                          shift.shiftId,
-                          staffId,
-                          nozzle.nozzleId,
-                        );
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    'Assigned to ${staffList.firstWhere((e) => e['id'] == staffId)['name']}')),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (staffId) async {
+                        if (staffId != null) {
+                          await _shiftService.assignNozzleToStaff(
+                            shift.shiftId,
+                            staffId,
+                            nozzle.nozzleId,
                           );
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Assigned to ${staffList.firstWhere((e) => e['id'] == staffId)['name']}',
+                                ),
+                              ),
+                            );
+                          }
                         }
-                      }
-                    },
-                  ),
-                );
-              },
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx), child: const Text('Done')),
-          ],
-        );
-      }),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Done'),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

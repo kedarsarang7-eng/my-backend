@@ -164,88 +164,90 @@ class Customer {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': odId,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'address': address,
-        'gstin': gstin,
-        'totalBilled': totalBilled,
-        'totalPaid': totalPaid,
-        'totalDues': totalDues,
-        'isActive': isActive,
-        'isSynced': isSynced,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'deletedAt': deletedAt?.toIso8601String(),
-        // Customer Master Tab Enhancement Fields
-        'customerType': customerType.value,
-        'creditLimit': creditLimit,
-        'openingBalance': openingBalance,
-        'priceLevel': priceLevel,
-        'gstPreference': gstPreference.value,
-        'isBlocked': isBlocked,
-        'blockReason': blockReason,
-        'lastTransactionDate': lastTransactionDate?.toIso8601String(),
-      };
+    'id': id,
+    'userId': odId,
+    'name': name,
+    'phone': phone,
+    'email': email,
+    'address': address,
+    'gstin': gstin,
+    'totalBilled': totalBilled,
+    'totalPaid': totalPaid,
+    'totalDues': totalDues,
+    'isActive': isActive,
+    'isSynced': isSynced,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'deletedAt': deletedAt?.toIso8601String(),
+    // Customer Master Tab Enhancement Fields
+    'customerType': customerType.value,
+    'creditLimit': creditLimit,
+    'openingBalance': openingBalance,
+    'priceLevel': priceLevel,
+    'gstPreference': gstPreference.value,
+    'isBlocked': isBlocked,
+    'blockReason': blockReason,
+    'lastTransactionDate': lastTransactionDate?.toIso8601String(),
+  };
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'address': address,
-        'gstin': gstin,
-        'totalBilled': totalBilled,
-        'totalPaid': totalPaid,
-        'totalDues': totalDues,
-        'isActive': isActive,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        // Customer Master Tab Enhancement Fields
-        'customerType': customerType.value,
-        'creditLimit': creditLimit,
-        'openingBalance': openingBalance,
-        'priceLevel': priceLevel,
-        'gstPreference': gstPreference.value,
-        'isBlocked': isBlocked,
-        'blockReason': blockReason,
-        'lastTransactionDate': lastTransactionDate?.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'phone': phone,
+    'email': email,
+    'address': address,
+    'gstin': gstin,
+    'totalBilled': totalBilled,
+    'totalPaid': totalPaid,
+    'totalDues': totalDues,
+    'isActive': isActive,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    // Customer Master Tab Enhancement Fields
+    'customerType': customerType.value,
+    'creditLimit': creditLimit,
+    'openingBalance': openingBalance,
+    'priceLevel': priceLevel,
+    'gstPreference': gstPreference.value,
+    'isBlocked': isBlocked,
+    'blockReason': blockReason,
+    'lastTransactionDate': lastTransactionDate?.toIso8601String(),
+  };
 
   factory Customer.fromMap(Map<String, dynamic> map) => Customer(
-        id: map['id'] as String,
-        odId: map['userId'] as String,
-        name: map['name'] as String,
-        phone: map['phone'] as String?,
-        email: map['email'] as String?,
-        address: map['address'] as String?,
-        gstin: map['gstin'] as String?,
-        totalBilled: (map['totalBilled'] as num?)?.toDouble() ?? 0,
-        totalPaid: (map['totalPaid'] as num?)?.toDouble() ?? 0,
-        totalDues: (map['totalDues'] as num?)?.toDouble() ?? 0,
-        isActive: map['isActive'] as bool? ?? true,
-        isSynced: map['isSynced'] as bool? ?? false,
-        createdAt: DateTime.parse(map['createdAt'] as String),
-        updatedAt: DateTime.parse(map['updatedAt'] as String),
-        deletedAt: map['deletedAt'] != null
-            ? DateTime.parse(map['deletedAt'] as String)
-            : null,
-        // Customer Master Tab Enhancement Fields
-        customerType: CustomerType.fromString(
-            map['customerType'] as String? ?? 'regular'),
-        creditLimit: (map['creditLimit'] as num?)?.toDouble() ?? 0,
-        openingBalance: (map['openingBalance'] as num?)?.toDouble() ?? 0,
-        priceLevel: map['priceLevel'] as String?,
-        gstPreference: GstPreference.fromString(
-            map['gstPreference'] as String? ?? 'exclusive'),
-        isBlocked: map['isBlocked'] as bool? ?? false,
-        blockReason: map['blockReason'] as String?,
-        lastTransactionDate: map['lastTransactionDate'] != null
-            ? DateTime.parse(map['lastTransactionDate'] as String)
-            : null,
-      );
+    id: map['id'] as String,
+    odId: map['userId'] as String,
+    name: map['name'] as String,
+    phone: map['phone'] as String?,
+    email: map['email'] as String?,
+    address: map['address'] as String?,
+    gstin: map['gstin'] as String?,
+    totalBilled: (map['totalBilled'] as num?)?.toDouble() ?? 0,
+    totalPaid: (map['totalPaid'] as num?)?.toDouble() ?? 0,
+    totalDues: (map['totalDues'] as num?)?.toDouble() ?? 0,
+    isActive: map['isActive'] as bool? ?? true,
+    isSynced: map['isSynced'] as bool? ?? false,
+    createdAt: DateTime.parse(map['createdAt'] as String),
+    updatedAt: DateTime.parse(map['updatedAt'] as String),
+    deletedAt: map['deletedAt'] != null
+        ? DateTime.parse(map['deletedAt'] as String)
+        : null,
+    // Customer Master Tab Enhancement Fields
+    customerType: CustomerType.fromString(
+      map['customerType'] as String? ?? 'regular',
+    ),
+    creditLimit: (map['creditLimit'] as num?)?.toDouble() ?? 0,
+    openingBalance: (map['openingBalance'] as num?)?.toDouble() ?? 0,
+    priceLevel: map['priceLevel'] as String?,
+    gstPreference: GstPreference.fromString(
+      map['gstPreference'] as String? ?? 'exclusive',
+    ),
+    isBlocked: map['isBlocked'] as bool? ?? false,
+    blockReason: map['blockReason'] as String?,
+    lastTransactionDate: map['lastTransactionDate'] != null
+        ? DateTime.parse(map['lastTransactionDate'] as String)
+        : null,
+  );
 }
 
 /// Customers Repository
@@ -278,12 +280,14 @@ class CustomersRepository {
     return await errorHandler.runSafe<Customer>(() async {
       // Check for duplicate phone number (if provided)
       if (phone != null && phone.isNotEmpty) {
-        final existing = await (database.select(database.customers)
-              ..where((t) =>
-                  t.phone.equals(phone) &
-                  t.userId.equals(userId) &
-                  t.deletedAt.isNull()))
-            .getSingleOrNull();
+        final existing =
+            await (database.select(database.customers)..where(
+                  (t) =>
+                      t.phone.equals(phone) &
+                      t.userId.equals(userId) &
+                      t.deletedAt.isNull(),
+                ))
+                .getSingleOrNull();
         if (existing != null) {
           throw Exception('Customer with phone $phone already exists');
         }
@@ -304,7 +308,9 @@ class CustomersRepository {
         updatedAt: now,
       );
 
-      await database.into(database.customers).insert(
+      await database
+          .into(database.customers)
+          .insert(
             CustomersCompanion.insert(
               id: id,
               userId: userId,
@@ -337,9 +343,10 @@ class CustomersRepository {
   /// Get customer by ID
   Future<RepositoryResult<Customer?>> getById(String id) async {
     return await errorHandler.runSafe<Customer?>(() async {
-      final result = await (database.select(database.customers)
-            ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final result =
+          await (database.select(database.customers)
+                ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
+              .getSingleOrNull();
 
       if (result == null) return null;
       return _entityToCustomer(result);
@@ -349,9 +356,10 @@ class CustomersRepository {
   /// Get customer by phone
   Future<RepositoryResult<Customer?>> getByPhone(String phone) async {
     return await errorHandler.runSafe<Customer?>(() async {
-      final result = await (database.select(database.customers)
-            ..where((t) => t.phone.equals(phone) & t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final result =
+          await (database.select(database.customers)
+                ..where((t) => t.phone.equals(phone) & t.deletedAt.isNull()))
+              .getSingleOrNull();
 
       if (result == null) return null;
       return _entityToCustomer(result);
@@ -388,27 +396,33 @@ class CustomersRepository {
   }
 
   /// Update customer
-  Future<RepositoryResult<Customer>> updateCustomer(Customer customer,
-      {required String userId}) async {
+  Future<RepositoryResult<Customer>> updateCustomer(
+    Customer customer, {
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<Customer>(() async {
-      final updated =
-          customer.copyWith(updatedAt: DateTime.now(), isSynced: false);
+      final updated = customer.copyWith(
+        updatedAt: DateTime.now(),
+        isSynced: false,
+      );
 
-      await (database.update(database.customers)
-            ..where((t) => t.id.equals(customer.id)))
-          .write(CustomersCompanion(
-        name: Value(updated.name),
-        phone: Value(updated.phone),
-        email: Value(updated.email),
-        address: Value(updated.address),
-        gstin: Value(updated.gstin),
-        totalBilled: Value(updated.totalBilled),
-        totalPaid: Value(updated.totalPaid),
-        totalDues: Value(updated.totalDues),
-        isActive: Value(updated.isActive),
-        isSynced: const Value(false),
-        updatedAt: Value(updated.updatedAt),
-      ));
+      await (database.update(
+        database.customers,
+      )..where((t) => t.id.equals(customer.id))).write(
+        CustomersCompanion(
+          name: Value(updated.name),
+          phone: Value(updated.phone),
+          email: Value(updated.email),
+          address: Value(updated.address),
+          gstin: Value(updated.gstin),
+          totalBilled: Value(updated.totalBilled),
+          totalPaid: Value(updated.totalPaid),
+          totalDues: Value(updated.totalDues),
+          isActive: Value(updated.isActive),
+          isSynced: const Value(false),
+          updatedAt: Value(updated.updatedAt),
+        ),
+      );
 
       // Queue for sync
       final item = SyncQueueItem.create(
@@ -425,14 +439,19 @@ class CustomersRepository {
   }
 
   /// Delete customer (soft delete)
-  Future<RepositoryResult<bool>> deleteCustomer(String id,
-      {required String userId}) async {
+  Future<RepositoryResult<bool>> deleteCustomer(
+    String id, {
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<bool>(() async {
-      await (database.update(database.customers)..where((t) => t.id.equals(id)))
-          .write(CustomersCompanion(
-        deletedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.customers,
+      )..where((t) => t.id.equals(id))).write(
+        CustomersCompanion(
+          deletedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       // Queue for sync
       final item = SyncQueueItem.create(
@@ -453,8 +472,9 @@ class CustomersRepository {
   // ============================================
 
   /// Get customers with outstanding dues
-  Future<RepositoryResult<List<Customer>>> getCustomersWithDues(
-      {String? userId}) async {
+  Future<RepositoryResult<List<Customer>>> getCustomersWithDues({
+    String? userId,
+  }) async {
     return await errorHandler.runSafe<List<Customer>>(() async {
       final query = database.select(database.customers)
         ..where((t) => t.deletedAt.isNull() & t.totalDues.isBiggerThanValue(0))
@@ -476,9 +496,9 @@ class CustomersRepository {
     required String userId,
   }) async {
     return await errorHandler.runSafe<Customer>(() async {
-      final current = await (database.select(database.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .getSingleOrNull();
+      final current = await (database.select(
+        database.customers,
+      )..where((t) => t.id.equals(customerId))).getSingleOrNull();
 
       if (current == null) {
         throw Exception('Customer not found');
@@ -487,14 +507,16 @@ class CustomersRepository {
       final newTotalPaid = current.totalPaid + amount;
       final newTotalDues = current.totalBilled - newTotalPaid;
 
-      await (database.update(database.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .write(CustomersCompanion(
-        totalPaid: Value(newTotalPaid),
-        totalDues: Value(newTotalDues > 0 ? newTotalDues : 0),
-        isSynced: const Value(false),
-        updatedAt: Value(DateTime.now()),
-      ));
+      await (database.update(
+        database.customers,
+      )..where((t) => t.id.equals(customerId))).write(
+        CustomersCompanion(
+          totalPaid: Value(newTotalPaid),
+          totalDues: Value(newTotalDues > 0 ? newTotalDues : 0),
+          isSynced: const Value(false),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
 
       // Queue for sync
       final item = SyncQueueItem.create(
@@ -535,16 +557,19 @@ class CustomersRepository {
 
       // CRITICAL: Always filter by userId for business isolation
       // This prevents cross-business data leakage
-      final allCustomers = await (database.select(database.customers)
-            ..where((t) => t.deletedAt.isNull() & t.userId.equals(userId))
-            ..orderBy([(t) => OrderingTerm.asc(t.name)])
-            ..limit(limit * 2)) // Fetch extra to account for filtering
-          .get();
+      final allCustomers =
+          await (database.select(database.customers)
+                ..where((t) => t.deletedAt.isNull() & t.userId.equals(userId))
+                ..orderBy([(t) => OrderingTerm.asc(t.name)])
+                ..limit(limit * 2)) // Fetch extra to account for filtering
+              .get();
 
       // Filter by name or phone in Dart for case-insensitive search
-      var results = allCustomers.where((c) =>
-          c.name.toLowerCase().contains(lowerQuery) ||
-          (c.phone?.contains(query) ?? false));
+      var results = allCustomers.where(
+        (c) =>
+            c.name.toLowerCase().contains(lowerQuery) ||
+            (c.phone?.contains(query) ?? false),
+      );
 
       // If query looks like an invoice number, also search bills
       // and include matching customers
@@ -552,21 +577,26 @@ class CustomersRepository {
           query.toUpperCase().startsWith('BILL') ||
           RegExp(r'^\d{6,}$').hasMatch(query)) {
         try {
-          final matchingBills = await (database.select(database.bills)
-                ..where((t) =>
-                    t.deletedAt.isNull() &
-                    t.invoiceNumber.contains(query) &
-                    t.userId.equals(userId)))
-              .get();
+          final matchingBills =
+              await (database.select(database.bills)..where(
+                    (t) =>
+                        t.deletedAt.isNull() &
+                        t.invoiceNumber.contains(query) &
+                        t.userId.equals(userId),
+                  ))
+                  .get();
 
-          final customerIdsFromBills =
-              matchingBills.map((b) => b.customerId).toSet();
+          final customerIdsFromBills = matchingBills
+              .map((b) => b.customerId)
+              .toSet();
 
           // Add customers not already in results
           final existingIds = results.map((c) => c.id).toSet();
-          final additionalCustomers = allCustomers.where((c) =>
-              customerIdsFromBills.contains(c.id) &&
-              !existingIds.contains(c.id));
+          final additionalCustomers = allCustomers.where(
+            (c) =>
+                customerIdsFromBills.contains(c.id) &&
+                !existingIds.contains(c.id),
+          );
 
           results = [...results, ...additionalCustomers];
         } catch (e) {
@@ -583,31 +613,31 @@ class CustomersRepository {
   // ============================================
 
   Customer _entityToCustomer(CustomerEntity e) => Customer(
-        id: e.id,
-        odId: e.userId,
-        name: e.name,
-        phone: e.phone,
-        email: e.email,
-        address: e.address,
-        gstin: e.gstin,
-        totalBilled: e.totalBilled,
-        totalPaid: e.totalPaid,
-        totalDues: e.totalDues,
-        isActive: e.isActive,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-        deletedAt: e.deletedAt,
-        // Customer Master Tab Enhancement Fields
-        customerType: CustomerType.fromString(e.customerType),
-        creditLimit: e.creditLimit,
-        openingBalance: e.openingBalance,
-        priceLevel: e.priceLevel,
-        gstPreference: GstPreference.fromString(e.gstPreference),
-        isBlocked: e.isBlocked,
-        blockReason: e.blockReason,
-        lastTransactionDate: e.lastTransactionDate,
-      );
+    id: e.id,
+    odId: e.userId,
+    name: e.name,
+    phone: e.phone,
+    email: e.email,
+    address: e.address,
+    gstin: e.gstin,
+    totalBilled: e.totalBilled,
+    totalPaid: e.totalPaid,
+    totalDues: e.totalDues,
+    isActive: e.isActive,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+    deletedAt: e.deletedAt,
+    // Customer Master Tab Enhancement Fields
+    customerType: CustomerType.fromString(e.customerType),
+    creditLimit: e.creditLimit,
+    openingBalance: e.openingBalance,
+    priceLevel: e.priceLevel,
+    gstPreference: GstPreference.fromString(e.gstPreference),
+    isBlocked: e.isBlocked,
+    blockReason: e.blockReason,
+    lastTransactionDate: e.lastTransactionDate,
+  );
 
   // ============================================
   // ANALYTICS & SCORING
@@ -615,13 +645,15 @@ class CustomersRepository {
 
   /// Calculate Customer Trust Score
   Future<RepositoryResult<TrustScore>> calculateTrustScore(
-      String customerId) async {
+    String customerId,
+  ) async {
     return await errorHandler.runSafe<TrustScore>(() async {
       // 1. Fetch History
-      final bills = await (database.select(database.bills)
-            ..where(
-                (t) => t.customerId.equals(customerId) & t.deletedAt.isNull()))
-          .get();
+      final bills =
+          await (database.select(database.bills)..where(
+                (t) => t.customerId.equals(customerId) & t.deletedAt.isNull(),
+              ))
+              .get();
 
       if (bills.isEmpty) {
         return TrustScore.neutral();
@@ -634,13 +666,15 @@ class CustomersRepository {
       // A. Reliability (Max 40) - Late Payments
       int lateBills = bills.where((b) {
         final isOverdue = b.status == 'OVERDUE';
-        final isOldUnpaid = (b.status == 'Unpaid' || b.status == 'Partial') &&
+        final isOldUnpaid =
+            (b.status == 'Unpaid' || b.status == 'Partial') &&
             b.billDate.isBefore(now.subtract(const Duration(days: 30)));
         return isOverdue || isOldUnpaid;
       }).length;
 
-      double reliabilityRatio =
-          bills.isNotEmpty ? (1 - (lateBills / bills.length)) : 1.0;
+      double reliabilityRatio = bills.isNotEmpty
+          ? (1 - (lateBills / bills.length))
+          : 1.0;
       double reliabilityScore = 40 * reliabilityRatio;
 
       // B. Financial Health (Max 30) - Credit Usage
@@ -653,19 +687,25 @@ class CustomersRepository {
 
       // C. Value (Max 20) - Average Bill Amount
       double avgBill = bills.isNotEmpty ? (totalBilled / bills.length) : 0;
-      double valueScore =
-          ((avgBill / 1000) * 20).clamp(0, 20); // Cap at 20 (Target ₹1000)
+      double valueScore = ((avgBill / 1000) * 20).clamp(
+        0,
+        20,
+      ); // Cap at 20 (Target ₹1000)
 
       // D. Frequency (Max 10) - Bills per Month
-      DateTime firstBillDate =
-          bills.map((b) => b.billDate).reduce((a, b) => a.isBefore(b) ? a : b);
+      DateTime firstBillDate = bills
+          .map((b) => b.billDate)
+          .reduce((a, b) => a.isBefore(b) ? a : b);
       int daysActive =
           now.difference(firstBillDate).inDays + 1; // +1 to avoid div by zero
       double monthsActive = daysActive / 30;
-      double billsPerMonth =
-          monthsActive > 0 ? (bills.length / monthsActive) : 0;
-      double frequencyScore =
-          ((billsPerMonth / 4) * 10).clamp(0, 10); // Cap at 10 (Target 4/month)
+      double billsPerMonth = monthsActive > 0
+          ? (bills.length / monthsActive)
+          : 0;
+      double frequencyScore = ((billsPerMonth / 4) * 10).clamp(
+        0,
+        10,
+      ); // Cap at 10 (Target 4/month)
 
       // Total
       score = reliabilityScore + creditScore + valueScore + frequencyScore;
@@ -713,14 +753,15 @@ class TrustScore {
   });
 
   factory TrustScore.neutral() => TrustScore(
-      score: 50,
-      reliabilityScore: 20,
-      creditScore: 15,
-      valueScore: 10,
-      frequencyScore: 5,
-      totalBills: 0,
-      lateBills: 0,
-      totalDues: 0);
+    score: 50,
+    reliabilityScore: 20,
+    creditScore: 15,
+    valueScore: 10,
+    frequencyScore: 5,
+    totalBills: 0,
+    lateBills: 0,
+    totalDues: 0,
+  );
 
   bool get isRisky => score < 50;
   bool get isExcellent => score >= 80;

@@ -75,8 +75,8 @@ class _ShortcutItemState extends State<ShortcutItem> {
             color: _isHovered
                 ? FuturisticColors.accent1.withOpacity(0.1)
                 : widget.config.isPriority
-                    ? FuturisticColors.primary.withOpacity(0.15)
-                    : Colors.transparent,
+                ? FuturisticColors.primary.withOpacity(0.15)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: widget.config.isPriority
@@ -143,8 +143,9 @@ class _ShortcutItemState extends State<ShortcutItem> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
       decoration: BoxDecoration(
-        color:
-            badge.isWarning ? FuturisticColors.error : FuturisticColors.accent1,
+        color: badge.isWarning
+            ? FuturisticColors.error
+            : FuturisticColors.accent1,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: FuturisticColors.surface, width: 1.5),
       ),

@@ -90,27 +90,27 @@ class FoodMenuItem extends Equatable {
 
   /// Convert to Firestore map
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'vendorId': vendorId,
-        'categoryId': categoryId,
-        'name': name,
-        'description': description,
-        'price': price,
-        'imageUrl': imageUrl,
-        'isAvailable': isAvailable,
-        'isPopular': isPopular,
-        'preparationTimeMinutes': preparationTimeMinutes,
-        'popularityCount': popularityCount,
-        'isVegetarian': isVegetarian,
-        'isVegan': isVegan,
-        'isSpicy': isSpicy,
-        'allergens': allergens,
-        'sortOrder': sortOrder,
-        'isActive': isActive,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        if (deletedAt != null) 'deletedAt': deletedAt!.toIso8601String(),
-      };
+    'id': id,
+    'vendorId': vendorId,
+    'categoryId': categoryId,
+    'name': name,
+    'description': description,
+    'price': price,
+    'imageUrl': imageUrl,
+    'isAvailable': isAvailable,
+    'isPopular': isPopular,
+    'preparationTimeMinutes': preparationTimeMinutes,
+    'popularityCount': popularityCount,
+    'isVegetarian': isVegetarian,
+    'isVegan': isVegan,
+    'isSpicy': isSpicy,
+    'allergens': allergens,
+    'sortOrder': sortOrder,
+    'isActive': isActive,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    if (deletedAt != null) 'deletedAt': deletedAt!.toIso8601String(),
+  };
 
   /// Create from Firestore map
   factory FoodMenuItem.fromFirestoreMap(Map<String, dynamic> map) {
@@ -133,12 +133,15 @@ class FoodMenuItem extends Equatable {
       sortOrder: map['sortOrder'] ?? 0,
       isActive: map['isActive'] ?? true,
       isSynced: true,
-      createdAt:
-          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt:
-          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
-      deletedAt:
-          map['deletedAt'] != null ? DateTime.parse(map['deletedAt']) : null,
+      createdAt: DateTime.parse(
+        map['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        map['updatedAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      deletedAt: map['deletedAt'] != null
+          ? DateTime.parse(map['deletedAt'])
+          : null,
     );
   }
 

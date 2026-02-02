@@ -75,8 +75,11 @@ class _DesktopInvoicesScreenState extends ConsumerState<DesktopInvoicesScreen> {
                     },
                     actionsBuilder: (bill) => [
                       IconButton(
-                        icon: const Icon(Icons.visibility_outlined,
-                            size: 20, color: FuturisticColors.accent1),
+                        icon: const Icon(
+                          Icons.visibility_outlined,
+                          size: 20,
+                          color: FuturisticColors.accent1,
+                        ),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -88,8 +91,11 @@ class _DesktopInvoicesScreenState extends ConsumerState<DesktopInvoicesScreen> {
                         tooltip: 'View',
                       ),
                       IconButton(
-                        icon: const Icon(Icons.print_outlined,
-                            size: 20, color: FuturisticColors.textSecondary),
+                        icon: const Icon(
+                          Icons.print_outlined,
+                          size: 20,
+                          color: FuturisticColors.textSecondary,
+                        ),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -152,8 +158,10 @@ class _DesktopInvoicesScreenState extends ConsumerState<DesktopInvoicesScreen> {
             decoration: const InputDecoration(
               hintText: 'Search invoices...',
               hintStyle: TextStyle(color: FuturisticColors.textSecondary),
-              prefixIcon:
-                  Icon(Icons.search, color: FuturisticColors.textSecondary),
+              prefixIcon: Icon(
+                Icons.search,
+                color: FuturisticColors.textSecondary,
+              ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(vertical: 10),
             ),

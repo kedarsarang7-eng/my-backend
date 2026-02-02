@@ -68,8 +68,9 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
           amount: amount,
           paymentMode: _paymentMode.toUpperCase(),
           date: _selectedDate,
-          notes:
-              _notesController.text.isNotEmpty ? _notesController.text : null,
+          notes: _notesController.text.isNotEmpty
+              ? _notesController.text
+              : null,
         );
       } else {
         // PAID PAYMENT (Vendor)
@@ -80,8 +81,9 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
           amount: amount,
           paymentMode: _paymentMode.toUpperCase(),
           date: _selectedDate,
-          notes:
-              _notesController.text.isNotEmpty ? _notesController.text : null,
+          notes: _notesController.text.isNotEmpty
+              ? _notesController.text
+              : null,
         );
       }
 
@@ -93,9 +95,9 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -108,20 +110,18 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
     final actionLabel = isReceiving ? 'Receive Payment' : 'Pay Vendor';
     final balanceLabel = widget.currentBalance > 0
         ? (isReceiving
-            ? 'Amount Due: ₹${widget.currentBalance}'
-            : 'To Pay: ₹${widget.currentBalance}')
+              ? 'Amount Due: ₹${widget.currentBalance}'
+              : 'To Pay: ₹${widget.currentBalance}')
         : (isReceiving
-            ? 'Advance: ₹${widget.currentBalance.abs()}'
-            : 'Advance: ₹${widget.currentBalance.abs()}');
+              ? 'Advance: ₹${widget.currentBalance.abs()}'
+              : 'Advance: ₹${widget.currentBalance.abs()}');
 
     final balanceColor = widget.currentBalance > 0
         ? (isReceiving ? Colors.red : Colors.orange)
         : Colors.green;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(actionLabel),
-      ),
+      appBar: AppBar(title: Text(actionLabel)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -134,10 +134,9 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceVariant
-                      .withOpacity(0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surfaceVariant.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.withOpacity(0.2)),
                 ),
@@ -151,9 +150,9 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
                     Text(
                       balanceLabel,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: balanceColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: balanceColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -185,15 +184,19 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
               // Amount Input
               TextFormField(
                 controller: _amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Amount',
-                  prefixIcon: Text('₹ ',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  prefixIcon: Text(
+                    '₹ ',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                   border: OutlineInputBorder(),
                 ),
                 validator: (val) {
@@ -205,8 +208,10 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
               const SizedBox(height: 16),
 
               // Payment Mode
-              Text('Payment Mode',
-                  style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                'Payment Mode',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -242,14 +247,17 @@ class _CollectPaymentScreenState extends State<CollectPaymentScreen> {
                     backgroundColor: FuturisticColors.primary,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: _isProcessing
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
                           'CONFIRM ${isReceiving ? "RECEIPT" : "PAYMENT"}',
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                 ),
               ),

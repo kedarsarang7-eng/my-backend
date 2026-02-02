@@ -39,10 +39,7 @@ class DeviceValidationResult {
   }
 
   factory DeviceValidationResult.untrusted(String reason) {
-    return DeviceValidationResult._(
-      isValid: false,
-      reason: reason,
-    );
+    return DeviceValidationResult._(isValid: false, reason: reason);
   }
 
   factory DeviceValidationResult.cooling(TrustedDevice device) {
@@ -83,8 +80,8 @@ class TrustedDeviceService {
   TrustedDeviceService({
     FirebaseFirestore? firestore,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auditRepository = auditRepository;
 
   /// Get current device fingerprint
   Future<DeviceFingerprint> getCurrentFingerprint() async {
@@ -121,8 +118,9 @@ class TrustedDeviceService {
 
     if (activeDevices >= maxTrustedDevices) {
       throw DeviceBindingException(
-          'Maximum $maxTrustedDevices trusted devices allowed. '
-          'Remove an existing device first.');
+        'Maximum $maxTrustedDevices trusted devices allowed. '
+        'Remove an existing device first.',
+      );
     }
 
     // Create trusted device
@@ -191,7 +189,8 @@ class TrustedDeviceService {
     }
 
     return DeviceValidationResult.untrusted(
-        'This device is not registered as a trusted owner device');
+      'This device is not registered as a trusted owner device',
+    );
   }
 
   /// Check if action is allowed on current device
@@ -264,12 +263,14 @@ class TrustedDeviceService {
     );
 
     // Cannot revoke if it's the only active device
-    final activeCount =
-        devices.where((d) => d.status == TrustedDeviceStatus.active).length;
+    final activeCount = devices
+        .where((d) => d.status == TrustedDeviceStatus.active)
+        .length;
 
     if (activeCount == 1 && device.status == TrustedDeviceStatus.active) {
       throw DeviceBindingException(
-          'Cannot revoke the only active device. Register a new device first.');
+        'Cannot revoke the only active device. Register a new device first.',
+      );
     }
 
     // Update status
@@ -332,7 +333,8 @@ class TrustedDeviceService {
     );
 
     debugPrint(
-        'TrustedDeviceService: UNAUTHORIZED ATTEMPT - $action from untrusted device');
+      'TrustedDeviceService: UNAUTHORIZED ATTEMPT - $action from untrusted device',
+    );
   }
 
   String _cacheKey(String businessId, String ownerId) => '$businessId:$ownerId';

@@ -73,12 +73,15 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
     final p = widget.product;
     nameCtrl = TextEditingController(text: p?.name ?? '');
     priceCtrl = TextEditingController(
-        text: p?.sellingPrice != null ? p!.sellingPrice.toString() : '');
+      text: p?.sellingPrice != null ? p!.sellingPrice.toString() : '',
+    );
     stockCtrl = TextEditingController(
-        text: p?.stockQuantity != null ? p!.stockQuantity.toString() : '');
+      text: p?.stockQuantity != null ? p!.stockQuantity.toString() : '',
+    );
     unitCtrl = TextEditingController(text: p?.unit ?? 'pcs');
     taxRateCtrl = TextEditingController(
-        text: p?.taxRate != null ? p!.taxRate.toString() : '');
+      text: p?.taxRate != null ? p!.taxRate.toString() : '',
+    );
 
     sizeCtrl = TextEditingController(text: p?.size ?? '');
     colorCtrl = TextEditingController(text: p?.color ?? '');
@@ -127,12 +130,16 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
                       ? 'Add New ${config.itemLabel}'
                       : 'Edit ${config.itemLabel}',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _businessType.primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -147,8 +154,10 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: Icon(Icons.close,
-                      color: isDark ? Colors.white54 : Colors.black54),
+                  icon: Icon(
+                    Icons.close,
+                    color: isDark ? Colors.white54 : Colors.black54,
+                  ),
                   onPressed: () => Navigator.pop(context),
                   tooltip: 'Close',
                 ),
@@ -191,14 +200,21 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
             // TAX RATE (GST)
             if (FeatureResolver(_businessType).showProductTax) ...[
               if (config.gstEditable) ...[
-                _field('Tax Rate (%)', taxRateCtrl, isDark,
-                    keyboard: TextInputType.number),
+                _field(
+                  'Tax Rate (%)',
+                  taxRateCtrl,
+                  isDark,
+                  keyboard: TextInputType.number,
+                ),
                 const SizedBox(height: 12),
               ] else ...[
                 _readOnlyField(
-                    'Tax Rate', '${config.defaultGstRate}% (Fixed)', isDark),
+                  'Tax Rate',
+                  '${config.defaultGstRate}% (Fixed)',
+                  isDark,
+                ),
                 const SizedBox(height: 12),
-              ]
+              ],
             ],
 
             // CLOTHING FIELDS
@@ -238,10 +254,12 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
             Row(
               children: [
                 Expanded(
-                    child: _field('SKU (Optional)', skuController, isDark)),
+                  child: _field('SKU (Optional)', skuController, isDark),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
-                    child: _field('Barcode (Optional)', barcodeCtrl, isDark)),
+                  child: _field('Barcode (Optional)', barcodeCtrl, isDark),
+                ),
               ],
             ),
 
@@ -279,8 +297,12 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
     );
   }
 
-  Widget _field(String label, TextEditingController ctrl, bool isDark,
-      {TextInputType? keyboard}) {
+  Widget _field(
+    String label,
+    TextEditingController ctrl,
+    bool isDark, {
+    TextInputType? keyboard,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -292,11 +314,13 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
           style: TextStyle(color: isDark ? Colors.white : Colors.black87),
           decoration: InputDecoration(
             filled: true,
-            fillColor:
-                isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade100,
+            fillColor: isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.grey.shade100,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none),
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
       ],
@@ -313,15 +337,14 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           decoration: BoxDecoration(
-            color:
-                isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade100,
+            color: isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             value,
-            style: TextStyle(
-              color: isDark ? Colors.white54 : Colors.black54,
-            ),
+            style: TextStyle(color: isDark ? Colors.white54 : Colors.black54),
           ),
         ),
       ],
@@ -337,23 +360,27 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color:
-                isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade100,
+            color: isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(10),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
-              value: config.unitOptions
+              value:
+                  config.unitOptions
                       .map((u) => u.label.toLowerCase())
                       .contains(unitCtrl.text.toLowerCase())
                   ? unitCtrl.text.toLowerCase()
                   : config.unitOptions.first.label.toLowerCase(),
               items: config.unitOptions
-                  .map((unit) => DropdownMenuItem(
-                        value: unit.label.toLowerCase(),
-                        child: Text(unit.label),
-                      ))
+                  .map(
+                    (unit) => DropdownMenuItem(
+                      value: unit.label.toLowerCase(),
+                      child: Text(unit.label),
+                    ),
+                  )
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
@@ -404,10 +431,12 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
           taxRate:
               double.tryParse(taxRateCtrl.text) ?? _config?.defaultGstRate ?? 0,
           size: sizeCtrl.text.trim().isNotEmpty ? sizeCtrl.text.trim() : null,
-          color:
-              colorCtrl.text.trim().isNotEmpty ? colorCtrl.text.trim() : null,
-          brand:
-              brandCtrl.text.trim().isNotEmpty ? brandCtrl.text.trim() : null,
+          color: colorCtrl.text.trim().isNotEmpty
+              ? colorCtrl.text.trim()
+              : null,
+          brand: brandCtrl.text.trim().isNotEmpty
+              ? brandCtrl.text.trim()
+              : null,
           hsnCode: hsnCodeCtrl.text.trim().isNotEmpty
               ? hsnCodeCtrl.text.trim()
               : null,
@@ -436,10 +465,12 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
           taxRate:
               double.tryParse(taxRateCtrl.text) ?? _config?.defaultGstRate ?? 0,
           size: sizeCtrl.text.trim().isNotEmpty ? sizeCtrl.text.trim() : null,
-          color:
-              colorCtrl.text.trim().isNotEmpty ? colorCtrl.text.trim() : null,
-          brand:
-              brandCtrl.text.trim().isNotEmpty ? brandCtrl.text.trim() : null,
+          color: colorCtrl.text.trim().isNotEmpty
+              ? colorCtrl.text.trim()
+              : null,
+          brand: brandCtrl.text.trim().isNotEmpty
+              ? brandCtrl.text.trim()
+              : null,
           hsnCode: hsnCodeCtrl.text.trim().isNotEmpty
               ? hsnCodeCtrl.text.trim()
               : null,
@@ -469,10 +500,7 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
   void _showError(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: FuturisticColors.error,
-      ),
+      SnackBar(content: Text(message), backgroundColor: FuturisticColors.error),
     );
   }
 
@@ -504,9 +532,10 @@ class _AddEditProductSheetState extends State<AddEditProductSheet> {
           'expiryDate': saveData['expiryDate'],
           'mrp': saveData['mrp'],
           'purchaseRate': saveData['purchaseRate'],
-          'quantity': double.tryParse(stockCtrl.text) ??
+          'quantity':
+              double.tryParse(stockCtrl.text) ??
               0, // Initial batch gets full stock
-        }
+        },
       ];
     }
     return null;

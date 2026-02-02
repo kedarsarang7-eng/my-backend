@@ -54,14 +54,14 @@ class LogEntry {
   });
 
   Map<String, dynamic> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'level': level.label,
-        'tag': tag,
-        'message': message,
-        'metadata': metadata,
-        'errorType': errorType,
-        'stackTrace': stackTrace,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'level': level.label,
+    'tag': tag,
+    'message': message,
+    'metadata': metadata,
+    'errorType': errorType,
+    'stackTrace': stackTrace,
+  };
 
   @override
   String toString() =>
@@ -87,13 +87,13 @@ class PerformanceMetric {
   });
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'category': category,
-        'durationMs': duration.inMilliseconds,
-        'success': success,
-        'timestamp': timestamp.toIso8601String(),
-        'attributes': attributes,
-      };
+    'name': name,
+    'category': category,
+    'durationMs': duration.inMilliseconds,
+    'success': success,
+    'timestamp': timestamp.toIso8601String(),
+    'attributes': attributes,
+  };
 }
 
 /// Health status
@@ -111,11 +111,11 @@ class HealthStatus {
   });
 
   Map<String, dynamic> toJson() => {
-        'isHealthy': isHealthy,
-        'components': components,
-        'metrics': metrics,
-        'timestamp': timestamp.toIso8601String(),
-      };
+    'isHealthy': isHealthy,
+    'components': components,
+    'metrics': metrics,
+    'timestamp': timestamp.toIso8601String(),
+  };
 }
 
 /// Monitoring Service - Singleton
@@ -241,19 +241,35 @@ class MonitoringService {
   void warning(String tag, String message, {Map<String, dynamic>? metadata}) =>
       log(LogLevel.warning, tag, message, metadata: metadata);
 
-  void error(String tag, String message,
-          {Object? error,
-          StackTrace? stackTrace,
-          Map<String, dynamic>? metadata}) =>
-      log(LogLevel.error, tag, message,
-          error: error, stackTrace: stackTrace, metadata: metadata);
+  void error(
+    String tag,
+    String message, {
+    Object? error,
+    StackTrace? stackTrace,
+    Map<String, dynamic>? metadata,
+  }) => log(
+    LogLevel.error,
+    tag,
+    message,
+    error: error,
+    stackTrace: stackTrace,
+    metadata: metadata,
+  );
 
-  void fatal(String tag, String message,
-          {Object? error,
-          StackTrace? stackTrace,
-          Map<String, dynamic>? metadata}) =>
-      log(LogLevel.fatal, tag, message,
-          error: error, stackTrace: stackTrace, metadata: metadata);
+  void fatal(
+    String tag,
+    String message, {
+    Object? error,
+    StackTrace? stackTrace,
+    Map<String, dynamic>? metadata,
+  }) => log(
+    LogLevel.fatal,
+    tag,
+    message,
+    error: error,
+    stackTrace: stackTrace,
+    metadata: metadata,
+  );
 
   // ============================================================================
   // PERFORMANCE TRACING
@@ -292,12 +308,11 @@ class MonitoringService {
 
     // Log performance
     final emoji = success ? '✓' : '✗';
-    debug('PERF', '$emoji $name: ${stopwatch.elapsedMilliseconds}ms',
-        metadata: {
-          'category': category,
-          'success': success,
-          ...?attributes,
-        });
+    debug(
+      'PERF',
+      '$emoji $name: ${stopwatch.elapsedMilliseconds}ms',
+      metadata: {'category': category, 'success': success, ...?attributes},
+    );
 
     return metric;
   }
@@ -312,14 +327,20 @@ class MonitoringService {
     startTrace(name);
     try {
       final result = await operation();
-      stopTrace(name,
-          category: category, success: true, attributes: attributes);
+      stopTrace(
+        name,
+        category: category,
+        success: true,
+        attributes: attributes,
+      );
       return result;
     } catch (e, stack) {
-      stopTrace(name, category: category, success: false, attributes: {
-        ...?attributes,
-        'error': e.toString(),
-      });
+      stopTrace(
+        name,
+        category: category,
+        success: false,
+        attributes: {...?attributes, 'error': e.toString()},
+      );
       error('PERF', 'Operation failed: $name', error: e, stackTrace: stack);
       rethrow;
     }
@@ -417,7 +438,9 @@ class MonitoringService {
 
   /// Send event to Firebase Analytics (non-blocking)
   void _sendToFirebaseAnalytics(
-      String eventName, Map<String, dynamic>? parameters) {
+    String eventName,
+    Map<String, dynamic>? parameters,
+  ) {
     if (kDebugMode) return; // Skip in debug mode to avoid clutter
 
     // Use try-catch to handle case where firebase_analytics is not available
@@ -449,8 +472,10 @@ class MonitoringService {
             .take(3) // Limit to avoid excessive logging
             .map((e) => '${e.key}=${e.value}')
             .join(',');
-        FirebaseCrashlytics.instance
-            .setCustomKey('last_event_params', paramStr);
+        FirebaseCrashlytics.instance.setCustomKey(
+          'last_event_params',
+          paramStr,
+        );
       }
     }
   }
@@ -498,8 +523,9 @@ class MonitoringService {
 
   /// Get average performance for a category
   Map<String, double> getAveragePerformance(String category) {
-    final categoryMetrics =
-        _metricsBuffer.where((m) => m.category == category).toList();
+    final categoryMetrics = _metricsBuffer
+        .where((m) => m.category == category)
+        .toList();
     if (categoryMetrics.isEmpty) return {};
 
     final grouped = <String, List<int>>{};
@@ -507,8 +533,10 @@ class MonitoringService {
       grouped.putIfAbsent(m.name, () => []).add(m.duration.inMilliseconds);
     }
 
-    return grouped.map((name, durations) =>
-        MapEntry(name, durations.reduce((a, b) => a + b) / durations.length));
+    return grouped.map(
+      (name, durations) =>
+          MapEntry(name, durations.reduce((a, b) => a + b) / durations.length),
+    );
   }
 
   /// Export logs for debugging
@@ -551,9 +579,16 @@ void logInfo(String tag, String message, {Map<String, dynamic>? metadata}) =>
 void logWarning(String tag, String message, {Map<String, dynamic>? metadata}) =>
     monitoring.warning(tag, message, metadata: metadata);
 
-void logError(String tag, String message,
-        {Object? error,
-        StackTrace? stackTrace,
-        Map<String, dynamic>? metadata}) =>
-    monitoring.error(tag, message,
-        error: error, stackTrace: stackTrace, metadata: metadata);
+void logError(
+  String tag,
+  String message, {
+  Object? error,
+  StackTrace? stackTrace,
+  Map<String, dynamic>? metadata,
+}) => monitoring.error(
+  tag,
+  message,
+  error: error,
+  stackTrace: stackTrace,
+  metadata: metadata,
+);

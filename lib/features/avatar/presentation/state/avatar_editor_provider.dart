@@ -108,8 +108,9 @@ class AvatarEditorNotifier extends Notifier<AvatarEditorState> {
     if (newData == state.currentData) return;
 
     // Add to history, removing any future history if we were in the middle of undo stack
-    final newHistory =
-        state.history.sublist(0, state.historyIndex + 1).toList();
+    final newHistory = state.history
+        .sublist(0, state.historyIndex + 1)
+        .toList();
     newHistory.add(newData);
 
     // Limit history size to 20 to prevent memory issues
@@ -173,5 +174,5 @@ class AvatarEditorNotifier extends Notifier<AvatarEditorState> {
 // Provider - Riverpod 3.x syntax
 final avatarEditorProvider =
     NotifierProvider<AvatarEditorNotifier, AvatarEditorState>(
-  AvatarEditorNotifier.new,
-);
+      AvatarEditorNotifier.new,
+    );

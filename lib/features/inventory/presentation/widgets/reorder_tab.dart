@@ -72,8 +72,9 @@ class _ReorderTabState extends State<ReorderTab> {
 
   Widget _buildPredictionCard(ReorderPrediction item) {
     final isCritical = item.isCritical;
-    final color =
-        isCritical ? FuturisticColors.error : FuturisticColors.warning;
+    final color = isCritical
+        ? FuturisticColors.error
+        : FuturisticColors.warning;
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -110,14 +111,18 @@ class _ReorderTabState extends State<ReorderTab> {
                       Text(
                         'Stock: ${item.product.stockQuantity.toStringAsFixed(0)} ${item.product.unit}',
                         style: TextStyle(
-                            color: Colors.grey.shade600, fontSize: 12),
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: color,
                     borderRadius: BorderRadius.circular(16),
@@ -127,9 +132,10 @@ class _ReorderTabState extends State<ReorderTab> {
                         ? "Empty!"
                         : "${item.daysUntilEmpty} Days Left",
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],
@@ -150,13 +156,15 @@ class _ReorderTabState extends State<ReorderTab> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: FuturisticColors.primary,
                     foregroundColor: Colors.white,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 0,
+                    ),
                     visualDensity: VisualDensity.compact,
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -178,9 +186,11 @@ class _ReorderTabState extends State<ReorderTab> {
             Text('Product: ${item.product.name}'),
             const SizedBox(height: 8),
             Text(
-                'Current Stock: ${item.product.stockQuantity.toStringAsFixed(0)} ${item.product.unit}'),
+              'Current Stock: ${item.product.stockQuantity.toStringAsFixed(0)} ${item.product.unit}',
+            ),
             Text(
-                'Daily Sales: ${item.dailyVelocity.toStringAsFixed(1)} ${item.product.unit}/day'),
+              'Daily Sales: ${item.dailyVelocity.toStringAsFixed(1)} ${item.product.unit}/day',
+            ),
             const SizedBox(height: 12),
             Text(
               'Suggested Order: $suggestedQty ${item.product.unit}',

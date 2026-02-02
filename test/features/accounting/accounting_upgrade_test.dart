@@ -40,19 +40,21 @@ void main() {
     test('Calculates Bill Total strictness', () {
       final items = [
         BillItem(
-            productId: '1',
-            productName: 'A',
-            qty: 1,
-            price: 100.55,
-            gstRate: 0,
-            discount: 0), // 100.55
+          productId: '1',
+          productName: 'A',
+          qty: 1,
+          price: 100.55,
+          gstRate: 0,
+          discount: 0,
+        ), // 100.55
         BillItem(
-            productId: '2',
-            productName: 'B',
-            qty: 1,
-            price: 200.55,
-            gstRate: 0,
-            discount: 0), // 200.55
+          productId: '2',
+          productName: 'B',
+          qty: 1,
+          price: 200.55,
+          gstRate: 0,
+          discount: 0,
+        ), // 200.55
       ];
       // Total = 301.10
 

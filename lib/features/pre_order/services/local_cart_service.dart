@@ -18,7 +18,8 @@ class LocalCartService extends ChangeNotifier {
       if (_items.isNotEmpty) {
         // Log warning or notify user theoretically, but for now we auto-reset
         debugPrint(
-            'LocalCartService: Vendor changed from $_currentVendorId to $vendorId. Clearing cart.');
+          'LocalCartService: Vendor changed from $_currentVendorId to $vendorId. Clearing cart.',
+        );
       }
       _items.clear();
       _currentVendorId = vendorId;
@@ -32,8 +33,9 @@ class LocalCartService extends ChangeNotifier {
       throw Exception('Cart not initialized for any vendor');
     }
 
-    final index =
-        _items.indexWhere((element) => element.productId == item.productId);
+    final index = _items.indexWhere(
+      (element) => element.productId == item.productId,
+    );
     if (index >= 0) {
       // Update existing
       _items[index] = item;

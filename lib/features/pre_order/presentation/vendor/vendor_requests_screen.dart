@@ -21,8 +21,10 @@ class VendorRequestsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer Requests',
-            style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+        title: Text(
+          'Customer Requests',
+          style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+        ),
       ),
       body: StreamBuilder<List<CustomerItemRequest>>(
         stream: repo.watchRequestsForVendor(ownerId), // Reactive Stream
@@ -42,12 +44,16 @@ class VendorRequestsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inbox_outlined,
-                      size: 64, color: Colors.grey.shade300),
+                  Icon(
+                    Icons.inbox_outlined,
+                    size: 64,
+                    color: Colors.grey.shade300,
+                  ),
                   const SizedBox(height: 16),
-                  Text("No Item Requests",
-                      style:
-                          GoogleFonts.outfit(fontSize: 18, color: Colors.grey)),
+                  Text(
+                    "No Item Requests",
+                    style: GoogleFonts.outfit(fontSize: 18, color: Colors.grey),
+                  ),
                 ],
               ),
             );
@@ -101,7 +107,9 @@ class VendorRequestsScreen extends StatelessWidget {
                         Text(
                           'Customer: ${req.customerId.substring(0, 8)}...', // Truncate ID if long, ideally fetch name
                           style: GoogleFonts.outfit(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -127,13 +135,19 @@ class VendorRequestsScreen extends StatelessWidget {
                   _buildStatusChip(req.status),
                   Row(
                     children: [
-                      Text('View Details',
-                          style: GoogleFonts.outfit(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600)),
+                      Text(
+                        'View Details',
+                        style: GoogleFonts.outfit(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(width: 4),
-                      Icon(Icons.arrow_forward,
-                          size: 14, color: Theme.of(context).primaryColor),
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 14,
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ],
                   ),
                 ],
@@ -195,9 +209,14 @@ class VendorRequestsScreen extends StatelessWidget {
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text(status.name.toUpperCase(),
-          style: TextStyle(
-              color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+      child: Text(
+        status.name.toUpperCase(),
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }

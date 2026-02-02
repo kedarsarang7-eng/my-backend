@@ -27,9 +27,11 @@ class _EditBillItemDialogState extends State<EditBillItemDialog> {
     super.initState();
     _nameController = TextEditingController(text: widget.item['vegName'] ?? '');
     _priceController = TextEditingController(
-        text: (widget.item['pricePerKg'] ?? 0).toString());
-    _qtyController =
-        TextEditingController(text: (widget.item['quantity'] ?? 0).toString());
+      text: (widget.item['pricePerKg'] ?? 0).toString(),
+    );
+    _qtyController = TextEditingController(
+      text: (widget.item['quantity'] ?? 0).toString(),
+    );
   }
 
   @override
@@ -45,9 +47,9 @@ class _EditBillItemDialogState extends State<EditBillItemDialog> {
     final qty = double.tryParse(_qtyController.text) ?? 0;
 
     if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter item name')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter item name')));
       return;
     }
 
@@ -79,8 +81,9 @@ class _EditBillItemDialogState extends State<EditBillItemDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _priceController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Price per KG (₹)',
                 border: OutlineInputBorder(),
@@ -89,8 +92,9 @@ class _EditBillItemDialogState extends State<EditBillItemDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _qtyController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Quantity (KG)',
                 border: OutlineInputBorder(),
@@ -107,7 +111,8 @@ class _EditBillItemDialogState extends State<EditBillItemDialog> {
         ElevatedButton(
           onPressed: _save,
           style: ElevatedButton.styleFrom(
-              backgroundColor: FuturisticColors.success),
+            backgroundColor: FuturisticColors.success,
+          ),
           child: const Text('Save'),
         ),
       ],
@@ -213,9 +218,9 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -320,24 +325,27 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
                     color: FuturisticColors.primary,
                     child: Row(
                       children: [
+                        Expanded(flex: 3, child: _tableHeaderCell('Item Name')),
                         Expanded(
-                          flex: 3,
-                          child: _tableHeaderCell('Item Name'),
+                          flex: 1,
+                          child: _tableHeaderCell(
+                            'Price/KG',
+                            align: TextAlign.center,
+                          ),
                         ),
                         Expanded(
                           flex: 1,
-                          child: _tableHeaderCell('Price/KG',
-                              align: TextAlign.center),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: _tableHeaderCell('Qty (KG)',
-                              align: TextAlign.center),
+                          child: _tableHeaderCell(
+                            'Qty (KG)',
+                            align: TextAlign.center,
+                          ),
                         ),
                         Expanded(
                           flex: 2,
-                          child:
-                              _tableHeaderCell('Total', align: TextAlign.right),
+                          child: _tableHeaderCell(
+                            'Total',
+                            align: TextAlign.right,
+                          ),
                         ),
                         const SizedBox(width: 60),
                       ],
@@ -370,10 +378,7 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
                           color: isEven ? Colors.white : Colors.grey[50],
                           child: Row(
                             children: [
-                              Expanded(
-                                flex: 3,
-                                child: _tableDataCell(vegName),
-                              ),
+                              Expanded(flex: 3, child: _tableDataCell(vegName)),
                               Expanded(
                                 flex: 1,
                                 child: _tableDataCell(
@@ -403,16 +408,21 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          size: 18, color: Colors.blue),
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        size: 18,
+                                        color: Colors.blue,
+                                      ),
                                       onPressed: () => _editItem(index),
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          size: 18,
-                                          color: FuturisticColors.error),
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        size: 18,
+                                        color: FuturisticColors.error,
+                                      ),
                                       onPressed: () => _removeItem(index),
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
@@ -446,8 +456,12 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
                   if (widget.pendingDues > 0)
                     _summaryRow('Pending Due', widget.pendingDues, isRed: true),
                   const Divider(height: 16),
-                  _summaryRow('Amount Paid', _total - widget.pendingDues,
-                      isBold: true, isGreen: true),
+                  _summaryRow(
+                    'Amount Paid',
+                    _total - widget.pendingDues,
+                    isBold: true,
+                    isGreen: true,
+                  ),
                 ],
               ),
             ),
@@ -533,8 +547,11 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
     );
   }
 
-  Widget _tableDataCell(String text,
-      {TextAlign align = TextAlign.left, bool isBold = false}) {
+  Widget _tableDataCell(
+    String text, {
+    TextAlign align = TextAlign.left,
+    bool isBold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Text(
@@ -549,8 +566,13 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
     );
   }
 
-  Widget _summaryRow(String label, double amount,
-      {bool isBold = false, bool isRed = false, bool isGreen = false}) {
+  Widget _summaryRow(
+    String label,
+    double amount, {
+    bool isBold = false,
+    bool isRed = false,
+    bool isGreen = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -571,8 +593,8 @@ class _EnhancedCustomerPanelState extends State<EnhancedCustomerPanel> {
               color: isRed
                   ? FuturisticColors.unpaid
                   : isGreen
-                      ? FuturisticColors.success
-                      : Colors.black,
+                  ? FuturisticColors.success
+                  : Colors.black,
             ),
           ),
         ],

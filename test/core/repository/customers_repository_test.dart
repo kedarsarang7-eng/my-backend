@@ -109,10 +109,7 @@ void main() {
         updatedAt: now,
       );
 
-      final updated = original.copyWith(
-        name: 'Updated Name',
-        totalDues: 500,
-      );
+      final updated = original.copyWith(name: 'Updated Name', totalDues: 500);
 
       // Changed fields
       expect(updated.name, 'Updated Name');

@@ -180,14 +180,19 @@ void callbackDispatcher() {
           await syncManager.forceSyncAll();
         }
 
-        developer.log('Background sync completed: ${pending.length} items',
-            name: 'WorkManager');
+        developer.log(
+          'Background sync completed: ${pending.length} items',
+          name: 'WorkManager',
+        );
       }
 
       return true;
     } catch (e, stack) {
-      developer.log('Background task failed: $e',
-          name: 'WorkManager', stackTrace: stack);
+      developer.log(
+        'Background task failed: $e',
+        name: 'WorkManager',
+        stackTrace: stack,
+      );
       return false;
     }
   });
@@ -260,8 +265,12 @@ void main() async {
         name: 'main',
         stackTrace: stack,
       );
-      monitoring.fatal('ZoneError', error.toString(),
-          error: error, stackTrace: stack);
+      monitoring.fatal(
+        'ZoneError',
+        error.toString(),
+        error: error,
+        stackTrace: stack,
+      );
     },
   );
 }
@@ -296,8 +305,11 @@ Future<void> _bootstrapFirebase() async {
     firebaseInitError = null;
     developer.log('Firebase bootstrap complete', name: 'main');
   } catch (e, stack) {
-    developer.log('Firebase initialization failed: $e',
-        name: 'main', stackTrace: stack);
+    developer.log(
+      'Firebase initialization failed: $e',
+      name: 'main',
+      stackTrace: stack,
+    );
     firebaseReady = false;
     firebaseInitError = e.toString();
     // App can continue in offline mode
@@ -309,10 +321,12 @@ Future<void> _initializeAppCheck() async {
     const isDebug = bool.fromEnvironment('dart.vm.product') == false;
 
     await FirebaseAppCheck.instance.activate(
-      webProvider:
-          ReCaptchaV3Provider('6LcYWjYsAAAAAGbbveVV_QrGv03ePVEMm9yYNFKB'),
-      androidProvider:
-          isDebug ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+      webProvider: ReCaptchaV3Provider(
+        '6LcYWjYsAAAAAGbbveVV_QrGv03ePVEMm9yYNFKB',
+      ),
+      androidProvider: isDebug
+          ? AndroidProvider.debug
+          : AndroidProvider.playIntegrity,
       appleProvider: isDebug ? AppleProvider.debug : AppleProvider.appAttest,
     );
 
@@ -355,9 +369,9 @@ Future<void> _warmupFirestore() async {
   // Native: blocking warmup with retries
   for (int i = 0; i < 3; i++) {
     try {
-      await FirebaseFirestore.instance
-          .enableNetwork()
-          .timeout(const Duration(seconds: 5));
+      await FirebaseFirestore.instance.enableNetwork().timeout(
+        const Duration(seconds: 5),
+      );
       developer.log('Firestore network enabled', name: 'main');
       break;
     } catch (e) {
@@ -375,20 +389,26 @@ void _warmupFirestoreWeb() {
     // Multiple warmup attempts over 10 seconds
     for (int i = 0; i < 5; i++) {
       try {
-        await FirebaseFirestore.instance
-            .enableNetwork()
-            .timeout(const Duration(seconds: 3));
-        developer.log('Web: Firestore warmup success on attempt ${i + 1}',
-            name: 'main');
+        await FirebaseFirestore.instance.enableNetwork().timeout(
+          const Duration(seconds: 3),
+        );
+        developer.log(
+          'Web: Firestore warmup success on attempt ${i + 1}',
+          name: 'main',
+        );
         return; // Success
       } catch (e) {
-        developer.log('Web: Firestore warmup attempt ${i + 1} failed: $e',
-            name: 'main');
+        developer.log(
+          'Web: Firestore warmup attempt ${i + 1} failed: $e',
+          name: 'main',
+        );
         await Future.delayed(Duration(seconds: 2));
       }
     }
-    developer.log('Web: Firestore warmup completed (may still be connecting)',
-        name: 'main');
+    developer.log(
+      'Web: Firestore warmup completed (may still be connecting)',
+      name: 'main',
+    );
   });
 }
 
@@ -444,8 +464,11 @@ Future<void> initEnterpriseServicesForUser(String userId) async {
     // ================================================================
     _runWeeklyIntegrityCheck(userId);
   } catch (e, stack) {
-    developer.log('Enterprise init failed: $e',
-        name: 'main', stackTrace: stack);
+    developer.log(
+      'Enterprise init failed: $e',
+      name: 'main',
+      stackTrace: stack,
+    );
   }
 }
 
@@ -463,35 +486,41 @@ void _runWeeklyIntegrityCheck(String userId) {
         developer.log('Running weekly integrity check...', name: 'integrity');
 
         // Create integrity service directly with database
-        final integrityService =
-            DataIntegrityService(database: AppDatabase.instance);
+        final integrityService = DataIntegrityService(
+          database: AppDatabase.instance,
+        );
 
         // Stock integrity check with auto-fix
-        final stockResult =
-            await integrityService.verifyAndAutoFixStockIntegrity(
-          userId,
-          minorThreshold: 1.0,
-          alertThreshold: 5.0,
-        );
+        final stockResult = await integrityService
+            .verifyAndAutoFixStockIntegrity(
+              userId,
+              minorThreshold: 1.0,
+              alertThreshold: 5.0,
+            );
         developer.log(
-            'Stock integrity: ${stockResult.checkedCount} products, '
-            '${stockResult.minorFixCount} corrections',
-            name: 'integrity');
+          'Stock integrity: ${stockResult.checkedCount} products, '
+          '${stockResult.minorFixCount} corrections',
+          name: 'integrity',
+        );
 
         // Customer ledger integrity check
-        final ledgerResult =
-            await integrityService.reconcileCustomerBalance(userId);
+        final ledgerResult = await integrityService.reconcileCustomerBalance(
+          userId,
+        );
         developer.log(
-            'Ledger integrity: ${ledgerResult.checkedCount} customers, '
-            '${ledgerResult.correctionCount} corrected',
-            name: 'integrity');
+          'Ledger integrity: ${ledgerResult.checkedCount} customers, '
+          '${ledgerResult.correctionCount} corrected',
+          name: 'integrity',
+        );
 
         await prefs.setInt('lastIntegrityCheck', now);
         developer.log('Weekly integrity check complete', name: 'integrity');
       }
     } catch (e) {
-      developer.log('Integrity check failed (non-blocking): $e',
-          name: 'integrity');
+      developer.log(
+        'Integrity check failed (non-blocking): $e',
+        name: 'integrity',
+      );
     }
   });
 }
@@ -645,7 +674,6 @@ class DukanXApp extends riverpod.ConsumerWidget {
           VendorRoleGuard(child: const CustomersListScreen()),
 
       // Settings & Admin
-
       '/settings': (context) => VendorRoleGuard(child: const SettingsScreen()),
       '/admin/recompute_dues': (context) =>
           VendorRoleGuard(child: const AdminMigrationsScreen()),
@@ -694,7 +722,8 @@ class DukanXApp extends riverpod.ConsumerWidget {
         final args = ModalRoute.of(context)!.settings.arguments;
         if (args is String) {
           return VendorRoleGuard(
-              child: CustomerNotificationsScreen(customerId: args));
+            child: CustomerNotificationsScreen(customerId: args),
+          );
         }
         return const VendorRoleGuard(child: SizedBox.shrink());
       },
@@ -725,83 +754,83 @@ class DukanXApp extends riverpod.ConsumerWidget {
 
       // Clinic
       '/clinic/appointment': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [BusinessType.clinic],
-              denialMessage: 'Only Clinics can access Appointments',
-              child: const AppointmentScreen(),
-            ),
-          ),
+        child: BusinessGuard(
+          allowedTypes: const [BusinessType.clinic],
+          denialMessage: 'Only Clinics can access Appointments',
+          child: const AppointmentScreen(),
+        ),
+      ),
       '/clinic/prescription': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [BusinessType.clinic],
-              denialMessage: 'Only Clinics can access Prescriptions',
-              child: const AddPrescriptionScreen(),
-            ),
-          ),
+        child: BusinessGuard(
+          allowedTypes: const [BusinessType.clinic],
+          denialMessage: 'Only Clinics can access Prescriptions',
+          child: const AddPrescriptionScreen(),
+        ),
+      ),
       '/clinic/queue': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [BusinessType.clinic],
-              denialMessage: 'Only Clinics can access Patient Queue',
-              child: const PatientListScreen(),
-            ),
-          ),
+        child: BusinessGuard(
+          allowedTypes: const [BusinessType.clinic],
+          denialMessage: 'Only Clinics can access Patient Queue',
+          child: const PatientListScreen(),
+        ),
+      ),
 
       // Service / Repair (Mobile, Computer, General Service)
       '/job/create': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [
-                BusinessType.mobileShop,
-                BusinessType.computerShop,
-                BusinessType.service,
-                BusinessType.electronics
-              ],
-              denialMessage:
-                  'This feature is for Service/Repair businesses only',
-              child: const CreateServiceJobScreen(),
-            ),
-          ),
-      '/job/status': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [
-                BusinessType.mobileShop,
-                BusinessType.computerShop,
-                BusinessType.service,
-                BusinessType.electronics
-              ],
-              child: const ServiceJobListScreen(),
-            ),
-          ),
-      '/job/deliver': (context) => VendorRoleGuard(
-              child: BusinessGuard(allowedTypes: const [
+        child: BusinessGuard(
+          allowedTypes: const [
             BusinessType.mobileShop,
             BusinessType.computerShop,
             BusinessType.service,
-            BusinessType.electronics
-          ], child: const ServiceJobListScreen())), // Reuse list for now
-
+            BusinessType.electronics,
+          ],
+          denialMessage: 'This feature is for Service/Repair businesses only',
+          child: const CreateServiceJobScreen(),
+        ),
+      ),
+      '/job/status': (context) => VendorRoleGuard(
+        child: BusinessGuard(
+          allowedTypes: const [
+            BusinessType.mobileShop,
+            BusinessType.computerShop,
+            BusinessType.service,
+            BusinessType.electronics,
+          ],
+          child: const ServiceJobListScreen(),
+        ),
+      ),
+      '/job/deliver': (context) => VendorRoleGuard(
+        child: BusinessGuard(
+          allowedTypes: const [
+            BusinessType.mobileShop,
+            BusinessType.computerShop,
+            BusinessType.service,
+            BusinessType.electronics,
+          ],
+          child: const ServiceJobListScreen(),
+        ),
+      ), // Reuse list for now
       // Petrol Pump
       '/pump/reading': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [BusinessType.petrolPump],
-              denialMessage: 'Only Petrol Pumps can access Meter Readings',
-              child: const DispenserListScreen(),
-            ),
-          ),
+        child: BusinessGuard(
+          allowedTypes: const [BusinessType.petrolPump],
+          denialMessage: 'Only Petrol Pumps can access Meter Readings',
+          child: const DispenserListScreen(),
+        ),
+      ),
       '/pump/density': (context) => VendorRoleGuard(
-            child: BusinessGuard(
-              allowedTypes: const [BusinessType.petrolPump],
-              child: const FuelRatesScreen(),
-            ),
-          ),
+        child: BusinessGuard(
+          allowedTypes: const [BusinessType.petrolPump],
+          child: const FuelRatesScreen(),
+        ),
+      ),
 
       // Parameterized routes
       '/customer_app': (context) {
         final args = ModalRoute.of(context)!.settings.arguments;
         if (args is Customer) {
           return CustomerRoleGuard(
-            child: CustomerHomeScreen(
-              customerId: args.id,
-            ),
+            child: CustomerHomeScreen(customerId: args.id),
           );
         }
         return const CustomerAuthScreen();
@@ -831,9 +860,7 @@ class DukanXApp extends riverpod.ConsumerWidget {
       '/cloud_sync_settings': (context) {
         final args = ModalRoute.of(context)!.settings.arguments;
         if (args is String) {
-          return VendorRoleGuard(
-            child: CloudSyncSettingsScreen(ownerId: args),
-          );
+          return VendorRoleGuard(child: CloudSyncSettingsScreen(ownerId: args));
         }
         return VendorRoleGuard(child: const SettingsScreen());
       },
@@ -852,9 +879,7 @@ class DukanXApp extends riverpod.ConsumerWidget {
       '/invoice_preview': (context) {
         final args = ModalRoute.of(context)!.settings.arguments;
         if (args is EditableInvoice) {
-          return VendorRoleGuard(
-            child: InvoicePreviewScreen(invoice: args),
-          );
+          return VendorRoleGuard(child: InvoicePreviewScreen(invoice: args));
         }
         return VendorRoleGuard(child: const SizedBox.shrink());
       },

@@ -24,9 +24,9 @@ class ClinicBillingService {
     required AppDatabase db,
     required SyncManager syncManager,
     required InventoryService inventoryService,
-  })  : _db = db,
-        _syncManager = syncManager,
-        _inventoryService = inventoryService;
+  }) : _db = db,
+       _syncManager = syncManager,
+       _inventoryService = inventoryService;
 
   static const String collectionName = 'bills';
 
@@ -68,48 +68,52 @@ class ClinicBillingService {
         'discountPercent': 0.0,
         'taxPercent': 0.0,
         'type': 'SERVICE',
-      }
+      },
     ];
 
-    await _db.into(_db.bills).insert(BillsCompanion.insert(
-          id: billId,
-          userId: doctorId,
-          invoiceNumber: _generateInvoiceNumber(now),
-          customerId: Value(patientId),
-          customerName: Value(patientName),
-          billDate: now,
-          subtotal: Value(fee),
-          grandTotal: Value(fee),
-          paidAmount: const Value(0.0),
-          status: const Value('PENDING'),
-          businessType: const Value('clinic'),
-          itemsJson: jsonEncode(billItems),
-          createdAt: now,
-          updatedAt: now,
-        ));
+    await _db
+        .into(_db.bills)
+        .insert(
+          BillsCompanion.insert(
+            id: billId,
+            userId: doctorId,
+            invoiceNumber: _generateInvoiceNumber(now),
+            customerId: Value(patientId),
+            customerName: Value(patientName),
+            billDate: now,
+            subtotal: Value(fee),
+            grandTotal: Value(fee),
+            paidAmount: const Value(0.0),
+            status: const Value('PENDING'),
+            businessType: const Value('clinic'),
+            itemsJson: jsonEncode(billItems),
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
 
     // Update visit with billId
-    await (_db.update(_db.visits)..where((t) => t.id.equals(visitId)))
-        .write(VisitsCompanion(
-      billId: Value(billId),
-      updatedAt: Value(now),
-    ));
+    await (_db.update(_db.visits)..where((t) => t.id.equals(visitId))).write(
+      VisitsCompanion(billId: Value(billId), updatedAt: Value(now)),
+    );
 
     // Queue sync
-    await _syncManager.enqueue(SyncQueueItem.create(
-      userId: doctorId,
-      operationType: SyncOperationType.create,
-      targetCollection: collectionName,
-      documentId: billId,
-      payload: {
-        'id': billId,
-        'visitId': visitId,
-        'patientId': patientId,
-        'items': billItems,
-        'subtotal': fee,
-        'grandTotal': fee,
-      },
-    ));
+    await _syncManager.enqueue(
+      SyncQueueItem.create(
+        userId: doctorId,
+        operationType: SyncOperationType.create,
+        targetCollection: collectionName,
+        documentId: billId,
+        payload: {
+          'id': billId,
+          'visitId': visitId,
+          'patientId': patientId,
+          'items': billItems,
+          'subtotal': fee,
+          'grandTotal': fee,
+        },
+      ),
+    );
 
     return billId;
   }
@@ -133,9 +137,9 @@ class ClinicBillingService {
       final syncOps = <SyncQueueItem>[];
 
       // Get existing bill
-      final bill = await (_db.select(_db.bills)
-            ..where((t) => t.id.equals(billId)))
-          .getSingleOrNull();
+      final bill = await (_db.select(
+        _db.bills,
+      )..where((t) => t.id.equals(billId))).getSingleOrNull();
 
       if (bill == null) {
         throw Exception('Bill not found: $billId');
@@ -146,7 +150,8 @@ class ClinicBillingService {
       if (bill.itemsJson.isNotEmpty) {
         try {
           existingItems = List<Map<String, dynamic>>.from(
-              jsonDecode(bill.itemsJson) as List);
+            jsonDecode(bill.itemsJson) as List,
+          );
         } catch (_) {
           existingItems = [];
         }
@@ -161,9 +166,9 @@ class ClinicBillingService {
 
         // Try to get price from inventory if productId exists
         if (includeProducts && medicine.productId != null) {
-          final product = await (_db.select(_db.products)
-                ..where((t) => t.id.equals(medicine.productId!)))
-              .getSingleOrNull();
+          final product = await (_db.select(
+            _db.products,
+          )..where((t) => t.id.equals(medicine.productId!))).getSingleOrNull();
 
           if (product != null) {
             unitPrice = product.sellingPrice;
@@ -223,19 +228,21 @@ class ClinicBillingService {
       );
 
       // Collect sync op for bill update
-      syncOps.add(SyncQueueItem.create(
-        userId: bill.userId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: billId,
-        payload: {
-          'id': billId,
-          'prescriptionId': prescription.id,
-          'subtotal': newSubtotal,
-          'grandTotal': newGrandTotal,
-          'items': existingItems, // Include items updates
-        },
-      ));
+      syncOps.add(
+        SyncQueueItem.create(
+          userId: bill.userId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: billId,
+          payload: {
+            'id': billId,
+            'prescriptionId': prescription.id,
+            'subtotal': newSubtotal,
+            'grandTotal': newGrandTotal,
+            'items': existingItems, // Include items updates
+          },
+        ),
+      );
 
       // Execute all sync ops via manager (post-transaction or here?
       // SyncManager usually handles its own async, but we want to ensure these are queued.
@@ -258,9 +265,9 @@ class ClinicBillingService {
   }) async {
     final now = DateTime.now();
 
-    final bill = await (_db.select(_db.bills)
-          ..where((t) => t.id.equals(billId)))
-        .getSingleOrNull();
+    final bill = await (_db.select(
+      _db.bills,
+    )..where((t) => t.id.equals(billId))).getSingleOrNull();
 
     if (bill == null) {
       throw Exception('Bill not found: $billId');
@@ -271,8 +278,9 @@ class ClinicBillingService {
     List<Map<String, dynamic>> existingItems = [];
     if (bill.itemsJson.isNotEmpty) {
       try {
-        existingItems =
-            List<Map<String, dynamic>>.from(jsonDecode(bill.itemsJson) as List);
+        existingItems = List<Map<String, dynamic>>.from(
+          jsonDecode(bill.itemsJson) as List,
+        );
       } catch (_) {
         existingItems = [];
       }
@@ -318,15 +326,15 @@ class ClinicBillingService {
 
   /// Get bill associated with a visit
   Future<BillEntity?> getBillForVisit(String visitId) async {
-    final visit = await (_db.select(_db.visits)
-          ..where((t) => t.id.equals(visitId)))
-        .getSingleOrNull();
+    final visit = await (_db.select(
+      _db.visits,
+    )..where((t) => t.id.equals(visitId))).getSingleOrNull();
 
     if (visit?.billId == null) return null;
 
-    return await (_db.select(_db.bills)
-          ..where((t) => t.id.equals(visit!.billId!)))
-        .getSingleOrNull();
+    return await (_db.select(
+      _db.bills,
+    )..where((t) => t.id.equals(visit!.billId!))).getSingleOrNull();
   }
 
   // ============================================

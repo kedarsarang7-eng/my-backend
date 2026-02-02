@@ -27,14 +27,16 @@ class FraudAlertRepository {
     required AppDatabase database,
     FirebaseFirestore? firestore,
     required AuditRepository auditRepository,
-  })  : _database = database,
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _auditRepository = auditRepository;
+  }) : _database = database,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _auditRepository = auditRepository;
 
   /// Save a fraud alert
   Future<void> saveAlert(FraudAlert alert) async {
     // Save to local database
-    await _database.into(_database.fraudAlerts).insert(
+    await _database
+        .into(_database.fraudAlerts)
+        .insert(
           FraudAlertsCompanion.insert(
             id: alert.id,
             businessId: alert.businessId,
@@ -69,11 +71,12 @@ class FraudAlertRepository {
 
   /// Get pending (unacknowledged) alerts for a business
   Future<List<FraudAlert>> getPendingAlerts(String businessId) async {
-    final rows = await (_database.select(_database.fraudAlerts)
-          ..where((t) => t.businessId.equals(businessId))
-          ..where((t) => t.isAcknowledged.equals(false))
-          ..orderBy([(t) => drift.OrderingTerm.desc(t.createdAt)]))
-        .get();
+    final rows =
+        await (_database.select(_database.fraudAlerts)
+              ..where((t) => t.businessId.equals(businessId))
+              ..where((t) => t.isAcknowledged.equals(false))
+              ..orderBy([(t) => drift.OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return rows.map(_entityToAlert).toList();
   }
@@ -83,11 +86,12 @@ class FraudAlertRepository {
     String businessId, {
     int limit = 100,
   }) async {
-    final rows = await (_database.select(_database.fraudAlerts)
-          ..where((t) => t.businessId.equals(businessId))
-          ..orderBy([(t) => drift.OrderingTerm.desc(t.createdAt)])
-          ..limit(limit))
-        .get();
+    final rows =
+        await (_database.select(_database.fraudAlerts)
+              ..where((t) => t.businessId.equals(businessId))
+              ..orderBy([(t) => drift.OrderingTerm.desc(t.createdAt)])
+              ..limit(limit))
+            .get();
 
     return rows.map(_entityToAlert).toList();
   }
@@ -97,11 +101,12 @@ class FraudAlertRepository {
     String businessId,
     FraudAlertType type,
   ) async {
-    final rows = await (_database.select(_database.fraudAlerts)
-          ..where((t) => t.businessId.equals(businessId))
-          ..where((t) => t.alertType.equals(type.name))
-          ..orderBy([(t) => drift.OrderingTerm.desc(t.createdAt)]))
-        .get();
+    final rows =
+        await (_database.select(_database.fraudAlerts)
+              ..where((t) => t.businessId.equals(businessId))
+              ..where((t) => t.alertType.equals(type.name))
+              ..orderBy([(t) => drift.OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return rows.map(_entityToAlert).toList();
   }
@@ -115,13 +120,15 @@ class FraudAlertRepository {
     final now = DateTime.now();
 
     // Update local database
-    await (_database.update(_database.fraudAlerts)
-          ..where((t) => t.id.equals(alertId)))
-        .write(FraudAlertsCompanion(
-      isAcknowledged: const drift.Value(true),
-      acknowledgedBy: drift.Value(acknowledgedBy),
-      acknowledgedAt: drift.Value(now),
-    ));
+    await (_database.update(
+      _database.fraudAlerts,
+    )..where((t) => t.id.equals(alertId))).write(
+      FraudAlertsCompanion(
+        isAcknowledged: const drift.Value(true),
+        acknowledgedBy: drift.Value(acknowledgedBy),
+        acknowledgedAt: drift.Value(now),
+      ),
+    );
 
     // Sync to Firestore
     try {
@@ -147,10 +154,11 @@ class FraudAlertRepository {
 
   /// Get alert count by severity
   Future<Map<FraudSeverity, int>> getAlertCounts(String businessId) async {
-    final rows = await (_database.select(_database.fraudAlerts)
-          ..where((t) => t.businessId.equals(businessId))
-          ..where((t) => t.isAcknowledged.equals(false)))
-        .get();
+    final rows =
+        await (_database.select(_database.fraudAlerts)
+              ..where((t) => t.businessId.equals(businessId))
+              ..where((t) => t.isAcknowledged.equals(false)))
+            .get();
 
     final counts = <FraudSeverity, int>{};
     for (final severity in FraudSeverity.values) {
@@ -185,11 +193,12 @@ class FraudAlertRepository {
   }) async {
     final cutoff = DateTime.now().subtract(Duration(days: daysToKeep));
 
-    final deleted = await (_database.delete(_database.fraudAlerts)
-          ..where((t) => t.businessId.equals(businessId))
-          ..where((t) => t.isAcknowledged.equals(true))
-          ..where((t) => t.acknowledgedAt.isSmallerThanValue(cutoff)))
-        .go();
+    final deleted =
+        await (_database.delete(_database.fraudAlerts)
+              ..where((t) => t.businessId.equals(businessId))
+              ..where((t) => t.isAcknowledged.equals(true))
+              ..where((t) => t.acknowledgedAt.isSmallerThanValue(cutoff)))
+            .go();
 
     debugPrint('FraudAlertRepository: Cleaned up $deleted old alerts');
     return deleted;

@@ -57,8 +57,9 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('Create Campaign'),
         backgroundColor: Colors.transparent,
@@ -103,8 +104,11 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                       value: type,
                       child: Row(
                         children: [
-                          Icon(_getTypeIcon(type),
-                              size: 20, color: _getTypeColor(type)),
+                          Icon(
+                            _getTypeIcon(type),
+                            size: 20,
+                            color: _getTypeColor(type),
+                          ),
                           const SizedBox(width: 8),
                           Text(_formatType(type)),
                         ],
@@ -166,8 +170,9 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                     onChanged: (v) {
                       setState(() => _selectedTemplateId = v);
                       if (v != null) {
-                        final template =
-                            _templates.firstWhere((t) => t['id'] == v);
+                        final template = _templates.firstWhere(
+                          (t) => t['id'] == v,
+                        );
                         _messageController.text = template['content'] as String;
                       }
                     },
@@ -291,10 +296,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
         const SizedBox(width: 8),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -418,9 +420,9 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
 
     final userId = sl<SessionManager>().ownerId;
     if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Not logged in')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Not logged in')));
       return;
     }
 

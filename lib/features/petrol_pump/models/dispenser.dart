@@ -21,8 +21,8 @@ class Dispenser {
     DateTime? createdAt,
     DateTime? updatedAt,
     this.isActive = true,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Dispenser copyWith({
     String? dispenserId,
@@ -47,21 +47,22 @@ class Dispenser {
   }
 
   Map<String, dynamic> toMap() => {
-        'dispenserId': dispenserId,
-        'name': name,
-        'nozzleIds': nozzleIds,
-        'linkedTankId': linkedTankId,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'isActive': isActive,
-      };
+    'dispenserId': dispenserId,
+    'name': name,
+    'nozzleIds': nozzleIds,
+    'linkedTankId': linkedTankId,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'isActive': isActive,
+  };
 
   factory Dispenser.fromMap(String id, Map<String, dynamic> map) {
     return Dispenser(
       dispenserId: id,
       name: map['name'] as String? ?? '',
-      nozzleIds: (map['nozzleIds'] as List<dynamic>?)
+      nozzleIds:
+          (map['nozzleIds'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],

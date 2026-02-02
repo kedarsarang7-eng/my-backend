@@ -72,7 +72,7 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
     'meter',
     'sq.ft',
     'hour',
-    'service'
+    'service',
   ];
 
   @override
@@ -176,9 +176,7 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
           color: _colorController.text.trim(),
         );
       } else if (widget.businessType == BusinessType.hardware) {
-        item = item.copyWith(
-          size: _sizeController.text.trim(),
-        );
+        item = item.copyWith(size: _sizeController.text.trim());
       }
 
       widget.onItemAdded(item);
@@ -229,7 +227,8 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                       child: TextFormField(
                         controller: _batchController,
                         style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87),
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                         decoration: _buildInputDecoration(
                           'Batch No',
                           Icons.qr_code_2,
@@ -246,7 +245,8 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                           child: TextFormField(
                             controller: _expiryController,
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87),
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
                             decoration: _buildInputDecoration(
                               'Expiry Date',
                               Icons.calendar_today,
@@ -267,8 +267,9 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                   widget.businessType == BusinessType.computerShop) ...[
                 TextFormField(
                   controller: _serialController,
-                  style:
-                      TextStyle(color: isDark ? Colors.white : Colors.black87),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   decoration: _buildInputDecoration(
                     'Serial No / IMEI',
                     Icons.tag,
@@ -280,8 +281,9 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                 TextFormField(
                   controller: _warrantyController,
                   keyboardType: TextInputType.number,
-                  style:
-                      TextStyle(color: isDark ? Colors.white : Colors.black87),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   decoration: _buildInputDecoration(
                     'Warranty (Months)',
                     Icons.verified_user_outlined,
@@ -298,7 +300,8 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                       child: TextFormField(
                         controller: _sizeController,
                         style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87),
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                         decoration: _buildInputDecoration(
                           'Size',
                           Icons.straighten,
@@ -312,7 +315,8 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                       child: TextFormField(
                         controller: _colorController,
                         style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87),
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                         decoration: _buildInputDecoration(
                           'Color',
                           Icons.palette_outlined,
@@ -328,8 +332,9 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
               if (widget.businessType == BusinessType.hardware) ...[
                 TextFormField(
                   controller: _sizeController,
-                  style:
-                      TextStyle(color: isDark ? Colors.white : Colors.black87),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   decoration: _buildInputDecoration(
                     'Size / Dimensions',
                     Icons.straighten,
@@ -347,14 +352,17 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                     flex: 2,
                     child: TextFormField(
                       controller: _qtyController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d*\.?\d*')),
+                          RegExp(r'^\d*\.?\d*'),
+                        ),
                       ],
                       style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87),
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                       decoration: _buildInputDecoration(
                         'Quantity',
                         Icons.numbers,
@@ -372,18 +380,17 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                     flex: 2,
                     child: DropdownButtonFormField<String>(
                       value: _selectedUnit,
-                      dropdownColor:
-                          isDark ? const Color(0xFF1E293B) : Colors.white,
+                      dropdownColor: isDark
+                          ? const Color(0xFF1E293B)
+                          : Colors.white,
                       style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87),
-                      decoration: _buildInputDecoration(
-                        'Unit',
-                        null,
-                        isDark,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
+                      decoration: _buildInputDecoration('Unit', null, isDark),
                       items: _units
                           .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)))
+                            (u) => DropdownMenuItem(value: u, child: Text(u)),
+                          )
                           .toList(),
                       onChanged: (v) =>
                           setState(() => _selectedUnit = v ?? 'pcs'),
@@ -396,8 +403,9 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
               // Rate
               TextFormField(
                 controller: _rateController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                 ],
@@ -421,14 +429,17 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _gstController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d*\.?\d*')),
+                          RegExp(r'^\d*\.?\d*'),
+                        ),
                       ],
                       style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87),
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                       decoration: _buildInputDecoration(
                         'GST %',
                         Icons.receipt_long_outlined,
@@ -441,14 +452,17 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _discountController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d*\.?\d*')),
+                          RegExp(r'^\d*\.?\d*'),
+                        ),
                       ],
                       style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87),
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                       decoration: _buildInputDecoration(
                         'Discount (₹)',
                         Icons.local_offer_outlined,
@@ -491,7 +505,7 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
                         color: FuturisticColors.primary.withOpacity(0.4),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
-                      )
+                      ),
                     ],
                   ),
                   child: ElevatedButton(
@@ -564,10 +578,7 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(
-          color: FuturisticColors.primary,
-          width: 2,
-        ),
+        borderSide: BorderSide(color: FuturisticColors.primary, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
@@ -591,9 +602,7 @@ class _ManualItemEntrySheetState extends State<ManualItemEntrySheet> {
             ? FuturisticColors.primary.withOpacity(0.1)
             : FuturisticColors.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: FuturisticColors.primary.withOpacity(0.2),
-        ),
+        border: Border.all(color: FuturisticColors.primary.withOpacity(0.2)),
       ),
       child: Column(
         children: [

@@ -21,54 +21,58 @@ class SyncQueueLocalOpsImpl implements SyncQueueLocalOperations {
 
   @override
   Future<void> insertSyncQueueItem(SyncQueueItem item) async {
-    await _db.insertSyncQueueEntry(SyncQueueCompanion.insert(
-      operationId: item.operationId,
-      operationType: item.operationType.value,
-      targetCollection: item.targetCollection,
-      documentId: item.documentId,
-      payload: jsonEncode(item.payload),
-      payloadHash: Value(item.payloadHash),
-      status: Value(item.status.value),
-      retryCount: Value(item.retryCount),
-      lastError: Value(item.lastError),
-      createdAt: item.createdAt,
-      lastAttemptAt: Value(item.lastAttemptAt),
-      syncedAt: Value(item.syncedAt),
-      priority: Value(item.priority),
-      parentOperationId: Value(item.parentOperationId),
-      stepNumber: Value(item.stepNumber),
-      totalSteps: Value(item.totalSteps),
-      userId: item.userId,
-      deviceId: Value(item.deviceId),
-      dependencyGroup: Value(item.dependencyGroup),
-      ownerId: Value(item.ownerId),
-    ));
+    await _db.insertSyncQueueEntry(
+      SyncQueueCompanion.insert(
+        operationId: item.operationId,
+        operationType: item.operationType.value,
+        targetCollection: item.targetCollection,
+        documentId: item.documentId,
+        payload: jsonEncode(item.payload),
+        payloadHash: Value(item.payloadHash),
+        status: Value(item.status.value),
+        retryCount: Value(item.retryCount),
+        lastError: Value(item.lastError),
+        createdAt: item.createdAt,
+        lastAttemptAt: Value(item.lastAttemptAt),
+        syncedAt: Value(item.syncedAt),
+        priority: Value(item.priority),
+        parentOperationId: Value(item.parentOperationId),
+        stepNumber: Value(item.stepNumber),
+        totalSteps: Value(item.totalSteps),
+        userId: item.userId,
+        deviceId: Value(item.deviceId),
+        dependencyGroup: Value(item.dependencyGroup),
+        ownerId: Value(item.ownerId),
+      ),
+    );
   }
 
   @override
   Future<void> updateSyncQueueItem(SyncQueueItem item) async {
-    await _db.updateSyncQueueEntry(SyncQueueEntry(
-      operationId: item.operationId,
-      operationType: item.operationType.value,
-      targetCollection: item.targetCollection,
-      documentId: item.documentId,
-      payload: jsonEncode(item.payload),
-      payloadHash: item.payloadHash,
-      status: item.status.value,
-      retryCount: item.retryCount,
-      lastError: item.lastError,
-      createdAt: item.createdAt,
-      lastAttemptAt: item.lastAttemptAt,
-      syncedAt: item.syncedAt,
-      priority: item.priority,
-      parentOperationId: item.parentOperationId,
-      stepNumber: item.stepNumber,
-      totalSteps: item.totalSteps,
-      userId: item.userId,
-      deviceId: item.deviceId,
-      dependencyGroup: item.dependencyGroup,
-      ownerId: item.ownerId,
-    ));
+    await _db.updateSyncQueueEntry(
+      SyncQueueEntry(
+        operationId: item.operationId,
+        operationType: item.operationType.value,
+        targetCollection: item.targetCollection,
+        documentId: item.documentId,
+        payload: jsonEncode(item.payload),
+        payloadHash: item.payloadHash,
+        status: item.status.value,
+        retryCount: item.retryCount,
+        lastError: item.lastError,
+        createdAt: item.createdAt,
+        lastAttemptAt: item.lastAttemptAt,
+        syncedAt: item.syncedAt,
+        priority: item.priority,
+        parentOperationId: item.parentOperationId,
+        stepNumber: item.stepNumber,
+        totalSteps: item.totalSteps,
+        userId: item.userId,
+        deviceId: item.deviceId,
+        dependencyGroup: item.dependencyGroup,
+        ownerId: item.ownerId,
+      ),
+    );
   }
 
   @override
@@ -98,20 +102,22 @@ class SyncQueueLocalOpsImpl implements SyncQueueLocalOperations {
 
   @override
   Future<void> moveToDeadLetter(SyncQueueItem item, String error) async {
-    await _db.insertDeadLetter(DeadLetterQueueCompanion.insert(
-      id: 'dl_${item.operationId}',
-      originalOperationId: item.operationId,
-      userId: item.userId,
-      operationType: item.operationType.value,
-      targetCollection: item.targetCollection,
-      documentId: item.documentId,
-      payload: jsonEncode(item.payload),
-      failureReason: error,
-      totalAttempts: item.retryCount,
-      firstAttemptAt: item.createdAt,
-      lastAttemptAt: item.lastAttemptAt ?? DateTime.now(),
-      movedToDeadLetterAt: DateTime.now(),
-    ));
+    await _db.insertDeadLetter(
+      DeadLetterQueueCompanion.insert(
+        id: 'dl_${item.operationId}',
+        originalOperationId: item.operationId,
+        userId: item.userId,
+        operationType: item.operationType.value,
+        targetCollection: item.targetCollection,
+        documentId: item.documentId,
+        payload: jsonEncode(item.payload),
+        failureReason: error,
+        totalAttempts: item.retryCount,
+        firstAttemptAt: item.createdAt,
+        lastAttemptAt: item.lastAttemptAt ?? DateTime.now(),
+        movedToDeadLetterAt: DateTime.now(),
+      ),
+    );
   }
 
   /// Convert database entry to domain model

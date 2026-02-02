@@ -16,19 +16,19 @@ class Expense {
   });
 
   Map<String, dynamic> toMap() => {
-        'category': category,
-        'description': description,
-        'amount': amount,
-        'date': date.toIso8601String(),
-        'ownerId': ownerId,
-      };
+    'category': category,
+    'description': description,
+    'amount': amount,
+    'date': date.toIso8601String(),
+    'ownerId': ownerId,
+  };
 
   factory Expense.fromMap(String id, Map<String, dynamic> map) => Expense(
-        id: id,
-        category: map['category'] ?? 'General',
-        description: map['description'] ?? '',
-        amount: (map['amount'] ?? 0).toDouble(),
-        date: DateTime.parse(map['date'] ?? DateTime.now().toIso8601String()),
-        ownerId: map['ownerId'] ?? '',
-      );
+    id: id,
+    category: map['category'] ?? 'General',
+    description: map['description'] ?? '',
+    amount: (map['amount'] ?? 0).toDouble(),
+    date: DateTime.parse(map['date'] ?? DateTime.now().toIso8601String()),
+    ownerId: map['ownerId'] ?? '',
+  );
 }

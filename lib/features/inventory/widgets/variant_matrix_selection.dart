@@ -68,20 +68,27 @@ class _VariantMatrixSelectionState extends State<VariantMatrixSelection> {
                       const TableCell(
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text('Size \\ Color',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: Text(
+                            'Size \\ Color',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                      ...widget.colors.map((c) => TableCell(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(c,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
+                      ...widget.colors.map(
+                        (c) => TableCell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                c,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          )),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   // Data Rows
@@ -92,9 +99,12 @@ class _VariantMatrixSelectionState extends State<VariantMatrixSelection> {
                           verticalAlignment: TableCellVerticalAlignment.middle,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(size,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                            child: Text(
+                              size,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                         ...widget.colors.map((color) {
@@ -110,7 +120,9 @@ class _VariantMatrixSelectionState extends State<VariantMatrixSelection> {
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 4),
+                                    vertical: 8,
+                                    horizontal: 4,
+                                  ),
                                   isDense: true,
                                 ),
                                 onChanged: (val) =>

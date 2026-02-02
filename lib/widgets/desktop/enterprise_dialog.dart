@@ -127,14 +127,14 @@ class EnterpriseDialog extends StatelessWidget {
                                 color: theme.hintColor,
                               ),
                             ),
-                          ]
+                          ],
                         ],
                       ),
                     ),
                     IconButton(
                       icon: Icon(Icons.close, color: theme.hintColor),
                       onPressed: () => Navigator.of(context).pop(),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -161,14 +161,15 @@ class EnterpriseDialog extends StatelessWidget {
                       // Add spacing between actions if multiple
                       if (a != actions!.last) {
                         return Padding(
-                            padding: const EdgeInsets.only(right: 12),
-                            child: a);
+                          padding: const EdgeInsets.only(right: 12),
+                          child: a,
+                        );
                       }
                       return a;
                     }).toList(),
                   ),
-                )
-              ]
+                ),
+              ],
             ],
           ),
         ),

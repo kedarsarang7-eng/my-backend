@@ -55,10 +55,11 @@ class InvoiceNumberService {
     // Use a transaction to ensure atomic read-modify-write
     final nextNumber = await _db.transaction<int>(() async {
       // Try to get existing counter
-      final existingCounter = await (_db.select(_db.invoiceCounters)
-            ..where(
-                (t) => t.userId.equals(userId) & t.financialYear.equals(fy)))
-          .getSingleOrNull();
+      final existingCounter =
+          await (_db.select(_db.invoiceCounters)..where(
+                (t) => t.userId.equals(userId) & t.financialYear.equals(fy),
+              ))
+              .getSingleOrNull();
 
       final now = DateTime.now();
       int newNumber;
@@ -67,19 +68,23 @@ class InvoiceNumberService {
         // Increment existing counter
         newNumber = existingCounter.lastNumber + 1;
 
-        await (_db.update(_db.invoiceCounters)
-              ..where(
-                  (t) => t.userId.equals(userId) & t.financialYear.equals(fy)))
-            .write(InvoiceCountersCompanion(
-          lastNumber: Value(newNumber),
-          prefix: Value(invoicePrefix),
-          updatedAt: Value(now),
-        ));
+        await (_db.update(_db.invoiceCounters)..where(
+              (t) => t.userId.equals(userId) & t.financialYear.equals(fy),
+            ))
+            .write(
+              InvoiceCountersCompanion(
+                lastNumber: Value(newNumber),
+                prefix: Value(invoicePrefix),
+                updatedAt: Value(now),
+              ),
+            );
       } else {
         // Create new counter starting at 1
         newNumber = 1;
 
-        await _db.into(_db.invoiceCounters).insert(
+        await _db
+            .into(_db.invoiceCounters)
+            .insert(
               InvoiceCountersCompanion.insert(
                 userId: userId,
                 financialYear: fy,
@@ -110,9 +115,11 @@ class InvoiceNumberService {
   }) async {
     final fy = financialYear ?? getCurrentFinancialYear();
 
-    final counter = await (_db.select(_db.invoiceCounters)
-          ..where((t) => t.userId.equals(userId) & t.financialYear.equals(fy)))
-        .getSingleOrNull();
+    final counter =
+        await (_db.select(_db.invoiceCounters)..where(
+              (t) => t.userId.equals(userId) & t.financialYear.equals(fy),
+            ))
+            .getSingleOrNull();
 
     return counter?.lastNumber ?? 0;
   }
@@ -147,13 +154,16 @@ class InvoiceNumberService {
   }) async {
     final now = DateTime.now();
 
-    await (_db.update(_db.invoiceCounters)
-          ..where((t) =>
-              t.userId.equals(userId) & t.financialYear.equals(financialYear)))
-        .write(InvoiceCountersCompanion(
-      lastNumber: Value(startFrom),
-      updatedAt: Value(now),
-    ));
+    await (_db.update(_db.invoiceCounters)..where(
+          (t) =>
+              t.userId.equals(userId) & t.financialYear.equals(financialYear),
+        ))
+        .write(
+          InvoiceCountersCompanion(
+            lastNumber: Value(startFrom),
+            updatedAt: Value(now),
+          ),
+        );
   }
 
   /// Get all counters for a user (for admin/settings view)

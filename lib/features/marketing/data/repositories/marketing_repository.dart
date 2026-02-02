@@ -35,7 +35,9 @@ class MarketingRepository {
       final id = const Uuid().v4();
       final now = DateTime.now();
 
-      await _db.into(_db.marketingCampaigns).insert(
+      await _db
+          .into(_db.marketingCampaigns)
+          .insert(
             MarketingCampaignsCompanion.insert(
               id: id,
               userId: userId,
@@ -51,9 +53,9 @@ class MarketingRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.marketingCampaigns)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.marketingCampaigns,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Failed to create campaign');
@@ -81,7 +83,8 @@ class MarketingRepository {
 
       final entities = await query.get();
       return RepositoryResult.success(
-          entities.map((e) => CampaignModelX.fromEntity(e)).toList());
+        entities.map((e) => CampaignModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching campaigns: $e');
     }
@@ -90,9 +93,9 @@ class MarketingRepository {
   /// Get campaign by ID
   Future<RepositoryResult<CampaignModel>> getCampaignById(String id) async {
     try {
-      final entity = await (_db.select(_db.marketingCampaigns)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.marketingCampaigns,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Campaign not found');
@@ -114,17 +117,26 @@ class MarketingRepository {
     DateTime? completedAt,
   }) async {
     try {
-      await (_db.update(_db.marketingCampaigns)..where((t) => t.id.equals(id)))
-          .write(MarketingCampaignsCompanion(
-        status: Value(status),
-        sentCount: sentCount != null ? Value(sentCount) : const Value.absent(),
-        failedCount:
-            failedCount != null ? Value(failedCount) : const Value.absent(),
-        startedAt: startedAt != null ? Value(startedAt) : const Value.absent(),
-        completedAt:
-            completedAt != null ? Value(completedAt) : const Value.absent(),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.marketingCampaigns,
+      )..where((t) => t.id.equals(id))).write(
+        MarketingCampaignsCompanion(
+          status: Value(status),
+          sentCount: sentCount != null
+              ? Value(sentCount)
+              : const Value.absent(),
+          failedCount: failedCount != null
+              ? Value(failedCount)
+              : const Value.absent(),
+          startedAt: startedAt != null
+              ? Value(startedAt)
+              : const Value.absent(),
+          completedAt: completedAt != null
+              ? Value(completedAt)
+              : const Value.absent(),
+          isSynced: const Value(false),
+        ),
+      );
 
       return RepositoryResult.success(null);
     } catch (e) {
@@ -135,12 +147,14 @@ class MarketingRepository {
   /// Get scheduled campaigns that need to run
   Future<List<CampaignModel>> getScheduledCampaigns(String userId) async {
     final now = DateTime.now();
-    final entities = await (_db.select(_db.marketingCampaigns)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.status.equals('SCHEDULED') &
-              t.scheduledAt.isSmallerOrEqualValue(now)))
-        .get();
+    final entities =
+        await (_db.select(_db.marketingCampaigns)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.status.equals('SCHEDULED') &
+                  t.scheduledAt.isSmallerOrEqualValue(now),
+            ))
+            .get();
     return entities.map((e) => CampaignModelX.fromEntity(e)).toList();
   }
 
@@ -161,7 +175,9 @@ class MarketingRepository {
     final id = const Uuid().v4();
     final now = DateTime.now();
 
-    await _db.into(_db.campaignLogs).insert(
+    await _db
+        .into(_db.campaignLogs)
+        .insert(
           CampaignLogsCompanion.insert(
             id: id,
             campaignId: campaignId,
@@ -180,23 +196,27 @@ class MarketingRepository {
 
   /// Get logs for a campaign
   Future<RepositoryResult<List<Map<String, dynamic>>>> getCampaignLogs(
-      String campaignId) async {
+    String campaignId,
+  ) async {
     try {
-      final entities = await (_db.select(_db.campaignLogs)
-            ..where((t) => t.campaignId.equals(campaignId))
-            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-          .get();
+      final entities =
+          await (_db.select(_db.campaignLogs)
+                ..where((t) => t.campaignId.equals(campaignId))
+                ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+              .get();
 
       final logs = entities
-          .map((e) => {
-                'id': e.id,
-                'customerId': e.customerId,
-                'channel': e.channel,
-                'phone': e.phone,
-                'status': e.status,
-                'sentAt': e.sentAt,
-                'errorMessage': e.errorMessage,
-              })
+          .map(
+            (e) => {
+              'id': e.id,
+              'customerId': e.customerId,
+              'channel': e.channel,
+              'phone': e.phone,
+              'status': e.status,
+              'sentAt': e.sentAt,
+              'errorMessage': e.errorMessage,
+            },
+          )
           .toList();
 
       return RepositoryResult.success(logs);
@@ -223,7 +243,9 @@ class MarketingRepository {
       final id = const Uuid().v4();
       final now = DateTime.now();
 
-      await _db.into(_db.messageTemplates).insert(
+      await _db
+          .into(_db.messageTemplates)
+          .insert(
             MessageTemplatesCompanion.insert(
               id: id,
               title: name, // Required title field
@@ -248,27 +270,33 @@ class MarketingRepository {
 
   /// Get all templates for a user
   Future<RepositoryResult<List<Map<String, dynamic>>>> getTemplates(
-      String userId) async {
+    String userId,
+  ) async {
     try {
-      final entities = await (_db.select(_db.messageTemplates)
-            ..where((t) =>
-                t.userId.equals(userId) | t.isSystemTemplate.equals(true))
-            ..where((t) => t.isActive.equals(true))
-            ..orderBy([
-              (t) => OrderingTerm.desc(t.isSystemTemplate),
-              (t) => OrderingTerm.asc(t.name),
-            ]))
-          .get();
+      final entities =
+          await (_db.select(_db.messageTemplates)
+                ..where(
+                  (t) =>
+                      t.userId.equals(userId) | t.isSystemTemplate.equals(true),
+                )
+                ..where((t) => t.isActive.equals(true))
+                ..orderBy([
+                  (t) => OrderingTerm.desc(t.isSystemTemplate),
+                  (t) => OrderingTerm.asc(t.name),
+                ]))
+              .get();
 
       final templates = entities
-          .map((e) => {
-                'id': e.id,
-                'name': e.name,
-                'category': e.category,
-                'content': e.content,
-                'language': e.language,
-                'isSystem': e.isSystemTemplate,
-              })
+          .map(
+            (e) => {
+              'id': e.id,
+              'name': e.name,
+              'category': e.category,
+              'content': e.content,
+              'language': e.language,
+              'isSystem': e.isSystemTemplate,
+            },
+          )
           .toList();
 
       return RepositoryResult.success(templates);

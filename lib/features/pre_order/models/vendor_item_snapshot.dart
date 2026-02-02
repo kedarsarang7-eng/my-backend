@@ -13,10 +13,13 @@ class VendorItemSnapshot {
   });
 
   factory VendorItemSnapshot.fromMap(
-      String vendorId, Map<String, dynamic> map) {
+    String vendorId,
+    Map<String, dynamic> map,
+  ) {
     return VendorItemSnapshot(
       vendorId: vendorId,
-      items: (map['items'] as List<dynamic>?)
+      items:
+          (map['items'] as List<dynamic>?)
               ?.map((e) => SnapshotItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -27,10 +30,10 @@ class VendorItemSnapshot {
   }
 
   Map<String, dynamic> toMap() => {
-        'vendorId': vendorId,
-        'items': items.map((e) => e.toMap()).toList(),
-        'snapshotUpdatedAt': snapshotUpdatedAt.toIso8601String(),
-      };
+    'vendorId': vendorId,
+    'items': items.map((e) => e.toMap()).toList(),
+    'snapshotUpdatedAt': snapshotUpdatedAt.toIso8601String(),
+  };
 
   VendorItemSnapshot copyWith({
     String? vendorId,
@@ -89,14 +92,14 @@ class SnapshotItem {
   }
 
   Map<String, dynamic> toMap() => {
-        'itemId': itemId,
-        'name': name,
-        'unit': unit,
-        'price': price,
-        'stockQty': stockQty,
-        'lowStockThreshold': lowStockThreshold,
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'itemId': itemId,
+    'name': name,
+    'unit': unit,
+    'price': price,
+    'stockQty': stockQty,
+    'lowStockThreshold': lowStockThreshold,
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   SnapshotItem copyWith({
     String? itemId,
@@ -120,8 +123,4 @@ class SnapshotItem {
 }
 
 /// Stock status enum for UI
-enum StockStatus {
-  inStock,
-  lowStock,
-  outOfStock,
-}
+enum StockStatus { inStock, lowStock, outOfStock }

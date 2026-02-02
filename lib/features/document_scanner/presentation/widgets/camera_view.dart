@@ -46,7 +46,8 @@ class _CameraViewState extends State<CameraView> {
       ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: Platform.isAndroid
-          ? ImageFormatGroup.nv21 // Better for ML Kit on Android
+          ? ImageFormatGroup
+                .nv21 // Better for ML Kit on Android
           : ImageFormatGroup.bgra8888,
     );
 
@@ -87,7 +88,8 @@ class _CameraViewState extends State<CameraView> {
     final metadata = InputImageMetadata(
       size: Size(image.width.toDouble(), image.height.toDouble()),
       rotation: _rotationIntToImageRotation(sensorOrientation),
-      format: InputImageFormatValue.fromRawValue(image.format.raw as int) ??
+      format:
+          InputImageFormatValue.fromRawValue(image.format.raw as int) ??
           InputImageFormat.nv21,
       bytesPerRow: image.planes[0].bytesPerRow,
     );

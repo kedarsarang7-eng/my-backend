@@ -99,9 +99,9 @@ class _VendorQRCodeScreenState extends State<VendorQRCodeScreen> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sharing: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error sharing: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSharing = false);
@@ -144,11 +144,7 @@ class _VendorQRCodeScreenState extends State<VendorQRCodeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                color: Colors.red.shade400,
-                size: 64,
-              ),
+              Icon(Icons.error_outline, color: Colors.red.shade400, size: 64),
               const SizedBox(height: 24),
               Text(
                 "Unable to generate QR Code",
@@ -161,10 +157,7 @@ class _VendorQRCodeScreenState extends State<VendorQRCodeScreen> {
               const SizedBox(height: 12),
               Text(
                 "Please ensure you're logged in as a vendor.",
-                style: GoogleFonts.outfit(
-                  color: Colors.white54,
-                  fontSize: 14,
-                ),
+                style: GoogleFonts.outfit(color: Colors.white54, fontSize: 14),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -194,8 +187,9 @@ class _VendorQRCodeScreenState extends State<VendorQRCodeScreen> {
             decoration: BoxDecoration(
               color: const Color(0xFF00D4FF).withOpacity(0.15),
               borderRadius: BorderRadius.circular(20),
-              border:
-                  Border.all(color: const Color(0xFF00D4FF).withOpacity(0.3)),
+              border: Border.all(
+                color: const Color(0xFF00D4FF).withOpacity(0.3),
+              ),
             ),
             child: Text(
               _vendorUid!, // Using UID as reference ID
@@ -286,10 +280,7 @@ class _VendorQRCodeScreenState extends State<VendorQRCodeScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                _buildInstructionStep(
-                  "1",
-                  "Customer opens dukanX app",
-                ),
+                _buildInstructionStep("1", "Customer opens dukanX app"),
                 const SizedBox(height: 8),
                 _buildInstructionStep(
                   "2",
@@ -368,10 +359,7 @@ class _VendorQRCodeScreenState extends State<VendorQRCodeScreen> {
         Expanded(
           child: Text(
             text,
-            style: GoogleFonts.outfit(
-              color: Colors.white54,
-              fontSize: 14,
-            ),
+            style: GoogleFonts.outfit(color: Colors.white54, fontSize: 14),
           ),
         ),
       ],

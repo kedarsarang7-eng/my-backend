@@ -50,37 +50,37 @@ class Vendor {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'address': address,
-        'gstin': gstin,
-        'totalPurchased': totalPurchased,
-        'totalPaid': totalPaid,
-        'totalOutstanding': totalOutstanding,
-        'isActive': isActive,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'name': name,
+    'phone': phone,
+    'email': email,
+    'address': address,
+    'gstin': gstin,
+    'totalPurchased': totalPurchased,
+    'totalPaid': totalPaid,
+    'totalOutstanding': totalOutstanding,
+    'isActive': isActive,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory Vendor.fromEntity(VendorEntity e) => Vendor(
-        id: e.id,
-        userId: e.userId,
-        name: e.name,
-        phone: e.phone,
-        email: e.email,
-        address: e.address,
-        gstin: e.gstin,
-        totalPurchased: e.totalPurchased,
-        totalPaid: e.totalPaid,
-        totalOutstanding: e.totalOutstanding,
-        isActive: e.isActive,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-      );
+    id: e.id,
+    userId: e.userId,
+    name: e.name,
+    phone: e.phone,
+    email: e.email,
+    address: e.address,
+    gstin: e.gstin,
+    totalPurchased: e.totalPurchased,
+    totalPaid: e.totalPaid,
+    totalOutstanding: e.totalOutstanding,
+    isActive: e.isActive,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+  );
 }
 
 /// Vendors Repository
@@ -106,7 +106,9 @@ class VendorsRepository {
     return await errorHandler.runSafe<Vendor>(() async {
       final now = DateTime.now();
 
-      await database.into(database.vendors).insert(
+      await database
+          .into(database.vendors)
+          .insert(
             VendorsCompanion.insert(
               id: vendor.id,
               userId: vendor.userId,
@@ -125,13 +127,15 @@ class VendorsRepository {
           );
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: vendor.userId,
-        operationType: SyncOperationType.create,
-        targetCollection: collectionName,
-        documentId: vendor.id,
-        payload: vendor.toMap(),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendor.userId,
+          operationType: SyncOperationType.create,
+          targetCollection: collectionName,
+          documentId: vendor.id,
+          payload: vendor.toMap(),
+        ),
+      );
 
       return vendor;
     }, 'createVendor');
@@ -142,9 +146,9 @@ class VendorsRepository {
     return await errorHandler.runSafe<Vendor>(() async {
       final now = DateTime.now();
 
-      await (database.update(database.vendors)
-            ..where((t) => t.id.equals(vendor.id)))
-          .write(
+      await (database.update(
+        database.vendors,
+      )..where((t) => t.id.equals(vendor.id))).write(
         VendorsCompanion(
           name: Value(vendor.name),
           phone: Value(vendor.phone),
@@ -161,13 +165,15 @@ class VendorsRepository {
       );
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: vendor.userId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: vendor.id,
-        payload: vendor.toMap(),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendor.userId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: vendor.id,
+          payload: vendor.toMap(),
+        ),
+      );
 
       return vendor;
     }, 'updateVendor');
@@ -178,8 +184,9 @@ class VendorsRepository {
     return await errorHandler.runSafe<bool>(() async {
       final now = DateTime.now();
 
-      await (database.update(database.vendors)..where((t) => t.id.equals(id)))
-          .write(
+      await (database.update(
+        database.vendors,
+      )..where((t) => t.id.equals(id))).write(
         VendorsCompanion(
           deletedAt: Value(now),
           updatedAt: Value(now),
@@ -188,13 +195,15 @@ class VendorsRepository {
       );
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.delete,
-        targetCollection: collectionName,
-        documentId: id,
-        payload: const {},
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.delete,
+          targetCollection: collectionName,
+          documentId: id,
+          payload: const {},
+        ),
+      );
 
       return true;
     }, 'deleteVendor');
@@ -203,9 +212,9 @@ class VendorsRepository {
   /// Get vendor by ID
   Future<RepositoryResult<Vendor>> getById(String id) async {
     return await errorHandler.runSafe<Vendor>(() async {
-      final entity = await (database.select(database.vendors)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (database.select(
+        database.vendors,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) throw Exception('Vendor not found');
       return Vendor.fromEntity(entity);
@@ -215,10 +224,11 @@ class VendorsRepository {
   /// Get all vendors
   Future<RepositoryResult<List<Vendor>>> getAll(String userId) async {
     return await errorHandler.runSafe<List<Vendor>>(() async {
-      final results = await (database.select(database.vendors)
-            ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.name)]))
-          .get();
+      final results =
+          await (database.select(database.vendors)
+                ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
+                ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+              .get();
 
       return results.map(Vendor.fromEntity).toList();
     }, 'getAll');
@@ -245,38 +255,41 @@ class VendorsRepository {
   }) async {
     final outstandingIncrement = billAmount - paidAmount;
 
-    final vendor = await (database.select(database.vendors)
-          ..where((t) => t.id.equals(vendorId)))
-        .getSingleOrNull();
+    final vendor = await (database.select(
+      database.vendors,
+    )..where((t) => t.id.equals(vendorId))).getSingleOrNull();
 
     if (vendor != null) {
       final now = DateTime.now();
-      await (database.update(database.vendors)
-            ..where((t) => t.id.equals(vendorId)))
-          .write(
+      await (database.update(
+        database.vendors,
+      )..where((t) => t.id.equals(vendorId))).write(
         VendorsCompanion(
           totalPurchased: Value(vendor.totalPurchased + billAmount),
           totalPaid: Value(vendor.totalPaid + paidAmount),
-          totalOutstanding:
-              Value(vendor.totalOutstanding + outstandingIncrement),
+          totalOutstanding: Value(
+            vendor.totalOutstanding + outstandingIncrement,
+          ),
           updatedAt: Value(now),
           isSynced: const Value(false),
         ),
       );
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: vendor.userId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: vendorId,
-        payload: {
-          'totalPurchased': vendor.totalPurchased + billAmount,
-          'totalPaid': vendor.totalPaid + paidAmount,
-          'totalOutstanding': vendor.totalOutstanding + outstandingIncrement,
-          'updatedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendor.userId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: vendorId,
+          payload: {
+            'totalPurchased': vendor.totalPurchased + billAmount,
+            'totalPaid': vendor.totalPaid + paidAmount,
+            'totalOutstanding': vendor.totalOutstanding + outstandingIncrement,
+            'updatedAt': now.toIso8601String(),
+          },
+        ),
+      );
     }
   }
 }

@@ -13,8 +13,9 @@ class PurchaseDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Detect if we need special columns
-    final hasBatchInfo = order.items
-        .any((i) => i.batchNumber != null && i.batchNumber!.isNotEmpty);
+    final hasBatchInfo = order.items.any(
+      (i) => i.batchNumber != null && i.batchNumber!.isNotEmpty,
+    );
     final hasExpiryInfo = order.items.any((i) => i.expiryDate != null);
 
     return Scaffold(
@@ -49,7 +50,9 @@ class PurchaseDetailScreen extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: order.status == 'COMPLETED'
                               ? Colors.green.withOpacity(0.1)
@@ -71,8 +74,10 @@ class PurchaseDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   _infoRow('Vendor', order.vendorName ?? 'Unknown'),
-                  _infoRow('Date',
-                      DateFormat('dd MMM yyyy').format(order.purchaseDate)),
+                  _infoRow(
+                    'Date',
+                    DateFormat('dd MMM yyyy').format(order.purchaseDate),
+                  ),
                   const Divider(),
                   _infoRow(
                     'Total Amount',
@@ -106,7 +111,8 @@ class PurchaseDetailScreen extends StatelessWidget {
                   elevation: 2,
                   margin: const EdgeInsets.only(bottom: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: Column(
@@ -126,8 +132,9 @@ class PurchaseDetailScreen extends StatelessWidget {
                             ),
                             Text(
                               '₹${item.totalAmount.toStringAsFixed(2)}',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -137,7 +144,9 @@ class PurchaseDetailScreen extends StatelessWidget {
                             Text(
                               '${item.quantity} ${item.unit} x ₹${item.costPrice.toStringAsFixed(2)}',
                               style: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 13),
+                                color: Colors.grey.shade700,
+                                fontSize: 13,
+                              ),
                             ),
                           ],
                         ),
@@ -146,17 +155,22 @@ class PurchaseDetailScreen extends StatelessWidget {
                           const SizedBox(height: 4),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.blue.withOpacity(0.05),
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                  color: Colors.blue.withOpacity(0.2)),
+                                color: Colors.blue.withOpacity(0.2),
+                              ),
                             ),
                             child: Text(
                               'Batch: ${item.batchNumber}',
                               style: TextStyle(
-                                  fontSize: 11, color: Colors.blue.shade800),
+                                fontSize: 11,
+                                color: Colors.blue.shade800,
+                              ),
                             ),
                           ),
                         ],
@@ -185,8 +199,12 @@ class PurchaseDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(String label, String value,
-      {bool isBold = false, Color? color}) {
+  Widget _infoRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? color,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

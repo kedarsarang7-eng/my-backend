@@ -41,7 +41,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
   late final SessionManager _sessionManager;
   StreamSubscription<DailyStats>? _statsSubscription;
   StreamSubscription<SyncHealthMetrics>?
-      _syncSubscription; // Add sync subscription
+  _syncSubscription; // Add sync subscription
 
   // Real-time stats from ReportsRepository
   Map<String, dynamic> _stats = {
@@ -98,33 +98,35 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
     }
 
     // Subscribe to real-time daily stats stream
-    _statsSubscription = _reportsRepository.watchDailyStats(userId).listen(
-      (DailyStats stats) {
-        if (mounted) {
-          setState(() {
-            _stats = {
-              'todaySales': stats.todaySales,
-              'todayCollections': stats.paidThisMonth,
-              'todayBillCount': 0, // Will be populated if needed
-              'monthlySales': stats.todaySales,
-              'monthlyCollections': stats.paidThisMonth,
-              'monthlyBillCount': 0,
-              'totalDues': stats.totalPending,
-              'customerCount': 0, // Not in DailyStats, can add query
-              'lowStockCount': stats.lowStockCount,
-              'pendingSyncCount': 0, // From sync manager if needed
-            };
-            _isLoading = false;
-          });
-        }
-      },
-      onError: (error) {
-        debugPrint('Analytics stats stream error: $error');
-        if (mounted) {
-          setState(() => _isLoading = false);
-        }
-      },
-    );
+    _statsSubscription = _reportsRepository
+        .watchDailyStats(userId)
+        .listen(
+          (DailyStats stats) {
+            if (mounted) {
+              setState(() {
+                _stats = {
+                  'todaySales': stats.todaySales,
+                  'todayCollections': stats.paidThisMonth,
+                  'todayBillCount': 0, // Will be populated if needed
+                  'monthlySales': stats.todaySales,
+                  'monthlyCollections': stats.paidThisMonth,
+                  'monthlyBillCount': 0,
+                  'totalDues': stats.totalPending,
+                  'customerCount': 0, // Not in DailyStats, can add query
+                  'lowStockCount': stats.lowStockCount,
+                  'pendingSyncCount': 0, // From sync manager if needed
+                };
+                _isLoading = false;
+              });
+            }
+          },
+          onError: (error) {
+            debugPrint('Analytics stats stream error: $error');
+            if (mounted) {
+              setState(() => _isLoading = false);
+            }
+          },
+        );
 
     // Load sales trend data
     _loadSalesTrend(userId);
@@ -211,7 +213,10 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
     final startOfMonth = DateTime(now.year, now.month, 1);
 
     final result = await _reportsRepository.getCategorySalesBreakdown(
-        userId: userId, start: startOfMonth, end: now);
+      userId: userId,
+      start: startOfMonth,
+      end: now,
+    );
 
     if (result.isSuccess && result.data != null && mounted) {
       setState(() {
@@ -234,11 +239,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
     if (result.isSuccess && result.data != null && mounted) {
       final products = result.data!
           .take(5)
-          .map((p) => {
-                'name': p['name'] ?? 'Unknown',
-                'quantity': (p['quantity'] ?? 0).toInt(),
-                'revenue': p['total'] ?? 0.0,
-              })
+          .map(
+            (p) => {
+              'name': p['name'] ?? 'Unknown',
+              'quantity': (p['quantity'] ?? 0).toInt(),
+              'revenue': p['total'] ?? 0.0,
+            },
+          )
           .toList();
 
       setState(() {
@@ -258,8 +265,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
   String _formatNumber(dynamic number) {
     if (number == null) return '0';
     if (number is double) {
-      final formatter =
-          NumberFormat.currency(locale: 'en_IN', symbol: '', decimalDigits: 0);
+      final formatter = NumberFormat.currency(
+        locale: 'en_IN',
+        symbol: '',
+        decimalDigits: 0,
+      );
       return formatter.format(number);
     }
     return number.toString();
@@ -316,11 +326,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                         sliver: SliverGrid(
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: isWide ? 4 : 2,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: isWide ? 1.5 : 1.2,
-                          ),
+                                crossAxisCount: isWide ? 4 : 2,
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                                childAspectRatio: isWide ? 1.5 : 1.2,
+                              ),
                           delegate: SliverChildListDelegate([
                             _buildStatsCard(
                               'Today Sales',
@@ -367,7 +377,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                                   Expanded(child: _buildSalesChart(isDark)),
                                   const SizedBox(width: 16),
                                   Expanded(
-                                      child: _buildRevenueDonutChart(isDark)),
+                                    child: _buildRevenueDonutChart(isDark),
+                                  ),
                                 ],
                               )
                             : Column(
@@ -381,7 +392,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
 
                       // Top Products Section
                       SliverToBoxAdapter(
-                          child: _buildTopProductsSection(isDark)),
+                        child: _buildTopProductsSection(isDark),
+                      ),
 
                       // Health Status
                       SliverToBoxAdapter(child: _buildHealthStatus(isDark)),
@@ -411,8 +423,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
             children: [
               Row(
                 children: [
-                  const Icon(Icons.analytics_rounded,
-                      color: FuturisticColors.accent1, size: 28),
+                  const Icon(
+                    Icons.analytics_rounded,
+                    color: FuturisticColors.accent1,
+                    size: 28,
+                  ),
                   const SizedBox(width: 12),
                   Text(
                     'Analytics Dashboard',
@@ -433,14 +448,17 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                     width: 4,
                     height: 4,
                     decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: FuturisticColors.success),
+                      shape: BoxShape.circle,
+                      color: FuturisticColors.success,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Real-time business insights',
                     style: GoogleFonts.inter(
-                        color: FuturisticColors.textSecondary, fontSize: 13),
+                      color: FuturisticColors.textSecondary,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -469,8 +487,9 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
         children: [
           Icon(
             isSynced ? Icons.cloud_done : Icons.cloud_sync,
-            color:
-                isSynced ? FuturisticColors.success : FuturisticColors.warning,
+            color: isSynced
+                ? FuturisticColors.success
+                : FuturisticColors.warning,
             size: 16,
           ),
           const SizedBox(width: 6),
@@ -566,10 +585,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: (isPositive
-                          ? FuturisticColors.success
-                          : FuturisticColors.error)
-                      .withOpacity(0.15),
+                  color:
+                      (isPositive
+                              ? FuturisticColors.success
+                              : FuturisticColors.error)
+                          .withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -631,8 +651,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.bar_chart_outlined,
-                  size: 48, color: FuturisticColors.textDisabled),
+              const Icon(
+                Icons.bar_chart_outlined,
+                size: 48,
+                color: FuturisticColors.textDisabled,
+              ),
               const SizedBox(height: 12),
               Text(
                 'No Sales Data',
@@ -689,8 +712,9 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                       return BarTooltipItem(
                         '$day\n₹${_formatNumber(rod.toY)}',
                         GoogleFonts.inter(
-                            color: FuturisticColors.textPrimary,
-                            fontWeight: FontWeight.bold),
+                          color: FuturisticColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       );
                     },
                   ),
@@ -732,9 +756,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                     ),
                   ),
                   topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 gridData: FlGridData(
                   show: true,
@@ -757,7 +783,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                         gradient: FuturisticColors.primaryGradient,
                         width: 12,
                         borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(6)),
+                          top: Radius.circular(6),
+                        ),
                         backDrawRodData: BackgroundBarChartRodData(
                           show: true,
                           toY: 50000,
@@ -770,7 +797,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                         color: FuturisticColors.success,
                         width: 12,
                         borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(6)),
+                          top: Radius.circular(6),
+                        ),
                       ),
                     ],
                   );
@@ -796,9 +824,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
           ),
         ),
         const SizedBox(width: 8),
-        Text(label,
-            style: GoogleFonts.inter(
-                color: FuturisticColors.textSecondary, fontSize: 12)),
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            color: FuturisticColors.textSecondary,
+            fontSize: 12,
+          ),
+        ),
       ],
     );
   }
@@ -823,10 +855,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
           Expanded(
             child: _categorySales.isEmpty
                 ? Center(
-                    child: Text('No Category Data',
-                        style: GoogleFonts.inter(
-                            color: FuturisticColors.textDisabled,
-                            fontSize: 14)),
+                    child: Text(
+                      'No Category Data',
+                      style: GoogleFonts.inter(
+                        color: FuturisticColors.textDisabled,
+                        fontSize: 14,
+                      ),
+                    ),
                   )
                 : Row(
                     children: [
@@ -850,7 +885,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                                 FuturisticColors.accent1,
                                 FuturisticColors.accent2,
                                 FuturisticColors.success,
-                                FuturisticColors.warning
+                                FuturisticColors.warning,
                               ];
                               final color = colors[i % colors.length];
 
@@ -865,7 +900,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                                   fontSize: 12,
                                 ),
                                 badgeWidget: _buildCategoryBadge(
-                                    category['category'] as String),
+                                  category['category'] as String,
+                                ),
                                 badgePositionPercentageOffset: 1.3,
                               );
                             }),
@@ -874,45 +910,49 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
                       ),
                       // Legend
                       Expanded(
-                          flex: 3,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.only(left: 16),
-                            itemCount: _categorySales.take(5).length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 12),
-                            itemBuilder: (context, i) {
-                              final category = _categorySales[i];
-                              final List<Color> colors = [
-                                FuturisticColors.primary,
-                                FuturisticColors.accent1,
-                                FuturisticColors.accent2,
-                                FuturisticColors.success,
-                                FuturisticColors.warning
-                              ];
-                              final color = colors[i % colors.length];
+                        flex: 3,
+                        child: ListView.separated(
+                          padding: const EdgeInsets.only(left: 16),
+                          itemCount: _categorySales.take(5).length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 12),
+                          itemBuilder: (context, i) {
+                            final category = _categorySales[i];
+                            final List<Color> colors = [
+                              FuturisticColors.primary,
+                              FuturisticColors.accent1,
+                              FuturisticColors.accent2,
+                              FuturisticColors.success,
+                              FuturisticColors.warning,
+                            ];
+                            final color = colors[i % colors.length];
 
-                              return Row(
-                                children: [
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: BoxDecoration(
-                                        color: color, shape: BoxShape.circle),
+                            return Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    shape: BoxShape.circle,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      category['category'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.inter(
-                                          color: FuturisticColors.textSecondary,
-                                          fontSize: 12),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    category['category'],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.inter(
+                                      color: FuturisticColors.textSecondary,
+                                      fontSize: 12,
                                     ),
                                   ),
-                                ],
-                              );
-                            },
-                          ))
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
           ),
@@ -945,8 +985,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
         child: Center(
           child: Column(
             children: [
-              const Icon(Icons.inventory_2_outlined,
-                  size: 48, color: FuturisticColors.textDisabled),
+              const Icon(
+                Icons.inventory_2_outlined,
+                size: 48,
+                color: FuturisticColors.textDisabled,
+              ),
               const SizedBox(height: 12),
               Text(
                 'No Product Data',
@@ -980,10 +1023,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
               ),
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/inventory'),
-                child: Text('View All',
-                    style: GoogleFonts.inter(
-                        color: FuturisticColors.primary,
-                        fontWeight: FontWeight.bold)),
+                child: Text(
+                  'View All',
+                  style: GoogleFonts.inter(
+                    color: FuturisticColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -999,7 +1045,10 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
   }
 
   Widget _buildProductItem(
-      int rank, Map<String, dynamic> product, bool isDark) {
+    int rank,
+    Map<String, dynamic> product,
+    bool isDark,
+  ) {
     final colors = [
       const Color(0xFFFFD700), // Gold
       const Color(0xFFC0C0C0), // Silver
@@ -1081,9 +1130,6 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
     // In production, AnalyticsDashboardScreen should receive userId
     final userId = _sessionManager.ownerId ?? 'current_user_id';
 
-    return HealthScoreCard(
-      userId: userId,
-      isDark: isDark,
-    );
+    return HealthScoreCard(userId: userId, isDark: isDark);
   }
 }

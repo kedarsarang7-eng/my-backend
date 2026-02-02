@@ -9,11 +9,7 @@ class PaymentHistoryScreen extends ConsumerStatefulWidget {
   final String? customerId;
   final String? customerName;
 
-  const PaymentHistoryScreen({
-    super.key,
-    this.customerId,
-    this.customerName,
-  });
+  const PaymentHistoryScreen({super.key, this.customerId, this.customerName});
 
   @override
   ConsumerState<PaymentHistoryScreen> createState() =>
@@ -155,7 +151,8 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                           decoration: BoxDecoration(
                             color: palette.tomatoRed.withOpacity(0.1),
                             border: Border.all(
-                                color: palette.tomatoRed.withOpacity(0.3)),
+                              color: palette.tomatoRed.withOpacity(0.3),
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -205,18 +202,21 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                   padding: const EdgeInsets.all(32),
                                   child: Column(
                                     children: [
-                                      Icon(Icons.receipt_long_outlined,
-                                          size: 48,
-                                          color: isDark
-                                              ? Colors.white24
-                                              : palette.darkGray),
+                                      Icon(
+                                        Icons.receipt_long_outlined,
+                                        size: 48,
+                                        color: isDark
+                                            ? Colors.white24
+                                            : palette.darkGray,
+                                      ),
                                       const SizedBox(height: 12),
                                       Text(
                                         'No payment history yet',
                                         style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white54
-                                                : palette.darkGray),
+                                          color: isDark
+                                              ? Colors.white54
+                                              : palette.darkGray,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -240,11 +240,13 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                         : Colors.white,
                                     elevation: isDark ? 0 : 1,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        side: BorderSide(
-                                            color: isDark
-                                                ? Colors.white10
-                                                : Colors.transparent)),
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: BorderSide(
+                                        color: isDark
+                                            ? Colors.white10
+                                            : Colors.transparent,
+                                      ),
+                                    ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12),
                                       child: Column(
@@ -269,18 +271,18 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                               Container(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                  horizontal: 8,
-                                                  vertical: 4,
-                                                ),
+                                                      horizontal: 8,
+                                                      vertical: 4,
+                                                    ),
                                                 decoration: BoxDecoration(
                                                   color: isPaid
                                                       ? palette.leafGreen
-                                                          .withOpacity(0.1)
+                                                            .withOpacity(0.1)
                                                       : isPartial
-                                                          ? palette.sunYellow
-                                                              .withOpacity(0.1)
-                                                          : palette.tomatoRed
-                                                              .withOpacity(0.1),
+                                                      ? palette.sunYellow
+                                                            .withOpacity(0.1)
+                                                      : palette.tomatoRed
+                                                            .withOpacity(0.1),
                                                   borderRadius:
                                                       BorderRadius.circular(4),
                                                 ),
@@ -292,8 +294,8 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                                     color: isPaid
                                                         ? palette.leafGreen
                                                         : isPartial
-                                                            ? palette.sunYellow
-                                                            : palette.tomatoRed,
+                                                        ? palette.sunYellow
+                                                        : palette.tomatoRed,
                                                   ),
                                                 ),
                                               ),
@@ -309,8 +311,9 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                               Text(
                                                 'Date: ${bill.date.day}/${bill.date.month}/${bill.date.year}',
                                                 style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: palette.darkGray),
+                                                  fontSize: 12,
+                                                  color: palette.darkGray,
+                                                ),
                                               ),
                                               Text(
                                                 'Total: ₹${bill.subtotal.toStringAsFixed(2)}',
@@ -345,10 +348,11 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                                     Text(
                                                       '💵 Cash Paid:',
                                                       style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: isDark
-                                                              ? Colors.white70
-                                                              : Colors.black),
+                                                        fontSize: 12,
+                                                        color: isDark
+                                                            ? Colors.white70
+                                                            : Colors.black,
+                                                      ),
                                                     ),
                                                     Text(
                                                       '₹${bill.cashPaid.toStringAsFixed(2)}',
@@ -371,10 +375,11 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                                                     Text(
                                                       '💳 Online Paid:',
                                                       style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: isDark
-                                                              ? Colors.white70
-                                                              : Colors.black),
+                                                        fontSize: 12,
+                                                        color: isDark
+                                                            ? Colors.white70
+                                                            : Colors.black,
+                                                      ),
                                                     ),
                                                     Text(
                                                       '₹${bill.onlinePaid.toStringAsFixed(2)}',
@@ -452,7 +457,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
             color: color.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Column(

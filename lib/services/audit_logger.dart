@@ -18,20 +18,18 @@ class AuditLogger {
     if (user == null) return;
 
     try {
-      await _db
-          .collection('shops')
-          .doc(shopId)
-          .collection('activity_logs')
-          .add({
-        'action': action,
-        'entityId': entityId,
-        'details': details,
-        'performedBy': user.uid,
-        'performerEmail': user.email ?? 'Unknown',
-        'timestamp': FieldValue.serverTimestamp(),
-        'metadata': metadata ?? {},
-        'device': 'Mobile App', // Could capture device info
-      });
+      await _db.collection('shops').doc(shopId).collection('activity_logs').add(
+        {
+          'action': action,
+          'entityId': entityId,
+          'details': details,
+          'performedBy': user.uid,
+          'performerEmail': user.email ?? 'Unknown',
+          'timestamp': FieldValue.serverTimestamp(),
+          'metadata': metadata ?? {},
+          'device': 'Mobile App', // Could capture device info
+        },
+      );
     } catch (e) {
       // Fail silently for logs, don't block user
       developer.log("Audit Log Failed: $e", name: 'AuditLogger', error: e);
@@ -41,7 +39,10 @@ class AuditLogger {
   // --- SHORTCUTS ---
 
   static Future<void> logBillCreated(
-      String shopId, String billId, double amount) async {
+    String shopId,
+    String billId,
+    double amount,
+  ) async {
     await logAction(
       shopId: shopId,
       action: 'BILL_CREATE',
@@ -50,8 +51,13 @@ class AuditLogger {
     );
   }
 
-  static Future<void> logStockChange(String shopId, String productId,
-      double oldQty, double newQty, String reason) async {
+  static Future<void> logStockChange(
+    String shopId,
+    String productId,
+    double oldQty,
+    double newQty,
+    String reason,
+  ) async {
     await logAction(
       shopId: shopId,
       action: 'STOCK_ADJUST',
@@ -62,7 +68,11 @@ class AuditLogger {
   }
 
   static Future<void> logPaymentReceived(
-      String shopId, String paymentId, double amount, String mode) async {
+    String shopId,
+    String paymentId,
+    double amount,
+    String mode,
+  ) async {
     await logAction(
       shopId: shopId,
       action: 'PAYMENT_RECEIVED',

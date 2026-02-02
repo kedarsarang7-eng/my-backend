@@ -42,28 +42,28 @@ class HsnSummaryItem {
   double get totalTax => cgstAmount + sgstAmount + igstAmount + cessAmount;
 
   Map<String, dynamic> toMap() => {
-        'hsnCode': hsnCode,
-        'description': description,
-        'uqc': uqc,
-        'quantity': quantity,
-        'taxableValue': taxableValue,
-        'cgstAmount': cgstAmount,
-        'sgstAmount': sgstAmount,
-        'igstAmount': igstAmount,
-        'cessAmount': cessAmount,
-      };
+    'hsnCode': hsnCode,
+    'description': description,
+    'uqc': uqc,
+    'quantity': quantity,
+    'taxableValue': taxableValue,
+    'cgstAmount': cgstAmount,
+    'sgstAmount': sgstAmount,
+    'igstAmount': igstAmount,
+    'cessAmount': cessAmount,
+  };
 
   factory HsnSummaryItem.fromMap(Map<String, dynamic> map) => HsnSummaryItem(
-        hsnCode: map['hsnCode'] ?? '',
-        description: map['description'] ?? '',
-        uqc: map['uqc'],
-        quantity: (map['quantity'] ?? 0).toDouble(),
-        taxableValue: (map['taxableValue'] ?? 0).toDouble(),
-        cgstAmount: (map['cgstAmount'] ?? 0).toDouble(),
-        sgstAmount: (map['sgstAmount'] ?? 0).toDouble(),
-        igstAmount: (map['igstAmount'] ?? 0).toDouble(),
-        cessAmount: (map['cessAmount'] ?? 0).toDouble(),
-      );
+    hsnCode: map['hsnCode'] ?? '',
+    description: map['description'] ?? '',
+    uqc: map['uqc'],
+    quantity: (map['quantity'] ?? 0).toDouble(),
+    taxableValue: (map['taxableValue'] ?? 0).toDouble(),
+    cgstAmount: (map['cgstAmount'] ?? 0).toDouble(),
+    sgstAmount: (map['sgstAmount'] ?? 0).toDouble(),
+    igstAmount: (map['igstAmount'] ?? 0).toDouble(),
+    cessAmount: (map['cessAmount'] ?? 0).toDouble(),
+  );
 }
 
 /// GST Invoice Details - GST-specific data for each invoice
@@ -182,8 +182,9 @@ class GstInvoiceDetailModel {
       hsnSummary: hsnList,
       isReverseCharge: map['isReverseCharge'] ?? false,
       eInvoiceIrn: map['eInvoiceIrn'],
-      createdAt:
-          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+        map['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
       isSynced: map['isSynced'] ?? false,
     );
   }

@@ -12,15 +12,9 @@ final speechServiceProvider = Provider<SpeechService>((ref) {
 
 /// Process voice command use case using new Repositories
 final processVoiceCommandProvider = Provider<ProcessVoiceCommand>((ref) {
-  return ProcessVoiceCommand(
-    sl<ProductsRepository>(),
-    sl<SessionManager>(),
-  );
+  return ProcessVoiceCommand(sl<ProductsRepository>(), sl<SessionManager>());
 });
 
 final parseVoiceIntentProvider = Provider<ParseVoiceIntent>((ref) {
-  return ParseVoiceIntent(
-    sl<ProductsRepository>(),
-    sl<SessionManager>(),
-  );
+  return ParseVoiceIntent(sl<ProductsRepository>(), sl<SessionManager>());
 });

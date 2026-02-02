@@ -44,8 +44,8 @@ class _DashboardControllerState extends ConsumerState<DashboardController> {
     if (role == 'owner' || role == 'vendor') {
       // Check SIGNUP onboarding first (business type + language)
       final signupOnboardingService = OnboardingService();
-      final isSignupOnboardingCompleted =
-          await signupOnboardingService.isOnboardingCompleted();
+      final isSignupOnboardingCompleted = await signupOnboardingService
+          .isOnboardingCompleted();
 
       if (!isSignupOnboardingCompleted) {
         // New account needs signup onboarding (business setup)
@@ -59,8 +59,8 @@ class _DashboardControllerState extends ConsumerState<DashboardController> {
 
       // Signup onboarding is done, now check LOGIN onboarding (app intro)
       final loginOnboardingService = LoginOnboardingService();
-      final hasSeenLoginOnboarding =
-          await loginOnboardingService.hasSeenLoginOnboarding();
+      final hasSeenLoginOnboarding = await loginOnboardingService
+          .hasSeenLoginOnboarding();
 
       if (!hasSeenLoginOnboarding) {
         // User hasn't seen the login intro screens
@@ -129,9 +129,7 @@ class _DashboardControllerState extends ConsumerState<DashboardController> {
         return const ProfessionalOwnerDashboard();
       } else {
         // Owner/Vendor switched to Customer view
-        return CustomerHomeScreen(
-          customerId: sessionService.getUserId() ?? '',
-        );
+        return CustomerHomeScreen(customerId: sessionService.getUserId() ?? '');
       }
     } else {
       // Regular customer

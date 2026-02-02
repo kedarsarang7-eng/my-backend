@@ -20,7 +20,10 @@ class FirestoreDatabase {
 
   // --- 1. USER MANAGEMENT ---
   Future<void> createUserProfile(
-      User user, String role, String defaultShopId) async {
+    User user,
+    String role,
+    String defaultShopId,
+  ) async {
     final docRef = _db.collection('users').doc(user.uid);
     await docRef.set({
       'name': user.displayName ?? '',
@@ -56,8 +59,10 @@ class FirestoreDatabase {
   }
 
   // --- 3. BILLS (Transaction Based) ---
-  Future<String> createBill(
-      {required String shopId, required Bill bill}) async {
+  Future<String> createBill({
+    required String shopId,
+    required Bill bill,
+  }) async {
     if (uid == null) throw Exception("User not logged in");
 
     final billRef = _db.collection(billsPath(shopId)).doc();
@@ -79,8 +84,9 @@ class FirestoreDatabase {
     await _db.runTransaction((tx) async {
       tx.set(billRef, billData);
       if (bill.status.toLowerCase() != 'paid' && bill.customerId.isNotEmpty) {
-        final custRef =
-            _db.collection(customersPath(shopId)).doc(bill.customerId);
+        final custRef = _db
+            .collection(customersPath(shopId))
+            .doc(bill.customerId);
         final custSnap = await tx.get(custRef);
         if (custSnap.exists) {
           double currentDues = (custSnap.data()?['totalDues'] ?? 0).toDouble();
@@ -90,8 +96,9 @@ class FirestoreDatabase {
       }
       for (var item in bill.items) {
         if (item.vegId.isNotEmpty) {
-          final stockRef =
-              _db.collection(inventoryPath(shopId)).doc(item.vegId);
+          final stockRef = _db
+              .collection(inventoryPath(shopId))
+              .doc(item.vegId);
           final stockSnap = await tx.get(stockRef);
           if (stockSnap.exists) {
             double currentStock = (stockSnap.data()?['stock'] ?? 0).toDouble();
@@ -156,7 +163,10 @@ class FirestoreDatabase {
   }
 
   Future<void> syncBillRaw(
-      String shopId, String billId, Map<String, dynamic> sqlData) async {
+    String shopId,
+    String billId,
+    Map<String, dynamic> sqlData,
+  ) async {
     final data = mapSqlToFirestore(sqlData);
     await _db
         .collection(billsPath(shopId))
@@ -165,7 +175,10 @@ class FirestoreDatabase {
   }
 
   Future<void> syncCustomerRaw(
-      String shopId, String custId, Map<String, dynamic> sqlData) async {
+    String shopId,
+    String custId,
+    Map<String, dynamic> sqlData,
+  ) async {
     final data = mapSqlToFirestore(sqlData);
     await _db
         .collection(customersPath(shopId))
@@ -174,7 +187,10 @@ class FirestoreDatabase {
   }
 
   Future<void> syncInventoryRaw(
-      String shopId, String itemId, Map<String, dynamic> sqlData) async {
+    String shopId,
+    String itemId,
+    Map<String, dynamic> sqlData,
+  ) async {
     final data = mapSqlToFirestore(sqlData);
     // Ensure we handle renaming: 'stock_qty' (SQL) -> 'quantity' (Firestore)
     if (sqlData.containsKey('stock_qty')) {
@@ -199,7 +215,10 @@ class FirestoreDatabase {
   }
 
   Future<void> syncEntityRaw(
-      String collectionPath, String docId, Map<String, dynamic> data) async {
+    String collectionPath,
+    String docId,
+    Map<String, dynamic> data,
+  ) async {
     // Basic mapping if needed, or assume data is ready
     // Ensure timestamps? helper _mapSqlToFirestore handles it if we reuse it.
     // Ideally we pass cleaned map.

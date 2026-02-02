@@ -17,8 +17,10 @@ class AuthService {
     try {
       await _firestore.enableNetwork().timeout(const Duration(seconds: 10));
     } catch (e) {
-      developer.log('AuthService: enableNetwork warning: $e',
-          name: 'AuthService');
+      developer.log(
+        'AuthService: enableNetwork warning: $e',
+        name: 'AuthService',
+      );
     }
   }
 
@@ -45,15 +47,20 @@ class AuthService {
     required Function(String) codeAutoRetrievalTimeout,
   }) async {
     if (!enableOtp) {
-      verificationFailed(FirebaseAuthException(
+      verificationFailed(
+        FirebaseAuthException(
           code: 'otp-disabled',
           message:
-              'OTP login is disabled. Please use Google Sign-In or Password login.'));
+              'OTP login is disabled. Please use Google Sign-In or Password login.',
+        ),
+      );
       return;
     }
 
-    developer.log('Starting phone verification for $phoneNumber',
-        name: 'AuthService');
+    developer.log(
+      'Starting phone verification for $phoneNumber',
+      name: 'AuthService',
+    );
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: verificationCompleted,
@@ -73,9 +80,10 @@ class AuthService {
   }) async {
     if (!enableOtp) {
       throw FirebaseAuthException(
-          code: 'otp-disabled',
-          message:
-              'OTP login is disabled. Please use Google Sign-In or Password login.');
+        code: 'otp-disabled',
+        message:
+            'OTP login is disabled. Please use Google Sign-In or Password login.',
+      );
     }
 
     developer.log('Signing in with OTP...', name: 'AuthService');
@@ -134,8 +142,10 @@ class AuthService {
             retries--;
             await Future.delayed(const Duration(seconds: 1));
           } else {
-            developer.log('AuthService: signUpWithEmail retry failed: $e',
-                name: 'AuthService');
+            developer.log(
+              'AuthService: signUpWithEmail retry failed: $e',
+              name: 'AuthService',
+            );
             // We don't rethrow here because the basic user was created in Auth
             // But we should probably warn or try best effort for session
           }
@@ -160,11 +170,12 @@ class AuthService {
     required String shopId,
   }) async {
     return signUpWithEmail(
-        name: name,
-        phone: phone,
-        password: password,
-        role: 'owner',
-        shopId: shopId);
+      name: name,
+      phone: phone,
+      password: password,
+      role: 'owner',
+      shopId: shopId,
+    );
   }
 
   Future<UserCredential> signUpCustomer({
@@ -174,11 +185,12 @@ class AuthService {
     String? shopId,
   }) async {
     return signUpWithEmail(
-        name: name,
-        phone: phone,
-        password: password,
-        role: 'customer',
-        shopId: shopId);
+      name: name,
+      phone: phone,
+      password: password,
+      role: 'customer',
+      shopId: shopId,
+    );
   }
 
   /// Sign in with synthetic email from phone + password, then save session.
@@ -198,8 +210,9 @@ class AuthService {
       // persist session and FCM token
       await _saveSession(userCredential.user!.uid);
       try {
-        await sl<NotificationController>()
-            .getToken(uid: userCredential.user!.uid);
+        await sl<NotificationController>().getToken(
+          uid: userCredential.user!.uid,
+        );
       } catch (_) {}
     }
 
@@ -224,14 +237,17 @@ class AuthService {
       if (role != 'owner') {
         await signOut();
         throw FirebaseAuthException(
-            code: 'invalid-role', message: 'User is not an owner');
+          code: 'invalid-role',
+          message: 'User is not an owner',
+        );
       }
 
       if (storedShopId != shopId) {
         await signOut();
         throw FirebaseAuthException(
-            code: 'invalid-shop-id',
-            message: 'Invalid Shop ID for this account');
+          code: 'invalid-shop-id',
+          message: 'Invalid Shop ID for this account',
+        );
       }
     }
     return cred;
@@ -252,7 +268,9 @@ class AuthService {
       if (role != 'customer') {
         await signOut();
         throw FirebaseAuthException(
-            code: 'invalid-role', message: 'User is not a customer');
+          code: 'invalid-role',
+          message: 'User is not a customer',
+        );
       }
 
       // We no longer strictly enforce shopId on login for customers
@@ -295,14 +313,16 @@ class AuthService {
           // Let's being strict as per standard security:
           await signOut();
           throw FirebaseAuthException(
-              code: 'role-mismatch',
-              message:
-                  'This account is registered as $storedRole. Please login as $storedRole.');
+            code: 'role-mismatch',
+            message:
+                'This account is registered as $storedRole. Please login as $storedRole.',
+          );
         } else if (role == 'owner' && storedRole != 'owner') {
           await signOut();
           throw FirebaseAuthException(
-              code: 'role-mismatch',
-              message: 'This account is not an Owner account.');
+            code: 'role-mismatch',
+            message: 'This account is not an Owner account.',
+          );
         }
       }
 
@@ -324,7 +344,9 @@ class AuthService {
       final userCred = await gs.signIn();
       if (userCred == null || userCred.user == null) {
         throw FirebaseAuthException(
-            code: 'cancelled', message: 'Google sign-in cancelled');
+          code: 'cancelled',
+          message: 'Google sign-in cancelled',
+        );
       }
       final user = userCred.user!;
 
@@ -338,8 +360,9 @@ class AuthService {
       if (storedRole != 'owner') {
         await signOut();
         throw FirebaseAuthException(
-            code: 'unauthorized-owner',
-            message: 'This google account is not registered as an Owner.');
+          code: 'unauthorized-owner',
+          message: 'This google account is not registered as an Owner.',
+        );
       }
 
       // 4. Ensure Owner Profile (Legacy/Shop Data) - Optional check
@@ -362,8 +385,11 @@ class AuthService {
 
   /// Ensure a Firestore `users/{uid}` document exists.
   /// Returns the document data (existing or newly created).
-  Future<Map<String, dynamic>> _ensureFirestoreUser(User user,
-      {String? name, String role = 'customer'}) async {
+  Future<Map<String, dynamic>> _ensureFirestoreUser(
+    User user, {
+    String? name,
+    String role = 'customer',
+  }) async {
     await _ensureNetwork();
     final docRef = _firestore.collection('users').doc(user.uid);
     final doc = await docRef.get();
@@ -419,8 +445,9 @@ class AuthService {
           // The UI should handle prompting user for SMS code and then call confirmWebOtp or signInWithCredential.
           // For this high-level wrapper we just wait; the UI will complete the flow via confirmWebOtp or signInWithCredential.
           developer.log(
-              'Code sent for $phone verificationId=$verificationId resendToken=$token',
-              name: 'AuthService');
+            'Code sent for $phone verificationId=$verificationId resendToken=$token',
+            name: 'AuthService',
+          );
         },
         onError: (e) {
           if (!completer.isCompleted) completer.completeError(e);
@@ -441,8 +468,12 @@ class AuthService {
   }
 
   /// Update Firestore profile for the given uid (merge).
-  Future<void> updateProfile(String uid,
-      {String? name, String? phone, String? email}) async {
+  Future<void> updateProfile(
+    String uid, {
+    String? name,
+    String? phone,
+    String? email,
+  }) async {
     final data = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
     if (name != null) data['name'] = name;
     if (phone != null) data['phone'] = phone;
@@ -478,7 +509,9 @@ class AuthService {
     await prefs.setString(_sessionKeyUid, uid);
     if (role != null) await prefs.setString(_sessionKeyRole, role);
     await prefs.setString(
-        _sessionKeyTimestamp, DateTime.now().toIso8601String());
+      _sessionKeyTimestamp,
+      DateTime.now().toIso8601String(),
+    );
     developer.log('Session saved for $uid role=${role ?? 'unknown'}');
 
     try {
@@ -526,10 +559,13 @@ class AuthService {
     int? forceResendingToken,
   }) async {
     if (!enableOtp) {
-      onError(FirebaseAuthException(
+      onError(
+        FirebaseAuthException(
           code: 'otp-disabled',
           message:
-              'OTP login is disabled. Please use Google Sign-In or Password login.'));
+              'OTP login is disabled. Please use Google Sign-In or Password login.',
+        ),
+      );
       return;
     }
 
@@ -550,11 +586,15 @@ class AuthService {
   Future<UserCredential> confirmWebOtp(String smsCode) async {
     if (!kIsWeb) {
       throw FirebaseAuthException(
-          code: 'not-web', message: 'confirmWebOtp is for web only');
+        code: 'not-web',
+        message: 'confirmWebOtp is for web only',
+      );
     }
     if (_webConfirmationResult == null) {
       throw FirebaseAuthException(
-          code: 'no-confirmation', message: 'No confirmation result available');
+        code: 'no-confirmation',
+        message: 'No confirmation result available',
+      );
     }
     final userCred = await _webConfirmationResult.confirm(smsCode);
     if (userCred.user != null) {
@@ -567,7 +607,8 @@ class AuthService {
   }
 
   Future<UserCredential> signInWithCredential(
-      PhoneAuthCredential credential) async {
+    PhoneAuthCredential credential,
+  ) async {
     final userCred = await _auth.signInWithCredential(credential);
     if (userCred.user != null) {
       await _saveSession(userCred.user!.uid);

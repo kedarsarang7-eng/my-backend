@@ -78,15 +78,23 @@ void main() {
 
         // Assert - Each retry should have longer delay
         final now = DateTime.now();
-        expect(delay0.difference(now).inMilliseconds,
-            lessThanOrEqualTo(1500)); // ~1s + jitter
-        expect(delay1.difference(now).inMilliseconds,
-            lessThanOrEqualTo(3000)); // ~2s + jitter
-        expect(delay2.difference(now).inMilliseconds,
-            lessThanOrEqualTo(6000)); // ~4s + jitter
+        expect(
+          delay0.difference(now).inMilliseconds,
+          lessThanOrEqualTo(1500),
+        ); // ~1s + jitter
+        expect(
+          delay1.difference(now).inMilliseconds,
+          lessThanOrEqualTo(3000),
+        ); // ~2s + jitter
+        expect(
+          delay2.difference(now).inMilliseconds,
+          lessThanOrEqualTo(6000),
+        ); // ~4s + jitter
         // Max is capped at 5 minutes (300000ms)
         expect(
-            delay5.difference(now).inMilliseconds, lessThanOrEqualTo(400000));
+          delay5.difference(now).inMilliseconds,
+          lessThanOrEqualTo(400000),
+        );
       });
 
       test('should move to dead letter after max retries (5)', () {
@@ -113,8 +121,10 @@ void main() {
 
         // retry 0: ~1s delay
         // retry 3: ~8s delay (2^3 = 8)
-        expect(delay3.difference(now).inMilliseconds,
-            greaterThan(delay0.difference(now).inMilliseconds));
+        expect(
+          delay3.difference(now).inMilliseconds,
+          greaterThan(delay0.difference(now).inMilliseconds),
+        );
       });
     });
 
@@ -389,13 +399,15 @@ void main() {
       });
 
       test('should return correct allowed transitions for each state', () {
-        final pendingAllowed =
-            SyncStateTransition.getAllowedTransitions(SyncStatus.pending);
+        final pendingAllowed = SyncStateTransition.getAllowedTransitions(
+          SyncStatus.pending,
+        );
         expect(pendingAllowed, contains(SyncStatus.inProgress));
         expect(pendingAllowed, contains(SyncStatus.deadLetter));
 
-        final syncedAllowed =
-            SyncStateTransition.getAllowedTransitions(SyncStatus.synced);
+        final syncedAllowed = SyncStateTransition.getAllowedTransitions(
+          SyncStatus.synced,
+        );
         expect(syncedAllowed, isEmpty); // Terminal state
       });
     });
@@ -574,8 +586,10 @@ void main() {
         expect(restoredItem.operationId, equals(originalItem.operationId));
         expect(restoredItem.userId, equals(originalItem.userId));
         expect(restoredItem.documentId, equals(originalItem.documentId));
-        expect(restoredItem.targetCollection,
-            equals(originalItem.targetCollection));
+        expect(
+          restoredItem.targetCollection,
+          equals(originalItem.targetCollection),
+        );
         expect(restoredItem.operationType, equals(originalItem.operationType));
         expect(restoredItem.status, equals(originalItem.status));
       });

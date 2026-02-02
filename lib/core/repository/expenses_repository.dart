@@ -46,15 +46,15 @@ class ExpenseModel {
   });
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'category': category,
-        'description': description,
-        'amount': amount,
-        'date': date.toIso8601String(),
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'paymentMode': paymentMode,
-      };
+    'id': id,
+    'category': category,
+    'description': description,
+    'amount': amount,
+    'date': date.toIso8601String(),
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'paymentMode': paymentMode,
+  };
 }
 
 /// Expenses Repository
@@ -114,7 +114,9 @@ class ExpensesRepository {
       );
 
       // 1. Insert into local database
-      await database.into(database.expenses).insert(
+      await database
+          .into(database.expenses)
+          .insert(
             ExpensesCompanion.insert(
               id: id,
               userId: ownerId,
@@ -145,18 +147,21 @@ class ExpensesRepository {
           // Log but don't fail - expense is created, accounting can be fixed
           // In production, this should be a critical alert
           debugPrint(
-              '[EXPENSES] WARNING: Failed to create accounting entry: $e');
+            '[EXPENSES] WARNING: Failed to create accounting entry: $e',
+          );
         }
       }
 
       // 3. Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: ownerId,
-        operationType: SyncOperationType.create,
-        targetCollection: collectionName,
-        documentId: id,
-        payload: expense.toFirestoreMap(),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: ownerId,
+          operationType: SyncOperationType.create,
+          targetCollection: collectionName,
+          documentId: id,
+          payload: expense.toFirestoreMap(),
+        ),
+      );
 
       return expense;
     }, 'createExpense');
@@ -181,9 +186,9 @@ class ExpensesRepository {
           ..where((t) => t.expenseDate.isSmallerOrEqualValue(toDate));
       }
 
-      final rows = await (query
-            ..orderBy([(t) => OrderingTerm.desc(t.expenseDate)]))
-          .get();
+      final rows =
+          await (query..orderBy([(t) => OrderingTerm.desc(t.expenseDate)]))
+              .get();
 
       return rows.map((e) => _entityToModel(e)).toList();
     }, 'getAllExpenses');
@@ -222,16 +227,18 @@ class ExpensesRepository {
     return await errorHandler.runSafe<void>(() async {
       final updateCompanion = ExpensesCompanion(
         category: category != null ? Value(category) : const Value.absent(),
-        description:
-            description != null ? Value(description) : const Value.absent(),
+        description: description != null
+            ? Value(description)
+            : const Value.absent(),
         amount: amount != null ? Value(amount) : const Value.absent(),
         expenseDate: date != null ? Value(date) : const Value.absent(),
         updatedAt: Value(DateTime.now()),
         isSynced: const Value(false),
       );
 
-      await (database.update(database.expenses)..where((t) => t.id.equals(id)))
-          .write(updateCompanion);
+      await (database.update(
+        database.expenses,
+      )..where((t) => t.id.equals(id))).write(updateCompanion);
 
       // Queue for sync
       // Fetch updated record to get full payload if needed, or just send partial
@@ -243,13 +250,15 @@ class ExpensesRepository {
       if (date != null) payload['date'] = date.toIso8601String();
       payload['updatedAt'] = DateTime.now().toIso8601String();
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: id,
-        payload: payload,
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: id,
+          payload: payload,
+        ),
+      );
     }, 'updateExpense');
   }
 
@@ -259,19 +268,24 @@ class ExpensesRepository {
     required String userId,
   }) async {
     return await errorHandler.runSafe<void>(() async {
-      await (database.update(database.expenses)..where((t) => t.id.equals(id)))
-          .write(ExpensesCompanion(
-        deletedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.expenses,
+      )..where((t) => t.id.equals(id))).write(
+        ExpensesCompanion(
+          deletedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: userId,
-        operationType: SyncOperationType.delete,
-        targetCollection: collectionName,
-        documentId: id,
-        payload: {},
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: userId,
+          operationType: SyncOperationType.delete,
+          targetCollection: collectionName,
+          documentId: id,
+          payload: {},
+        ),
+      );
 
       // CRITICAL: Reverse accounting entry
       if (_accountingService != null) {
@@ -291,13 +305,13 @@ class ExpensesRepository {
   // ============================================
 
   ExpenseModel _entityToModel(ExpenseEntity e) => ExpenseModel(
-        id: e.id,
-        category: e.category,
-        description: e.description,
-        amount: e.amount,
-        date: e.expenseDate,
-        ownerId: e.userId,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-      );
+    id: e.id,
+    category: e.category,
+    description: e.description,
+    amount: e.amount,
+    date: e.expenseDate,
+    ownerId: e.userId,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+  );
 }

@@ -128,17 +128,17 @@ class StockAdjustmentRequest {
   bool get isDecrease => quantityChange < 0;
 
   Map<String, dynamic> toAuditJson() => {
-        'productId': productId,
-        'productName': productName,
-        'oldQuantity': oldQuantity,
-        'newQuantity': newQuantity,
-        'quantityChange': quantityChange,
-        'reason': reason.name,
-        'referenceId': referenceId,
-        'notes': notes,
-        'adjustedBy': adjustedBy,
-        'timestamp': timestamp.toIso8601String(),
-      };
+    'productId': productId,
+    'productName': productName,
+    'oldQuantity': oldQuantity,
+    'newQuantity': newQuantity,
+    'quantityChange': quantityChange,
+    'reason': reason.name,
+    'referenceId': referenceId,
+    'notes': notes,
+    'adjustedBy': adjustedBy,
+    'timestamp': timestamp.toIso8601String(),
+  };
 }
 
 /// Stock Security Service - PIN and audit integration for stock operations.
@@ -149,8 +149,8 @@ class StockSecurityService {
   StockSecurityService({
     required OwnerPinService pinService,
     required AuditRepository auditRepository,
-  })  : _pinService = pinService,
-        _auditRepository = auditRepository;
+  }) : _pinService = pinService,
+       _auditRepository = auditRepository;
 
   /// Validate stock adjustment request
   Future<StockAdjustmentValidation> validateAdjustment({
@@ -219,7 +219,8 @@ class StockSecurityService {
         targetTableName: 'fraud_alerts',
         recordId: request.productId,
         action: 'STOCK_MISMATCH_ALERT',
-        newValueJson: '''{
+        newValueJson:
+            '''{
           "severity": "${changePercent > 90 ? 'CRITICAL' : 'HIGH'}",
           "description": "Large stock adjustment (${changePercent.toStringAsFixed(0)}%): ${request.productName}",
           "oldQuantity": ${request.oldQuantity},
@@ -230,8 +231,9 @@ class StockSecurityService {
     }
 
     debugPrint(
-        'StockSecurityService: Logged adjustment for ${request.productId}: '
-        '${request.oldQuantity} -> ${request.newQuantity} (${request.reason.displayName})');
+      'StockSecurityService: Logged adjustment for ${request.productId}: '
+      '${request.oldQuantity} -> ${request.newQuantity} (${request.reason.displayName})',
+    );
   }
 }
 

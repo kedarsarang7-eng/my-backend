@@ -17,8 +17,8 @@ class FoodMenuRepository {
   static const _uuid = Uuid();
 
   FoodMenuRepository({AppDatabase? db, ErrorHandler? errorHandler})
-      : _db = db ?? AppDatabase.instance,
-        _errorHandler = errorHandler ?? ErrorHandler.instance;
+    : _db = db ?? AppDatabase.instance,
+      _errorHandler = errorHandler ?? ErrorHandler.instance;
 
   // ============================================================================
   // CATEGORY OPERATIONS
@@ -36,7 +36,9 @@ class FoodMenuRepository {
       final now = DateTime.now();
       final id = _uuid.v4();
 
-      await _db.into(_db.foodCategories).insert(
+      await _db
+          .into(_db.foodCategories)
+          .insert(
             FoodCategoriesCompanion.insert(
               id: id,
               vendorId: vendorId,
@@ -49,9 +51,9 @@ class FoodMenuRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.foodCategories)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final entity = await (_db.select(
+        _db.foodCategories,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return FoodCategory.fromEntity(entity);
     }, 'createCategory');
@@ -59,15 +61,19 @@ class FoodMenuRepository {
 
   /// Get all categories for a vendor
   Future<RepositoryResult<List<FoodCategory>>> getCategoriesByVendor(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await _errorHandler.runSafe<List<FoodCategory>>(() async {
-      final entities = await (_db.select(_db.foodCategories)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.isActive.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
-          .get();
+      final entities =
+          await (_db.select(_db.foodCategories)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.isActive.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
+              .get();
 
       return entities.map((e) => FoodCategory.fromEntity(e)).toList();
     }, 'getCategoriesByVendor');
@@ -76,10 +82,12 @@ class FoodMenuRepository {
   /// Watch categories for a vendor
   Stream<List<FoodCategory>> watchCategories(String vendorId) {
     return (_db.select(_db.foodCategories)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.isActive.equals(true) &
-              t.deletedAt.isNull())
+          ..where(
+            (t) =>
+                t.vendorId.equals(vendorId) &
+                t.isActive.equals(true) &
+                t.deletedAt.isNull(),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
         .watch()
         .map((rows) => rows.map((e) => FoodCategory.fromEntity(e)).toList());
@@ -108,7 +116,9 @@ class FoodMenuRepository {
       final now = DateTime.now();
       final id = _uuid.v4();
 
-      await _db.into(_db.foodMenuItems).insert(
+      await _db
+          .into(_db.foodMenuItems)
+          .insert(
             FoodMenuItemsCompanion.insert(
               id: id,
               vendorId: vendorId,
@@ -121,17 +131,18 @@ class FoodMenuRepository {
               isVegetarian: Value(isVegetarian),
               isVegan: Value(isVegan),
               isSpicy: Value(isSpicy),
-              allergensJson:
-                  Value(allergens.isNotEmpty ? jsonEncode(allergens) : null),
+              allergensJson: Value(
+                allergens.isNotEmpty ? jsonEncode(allergens) : null,
+              ),
               sortOrder: Value(sortOrder),
               createdAt: now,
               updatedAt: now,
             ),
           );
 
-      final entity = await (_db.select(_db.foodMenuItems)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final entity = await (_db.select(
+        _db.foodMenuItems,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return FoodMenuItem.fromEntity(entity);
     }, 'createMenuItem');
@@ -156,35 +167,44 @@ class FoodMenuRepository {
     return await _errorHandler.runSafe<FoodMenuItem>(() async {
       final now = DateTime.now();
 
-      await (_db.update(_db.foodMenuItems)..where((t) => t.id.equals(id)))
-          .write(FoodMenuItemsCompanion(
-        name: name != null ? Value(name) : const Value.absent(),
-        price: price != null ? Value(price) : const Value.absent(),
-        categoryId:
-            categoryId != null ? Value(categoryId) : const Value.absent(),
-        description:
-            description != null ? Value(description) : const Value.absent(),
-        imageUrl: imageUrl != null ? Value(imageUrl) : const Value.absent(),
-        isAvailable:
-            isAvailable != null ? Value(isAvailable) : const Value.absent(),
-        preparationTimeMinutes: preparationTimeMinutes != null
-            ? Value(preparationTimeMinutes)
-            : const Value.absent(),
-        isVegetarian:
-            isVegetarian != null ? Value(isVegetarian) : const Value.absent(),
-        isVegan: isVegan != null ? Value(isVegan) : const Value.absent(),
-        isSpicy: isSpicy != null ? Value(isSpicy) : const Value.absent(),
-        allergensJson: allergens != null
-            ? Value(jsonEncode(allergens))
-            : const Value.absent(),
-        sortOrder: sortOrder != null ? Value(sortOrder) : const Value.absent(),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.foodMenuItems,
+      )..where((t) => t.id.equals(id))).write(
+        FoodMenuItemsCompanion(
+          name: name != null ? Value(name) : const Value.absent(),
+          price: price != null ? Value(price) : const Value.absent(),
+          categoryId: categoryId != null
+              ? Value(categoryId)
+              : const Value.absent(),
+          description: description != null
+              ? Value(description)
+              : const Value.absent(),
+          imageUrl: imageUrl != null ? Value(imageUrl) : const Value.absent(),
+          isAvailable: isAvailable != null
+              ? Value(isAvailable)
+              : const Value.absent(),
+          preparationTimeMinutes: preparationTimeMinutes != null
+              ? Value(preparationTimeMinutes)
+              : const Value.absent(),
+          isVegetarian: isVegetarian != null
+              ? Value(isVegetarian)
+              : const Value.absent(),
+          isVegan: isVegan != null ? Value(isVegan) : const Value.absent(),
+          isSpicy: isSpicy != null ? Value(isSpicy) : const Value.absent(),
+          allergensJson: allergens != null
+              ? Value(jsonEncode(allergens))
+              : const Value.absent(),
+          sortOrder: sortOrder != null
+              ? Value(sortOrder)
+              : const Value.absent(),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
-      final entity = await (_db.select(_db.foodMenuItems)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final entity = await (_db.select(
+        _db.foodMenuItems,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return FoodMenuItem.fromEntity(entity);
     }, 'updateMenuItem');
@@ -192,35 +212,43 @@ class FoodMenuRepository {
 
   /// Set item availability (quick toggle)
   Future<RepositoryResult<void>> setItemAvailability(
-      String itemId, bool isAvailable) async {
+    String itemId,
+    bool isAvailable,
+  ) async {
     return await _errorHandler.runSafe<void>(() async {
-      await (_db.update(_db.foodMenuItems)..where((t) => t.id.equals(itemId)))
-          .write(FoodMenuItemsCompanion(
-        isAvailable: Value(isAvailable),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.foodMenuItems,
+      )..where((t) => t.id.equals(itemId))).write(
+        FoodMenuItemsCompanion(
+          isAvailable: Value(isAvailable),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'setItemAvailability');
   }
 
   /// Soft delete a menu item
   Future<RepositoryResult<void>> deleteMenuItem(String id) async {
     return await _errorHandler.runSafe<void>(() async {
-      await (_db.update(_db.foodMenuItems)..where((t) => t.id.equals(id)))
-          .write(FoodMenuItemsCompanion(
-        deletedAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.foodMenuItems,
+      )..where((t) => t.id.equals(id))).write(
+        FoodMenuItemsCompanion(
+          deletedAt: Value(DateTime.now()),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'deleteMenuItem');
   }
 
   /// Get menu item by ID
   Future<RepositoryResult<FoodMenuItem?>> getMenuItemById(String id) async {
     return await _errorHandler.runSafe<FoodMenuItem?>(() async {
-      final entity = await (_db.select(_db.foodMenuItems)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.foodMenuItems,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       return entity != null ? FoodMenuItem.fromEntity(entity) : null;
     }, 'getMenuItemById');
@@ -228,18 +256,22 @@ class FoodMenuRepository {
 
   /// Get all menu items for a vendor
   Future<RepositoryResult<List<FoodMenuItem>>> getMenuByVendor(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await _errorHandler.runSafe<List<FoodMenuItem>>(() async {
-      final entities = await (_db.select(_db.foodMenuItems)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.isActive.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([
-              (t) => OrderingTerm.asc(t.sortOrder),
-              (t) => OrderingTerm.asc(t.name),
-            ]))
-          .get();
+      final entities =
+          await (_db.select(_db.foodMenuItems)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.isActive.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([
+                  (t) => OrderingTerm.asc(t.sortOrder),
+                  (t) => OrderingTerm.asc(t.name),
+                ]))
+              .get();
 
       return entities.map((e) => FoodMenuItem.fromEntity(e)).toList();
     }, 'getMenuByVendor');
@@ -247,19 +279,23 @@ class FoodMenuRepository {
 
   /// Get available items only (for customer view)
   Future<RepositoryResult<List<FoodMenuItem>>> getAvailableItems(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await _errorHandler.runSafe<List<FoodMenuItem>>(() async {
-      final entities = await (_db.select(_db.foodMenuItems)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.isActive.equals(true) &
-                t.isAvailable.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([
-              (t) => OrderingTerm.asc(t.sortOrder),
-              (t) => OrderingTerm.asc(t.name),
-            ]))
-          .get();
+      final entities =
+          await (_db.select(_db.foodMenuItems)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.isActive.equals(true) &
+                      t.isAvailable.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([
+                  (t) => OrderingTerm.asc(t.sortOrder),
+                  (t) => OrderingTerm.asc(t.name),
+                ]))
+              .get();
 
       return entities.map((e) => FoodMenuItem.fromEntity(e)).toList();
     }, 'getAvailableItems');
@@ -267,16 +303,21 @@ class FoodMenuRepository {
 
   /// Get items by category
   Future<RepositoryResult<List<FoodMenuItem>>> getItemsByCategory(
-      String vendorId, String categoryId) async {
+    String vendorId,
+    String categoryId,
+  ) async {
     return await _errorHandler.runSafe<List<FoodMenuItem>>(() async {
-      final entities = await (_db.select(_db.foodMenuItems)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.categoryId.equals(categoryId) &
-                t.isActive.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
-          .get();
+      final entities =
+          await (_db.select(_db.foodMenuItems)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.categoryId.equals(categoryId) &
+                      t.isActive.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
+              .get();
 
       return entities.map((e) => FoodMenuItem.fromEntity(e)).toList();
     }, 'getItemsByCategory');
@@ -288,15 +329,18 @@ class FoodMenuRepository {
     int limit = 5,
   }) async {
     return await _errorHandler.runSafe<List<FoodMenuItem>>(() async {
-      final entities = await (_db.select(_db.foodMenuItems)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.isActive.equals(true) &
-                t.isAvailable.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.desc(t.popularityCount)])
-            ..limit(limit))
-          .get();
+      final entities =
+          await (_db.select(_db.foodMenuItems)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.isActive.equals(true) &
+                      t.isAvailable.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.popularityCount)])
+                ..limit(limit))
+              .get();
 
       return entities.map((e) => FoodMenuItem.fromEntity(e)).toList();
     }, 'getPopularItems');
@@ -305,10 +349,12 @@ class FoodMenuRepository {
   /// Watch menu items for a vendor (real-time updates)
   Stream<List<FoodMenuItem>> watchMenuItems(String vendorId) {
     return (_db.select(_db.foodMenuItems)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.isActive.equals(true) &
-              t.deletedAt.isNull())
+          ..where(
+            (t) =>
+                t.vendorId.equals(vendorId) &
+                t.isActive.equals(true) &
+                t.deletedAt.isNull(),
+          )
           ..orderBy([
             (t) => OrderingTerm.asc(t.sortOrder),
             (t) => OrderingTerm.asc(t.name),
@@ -319,40 +365,48 @@ class FoodMenuRepository {
 
   /// Increment popularity count (called when item is ordered)
   Future<void> incrementPopularity(String itemId) async {
-    await _db.customStatement('''
+    await _db.customStatement(
+      '''
       UPDATE food_menu_items 
       SET popularity_count = popularity_count + 1,
           updated_at = ?
       WHERE id = ?
-    ''', [DateTime.now().toIso8601String(), itemId]);
+    ''',
+      [DateTime.now().toIso8601String(), itemId],
+    );
   }
 
   /// Update popularity badge based on order count
-  Future<void> updatePopularityBadges(String vendorId,
-      {int threshold = 10}) async {
-    final items = await (_db.select(_db.foodMenuItems)
-          ..where((t) => t.vendorId.equals(vendorId) & t.deletedAt.isNull()))
-        .get();
+  Future<void> updatePopularityBadges(
+    String vendorId, {
+    int threshold = 10,
+  }) async {
+    final items = await (_db.select(
+      _db.foodMenuItems,
+    )..where((t) => t.vendorId.equals(vendorId) & t.deletedAt.isNull())).get();
 
     for (final item in items) {
       final shouldBePopular = item.popularityCount >= threshold;
       if (item.isPopular != shouldBePopular) {
-        await (_db.update(_db.foodMenuItems)
-              ..where((t) => t.id.equals(item.id)))
-            .write(FoodMenuItemsCompanion(
-          isPopular: Value(shouldBePopular),
-          updatedAt: Value(DateTime.now()),
-        ));
+        await (_db.update(
+          _db.foodMenuItems,
+        )..where((t) => t.id.equals(item.id))).write(
+          FoodMenuItemsCompanion(
+            isPopular: Value(shouldBePopular),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
       }
     }
   }
 
   /// Get unsynced menu items
   Future<List<FoodMenuItem>> getUnsyncedItems(String vendorId) async {
-    final entities = await (_db.select(_db.foodMenuItems)
-          ..where(
-              (t) => t.vendorId.equals(vendorId) & t.isSynced.equals(false)))
-        .get();
+    final entities =
+        await (_db.select(_db.foodMenuItems)..where(
+              (t) => t.vendorId.equals(vendorId) & t.isSynced.equals(false),
+            ))
+            .get();
 
     return entities.map((e) => FoodMenuItem.fromEntity(e)).toList();
   }

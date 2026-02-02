@@ -114,12 +114,12 @@ class JournalEntryLine {
   });
 
   Map<String, dynamic> toMap() => {
-        'ledgerId': ledgerId,
-        'ledgerName': ledgerName,
-        'debit': debit,
-        'credit': credit,
-        'description': description,
-      };
+    'ledgerId': ledgerId,
+    'ledgerName': ledgerName,
+    'debit': debit,
+    'credit': credit,
+    'description': description,
+  };
 
   factory JournalEntryLine.fromMap(Map<String, dynamic> map) =>
       JournalEntryLine(
@@ -179,22 +179,22 @@ class JournalEntryModel {
       entries.where((e) => e.credit > 0).toList();
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'voucherNumber': voucherNumber,
-        'voucherType': voucherType.value,
-        'entryDate': entryDate.toIso8601String(),
-        'narration': narration,
-        'sourceType': sourceType?.value,
-        'sourceId': sourceId,
-        'entriesJson': jsonEncode(entries.map((e) => e.toMap()).toList()),
-        'totalDebit': totalDebit,
-        'totalCredit': totalCredit,
-        'isLocked': isLocked,
-        'isSynced': isSynced,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'voucherNumber': voucherNumber,
+    'voucherType': voucherType.value,
+    'entryDate': entryDate.toIso8601String(),
+    'narration': narration,
+    'sourceType': sourceType?.value,
+    'sourceId': sourceId,
+    'entriesJson': jsonEncode(entries.map((e) => e.toMap()).toList()),
+    'totalDebit': totalDebit,
+    'totalCredit': totalCredit,
+    'isLocked': isLocked,
+    'isSynced': isSynced,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory JournalEntryModel.fromMap(Map<String, dynamic> map) {
     List<JournalEntryLine> entryLines = [];
@@ -211,10 +211,12 @@ class JournalEntryModel {
       id: map['id'] ?? '',
       userId: map['userId'] ?? '',
       voucherNumber: map['voucherNumber'] ?? '',
-      voucherType:
-          VoucherTypeExtension.fromString(map['voucherType'] ?? 'JOURNAL'),
-      entryDate:
-          DateTime.parse(map['entryDate'] ?? DateTime.now().toIso8601String()),
+      voucherType: VoucherTypeExtension.fromString(
+        map['voucherType'] ?? 'JOURNAL',
+      ),
+      entryDate: DateTime.parse(
+        map['entryDate'] ?? DateTime.now().toIso8601String(),
+      ),
       narration: map['narration'],
       sourceType: map['sourceType'] != null
           ? SourceTypeExtension.fromString(map['sourceType'])
@@ -225,10 +227,12 @@ class JournalEntryModel {
       totalCredit: (map['totalCredit'] ?? 0).toDouble(),
       isLocked: map['isLocked'] ?? false,
       isSynced: map['isSynced'] ?? false,
-      createdAt:
-          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt:
-          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+        map['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        map['updatedAt'] ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
 
@@ -281,7 +285,7 @@ enum AccountingEntryClassification {
   depreciation,
   contra,
   openingBalance,
-  systemGenerated
+  systemGenerated,
 }
 
 extension JournalEntryClassification on JournalEntryModel {

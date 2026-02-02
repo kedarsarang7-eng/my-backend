@@ -47,8 +47,9 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
     try {
       if (widget.patient != null) {
         // Load reports for specific patient
-        _allReports =
-            await _labReportRepo.getReportsForPatient(widget.patient!.id);
+        _allReports = await _labReportRepo.getReportsForPatient(
+          widget.patient!.id,
+        );
       } else {
         // Load pending reports for doctor
         final doctorId = sl<SessionManager>().ownerId ?? '';
@@ -96,9 +97,11 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
                     controller: _tabController,
                     children: [
                       _buildReportList(
-                          _filterByStatus(LabReportStatus.pending)),
+                        _filterByStatus(LabReportStatus.pending),
+                      ),
                       _buildReportList(
-                          _filterByStatus(LabReportStatus.uploaded)),
+                        _filterByStatus(LabReportStatus.uploaded),
+                      ),
                       _buildReportList(_filterByStatus(LabReportStatus.ready)),
                     ],
                   ),
@@ -128,13 +131,18 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.science_outlined,
-              size: 64, color: Colors.white.withOpacity(0.3)),
+          Icon(
+            Icons.science_outlined,
+            size: 64,
+            color: Colors.white.withOpacity(0.3),
+          ),
           const SizedBox(height: 16),
           Text(
             'No reports in this category',
             style: GoogleFonts.inter(
-                color: Colors.white.withOpacity(0.7), fontSize: 16),
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 16,
+            ),
           ),
         ],
       ),
@@ -183,7 +191,9 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
         title: Text(
           report.testName,
           style: GoogleFonts.inter(
-              color: Colors.white, fontWeight: FontWeight.w600),
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,9 +211,10 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
                 Text(
                   report.status.name.toUpperCase(),
                   style: TextStyle(
-                      color: statusColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500),
+                    color: statusColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -276,9 +287,9 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
     if (pickedFile != null) {
       // Simulate upload delay
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Uploading...')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Uploading...')));
       }
 
       await Future.delayed(const Duration(seconds: 1));
@@ -299,56 +310,64 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen>
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: GlassContainer(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                        child: Text(report.testName,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold))),
-                    IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () => Navigator.pop(context)),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  height: 300,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.file_present, size: 64, color: Colors.grey),
-                        Text('Report Preview',
-                            style: TextStyle(color: Colors.grey)),
-                      ],
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      report.testName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Container(
+                height: 300,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton.icon(
-                      icon: const Icon(Icons.download),
-                      label: const Text('Download'),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                )
-              ],
-            )),
+                child: const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.file_present, size: 64, color: Colors.grey),
+                      Text(
+                        'Report Preview',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    icon: const Icon(Icons.download),
+                    label: const Text('Download'),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

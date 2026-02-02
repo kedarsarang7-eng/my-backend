@@ -31,8 +31,8 @@ class Nozzle {
     DateTime? createdAt,
     DateTime? updatedAt,
     this.isActive = true,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Calculate sale litres from readings
   double get calculatedSaleLitres {
@@ -86,21 +86,21 @@ class Nozzle {
   }
 
   Map<String, dynamic> toMap() => {
-        'nozzleId': nozzleId,
-        'dispenserId': dispenserId,
-        'fuelTypeId': fuelTypeId,
-        'fuelTypeName': fuelTypeName,
-        'openingReading': openingReading,
-        'closingReading': closingReading,
-        'calculatedSaleLitres': calculatedSaleLitres,
-        'linkedShiftId': linkedShiftId,
-        'linkedEmployeeId': linkedEmployeeId,
-        'linkedTankId': linkedTankId,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'isActive': isActive,
-      };
+    'nozzleId': nozzleId,
+    'dispenserId': dispenserId,
+    'fuelTypeId': fuelTypeId,
+    'fuelTypeName': fuelTypeName,
+    'openingReading': openingReading,
+    'closingReading': closingReading,
+    'calculatedSaleLitres': calculatedSaleLitres,
+    'linkedShiftId': linkedShiftId,
+    'linkedEmployeeId': linkedEmployeeId,
+    'linkedTankId': linkedTankId,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'isActive': isActive,
+  };
 
   factory Nozzle.fromMap(String id, Map<String, dynamic> map) {
     return Nozzle(

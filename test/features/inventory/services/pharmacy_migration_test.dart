@@ -47,15 +47,17 @@ void main() {
       );
 
       // Mock getAll products
-      when(mockProductsRepo.getAll(userId: userId)).thenAnswer(
-          (_) async => RepositoryResult.success([product1, product2]));
+      when(
+        mockProductsRepo.getAll(userId: userId),
+      ).thenAnswer((_) async => RepositoryResult.success([product1, product2]));
 
       // Mock check for existing batches (None exist)
       when(mockBatchRepo.getAllBatches('p1')).thenAnswer((_) async => []);
 
       // Mock create batch
-      when(mockBatchRepo.createBatch(any))
-          .thenAnswer((_) async => 'batch-id-1');
+      when(
+        mockBatchRepo.createBatch(any),
+      ).thenAnswer((_) async => 'batch-id-1');
 
       // WHEN
       final result = await service.migrateLegacyStock(userId);
@@ -67,13 +69,19 @@ void main() {
 
       // Verify createBatch called for p1
       // Note: ProductBatchesCompanion fields are Value types
-      verify(mockBatchRepo.createBatch(argThat(predicate((batch) {
-        if (batch is! ProductBatchesCompanion) return false;
-        return batch.productId.value == 'p1' &&
-            batch.batchNumber.value == 'LEGACY_OPENING' &&
-            batch.expiryDate.value == null &&
-            batch.stockQuantity.value == 100;
-      })))).called(1);
+      verify(
+        mockBatchRepo.createBatch(
+          argThat(
+            predicate((batch) {
+              if (batch is! ProductBatchesCompanion) return false;
+              return batch.productId.value == 'p1' &&
+                  batch.batchNumber.value == 'LEGACY_OPENING' &&
+                  batch.expiryDate.value == null &&
+                  batch.stockQuantity.value == 100;
+            }),
+          ),
+        ),
+      ).called(1);
     });
 
     test('Should skip products that already have batches', () async {
@@ -89,8 +97,9 @@ void main() {
         updatedAt: DateTime.now(),
       );
 
-      when(mockProductsRepo.getAll(userId: userId))
-          .thenAnswer((_) async => RepositoryResult.success([product1]));
+      when(
+        mockProductsRepo.getAll(userId: userId),
+      ).thenAnswer((_) async => RepositoryResult.success([product1]));
 
       // Mock check for existing batches (Exists!)
       final existingBatch = ProductBatchEntity(
@@ -112,8 +121,9 @@ void main() {
         syncOperationId: null,
       );
 
-      when(mockBatchRepo.getAllBatches('p1'))
-          .thenAnswer((_) async => [existingBatch]);
+      when(
+        mockBatchRepo.getAllBatches('p1'),
+      ).thenAnswer((_) async => [existingBatch]);
 
       // WHEN
       final result = await service.migrateLegacyStock(userId);

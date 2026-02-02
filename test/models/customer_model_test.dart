@@ -90,10 +90,7 @@ void main() {
     });
 
     test('fromMap should handle missing optional fields', () {
-      final map = {
-        'name': 'Minimal Customer',
-        'phone': '7777777777',
-      };
+      final map = {'name': 'Minimal Customer', 'phone': '7777777777'};
 
       final customer = Customer.fromMap('cust-005', map);
 
@@ -132,12 +129,7 @@ void main() {
 
   group('Customer Edge Cases', () {
     test('should handle empty string fields', () {
-      final customer = Customer(
-        id: '',
-        name: '',
-        phone: '',
-        address: '',
-      );
+      final customer = Customer(id: '', name: '', phone: '', address: '');
 
       expect(customer.id, '');
       expect(customer.name, '');

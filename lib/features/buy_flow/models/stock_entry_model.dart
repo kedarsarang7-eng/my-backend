@@ -71,8 +71,9 @@ class StockEntry {
       paidAmount: (map['paidAmount'] ?? 0).toDouble(),
       dueAmount: (map['dueAmount'] ?? 0).toDouble(),
       paymentStatus: PaymentStatus.values.firstWhere(
-          (e) => e.name == (map['paymentStatus'] ?? 'unpaid'),
-          orElse: () => PaymentStatus.unpaid),
+        (e) => e.name == (map['paymentStatus'] ?? 'unpaid'),
+        orElse: () => PaymentStatus.unpaid,
+      ),
       billImageUrl: map['billImageUrl'] ?? '',
       createdAt: DateTime.parse(map['createdAt']),
       isDeleted: map['isDeleted'] ?? false,

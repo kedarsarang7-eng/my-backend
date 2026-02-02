@@ -40,18 +40,22 @@ class ExpensesScreen extends StatelessWidget {
         // Calculate totals for KPI cards
         final now = DateTime.now();
         final todayExpenses = expenses
-            .where((e) =>
-                e.date.day == now.day &&
-                e.date.month == now.month &&
-                e.date.year == now.year)
+            .where(
+              (e) =>
+                  e.date.day == now.day &&
+                  e.date.month == now.month &&
+                  e.date.year == now.year,
+            )
             .fold<double>(0, (sum, e) => sum + e.amount);
 
         final monthExpenses = expenses
             .where((e) => e.date.month == now.month && e.date.year == now.year)
             .fold<double>(0, (sum, e) => sum + e.amount);
 
-        final totalExpenses =
-            expenses.fold<double>(0, (sum, e) => sum + e.amount);
+        final totalExpenses = expenses.fold<double>(
+          0,
+          (sum, e) => sum + e.amount,
+        );
 
         return DesktopContentContainer(
           title: 'Expenses',
@@ -110,7 +114,9 @@ class ExpensesScreen extends StatelessWidget {
                       // Table Header
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 16),
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
@@ -148,97 +154,97 @@ class ExpensesScreen extends StatelessWidget {
                                 ),
                               )
                             : expenses.isEmpty
-                                ? CompactEmptyState(
-                                    icon: Icons.money_off_outlined,
-                                    message: 'No expenses recorded yet',
-                                    actionLabel: 'Add First Expense',
-                                    onAction: () =>
-                                        _showAddExpenseDialog(context, userId),
-                                  )
-                                : EnterpriseTable<ExpenseModel>(
-                                    data: expenses,
-                                    columns: [
-                                      EnterpriseTableColumn<ExpenseModel>(
-                                        title: 'Date',
-                                        valueBuilder: (e) => e.date,
-                                        widgetBuilder: (e) => Text(
-                                          DateFormat('MMM dd, yyyy')
-                                              .format(e.date),
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
+                            ? CompactEmptyState(
+                                icon: Icons.money_off_outlined,
+                                message: 'No expenses recorded yet',
+                                actionLabel: 'Add First Expense',
+                                onAction: () =>
+                                    _showAddExpenseDialog(context, userId),
+                              )
+                            : EnterpriseTable<ExpenseModel>(
+                                data: expenses,
+                                columns: [
+                                  EnterpriseTableColumn<ExpenseModel>(
+                                    title: 'Date',
+                                    valueBuilder: (e) => e.date,
+                                    widgetBuilder: (e) => Text(
+                                      DateFormat('MMM dd, yyyy').format(e.date),
+                                      style: const TextStyle(
+                                        color: Colors.white,
                                       ),
-                                      EnterpriseTableColumn<ExpenseModel>(
-                                        title: 'Category',
-                                        valueBuilder: (e) => e.category,
-                                        widgetBuilder: (e) => Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              width: 32,
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                color: FuturisticColors.error
-                                                    .withOpacity(0.15),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: Icon(
-                                                _getCategoryIcon(e.category),
-                                                size: 16,
-                                                color: FuturisticColors.error,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Text(
-                                              e.category,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      EnterpriseTableColumn<ExpenseModel>(
-                                        title: 'Description',
-                                        valueBuilder: (e) => e.description,
-                                        widgetBuilder: (e) => Text(
-                                          e.description,
-                                          style: TextStyle(
-                                            color:
-                                                FuturisticColors.textSecondary,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      EnterpriseTableColumn<ExpenseModel>(
-                                        title: 'Amount',
-                                        valueBuilder: (e) => e.amount,
-                                        isNumeric: true,
-                                        widgetBuilder: (e) => Text(
-                                          '₹${_formatAmount(e.amount)}',
-                                          style: const TextStyle(
-                                            color: FuturisticColors.error,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    actionsBuilder: (expense) => [
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.delete_outline,
-                                          color: FuturisticColors.textSecondary,
-                                          size: 18,
-                                        ),
-                                        tooltip: 'Delete',
-                                        onPressed: () =>
-                                            _confirmDelete(context, expense),
-                                      ),
-                                    ],
+                                    ),
                                   ),
+                                  EnterpriseTableColumn<ExpenseModel>(
+                                    title: 'Category',
+                                    valueBuilder: (e) => e.category,
+                                    widgetBuilder: (e) => Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 32,
+                                          height: 32,
+                                          decoration: BoxDecoration(
+                                            color: FuturisticColors.error
+                                                .withOpacity(0.15),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            _getCategoryIcon(e.category),
+                                            size: 16,
+                                            color: FuturisticColors.error,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          e.category,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  EnterpriseTableColumn<ExpenseModel>(
+                                    title: 'Description',
+                                    valueBuilder: (e) => e.description,
+                                    widgetBuilder: (e) => Text(
+                                      e.description,
+                                      style: TextStyle(
+                                        color: FuturisticColors.textSecondary,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  EnterpriseTableColumn<ExpenseModel>(
+                                    title: 'Amount',
+                                    valueBuilder: (e) => e.amount,
+                                    isNumeric: true,
+                                    widgetBuilder: (e) => Text(
+                                      '₹${_formatAmount(e.amount)}',
+                                      style: const TextStyle(
+                                        color: FuturisticColors.error,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                actionsBuilder: (expense) => [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: FuturisticColors.textSecondary,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Delete',
+                                    onPressed: () =>
+                                        _confirmDelete(context, expense),
+                                  ),
+                                ],
+                              ),
                       ),
                     ],
                   ),
@@ -378,8 +384,10 @@ class ExpensesScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close,
-                        color: FuturisticColors.textSecondary),
+                    icon: Icon(
+                      Icons.close,
+                      color: FuturisticColors.textSecondary,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],

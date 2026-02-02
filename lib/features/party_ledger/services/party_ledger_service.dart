@@ -22,10 +22,10 @@ class PartyLedgerService {
     FinancialReportsService? reportsService,
     AppDatabase? db,
     SyncManager? syncManager,
-  })  : _accountingRepo = accountingRepo ?? AccountingRepository(),
-        _reportsService = reportsService ?? FinancialReportsService(),
-        _db = db ?? sl<AppDatabase>(),
-        _syncManager = syncManager ?? SyncManager.instance;
+  }) : _accountingRepo = accountingRepo ?? AccountingRepository(),
+       _reportsService = reportsService ?? FinancialReportsService(),
+       _db = db ?? sl<AppDatabase>(),
+       _syncManager = syncManager ?? SyncManager.instance;
 
   /// Get party balance summary
   Future<PartyBalanceSummary> getPartyBalance({
@@ -51,10 +51,11 @@ class PartyLedgerService {
     // Get last transaction date
     // Better: get last journal entry involving this ledger
     final statement = await _reportsService.getLedgerStatement(
-        userId: userId,
-        ledgerId: ledger.id,
-        startDate: DateTime.now().subtract(const Duration(days: 365)),
-        endDate: DateTime.now());
+      userId: userId,
+      ledgerId: ledger.id,
+      startDate: DateTime.now().subtract(const Duration(days: 365)),
+      endDate: DateTime.now(),
+    );
 
     final lastTxnDate = statement.transactions.isNotEmpty
         ? statement.transactions.last.date
@@ -109,23 +110,29 @@ class PartyLedgerService {
     final now = DateTime.now();
 
     // Update customer table with new balance
-    await (_db.update(_db.customers)..where((t) => t.id.equals(customerId)))
-        .write(CustomersCompanion(
-            totalDues: Value(ledger.currentBalance),
-            updatedAt: Value(now),
-            isSynced: const Value(false)));
+    await (_db.update(
+      _db.customers,
+    )..where((t) => t.id.equals(customerId))).write(
+      CustomersCompanion(
+        totalDues: Value(ledger.currentBalance),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
 
     // CRITICAL: Queue for Sync
-    await _syncManager.enqueue(SyncQueueItem.create(
-      userId: userId,
-      operationType: SyncOperationType.update,
-      targetCollection: 'customers',
-      documentId: customerId,
-      payload: {
-        'totalDues': ledger.currentBalance,
-        'updatedAt': now.toIso8601String(),
-      },
-    ));
+    await _syncManager.enqueue(
+      SyncQueueItem.create(
+        userId: userId,
+        operationType: SyncOperationType.update,
+        targetCollection: 'customers',
+        documentId: customerId,
+        payload: {
+          'totalDues': ledger.currentBalance,
+          'updatedAt': now.toIso8601String(),
+        },
+      ),
+    );
   }
 
   /// --------------------------------------------------------------------------
@@ -143,20 +150,23 @@ class PartyLedgerService {
     // Fetch party name based on type
     String partyName = 'Unknown';
     if (partyType == 'CUSTOMER') {
-      final customer = await (_db.select(_db.customers)
-            ..where((t) => t.id.equals(partyId)))
-          .getSingleOrNull();
+      final customer = await (_db.select(
+        _db.customers,
+      )..where((t) => t.id.equals(partyId))).getSingleOrNull();
       partyName = customer?.name ?? 'Unknown Customer';
     } else if (partyType == 'VENDOR') {
-      final vendor = await (_db.select(_db.vendors)
-            ..where((t) => t.id.equals(partyId)))
-          .getSingleOrNull();
+      final vendor = await (_db.select(
+        _db.vendors,
+      )..where((t) => t.id.equals(partyId))).getSingleOrNull();
       partyName = vendor?.name ?? 'Unknown Vendor';
     }
 
     // 1. Get current Total Dues from Ledger
     final balanceSummary = await getPartyBalance(
-        userId: userId, partyId: partyId, partyType: partyType);
+      userId: userId,
+      partyId: partyId,
+      partyType: partyType,
+    );
 
     double totalDue = balanceSummary.currentBalance;
 
@@ -193,7 +203,7 @@ class PartyLedgerService {
       ..where((t) => t.userId.equals(userId))
       ..where((t) => t.customerId.equals(partyId))
       ..orderBy([
-        (t) => OrderingTerm(expression: t.billDate, mode: OrderingMode.desc)
+        (t) => OrderingTerm(expression: t.billDate, mode: OrderingMode.desc),
       ]);
 
     final bills = await query.get();
@@ -250,13 +260,29 @@ class PartyLedgerService {
       generatedAt: DateTime.now(),
       buckets: [
         AgingBucket(
-            label: '0-30 days', amount: bucket0_30, startDay: 0, endDay: 30),
+          label: '0-30 days',
+          amount: bucket0_30,
+          startDay: 0,
+          endDay: 30,
+        ),
         AgingBucket(
-            label: '31-60 days', amount: bucket31_60, startDay: 31, endDay: 60),
+          label: '31-60 days',
+          amount: bucket31_60,
+          startDay: 31,
+          endDay: 60,
+        ),
         AgingBucket(
-            label: '61-90 days', amount: bucket61_90, startDay: 61, endDay: 90),
+          label: '61-90 days',
+          amount: bucket61_90,
+          startDay: 61,
+          endDay: 90,
+        ),
         AgingBucket(
-            label: '90+ days', amount: bucket91Plus, startDay: 91, endDay: -1),
+          label: '90+ days',
+          amount: bucket91Plus,
+          startDay: 91,
+          endDay: -1,
+        ),
       ],
     );
   }
@@ -270,7 +296,10 @@ class PartyLedgerService {
     required double annualRate,
   }) async {
     final agingReport = await getAgingAnalysis(
-        userId: userId, partyId: partyId, partyType: 'CUSTOMER');
+      userId: userId,
+      partyId: partyId,
+      partyType: 'CUSTOMER',
+    );
 
     // Simple Rule: Interest only on >30 days? Or all?
     // Usually on overdue. Let's assume buckets > 30 are overdue.

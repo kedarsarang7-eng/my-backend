@@ -48,12 +48,18 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.storefront_outlined,
-                      size: 64, color: isDark ? Colors.white38 : Colors.grey),
+                  Icon(
+                    Icons.storefront_outlined,
+                    size: 64,
+                    color: isDark ? Colors.white38 : Colors.grey,
+                  ),
                   const SizedBox(height: 16),
-                  Text("No Suppliers Found",
-                      style: TextStyle(
-                          color: isDark ? Colors.white60 : Colors.grey)),
+                  Text(
+                    "No Suppliers Found",
+                    style: TextStyle(
+                      color: isDark ? Colors.white60 : Colors.grey,
+                    ),
+                  ),
                 ],
               ),
             );
@@ -62,7 +68,7 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
           return ListView.separated(
             padding: const EdgeInsets.only(bottom: 24),
             itemCount: vendors.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final vendor = vendors[index];
               return _buildVendorCard(vendor, isDark);
@@ -97,8 +103,9 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               child: Text(
                 vendor.name.isNotEmpty ? vendor.name[0].toUpperCase() : '?',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isPayable ? Colors.redAccent : Colors.green),
+                  fontWeight: FontWeight.bold,
+                  color: isPayable ? Colors.redAccent : Colors.green,
+                ),
               ),
             ),
             const SizedBox(width: 16),
@@ -106,51 +113,69 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(vendor.name,
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87)),
+                  Text(
+                    vendor.name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   if (vendor.phone?.isNotEmpty ?? false)
-                    Text(vendor.phone ?? '',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: isDark ? Colors.white54 : Colors.grey)),
+                    Text(
+                      vendor.phone ?? '',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? Colors.white54 : Colors.grey,
+                      ),
+                    ),
                 ],
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('₹${absBalance.toStringAsFixed(0)}',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: isPayable ? Colors.redAccent : Colors.green)),
-                Text(isPayable ? 'To Pay' : 'Advance',
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: isPayable ? Colors.redAccent : Colors.green)),
+                Text(
+                  '₹${absBalance.toStringAsFixed(0)}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isPayable ? Colors.redAccent : Colors.green,
+                  ),
+                ),
+                Text(
+                  isPayable ? 'To Pay' : 'Advance',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: isPayable ? Colors.redAccent : Colors.green,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 if (isPayable)
                   InkWell(
                     onTap: () => _showPaySheet(vendor, absBalance, isDark),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: const Text("PAY NOW",
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "PAY NOW",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  )
+                  ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -165,8 +190,10 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-        title: Text("Add New Supplier",
-            style: TextStyle(color: isDark ? Colors.white : Colors.black)),
+        title: Text(
+          "Add New Supplier",
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,12 +202,14 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               controller: nameCtrl,
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
-                  labelText: "Supplier Name",
-                  filled: true,
-                  fillColor: isDark ? Colors.white10 : Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none)),
+                labelText: "Supplier Name",
+                filled: true,
+                fillColor: isDark ? Colors.white10 : Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -188,12 +217,14 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               keyboardType: TextInputType.phone,
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
-                  labelText: "Phone Number",
-                  filled: true,
-                  fillColor: isDark ? Colors.white10 : Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none)),
+                labelText: "Phone Number",
+                filled: true,
+                fillColor: isDark ? Colors.white10 : Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ],
         ),
@@ -206,12 +237,13 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
             onPressed: () {
               if (nameCtrl.text.isNotEmpty) {
                 final v = repo.Vendor(
-                    id: 'v_${DateTime.now().millisecondsSinceEpoch}',
-                    userId: ownerId,
-                    name: nameCtrl.text,
-                    phone: phoneCtrl.text,
-                    createdAt: DateTime.now(),
-                    updatedAt: DateTime.now());
+                  id: 'v_${DateTime.now().millisecondsSinceEpoch}',
+                  userId: ownerId,
+                  name: nameCtrl.text,
+                  phone: phoneCtrl.text,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                );
                 _buyFlowService.saveVendor({
                   'vendorId': v.id,
                   'ownerId': v.userId,
@@ -222,11 +254,15 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-            child: const Text("Save Supplier",
-                style: TextStyle(color: Colors.white)),
+              backgroundColor: Colors.blueAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              "Save Supplier",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -240,8 +276,10 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-        title: Text("Pay ${vendor.name}",
-            style: TextStyle(color: isDark ? Colors.white : Colors.black)),
+        title: Text(
+          "Pay ${vendor.name}",
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -250,12 +288,14 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               keyboardType: TextInputType.number,
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
-                  labelText: "Amount (₹)",
-                  filled: true,
-                  fillColor: isDark ? Colors.white10 : Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none)),
+                labelText: "Amount (₹)",
+                filled: true,
+                fillColor: isDark ? Colors.white10 : Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ],
         ),
@@ -269,16 +309,25 @@ class _VendorPayoutsScreenState extends ConsumerState<VendorPayoutsScreen> {
               final amt = double.tryParse(amtCtrl.text);
               if (amt != null && amt > 0) {
                 await _buyFlowService.recordVendorPayment(
-                    vendor.userId, vendor.id, amt, "CASH", []);
+                  vendor.userId,
+                  vendor.id,
+                  amt,
+                  "CASH",
+                  [],
+                );
                 if (ctx.mounted) Navigator.pop(ctx);
               }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-            child: const Text("Confirm Payment",
-                style: TextStyle(color: Colors.white)),
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              "Confirm Payment",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),

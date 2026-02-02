@@ -37,8 +37,9 @@ class _BalanceScreenState extends ConsumerState<BalanceScreen> {
 
       // Get bills and expenses from local repository
       final bills = await sl<BillsRepository>().watchAll(userId: ownerId).first;
-      final expenses =
-          await sl<ExpensesRepository>().watchAll(userId: ownerId).first;
+      final expenses = await sl<ExpensesRepository>()
+          .watchAll(userId: ownerId)
+          .first;
 
       // Sum Cash Sales
       double totalCashSales = 0;
@@ -121,16 +122,18 @@ class _BalanceScreenState extends ConsumerState<BalanceScreen> {
                     ),
                     child: Column(
                       children: [
-                        Text("Total Liquid Assets",
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 16)),
+                        Text(
+                          "Total Liquid Assets",
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
                         const SizedBox(height: 10),
                         Text(
                           "₹ ${totalBalance.toStringAsFixed(2)}",
                           style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -143,20 +146,22 @@ class _BalanceScreenState extends ConsumerState<BalanceScreen> {
                       children: [
                         Expanded(
                           child: _buildBalanceCard(
-                              "Cash in Hand",
-                              _estimatedCashBalance,
-                              Icons.money_rounded,
-                              Colors.green,
-                              isDark),
+                            "Cash in Hand",
+                            _estimatedCashBalance,
+                            Icons.money_rounded,
+                            Colors.green,
+                            isDark,
+                          ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: _buildBalanceCard(
-                              "Bank Accounts",
-                              _totalBankBalance,
-                              Icons.account_balance_rounded,
-                              Colors.blue,
-                              isDark),
+                            "Bank Accounts",
+                            _totalBankBalance,
+                            Icons.account_balance_rounded,
+                            Colors.blue,
+                            isDark,
+                          ),
                         ),
                       ],
                     ),
@@ -168,7 +173,12 @@ class _BalanceScreenState extends ConsumerState<BalanceScreen> {
   }
 
   Widget _buildBalanceCard(
-      String title, double value, IconData icon, Color color, bool isDark) {
+    String title,
+    double value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return GlassCard(
       borderRadius: 20,
       padding: const EdgeInsets.all(20),
@@ -178,20 +188,25 @@ class _BalanceScreenState extends ConsumerState<BalanceScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-                color: color.withOpacity(0.1), shape: BoxShape.circle),
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
             child: Icon(icon, color: color, size: 32),
           ),
           const SizedBox(height: 16),
-          Text(title,
-              style: TextStyle(color: isDark ? Colors.white60 : Colors.grey)),
+          Text(
+            title,
+            style: TextStyle(color: isDark ? Colors.white60 : Colors.grey),
+          ),
           const SizedBox(height: 8),
           Text(
             "₹ ${value.toStringAsFixed(0)}",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: isDark ? Colors.white : Colors.black87),
-          )
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
         ],
       ),
     );

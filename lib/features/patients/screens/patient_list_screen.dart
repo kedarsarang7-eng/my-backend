@@ -90,7 +90,8 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const PatientRegistrationScreen()),
+              builder: (context) => const PatientRegistrationScreen(),
+            ),
           );
         },
         backgroundColor: FuturisticColors.neonBlue,
@@ -137,7 +138,9 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                   // Search Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
@@ -161,8 +164,9 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                             color: Colors.white.withOpacity(0.7),
                           ),
                           border: InputBorder.none,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
                         ),
                         onChanged: (value) {
                           setState(() {
@@ -203,9 +207,11 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.person_search_rounded,
-                                    size: 64,
-                                    color: Colors.white.withOpacity(0.3)),
+                                Icon(
+                                  Icons.person_search_rounded,
+                                  size: 64,
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
                                 const SizedBox(height: 16),
                                 Text(
                                   _searchQuery.isEmpty
@@ -258,10 +264,7 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
       ),
       child: Material(
         color: Colors.transparent,
@@ -320,8 +323,11 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.person_outline_rounded,
-                              size: 14, color: Colors.white.withOpacity(0.6)),
+                          Icon(
+                            Icons.person_outline_rounded,
+                            size: 14,
+                            color: Colors.white.withOpacity(0.6),
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             '${patient.gender} • ${patient.age} yrs',
@@ -333,8 +339,11 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                           if (patient.phone != null &&
                               patient.phone!.isNotEmpty) ...[
                             const SizedBox(width: 8),
-                            Icon(Icons.phone_rounded,
-                                size: 14, color: Colors.white.withOpacity(0.6)),
+                            Icon(
+                              Icons.phone_rounded,
+                              size: 14,
+                              color: Colors.white.withOpacity(0.6),
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               patient.phone!,
@@ -343,7 +352,7 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                                 color: Colors.white.withOpacity(0.6),
                               ),
                             ),
-                          ]
+                          ],
                         ],
                       ),
                     ],

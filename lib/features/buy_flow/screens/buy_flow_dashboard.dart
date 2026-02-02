@@ -97,66 +97,76 @@ class _BuyFlowDashboardState extends ConsumerState<BuyFlowDashboard> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                LayoutBuilder(builder: (context, constraints) {
-                  return GridView.count(
-                    crossAxisCount: constraints.maxWidth > 900 ? 4 : 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 1.5,
-                    children: [
-                      _buildActionCard(
-                        context,
-                        "Stock Entry",
-                        "Add new inventory",
-                        Icons.add_box_rounded,
-                        Colors.green,
-                        isDark,
-                        onTap: () => Navigator.push(
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    return GridView.count(
+                      crossAxisCount: constraints.maxWidth > 900 ? 4 : 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1.5,
+                      children: [
+                        _buildActionCard(
+                          context,
+                          "Stock Entry",
+                          "Add new inventory",
+                          Icons.add_box_rounded,
+                          Colors.green,
+                          isDark,
+                          onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const StockEntryScreen())),
-                      ),
-                      _buildActionCard(
-                        context,
-                        "Pay Vendor",
-                        "Clear dues",
-                        Icons.payment_rounded,
-                        Colors.blue,
-                        isDark,
-                        onTap: () => Navigator.push(
+                              builder: (_) => const StockEntryScreen(),
+                            ),
+                          ),
+                        ),
+                        _buildActionCard(
+                          context,
+                          "Pay Vendor",
+                          "Clear dues",
+                          Icons.payment_rounded,
+                          Colors.blue,
+                          isDark,
+                          onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const VendorPayoutsScreen())),
-                      ),
-                      _buildActionCard(
-                        context,
-                        "Create Order",
-                        "Request stock",
-                        Icons.shopping_cart_checkout_rounded,
-                        Colors.purple,
-                        isDark,
-                        onTap: () => Navigator.push(
+                              builder: (_) => const VendorPayoutsScreen(),
+                            ),
+                          ),
+                        ),
+                        _buildActionCard(
+                          context,
+                          "Create Order",
+                          "Request stock",
+                          Icons.shopping_cart_checkout_rounded,
+                          Colors.purple,
+                          isDark,
+                          onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const BuyOrdersScreen())),
-                      ),
-                      _buildActionCard(
-                        context,
-                        "Stock Reversal",
-                        "Return items",
-                        Icons.assignment_return_rounded,
-                        Colors.orange,
-                        isDark,
-                        onTap: () => Navigator.push(
+                              builder: (_) => const BuyOrdersScreen(),
+                            ),
+                          ),
+                        ),
+                        _buildActionCard(
+                          context,
+                          "Stock Reversal",
+                          "Return items",
+                          Icons.assignment_return_rounded,
+                          Colors.orange,
+                          isDark,
+                          onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const StockReversalScreen())),
-                      ),
-                    ],
-                  );
-                }),
+                              builder: (_) => const StockReversalScreen(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
 
                 const SizedBox(height: 32),
 
@@ -172,19 +182,28 @@ class _BuyFlowDashboardState extends ConsumerState<BuyFlowDashboard> {
                         color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("View All"),
-                    ),
+                    TextButton(onPressed: () {}, child: const Text("View All")),
                   ],
                 ),
                 const SizedBox(height: 16),
-                _buildActivityItem("Stock Added",
-                    "Invoice #8822 from Raj Traders", "Just now", isDark),
-                _buildActivityItem("Payment Made", "₹5,000 to Apex Supplies",
-                    "2 hours ago", isDark),
-                _buildActivityItem("Order Sent", "Order #PO-001 to Raj Traders",
-                    "5 hours ago", isDark),
+                _buildActivityItem(
+                  "Stock Added",
+                  "Invoice #8822 from Raj Traders",
+                  "Just now",
+                  isDark,
+                ),
+                _buildActivityItem(
+                  "Payment Made",
+                  "₹5,000 to Apex Supplies",
+                  "2 hours ago",
+                  isDark,
+                ),
+                _buildActivityItem(
+                  "Order Sent",
+                  "Order #PO-001 to Raj Traders",
+                  "5 hours ago",
+                  isDark,
+                ),
               ],
             ),
           );
@@ -194,14 +213,20 @@ class _BuyFlowDashboardState extends ConsumerState<BuyFlowDashboard> {
   }
 
   Widget _buildSummaryCard(
-      String title, String value, IconData icon, Color color, bool isDark) {
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!),
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,9 +266,15 @@ class _BuyFlowDashboardState extends ConsumerState<BuyFlowDashboard> {
     );
   }
 
-  Widget _buildActionCard(BuildContext context, String title, String subtitle,
-      IconData icon, Color color, bool isDark,
-      {required VoidCallback onTap}) {
+  Widget _buildActionCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    bool isDark, {
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -298,7 +329,11 @@ class _BuyFlowDashboardState extends ConsumerState<BuyFlowDashboard> {
   }
 
   Widget _buildActivityItem(
-      String title, String subtitle, String time, bool isDark) {
+    String title,
+    String subtitle,
+    String time,
+    bool isDark,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -306,12 +341,16 @@ class _BuyFlowDashboardState extends ConsumerState<BuyFlowDashboard> {
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!),
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!,
+        ),
       ),
       child: Row(
         children: [
-          Icon(Icons.history,
-              size: 20, color: isDark ? Colors.white54 : Colors.grey),
+          Icon(
+            Icons.history,
+            size: 20,
+            color: isDark ? Colors.white54 : Colors.grey,
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

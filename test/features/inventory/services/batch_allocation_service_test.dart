@@ -78,8 +78,9 @@ void main() {
         isSynced: false,
       );
 
-      when(mockBatchRepo.getBatchesForFefo(productId))
-          .thenAnswer((_) async => [batchA, batchB]);
+      when(
+        mockBatchRepo.getBatchesForFefo(productId),
+      ).thenAnswer((_) async => [batchA, batchB]);
 
       // WHEN
       final resultBill = await service.allocateBatches(bill);
@@ -133,8 +134,9 @@ void main() {
         isSynced: false,
       );
 
-      when(mockBatchRepo.getBatchesForFefo(productId))
-          .thenAnswer((_) async => [batchA]);
+      when(
+        mockBatchRepo.getBatchesForFefo(productId),
+      ).thenAnswer((_) async => [batchA]);
 
       // WHEN
       final resultBill = await service.allocateBatches(bill);
@@ -151,26 +153,28 @@ void main() {
       expect(resultBill.items[1].batchId, isNull);
     });
 
-    test('Should skip items that already have a batchId (Manual override)',
-        () async {
-      // GIVEN
-      final item = BillItem(
-        productId: 'prod-123',
-        productName: 'Manual Selection',
-        qty: 5,
-        price: 100,
-        batchId: 'manual-batch-id', // User already picked one
-      );
+    test(
+      'Should skip items that already have a batchId (Manual override)',
+      () async {
+        // GIVEN
+        final item = BillItem(
+          productId: 'prod-123',
+          productName: 'Manual Selection',
+          qty: 5,
+          price: 100,
+          batchId: 'manual-batch-id', // User already picked one
+        );
 
-      final bill = Bill.empty().copyWith(items: [item]);
+        final bill = Bill.empty().copyWith(items: [item]);
 
-      // WHEN
-      final resultBill = await service.allocateBatches(bill);
+        // WHEN
+        final resultBill = await service.allocateBatches(bill);
 
-      // THEN
-      verifyNever(mockBatchRepo.getBatchesForFefo(any));
-      expect(resultBill.items.length, 1);
-      expect(resultBill.items[0].batchId, 'manual-batch-id');
-    });
+        // THEN
+        verifyNever(mockBatchRepo.getBatchesForFefo(any));
+        expect(resultBill.items.length, 1);
+        expect(resultBill.items[0].batchId, 'manual-batch-id');
+      },
+    );
   });
 }

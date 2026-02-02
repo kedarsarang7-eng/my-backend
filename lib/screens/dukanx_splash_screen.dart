@@ -201,10 +201,7 @@ class _GlowingLogo extends StatelessWidget {
                   children: [
                     ShaderMask(
                       shaderCallback: (bounds) => const LinearGradient(
-                        colors: [
-                          Color(0xFF00D4FF),
-                          Color(0xFFAB5CF6),
-                        ],
+                        colors: [Color(0xFF00D4FF), Color(0xFFAB5CF6)],
                       ).createShader(bounds),
                       child: Text(
                         "dukanX",
@@ -251,8 +248,9 @@ class _GlowRingPainter extends CustomPainter {
     );
 
     final paint = Paint()
-      ..shader =
-          gradient.createShader(Rect.fromCircle(center: center, radius: radius))
+      ..shader = gradient.createShader(
+        Rect.fromCircle(center: center, radius: radius),
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
 
@@ -274,11 +272,7 @@ class _SpaceBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0B0D1F),
-            Color(0xFF0F1B3D),
-            Color(0xFF0B0D1F),
-          ],
+          colors: [Color(0xFF0B0D1F), Color(0xFF0F1B3D), Color(0xFF0B0D1F)],
         ),
       ),
       child: Stack(
@@ -294,8 +288,9 @@ class _SpaceBackground extends StatelessWidget {
                 height: random.nextDouble() * 2 + 1,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      Colors.white.withOpacity(random.nextDouble() * 0.6 + 0.2),
+                  color: Colors.white.withOpacity(
+                    random.nextDouble() * 0.6 + 0.2,
+                  ),
                 ),
               ),
             );

@@ -55,8 +55,10 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: Icon(Icons.close,
-                      color: isDark ? Colors.white54 : palette.darkGray),
+                  icon: Icon(
+                    Icons.close,
+                    color: isDark ? Colors.white54 : palette.darkGray,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -72,10 +74,13 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
                 hintText: 'Search by Name or SKU...',
-                hintStyle:
-                    TextStyle(color: isDark ? Colors.white54 : Colors.grey),
-                prefixIcon: Icon(Icons.search,
-                    color: isDark ? Colors.white54 : Colors.grey),
+                hintStyle: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.grey,
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: isDark ? Colors.white54 : Colors.grey,
+                ),
                 filled: true,
                 fillColor: isDark
                     ? Colors.white.withOpacity(0.05)
@@ -84,8 +89,10 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 16,
+                ),
               ),
               onChanged: (val) {
                 setState(() => _searchQuery = val.toLowerCase());
@@ -106,15 +113,19 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
 
                 if (snapshot.hasError) {
                   return Center(
-                      child: Text('Error: ${snapshot.error}',
-                          style: TextStyle(color: palette.tomatoRed)));
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: TextStyle(color: palette.tomatoRed),
+                    ),
+                  );
                 }
 
                 // Convert Product to StockItem
                 final products = snapshot.data ?? [];
 
                 final items = products
-                    .map((p) => StockItem(
+                    .map(
+                      (p) => StockItem(
                         id: p.id,
                         name: p.name,
                         sku: p.sku ?? '',
@@ -122,29 +133,38 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                         sellingPrice: p.sellingPrice,
                         unit: p.unit,
                         ownerId: widget.ownerId,
-                        lowStockThreshold: p.lowStockThreshold))
+                        lowStockThreshold: p.lowStockThreshold,
+                      ),
+                    )
                     .where((item) {
-                  final matchesName =
-                      item.name.toLowerCase().contains(_searchQuery);
-                  final matchesSku =
-                      item.sku.toLowerCase().contains(_searchQuery);
-                  return matchesName || matchesSku;
-                }).toList();
+                      final matchesName = item.name.toLowerCase().contains(
+                        _searchQuery,
+                      );
+                      final matchesSku = item.sku.toLowerCase().contains(
+                        _searchQuery,
+                      );
+                      return matchesName || matchesSku;
+                    })
+                    .toList();
 
                 if (items.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.search_off,
-                            size: 64, color: palette.darkGray.withOpacity(0.5)),
+                        Icon(
+                          Icons.search_off,
+                          size: 64,
+                          color: palette.darkGray.withOpacity(0.5),
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'No products found',
                           style: TextStyle(
-                              color: palette.darkGray,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
+                            color: palette.darkGray,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
@@ -154,8 +174,10 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                 return ListView.separated(
                   itemCount: items.length,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  separatorBuilder: (_, __) => Divider(
-                      height: 1, color: palette.darkGray.withOpacity(0.1)),
+                  separatorBuilder: (_, _) => Divider(
+                    height: 1,
+                    color: palette.darkGray.withOpacity(0.1),
+                  ),
                   itemBuilder: (context, index) {
                     final item = items[index];
                     final isOutOfStock = item.quantity <= 0;
@@ -164,7 +186,9 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
 
                     return ListTile(
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 8),
+                        horizontal: 4,
+                        vertical: 8,
+                      ),
                       leading: CircleAvatar(
                         backgroundColor: isOutOfStock
                             ? palette.tomatoRed.withOpacity(0.1)
@@ -190,8 +214,8 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                               : (isDark ? Colors.white : palette.mutedGray),
                           decoration:
                               (isOutOfStock && !widget.selectProductOnly)
-                                  ? TextDecoration.lineThrough
-                                  : null,
+                              ? TextDecoration.lineThrough
+                              : null,
                           decorationColor: palette.darkGray,
                         ),
                       ),
@@ -199,24 +223,31 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (item.sku.isNotEmpty)
-                            Text('SKU: ${item.sku}',
-                                style: TextStyle(
-                                    fontSize: 11, color: palette.darkGray)),
+                            Text(
+                              'SKU: ${item.sku}',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: palette.darkGray,
+                              ),
+                            ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
                               Text(
                                 '₹${item.sellingPrice.toStringAsFixed(2)} / ${item.unit}',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: isDark
-                                        ? Colors.white70
-                                        : palette.mutedGray),
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark
+                                      ? Colors.white70
+                                      : palette.mutedGray,
+                                ),
                               ),
                               const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: isOutOfStock
                                       ? palette.tomatoRed
@@ -239,15 +270,20 @@ class _StockProductPickerState extends ConsumerState<StockProductPicker> {
                         ],
                       ),
                       trailing: widget.selectProductOnly
-                          ? Icon(Icons.touch_app,
-                              color: palette.leafGreen.withOpacity(0.8))
+                          ? Icon(
+                              Icons.touch_app,
+                              color: palette.leafGreen.withOpacity(0.8),
+                            )
                           : (isOutOfStock
-                              ? null
-                              : IconButton(
-                                  icon: Icon(Icons.add_circle,
-                                      color: palette.leafGreen, size: 32),
-                                  onPressed: () => _showQuantityDialog(item),
-                                )),
+                                ? null
+                                : IconButton(
+                                    icon: Icon(
+                                      Icons.add_circle,
+                                      color: palette.leafGreen,
+                                      size: 32,
+                                    ),
+                                    onPressed: () => _showQuantityDialog(item),
+                                  )),
                       onTap: canInteract
                           ? () {
                               if (widget.selectProductOnly) {
@@ -309,8 +345,10 @@ class _StockQuantityDialogState extends ConsumerState<_StockQuantityDialog> {
     if (qty == null) return;
 
     if (qty > widget.item.quantity) {
-      setState(() => _errorText =
-          '⚠️ Only ${widget.item.quantity} ${widget.item.unit} available');
+      setState(
+        () => _errorText =
+            '⚠️ Only ${widget.item.quantity} ${widget.item.unit} available',
+      );
     } else {
       setState(() => _errorText = null);
     }
@@ -381,15 +419,17 @@ class _StockQuantityDialogState extends ConsumerState<_StockQuantityDialog> {
               Expanded(
                 child: TextField(
                   controller: _qtyCtrl,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   autofocus: true,
                   onChanged: _validate,
                   style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     labelText: 'Quantity (${widget.item.unit})',
                     labelStyle: TextStyle(
-                        color: isDark ? Colors.white70 : palette.darkGray),
+                      color: isDark ? Colors.white70 : palette.darkGray,
+                    ),
                     errorText: _errorText,
                     errorStyle: TextStyle(color: palette.tomatoRed),
                     border: OutlineInputBorder(
@@ -398,10 +438,13 @@ class _StockQuantityDialogState extends ConsumerState<_StockQuantityDialog> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                          color: isDark ? Colors.white24 : palette.darkGray),
+                        color: isDark ? Colors.white24 : palette.darkGray,
+                      ),
                     ),
-                    prefixIcon: Icon(Icons.scale,
-                        color: isDark ? Colors.white54 : palette.darkGray),
+                    prefixIcon: Icon(
+                      Icons.scale,
+                      color: isDark ? Colors.white54 : palette.darkGray,
+                    ),
                   ),
                 ),
               ),
@@ -409,23 +452,28 @@ class _StockQuantityDialogState extends ConsumerState<_StockQuantityDialog> {
               Expanded(
                 child: TextField(
                   controller: _priceCtrl,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     labelText: 'Price',
                     labelStyle: TextStyle(
-                        color: isDark ? Colors.white70 : palette.darkGray),
+                      color: isDark ? Colors.white70 : palette.darkGray,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                          color: isDark ? Colors.white24 : palette.darkGray),
+                        color: isDark ? Colors.white24 : palette.darkGray,
+                      ),
                     ),
-                    prefixIcon: Icon(Icons.currency_rupee,
-                        color: isDark ? Colors.white54 : palette.darkGray),
+                    prefixIcon: Icon(
+                      Icons.currency_rupee,
+                      color: isDark ? Colors.white54 : palette.darkGray,
+                    ),
                   ),
                 ),
               ),
@@ -441,14 +489,16 @@ class _StockQuantityDialogState extends ConsumerState<_StockQuantityDialog> {
                 disabledBackgroundColor: palette.darkGray.withOpacity(0.3),
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
               child: const Text(
                 'Add to Bill',
                 style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

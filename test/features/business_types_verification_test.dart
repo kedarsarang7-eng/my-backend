@@ -25,7 +25,9 @@ void main() {
       final bomId = 'bom-1';
       final userId = 'user-1';
 
-      await database.into(database.billOfMaterials).insert(
+      await database
+          .into(database.billOfMaterials)
+          .insert(
             BillOfMaterialsCompanion.insert(
               id: bomId,
               userId: userId,
@@ -37,9 +39,9 @@ void main() {
             ),
           );
 
-      final result = await (database.select(database.billOfMaterials)
-            ..where((t) => t.id.equals(bomId)))
-          .getSingle();
+      final result = await (database.select(
+        database.billOfMaterials,
+      )..where((t) => t.id.equals(bomId))).getSingle();
       expect(result.id, equals(bomId));
       expect(result.quantityRequired, equals(2.0));
     });
@@ -48,7 +50,9 @@ void main() {
       final entryId = 'prod-1';
       final userId = 'user-1';
 
-      await database.into(database.productionEntries).insert(
+      await database
+          .into(database.productionEntries)
+          .insert(
             ProductionEntriesCompanion.insert(
               id: entryId,
               userId: userId,
@@ -60,9 +64,9 @@ void main() {
             ),
           );
 
-      final result = await (database.select(database.productionEntries)
-            ..where((t) => t.id.equals(entryId)))
-          .getSingle();
+      final result = await (database.select(
+        database.productionEntries,
+      )..where((t) => t.id.equals(entryId))).getSingle();
       expect(result.id, equals(entryId));
       expect(result.quantityProduced, equals(10.0));
     });
@@ -73,7 +77,9 @@ void main() {
       final subId = 'sub-1';
       final userId = 'user-1';
 
-      await database.into(database.subscriptions).insert(
+      await database
+          .into(database.subscriptions)
+          .insert(
             SubscriptionsCompanion.insert(
               id: subId,
               userId: userId,
@@ -86,9 +92,9 @@ void main() {
             ),
           );
 
-      final result = await (database.select(database.subscriptions)
-            ..where((t) => t.id.equals(subId)))
-          .getSingle();
+      final result = await (database.select(
+        database.subscriptions,
+      )..where((t) => t.id.equals(subId))).getSingle();
       expect(result.id, equals(subId));
       expect(result.frequency, equals('MONTHLY'));
     });

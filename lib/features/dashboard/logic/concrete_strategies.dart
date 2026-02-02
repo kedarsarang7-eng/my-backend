@@ -40,9 +40,9 @@ class GroceryDashboardStrategy extends DashboardStrategy {
   String get dashboardTitle => 'Grocery Dashboard';
 
   List<BusinessCapability> get keyCapabilities => [
-        BusinessCapability.useStockManagement,
-        BusinessCapability.useBarcodeScanner,
-      ];
+    BusinessCapability.useStockManagement,
+    BusinessCapability.useBarcodeScanner,
+  ];
 
   List<MenuAction> getMenuActions(BuildContext context) {
     return [
@@ -98,9 +98,9 @@ class PharmacyDashboardStrategy extends DashboardStrategy {
   String get dashboardTitle => 'Pharmacy Dashboard';
 
   List<BusinessCapability> get keyCapabilities => [
-        BusinessCapability.usePrescription,
-        BusinessCapability.useBatchExpiry,
-      ];
+    BusinessCapability.usePrescription,
+    BusinessCapability.useBatchExpiry,
+  ];
 
   List<MenuAction> getMenuActions(BuildContext context) {
     return [
@@ -155,9 +155,9 @@ class ClinicDashboardStrategy extends DashboardStrategy {
   String get dashboardTitle => 'Clinic Management';
 
   List<BusinessCapability> get keyCapabilities => [
-        BusinessCapability.useAppointments,
-        BusinessCapability.usePatientRegistry,
-      ];
+    BusinessCapability.useAppointments,
+    BusinessCapability.usePatientRegistry,
+  ];
 
   List<MenuAction> getMenuActions(BuildContext context) {
     return [
@@ -211,9 +211,9 @@ class RestaurantDashboardStrategy extends DashboardStrategy {
   String get dashboardTitle => 'Restaurant Manager';
 
   List<BusinessCapability> get keyCapabilities => [
-        BusinessCapability.useTableManagement,
-        BusinessCapability.useKOT,
-      ];
+    BusinessCapability.useTableManagement,
+    BusinessCapability.useKOT,
+  ];
 
   List<MenuAction> getMenuActions(BuildContext context) {
     return [
@@ -267,11 +267,11 @@ class VegetableBrokerStrategy extends DashboardStrategy {
   String get dashboardTitle => 'Veg Billing Dashboard';
 
   List<BusinessCapability> get keyCapabilities => [
-        BusinessCapability.useStockManagement,
-        BusinessCapability.useDailyRates,
-      ];
+    BusinessCapability.useStockManagement,
+    BusinessCapability.useDailyRates,
+  ];
 
-// Copying legacy logic from HomeScreen
+  // Copying legacy logic from HomeScreen
   List<MenuAction> getMenuActions(BuildContext context) {
     return [
       MenuAction(
@@ -340,9 +340,9 @@ class DefaultDashboardStrategy extends DashboardStrategy {
   String get dashboardTitle => '${type.displayName} Dashboard';
 
   List<BusinessCapability> get keyCapabilities => [
-        BusinessCapability.useStockManagement,
-        BusinessCapability.useBarcodeScanner
-      ];
+    BusinessCapability.useStockManagement,
+    BusinessCapability.useBarcodeScanner,
+  ];
 
   List<MenuAction> getMenuActions(BuildContext context) {
     return [

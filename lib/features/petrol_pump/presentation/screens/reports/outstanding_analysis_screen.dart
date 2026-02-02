@@ -32,11 +32,12 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
       final db = sl<AppDatabase>();
 
       // Get all customers with outstanding dues
-      final customers = await (db.select(db.customers)
-            ..where((c) => c.totalDues.isBiggerThanValue(0))
-            ..where((c) => c.isActive.equals(true))
-            ..orderBy([(c) => OrderingTerm.desc(c.totalDues)]))
-          .get();
+      final customers =
+          await (db.select(db.customers)
+                ..where((c) => c.totalDues.isBiggerThanValue(0))
+                ..where((c) => c.isActive.equals(true))
+                ..orderBy([(c) => OrderingTerm.desc(c.totalDues)]))
+              .get();
 
       final outstandingList = <CustomerOutstanding>[];
       double total = 0;
@@ -104,10 +105,14 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
             },
             itemBuilder: (context) => [
               const PopupMenuItem(
-                  value: 'amount', child: Text('Sort by Amount')),
+                value: 'amount',
+                child: Text('Sort by Amount'),
+              ),
               const PopupMenuItem(value: 'name', child: Text('Sort by Name')),
               const PopupMenuItem(
-                  value: 'days', child: Text('Sort by Overdue Days')),
+                value: 'days',
+                child: Text('Sort by Overdue Days'),
+              ),
             ],
           ),
           IconButton(
@@ -159,9 +164,10 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
                 Text(
                   '₹${_totalOutstanding.toStringAsFixed(0)}',
                   style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
                 ),
               ],
             ),
@@ -172,7 +178,9 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
                 Text(
                   '${_customers.length}',
                   style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -208,7 +216,8 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
           Expanded(child: _buildAgeingBox('31-60 Days', days30, Colors.orange)),
           const SizedBox(width: 8),
           Expanded(
-              child: _buildAgeingBox('61-90 Days', days60, Colors.deepOrange)),
+            child: _buildAgeingBox('61-90 Days', days60, Colors.deepOrange),
+          ),
           const SizedBox(width: 8),
           Expanded(child: _buildAgeingBox('90+ Days', days90Plus, Colors.red)),
         ],
@@ -231,7 +240,10 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
           Text(
             '₹${amount.toStringAsFixed(0)}',
             style: TextStyle(
-                fontSize: 12, fontWeight: FontWeight.bold, color: color),
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
         ],
       ),
@@ -254,8 +266,10 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
             style: TextStyle(color: color, fontWeight: FontWeight.bold),
           ),
         ),
-        title: Text(customer.customerName,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          customer.customerName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -275,7 +289,10 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
             Text(
               '₹${customer.totalDues.toStringAsFixed(0)}',
               style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
             if (customer.overdueDays > 30)
               Container(
@@ -337,7 +354,8 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      content: Text('Payment recording feature coming soon')),
+                    content: Text('Payment recording feature coming soon'),
+                  ),
                 );
               },
             ),
@@ -348,7 +366,8 @@ class _OutstandingAnalysisScreenState extends State<OutstandingAnalysisScreen> {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      content: Text('Ledger view feature coming soon')),
+                    content: Text('Ledger view feature coming soon'),
+                  ),
                 );
               },
             ),

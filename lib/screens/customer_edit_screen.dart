@@ -44,16 +44,18 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
     _ownerId = sl<SessionManager>().ownerId;
 
     // Create a copy of customer for local mutations
-    localCustomer =
-        widget.customer.copyWith(); // Use copyWith if available or manual
+    localCustomer = widget.customer
+        .copyWith(); // Use copyWith if available or manual
 
     nameCtrl = TextEditingController(text: localCustomer.name);
     phoneCtrl = TextEditingController(text: localCustomer.phone);
     addressCtrl = TextEditingController(text: localCustomer.address);
-    discountCtrl =
-        TextEditingController(text: localCustomer.discountPercent.toString());
+    discountCtrl = TextEditingController(
+      text: localCustomer.discountPercent.toString(),
+    );
     marketTicketCtrl = TextEditingController(
-        text: localCustomer.marketTicketAmount.toString());
+      text: localCustomer.marketTicketAmount.toString(),
+    );
 
     // Track changes
     nameCtrl.addListener(() => setState(() => hasChanges = true));
@@ -76,9 +78,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading products: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading products: $e')));
       }
     } finally {
       if (mounted) setState(() => vegLoading = false);
@@ -89,9 +91,12 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
     if (availableVegetables.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Please add products first',
-                style: AppTypography.bodyMedium.copyWith(color: Colors.white)),
-            backgroundColor: FuturisticColors.error),
+          content: Text(
+            'Please add products first',
+            style: AppTypography.bodyMedium.copyWith(color: Colors.white),
+          ),
+          backgroundColor: FuturisticColors.error,
+        ),
       );
       return;
     }
@@ -117,10 +122,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Add Vegetable (Creates Bill)',
-                      style: AppTypography.headlineSmall.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: FuturisticColors.primary)),
+                  Text(
+                    'Add Vegetable (Creates Bill)',
+                    style: AppTypography.headlineSmall.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: FuturisticColors.primary,
+                    ),
+                  ),
                   const SizedBox(height: 16),
 
                   // Search Box
@@ -131,29 +139,39 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     ),
                     child: TextField(
                       controller: searchCtrl,
-                      style: AppTypography.bodyMedium
-                          .copyWith(color: FuturisticColors.textPrimary),
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: FuturisticColors.textPrimary,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Search Vegetable',
-                        labelStyle:
-                            TextStyle(color: FuturisticColors.textMuted),
+                        labelStyle: TextStyle(
+                          color: FuturisticColors.textMuted,
+                        ),
                         hintText: 'Type vegetable name...',
                         hintStyle: TextStyle(
-                            color: FuturisticColors.textMuted.withOpacity(0.5)),
-                        prefixIcon:
-                            Icon(Icons.search, color: FuturisticColors.accent),
+                          color: FuturisticColors.textMuted.withOpacity(0.5),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: FuturisticColors.accent,
+                        ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         suffixIcon: searchCtrl.text.isNotEmpty
                             ? IconButton(
-                                icon: Icon(Icons.clear,
-                                    color: FuturisticColors.textMuted),
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: FuturisticColors.textMuted,
+                                ),
                                 onPressed: () {
                                   searchCtrl.clear();
                                   dialogSetState(() {
-                                    filteredVegetables =
-                                        List.from(availableVegetables);
+                                    filteredVegetables = List.from(
+                                      availableVegetables,
+                                    );
                                     selectedVegId = '';
                                   });
                                 },
@@ -166,9 +184,11 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                             filteredVegetables = List.from(availableVegetables);
                           } else {
                             filteredVegetables = availableVegetables
-                                .where((v) => (v.name)
-                                    .toLowerCase()
-                                    .contains(val.toLowerCase()))
+                                .where(
+                                  (v) => (v.name).toLowerCase().contains(
+                                    val.toLowerCase(),
+                                  ),
+                                )
                                 .toList();
                           }
                           selectedVegId = '';
@@ -190,12 +210,15 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                       child: DropdownButton<String>(
                         isExpanded: true,
                         value: selectedVegId.isEmpty ? null : selectedVegId,
-                        hint: Text('Select Vegetable',
-                            style:
-                                TextStyle(color: FuturisticColors.textMuted)),
+                        hint: Text(
+                          'Select Vegetable',
+                          style: TextStyle(color: FuturisticColors.textMuted),
+                        ),
                         dropdownColor: FuturisticColors.surface,
-                        icon: Icon(Icons.arrow_drop_down,
-                            color: FuturisticColors.textPrimary),
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: FuturisticColors.textPrimary,
+                        ),
                         items: filteredVegetables.map((veg) {
                           final vegId = veg.id;
                           final vegName = veg.name;
@@ -203,17 +226,21 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                           final vegPrice = veg.sellingPrice.toStringAsFixed(2);
                           return DropdownMenuItem<String>(
                             value: vegId,
-                            child: Text('$vegName (₹$vegPrice/unit)',
-                                style: TextStyle(
-                                    color: FuturisticColors.textPrimary)),
+                            child: Text(
+                              '$vegName (₹$vegPrice/unit)',
+                              style: TextStyle(
+                                color: FuturisticColors.textPrimary,
+                              ),
+                            ),
                           );
                         }).toList(),
                         onChanged: (val) {
                           dialogSetState(() {
                             selectedVegId = val ?? '';
                             // Prefill price
-                            final veg = availableVegetables
-                                .firstWhereOrNull((v) => v.id == selectedVegId);
+                            final veg = availableVegetables.firstWhereOrNull(
+                              (v) => v.id == selectedVegId,
+                            );
                             if (veg != null) {
                               priceCtrl.text = veg.sellingPrice.toString();
                             }
@@ -230,8 +257,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     label: 'Quantity',
                     icon: Icons.scale,
                     suffixText: 'unit',
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                   ),
                   const SizedBox(height: 12),
 
@@ -240,8 +268,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     controller: priceCtrl,
                     label: 'Price per unit',
                     icon: Icons.currency_rupee,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                   ),
                   const SizedBox(height: 24),
 
@@ -249,8 +278,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       EnterpriseButton(
-                        onPressed:
-                            dialogAdding ? () {} : () => Navigator.pop(context),
+                        onPressed: dialogAdding
+                            ? () {}
+                            : () => Navigator.pop(context),
                         label: 'Cancel',
                         backgroundColor: Colors.transparent,
                         textColor: FuturisticColors.textMuted,
@@ -263,10 +293,10 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                               : () async {
                                   final qty =
                                       double.tryParse(qtyCtrl.text.trim()) ??
-                                          0.0;
+                                      0.0;
                                   final price =
                                       double.tryParse(priceCtrl.text.trim()) ??
-                                          0.0;
+                                      0.0;
 
                                   if (selectedVegId.isEmpty ||
                                       qty <= 0 ||
@@ -274,9 +304,10 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                                     return;
                                   }
 
-                                  final vegMatch =
-                                      availableVegetables.firstWhereOrNull(
-                                          (v) => v.id == selectedVegId);
+                                  final vegMatch = availableVegetables
+                                      .firstWhereOrNull(
+                                        (v) => v.id == selectedVegId,
+                                      );
                                   if (vegMatch == null) return;
 
                                   if (_ownerId == null) return;
@@ -335,28 +366,35 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                                         localCustomer.totalDues += total;
                                       });
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                              '✅ Bill created for ${vegMatch.name} ₹${total.toStringAsFixed(0)}',
-                                              style: TextStyle(
-                                                  color: Colors.white)),
+                                            '✅ Bill created for ${vegMatch.name} ₹${total.toStringAsFixed(0)}',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                           backgroundColor:
                                               FuturisticColors.success,
                                         ),
                                       );
                                       Navigator.pop(context);
                                     } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
-                                            content: Text(
-                                                'Error creating bill: ${result.error}',
-                                                style: TextStyle(
-                                                    color: Colors.white)),
-                                            backgroundColor:
-                                                FuturisticColors.error),
+                                          content: Text(
+                                            'Error creating bill: ${result.error}',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          backgroundColor:
+                                              FuturisticColors.error,
+                                        ),
                                       );
                                     }
                                   }
@@ -389,13 +427,15 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
       decoration: BoxDecoration(
         color: FuturisticColors.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: FuturisticColors.glassBorder.withOpacity(0.5)),
+        border: Border.all(
+          color: FuturisticColors.glassBorder.withOpacity(0.5),
+        ),
       ),
       child: TextField(
         controller: controller,
-        style: AppTypography.bodyMedium
-            .copyWith(color: FuturisticColors.textPrimary),
+        style: AppTypography.bodyMedium.copyWith(
+          color: FuturisticColors.textPrimary,
+        ),
         keyboardType: keyboardType,
         maxLines: maxLines,
         decoration: InputDecoration(
@@ -405,8 +445,10 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
           suffixText: suffixText,
           suffixStyle: TextStyle(color: FuturisticColors.textMuted),
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
         ),
       ),
     );
@@ -445,33 +487,36 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
         phone: updatedCustomer.phone,
         address: updatedCustomer.address,
         // Map other fields as needed, defaulting others
-        createdAt: DateTime
-            .now(), // Should preserve if available, but ui_cust might not have it
+        createdAt:
+            DateTime.now(), // Should preserve if available, but ui_cust might not have it
         updatedAt: DateTime.now(),
       );
 
-      final result = await sl<CustomersRepository>()
-          .updateCustomer(repoCustomer, userId: _ownerId!);
+      final result = await sl<CustomersRepository>().updateCustomer(
+        repoCustomer,
+        userId: _ownerId!,
+      );
 
       if (!mounted) return;
 
       if (result.isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('✅ Customer profile updated successfully!')),
+            content: Text('✅ Customer profile updated successfully!'),
+          ),
         );
         setState(() => hasChanges = false);
         Navigator.pop(context, result.data);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${result.error}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${result.error}')));
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
@@ -488,10 +533,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title: Text('Edit Customer',
-              style: AppTypography.headlineSmall.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: FuturisticColors.textPrimary)),
+          title: Text(
+            'Edit Customer',
+            style: AppTypography.headlineSmall.copyWith(
+              fontWeight: FontWeight.bold,
+              color: FuturisticColors.textPrimary,
+            ),
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -505,35 +553,47 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     child: GlassContainer(
                       padding: const EdgeInsets.all(24),
                       borderRadius: 24,
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        Text('Discard changes?',
-                            style: AppTypography.headlineSmall
-                                .copyWith(color: FuturisticColors.textPrimary)),
-                        const SizedBox(height: 12),
-                        Text(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Discard changes?',
+                            style: AppTypography.headlineSmall.copyWith(
+                              color: FuturisticColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
                             'You have unsaved changes. Are you sure you want to discard them?',
                             textAlign: TextAlign.center,
-                            style:
-                                TextStyle(color: FuturisticColors.textMuted)),
-                        const SizedBox(height: 24),
-                        Row(children: [
-                          Expanded(
-                              child: EnterpriseButton(
+                            style: TextStyle(color: FuturisticColors.textMuted),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: EnterpriseButton(
                                   onPressed: () => Navigator.pop(context),
                                   label: 'Cancel',
                                   backgroundColor: Colors.transparent,
-                                  textColor: FuturisticColors.textPrimary)),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: EnterpriseButton(
+                                  textColor: FuturisticColors.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: EnterpriseButton(
                                   onPressed: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
                                   },
                                   label: 'Discard',
-                                  backgroundColor: FuturisticColors.error)),
-                        ])
-                      ]),
+                                  backgroundColor: FuturisticColors.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -552,7 +612,8 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                 } catch (e) {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error exporting PDF: $e')));
+                      SnackBar(content: Text('Error exporting PDF: $e')),
+                    );
                   }
                 }
               },
@@ -566,8 +627,10 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
         ),
         body: isLoading
             ? Center(
-                child:
-                    CircularProgressIndicator(color: FuturisticColors.primary))
+                child: CircularProgressIndicator(
+                  color: FuturisticColors.primary,
+                ),
+              )
             : SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(16, 100, 16, 24),
                 child: Column(
@@ -588,12 +651,14 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                               radius: 30,
                               backgroundColor: FuturisticColors.surface,
                               child: Text(
-                                  widget.customer.name.isNotEmpty
-                                      ? widget.customer.name[0].toUpperCase()
-                                      : 'C',
-                                  style: AppTypography.headlineSmall.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: FuturisticColors.textPrimary)),
+                                widget.customer.name.isNotEmpty
+                                    ? widget.customer.name[0].toUpperCase()
+                                    : 'C',
+                                style: AppTypography.headlineSmall.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: FuturisticColors.textPrimary,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -601,22 +666,28 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Customer ID',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: FuturisticColors.textMuted)),
+                                Text(
+                                  'Customer ID',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: FuturisticColors.textMuted,
+                                  ),
+                                ),
                                 Text(
                                   widget.customer.id.substring(0, 8),
                                   style: TextStyle(
-                                      fontSize: 14,
-                                      color: FuturisticColors.textPrimary,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 14,
+                                    color: FuturisticColors.textPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 if (widget.customer.isBlacklisted)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
                                       gradient: FuturisticColors.errorGradient,
                                       borderRadius: BorderRadius.circular(4),
@@ -624,7 +695,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                                     child: const Text(
                                       '⛔ Blacklisted',
                                       style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ),
                               ],
@@ -636,10 +709,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     const SizedBox(height: 24),
 
                     // Edit Form
-                    Text('Basic Information',
-                        style: AppTypography.headlineSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: FuturisticColors.textPrimary)),
+                    Text(
+                      'Basic Information',
+                      style: AppTypography.headlineSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: FuturisticColors.textPrimary,
+                      ),
+                    ),
                     const SizedBox(height: 12),
 
                     // Name
@@ -669,10 +745,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                     const SizedBox(height: 24),
 
                     // Business Settings
-                    Text('Business Settings',
-                        style: AppTypography.headlineSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: FuturisticColors.textPrimary)),
+                    Text(
+                      'Business Settings',
+                      style: AppTypography.headlineSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: FuturisticColors.textPrimary,
+                      ),
+                    ),
                     const SizedBox(height: 12),
 
                     // Discount
@@ -705,8 +784,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                               Text(
                                 '🥬 Veg Calc (Quick Bill)',
                                 style: AppTypography.headlineSmall.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: FuturisticColors.textPrimary),
+                                  fontWeight: FontWeight.bold,
+                                  color: FuturisticColors.textPrimary,
+                                ),
                               ),
                               EnterpriseButton(
                                 onPressed: vegLoading
@@ -728,8 +808,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                                 child: Text(
                                   'Add vegetables to create instant bills.',
                                   style: AppTypography.bodyMedium.copyWith(
-                                      color: FuturisticColors.textMuted,
-                                      fontStyle: FontStyle.italic),
+                                    color: FuturisticColors.textMuted,
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -737,10 +818,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                           else
                             Column(
                               children: [
-                                ...addedVegetablesSession
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
+                                ...addedVegetablesSession.asMap().entries.map((
+                                  entry,
+                                ) {
                                   final veg = entry.value;
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 8),
@@ -750,8 +830,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                                         color: FuturisticColors.surface
                                             .withOpacity(0.5),
                                         border: Border.all(
-                                            color: FuturisticColors.success
-                                                .withOpacity(0.4)),
+                                          color: FuturisticColors.success
+                                              .withOpacity(0.4),
+                                        ),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Row(
@@ -766,26 +847,28 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                                                   style: AppTypography
                                                       .bodyMedium
                                                       .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              FuturisticColors
-                                                                  .textPrimary),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: FuturisticColors
+                                                            .textPrimary,
+                                                      ),
                                                 ),
                                                 const SizedBox(height: 4),
                                                 Text(
                                                   '${veg['quantityKg']} unit × ₹${veg['pricePerKg']} = ₹${veg['total'].toStringAsFixed(2)}',
                                                   style: AppTypography.bodySmall
                                                       .copyWith(
-                                                          color:
-                                                              FuturisticColors
-                                                                  .textMuted),
+                                                        color: FuturisticColors
+                                                            .textMuted,
+                                                      ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Icon(Icons.check_circle,
-                                              color: FuturisticColors.success),
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: FuturisticColors.success,
+                                          ),
                                         ],
                                       ),
                                     ),

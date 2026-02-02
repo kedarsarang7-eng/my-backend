@@ -62,8 +62,9 @@ class _AddStockScreenState extends State<AddStockScreen> {
         _categoryController.text = data['category'] ?? '';
         _sizeController.text = data['size'] ?? '';
         if (result['source'] == 'inventory') {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Item already exists!")));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Item already exists!")));
         }
       }
     } catch (e) {
@@ -120,18 +121,22 @@ class _AddStockScreenState extends State<AddStockScreen> {
             _sizeController.text = data['size'] ?? '';
             // If duplicate/existing
             if (result['source'] == 'inventory') {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content:
-                      Text("Item already exists! Quantity will be added.")));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Item already exists! Quantity will be added."),
+                ),
+              );
             }
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("New Item. Please fill details.")));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("New Item. Please fill details.")),
+            );
           }
         } catch (e) {
           if (mounted) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text("Error: $e")));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Error: $e")));
           }
         } finally {
           if (mounted) {
@@ -148,8 +153,10 @@ class _AddStockScreenState extends State<AddStockScreen> {
 
   Future<void> _handleCameraPhoto() async {
     final picker = ImagePicker();
-    final picked =
-        await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+    final picked = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
 
     if (picked != null) {
       if (!mounted) return;
@@ -169,8 +176,9 @@ class _AddStockScreenState extends State<AddStockScreen> {
         _sizeController.text = analysis['size'] ?? '';
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("AI Error: $e")));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("AI Error: $e")));
         }
       } finally {
         if (mounted) {
@@ -200,21 +208,28 @@ class _AddStockScreenState extends State<AddStockScreen> {
         "unit": _sizeController.text, // Mapping size to unit for now
         "quantity": double.tryParse(_qtyController.text) ?? 0,
         "sellingPrice": double.tryParse(_priceController.text) ?? 0,
-        "updatedAt": DateTime.now().toIso8601String()
+        "updatedAt": DateTime.now().toIso8601String(),
       };
 
       await _stockService.addStock(itemData);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             content: Text("Stock Added Successfully!"),
-            backgroundColor: Colors.green));
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.pop(context); // Return to list
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Save Error: $e"), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Save Error: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -231,15 +246,20 @@ class _AddStockScreenState extends State<AddStockScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(_mode == 'scanning' ? "Scan Barcode" : "Add New Stock",
-            style: TextStyle(
-                color: isDark ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold)),
+        title: Text(
+          _mode == 'scanning' ? "Scan Barcode" : "Add New Stock",
+          style: TextStyle(
+            color: isDark ? Colors.white : Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(_mode == 'select' ? Icons.close : Icons.arrow_back,
-              color: isDark ? Colors.white : Colors.black),
+          icon: Icon(
+            _mode == 'select' ? Icons.close : Icons.arrow_back,
+            color: isDark ? Colors.white : Colors.black,
+          ),
           onPressed: () {
             if (_mode == 'select') Navigator.pop(context);
             if (_mode == 'scanning') setState(() => _mode = 'select');
@@ -252,17 +272,17 @@ class _AddStockScreenState extends State<AddStockScreen> {
           // Gradient Background
           Container(
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: isDark
-                        ? [const Color(0xFF1A1A2E), const Color(0xFF16213E)]
-                        : [const Color(0xFFE0C3FC), const Color(0xFF8EC5FC)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight)),
+              gradient: LinearGradient(
+                colors: isDark
+                    ? [const Color(0xFF1A1A2E), const Color(0xFF16213E)]
+                    : [const Color(0xFFE0C3FC), const Color(0xFF8EC5FC)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
           ),
 
-          SafeArea(
-            child: _buildBody(isDark),
-          ),
+          SafeArea(child: _buildBody(isDark)),
 
           if (_isLoading)
             Container(
@@ -275,14 +295,18 @@ class _AddStockScreenState extends State<AddStockScreen> {
                     children: [
                       const CircularProgressIndicator(),
                       const SizedBox(height: 16),
-                      Text(_statusMessage ?? "Processing...",
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold))
+                      Text(
+                        _statusMessage ?? "Processing...",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
@@ -292,16 +316,15 @@ class _AddStockScreenState extends State<AddStockScreen> {
     if (_mode == 'scanning') {
       return Stack(
         children: [
-          MobileScanner(
-            onDetect: _onBarcodeDetected,
-          ),
+          MobileScanner(onDetect: _onBarcodeDetected),
           Center(
             child: Container(
               width: 250,
               height: 250,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.greenAccent, width: 2),
-                  borderRadius: BorderRadius.circular(12)),
+                border: Border.all(color: Colors.greenAccent, width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
           const Positioned(
@@ -312,11 +335,13 @@ class _AddStockScreenState extends State<AddStockScreen> {
               child: GlassContainer(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 color: Colors.black54,
-                child: Text("Point camera at barcode",
-                    style: TextStyle(color: Colors.white)),
+                child: Text(
+                  "Point camera at barcode",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          )
+          ),
         ],
       );
     }
@@ -333,48 +358,78 @@ class _AddStockScreenState extends State<AddStockScreen> {
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child:
-                        Image.file(_imageFile!, height: 150, fit: BoxFit.cover),
+                    child: Image.file(
+                      _imageFile!,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               const SizedBox(height: 20),
-              _buildTextField("Product Name", _nameController, isDark,
-                  required: true),
+              _buildTextField(
+                "Product Name",
+                _nameController,
+                isDark,
+                required: true,
+              ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
-                      child: _buildTextField(
-                          "Barcode/SKU", _skuController, isDark)),
+                    child: _buildTextField(
+                      "Barcode/SKU",
+                      _skuController,
+                      isDark,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
-                      child:
-                          _buildTextField("Brand", _brandController, isDark)),
+                    child: _buildTextField("Brand", _brandController, isDark),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
-                      child: _buildTextField(
-                          "Price (₹)", _priceController, isDark,
-                          isNum: true, required: true)),
+                    child: _buildTextField(
+                      "Price (₹)",
+                      _priceController,
+                      isDark,
+                      isNum: true,
+                      required: true,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
-                      child: _buildTextField("Qty", _qtyController, isDark,
-                          isNum: true, required: true)),
+                    child: _buildTextField(
+                      "Qty",
+                      _qtyController,
+                      isDark,
+                      isNum: true,
+                      required: true,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
-                      child: _buildTextField(
-                          "Category", _categoryController, isDark)),
+                    child: _buildTextField(
+                      "Category",
+                      _categoryController,
+                      isDark,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
-                      child: _buildTextField(
-                          "Size/Unit", _sizeController, isDark)),
+                    child: _buildTextField(
+                      "Size/Unit",
+                      _sizeController,
+                      isDark,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 30),
@@ -383,7 +438,7 @@ class _AddStockScreenState extends State<AddStockScreen> {
                 icon: Icons.check,
                 color: Colors.green,
                 onPressed: _saveStock,
-              )
+              ),
             ],
           ),
         ),
@@ -401,37 +456,52 @@ class _AddStockScreenState extends State<AddStockScreen> {
               onTap: _handleBarcodeScan,
               child: Column(
                 children: const [
-                  Icon(Icons.qr_code_scanner,
-                      size: 60, color: Colors.blueAccent),
+                  Icon(
+                    Icons.qr_code_scanner,
+                    size: 60,
+                    color: Colors.blueAccent,
+                  ),
                   SizedBox(height: 16),
-                  Text("Scan Barcode",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Scan Barcode",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 8),
-                  Text("Recommended. Fast & Accurate.",
-                      style: TextStyle(color: Colors.grey)),
+                  Text(
+                    "Recommended. Fast & Accurate.",
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-            Text("OR",
-                style: TextStyle(
-                    color: isDark ? Colors.white54 : Colors.black54,
-                    fontWeight: FontWeight.bold)),
+            Text(
+              "OR",
+              style: TextStyle(
+                color: isDark ? Colors.white54 : Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 24),
             GlassCard(
               onTap: _handleCameraPhoto,
               child: Column(
                 children: const [
-                  Icon(Icons.camera_alt_outlined,
-                      size: 60, color: Colors.purpleAccent),
+                  Icon(
+                    Icons.camera_alt_outlined,
+                    size: 60,
+                    color: Colors.purpleAccent,
+                  ),
                   SizedBox(height: 16),
-                  Text("Use Camera (AI)",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Use Camera (AI)",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 8),
-                  Text("Snap a photo. AI will guess details.",
-                      style: TextStyle(color: Colors.grey)),
+                  Text(
+                    "Snap a photo. AI will guess details.",
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ],
               ),
             ),
@@ -441,25 +511,32 @@ class _AddStockScreenState extends State<AddStockScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController ctrl, bool isDark,
-      {bool isNum = false, bool required = false}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController ctrl,
+    bool isDark, {
+    bool isNum = false,
+    bool required = false,
+  }) {
     return TextFormField(
       controller: ctrl,
       keyboardType: isNum ? TextInputType.number : TextInputType.text,
       style: TextStyle(color: isDark ? Colors.white : Colors.black),
-      validator:
-          required ? (v) => v?.isEmpty == true ? 'Required' : null : null,
+      validator: required
+          ? (v) => v?.isEmpty == true ? 'Required' : null
+          : null,
       decoration: InputDecoration(
-          labelText: label,
-          labelStyle:
-              TextStyle(color: isDark ? Colors.white70 : Colors.black54),
-          filled: true,
-          fillColor: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.white.withOpacity(0.8),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none)),
+        labelText: label,
+        labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+        filled: true,
+        fillColor: isDark
+            ? Colors.white.withOpacity(0.1)
+            : Colors.white.withOpacity(0.8),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
     );
   }
 }

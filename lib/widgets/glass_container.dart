@@ -55,11 +55,9 @@ class GlassContainer extends StatelessWidget {
             decoration: BoxDecoration(
               color: (color ?? FuturisticColors.surface).withOpacity(opacity),
               borderRadius: effectiveBorderRadius,
-              border: border ??
-                  Border.all(
-                    color: Colors.white.withOpacity(0.08),
-                    width: 1,
-                  ),
+              border:
+                  border ??
+                  Border.all(color: Colors.white.withOpacity(0.08), width: 1),
               gradient: gradient ?? FuturisticColors.glassGradient,
             ),
             child: child,
@@ -71,10 +69,7 @@ class GlassContainer extends StatelessWidget {
     if (onTap != null) {
       return MouseRegion(
         cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: onTap,
-          child: container,
-        ),
+        child: GestureDetector(onTap: onTap, child: container),
       );
     }
 

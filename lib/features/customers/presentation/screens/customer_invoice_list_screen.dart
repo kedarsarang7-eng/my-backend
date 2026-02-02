@@ -84,8 +84,9 @@ class _CustomerInvoiceListScreenState
         }
       } else {
         // Load from all vendors
-        final vendorsAsync =
-            ref.read(connectedVendorsProvider(widget.customerId));
+        final vendorsAsync = ref.read(
+          connectedVendorsProvider(widget.customerId),
+        );
 
         vendorsAsync.whenData((vendors) async {
           List<BillEntity> all = [];
@@ -145,15 +146,15 @@ class _CustomerInvoiceListScreenState
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? _buildError()
-              : TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildInvoiceList(_allInvoices),
-                    _buildInvoiceList(_unpaidInvoices),
-                    _buildInvoiceList(_paidInvoices),
-                  ],
-                ),
+          ? _buildError()
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildInvoiceList(_allInvoices),
+                _buildInvoiceList(_unpaidInvoices),
+                _buildInvoiceList(_paidInvoices),
+              ],
+            ),
     );
   }
 
@@ -163,8 +164,11 @@ class _CustomerInvoiceListScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.receipt_long_outlined,
-                size: 64, color: Colors.grey.shade400),
+            Icon(
+              Icons.receipt_long_outlined,
+              size: 64,
+              color: Colors.grey.shade400,
+            ),
             const SizedBox(height: 16),
             Text(
               'No invoices found',
@@ -190,7 +194,8 @@ class _CustomerInvoiceListScreenState
 
   Widget _buildInvoiceCard(BillEntity invoice) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isOverdue = invoice.dueDate != null &&
+    final isOverdue =
+        invoice.dueDate != null &&
         DateTime.now().isAfter(invoice.dueDate!) &&
         invoice.paidAmount < invoice.grandTotal;
     final isPaid = invoice.status == 'PAID';
@@ -251,8 +256,10 @@ class _CustomerInvoiceListScreenState
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -271,8 +278,11 @@ class _CustomerInvoiceListScreenState
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Icon(Icons.calendar_today,
-                      size: 14, color: Colors.grey.shade500),
+                  Icon(
+                    Icons.calendar_today,
+                    size: 14,
+                    color: Colors.grey.shade500,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     DateFormat('dd MMM yyyy').format(invoice.billDate),
@@ -311,9 +321,7 @@ class _CustomerInvoiceListScreenState
                       ),
                       Text(
                         '₹${invoice.grandTotal.toStringAsFixed(0)}',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -357,10 +365,7 @@ class _CustomerInvoiceListScreenState
             style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey),
           ),
           const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: _loadInvoices,
-            child: const Text('Retry'),
-          ),
+          ElevatedButton(onPressed: _loadInvoices, child: const Text('Retry')),
         ],
       ),
     );
@@ -390,18 +395,21 @@ class _CustomerInvoiceListScreenState
       String mobile = "";
 
       // Try to find vendor in connected list
-      final vendorsState =
-          ref.read(connectedVendorsProvider(widget.customerId));
+      final vendorsState = ref.read(
+        connectedVendorsProvider(widget.customerId),
+      );
       if (vendorsState.hasValue) {
         final vendor = vendorsState.value!.firstWhere(
-            (v) => v.vendorId == invoice.userId,
-            orElse: () => VendorConnection(
-                id: '',
-                customerId: '',
-                vendorId: '',
-                vendorName: 'Unknown Shop',
-                createdAt: DateTime.now(),
-                updatedAt: DateTime.now()));
+          (v) => v.vendorId == invoice.userId,
+          orElse: () => VendorConnection(
+            id: '',
+            customerId: '',
+            vendorId: '',
+            vendorName: 'Unknown Shop',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
         shopName = vendor.vendorName;
         ownerName = vendor.vendorBusinessName ?? vendor.vendorName;
         address = vendor.vendorAddress ?? "";
@@ -450,10 +458,11 @@ class _CustomerInvoiceListScreenState
             SnackBar(
               content: Text('Invoice saved to $path'),
               action: SnackBarAction(
-                  label: 'Open',
-                  onPressed: () {
-                    // Implement open logic if permitted
-                  }),
+                label: 'Open',
+                onPressed: () {
+                  // Implement open logic if permitted
+                },
+              ),
             ),
           );
         } else {
@@ -465,9 +474,9 @@ class _CustomerInvoiceListScreenState
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error generating PDF: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error generating PDF: $e')));
       }
     }
   }

@@ -27,23 +27,34 @@ abstract class BaseBusinessStrategy implements BusinessStrategy {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _circleButton(Icons.remove, () {
-              if (item.qty > 1) {
-                onUpdate(item.copyWith(qty: item.qty - 1));
-              }
-            }, isDark, accentColor),
+            _circleButton(
+              Icons.remove,
+              () {
+                if (item.qty > 1) {
+                  onUpdate(item.copyWith(qty: item.qty - 1));
+                }
+              },
+              isDark,
+              accentColor,
+            ),
             Text(
               item.qty.toStringAsFixed(
-                  item.qty == item.qty.roundToDouble() ? 0 : 1),
+                item.qty == item.qty.roundToDouble() ? 0 : 1,
+              ),
               style: GoogleFonts.inter(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 color: isDark ? Colors.white : Colors.black87,
               ),
             ),
-            _circleButton(Icons.add, () {
-              onUpdate(item.copyWith(qty: item.qty + 1));
-            }, isDark, accentColor),
+            _circleButton(
+              Icons.add,
+              () {
+                onUpdate(item.copyWith(qty: item.qty + 1));
+              },
+              isDark,
+              accentColor,
+            ),
           ],
         ),
       ),
@@ -96,11 +107,15 @@ abstract class BaseBusinessStrategy implements BusinessStrategy {
             isExpanded: true,
             isDense: true,
             items: options
-                .map((u) => DropdownMenuItem(
-                      value: u.label.toLowerCase(),
-                      child:
-                          Text(u.label, style: GoogleFonts.inter(fontSize: 14)),
-                    ))
+                .map(
+                  (u) => DropdownMenuItem(
+                    value: u.label.toLowerCase(),
+                    child: Text(
+                      u.label,
+                      style: GoogleFonts.inter(fontSize: 14),
+                    ),
+                  ),
+                )
                 .toList(),
             onChanged: (val) {
               if (val != null) {
@@ -129,19 +144,28 @@ abstract class BaseBusinessStrategy implements BusinessStrategy {
           ? [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))]
           : null,
       style: GoogleFonts.inter(
-          fontSize: 14, color: isDark ? Colors.white : Colors.black87),
+        fontSize: 14,
+        color: isDark ? Colors.white : Colors.black87,
+      ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-            fontSize: 12, color: isDark ? Colors.white54 : Colors.grey),
+          fontSize: 12,
+          color: isDark ? Colors.white54 : Colors.grey,
+        ),
         prefixText: prefix,
         prefixStyle: GoogleFonts.inter(
-            fontSize: 14, color: isDark ? Colors.white70 : Colors.black54),
+          fontSize: 14,
+          color: isDark ? Colors.white70 : Colors.black54,
+        ),
         filled: true,
-        fillColor:
-            isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        fillColor: isDark
+            ? Colors.white.withOpacity(0.05)
+            : Colors.grey.shade50,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 10,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
@@ -164,7 +188,11 @@ abstract class BaseBusinessStrategy implements BusinessStrategy {
   }
 
   Widget _circleButton(
-      IconData icon, VoidCallback onTap, bool isDark, Color accentColor) {
+    IconData icon,
+    VoidCallback onTap,
+    bool isDark,
+    Color accentColor,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),

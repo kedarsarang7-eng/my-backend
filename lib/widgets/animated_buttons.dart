@@ -86,8 +86,9 @@ class _AnimatedPressButtonState extends State<AnimatedPressButton>
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: (widget.backgroundColor ?? Colors.blue)
-                        .withOpacity(0.3),
+                    color: (widget.backgroundColor ?? Colors.blue).withOpacity(
+                      0.3,
+                    ),
                     blurRadius: _shadowAnim.value,
                     offset: Offset(0, _shadowAnim.value / 2),
                   ),
@@ -104,14 +105,16 @@ class _AnimatedPressButtonState extends State<AnimatedPressButton>
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : (widget.icon != null
-                        ? Icon(widget.icon)
-                        : const SizedBox()),
+                          ? Icon(widget.icon)
+                          : const SizedBox()),
                 label: Text(widget.label),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: widget.backgroundColor,
                   foregroundColor: widget.foregroundColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -159,9 +162,10 @@ class _AnimatedSuccessTickState extends State<AnimatedSuccessTick>
 
   @override
   Widget build(BuildContext context) {
-    final scaleAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    final scaleAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     return ScaleTransition(
       scale: scaleAnim,
@@ -171,11 +175,7 @@ class _AnimatedSuccessTickState extends State<AnimatedSuccessTick>
           color: Color(0xFF2F9E44),
           shape: BoxShape.circle,
         ),
-        child: const Icon(
-          Icons.check,
-          color: Colors.white,
-          size: 24,
-        ),
+        child: const Icon(Icons.check, color: Colors.white, size: 24),
       ),
     );
   }

@@ -15,7 +15,7 @@ class LedgerService {
   final AccountingRepository _repo;
 
   LedgerService({AccountingRepository? repo})
-      : _repo = repo ?? sl<AccountingRepository>();
+    : _repo = repo ?? sl<AccountingRepository>();
 
   /// Get the current balance of a ledger.
   ///
@@ -30,7 +30,8 @@ class LedgerService {
     final ledger = await _repo.getLedgerById(ledgerId);
     if (ledger == null) {
       throw Exception(
-          'Ledger not found: $ledgerId'); // Should we return 0? Safe fail?
+        'Ledger not found: $ledgerId',
+      ); // Should we return 0? Safe fail?
     }
 
     // 2. Fast Path: Current Balance
@@ -96,8 +97,11 @@ class LedgerService {
     // Note: We need to know if it's CUSTOMER or VENDOR to use specific repo method?
     // Repo has `getLedgerByLinkedEntity`.
 
-    var ledger =
-        await _repo.getLedgerByLinkedEntity(userId, 'CUSTOMER', partyId);
+    var ledger = await _repo.getLedgerByLinkedEntity(
+      userId,
+      'CUSTOMER',
+      partyId,
+    );
     ledger ??= await _repo.getLedgerByLinkedEntity(userId, 'VENDOR', partyId);
 
     if (ledger == null) return 0.0;

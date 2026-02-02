@@ -189,8 +189,9 @@ class _GstSettingsScreenState extends State<GstSettingsScreen> {
                                 if (value == null || value.isEmpty) {
                                   return null; // Optional
                                 }
-                                final result =
-                                    GstinValidator.validateGstin(value);
+                                final result = GstinValidator.validateGstin(
+                                  value,
+                                );
                                 if (!result.isValid) {
                                   return result.errorMessage;
                                 }
@@ -262,8 +263,11 @@ class _GstSettingsScreenState extends State<GstSettingsScreen> {
                                   context: context,
                                   initialDate:
                                       _registrationDate ?? DateTime.now(),
-                                  firstDate:
-                                      DateTime(2017, 7, 1), // GST launch date
+                                  firstDate: DateTime(
+                                    2017,
+                                    7,
+                                    1,
+                                  ), // GST launch date
                                   lastDate: DateTime.now(),
                                 );
                                 if (date != null) {
@@ -350,8 +354,9 @@ class _GstSettingsScreenState extends State<GstSettingsScreen> {
 
                     // Info Card
                     Card(
-                      color:
-                          theme.colorScheme.primaryContainer.withOpacity(0.3),
+                      color: theme.colorScheme.primaryContainer.withOpacity(
+                        0.3,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(

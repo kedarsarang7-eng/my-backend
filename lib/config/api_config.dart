@@ -85,8 +85,10 @@ class ApiConfig {
     if (Platform.isAndroid) {
       // 10.0.2.2 is the special alias to host loopback on Android Emulator
       // For real devices, override with DUKANX_API_URL dart-define
-      const customUrl =
-          String.fromEnvironment('DUKANX_API_URL', defaultValue: '');
+      const customUrl = String.fromEnvironment(
+        'DUKANX_API_URL',
+        defaultValue: '',
+      );
       if (customUrl.isNotEmpty) return customUrl;
       return _devAndroidEmulatorUrl;
     }

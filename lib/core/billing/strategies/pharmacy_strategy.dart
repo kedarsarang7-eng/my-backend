@@ -43,7 +43,10 @@ class PharmacyStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildBatchField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Batch',
       value: item.batchNo ?? '',
@@ -81,8 +84,11 @@ class PharmacyStrategy extends BaseBusinessStrategy {
         ),
         child: Row(
           children: [
-            Icon(Icons.calendar_today,
-                size: 16, color: isDark ? Colors.white54 : Colors.grey),
+            Icon(
+              Icons.calendar_today,
+              size: 16,
+              color: isDark ? Colors.white54 : Colors.grey,
+            ),
             const SizedBox(width: 8),
             Text(
               expiry != null ? DateFormat('MMM yy').format(expiry) : 'Expiry',

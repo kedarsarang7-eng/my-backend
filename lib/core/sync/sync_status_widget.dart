@@ -18,11 +18,7 @@ class SyncStatusWidget extends StatefulWidget {
   final bool compact;
   final VoidCallback? onTap;
 
-  const SyncStatusWidget({
-    super.key,
-    this.compact = false,
-    this.onTap,
-  });
+  const SyncStatusWidget({super.key, this.compact = false, this.onTap});
 
   @override
   State<SyncStatusWidget> createState() => _SyncStatusWidgetState();
@@ -96,8 +92,9 @@ class _SyncStatusWidgetState extends State<SyncStatusWidget>
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: pendingCount > 0
-                  ? Colors.orange
-                      .withOpacity(0.1 + _pulseController.value * 0.1)
+                  ? Colors.orange.withOpacity(
+                      0.1 + _pulseController.value * 0.1,
+                    )
                   : Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -195,8 +192,9 @@ class _SyncStatusWidgetState extends State<SyncStatusWidget>
         builder: (context, child) {
           return Icon(
             Icons.cloud_sync,
-            color:
-                Colors.orange.withOpacity(0.5 + _pulseController.value * 0.5),
+            color: Colors.orange.withOpacity(
+              0.5 + _pulseController.value * 0.5,
+            ),
             size: 32,
           );
         },
@@ -295,13 +293,25 @@ class SyncDetailsSheet extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _buildMetricRow(
-              'Pending', '${stats?.pendingCount ?? 0}', Icons.schedule),
+            'Pending',
+            '${stats?.pendingCount ?? 0}',
+            Icons.schedule,
+          ),
           _buildMetricRow(
-              'In Progress', '${stats?.inProgressCount ?? 0}', Icons.sync),
+            'In Progress',
+            '${stats?.inProgressCount ?? 0}',
+            Icons.sync,
+          ),
           _buildMetricRow(
-              'Failed', '${stats?.failedCount ?? 0}', Icons.error_outline),
+            'Failed',
+            '${stats?.failedCount ?? 0}',
+            Icons.error_outline,
+          ),
           _buildMetricRow(
-              'Dead Letter', '${stats?.deadLetterCount ?? 0}', Icons.dangerous),
+            'Dead Letter',
+            '${stats?.deadLetterCount ?? 0}',
+            Icons.dangerous,
+          ),
           const SizedBox(height: 16),
           if (stats?.isCircuitOpen == true)
             Container(
@@ -310,8 +320,10 @@ class SyncDetailsSheet extends StatelessWidget {
                 color: Colors.red.shade50,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Text("Circuit Breaker Open (Cooling down)",
-                  style: TextStyle(color: Colors.red)),
+              child: Text(
+                "Circuit Breaker Open (Cooling down)",
+                style: TextStyle(color: Colors.red),
+              ),
             ),
           const SizedBox(height: 20),
           SizedBox(
@@ -383,11 +395,7 @@ class PendingChangesIndicator extends StatelessWidget {
   final int count;
   final VoidCallback? onTap;
 
-  const PendingChangesIndicator({
-    super.key,
-    required this.count,
-    this.onTap,
-  });
+  const PendingChangesIndicator({super.key, required this.count, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -405,8 +413,11 @@ class PendingChangesIndicator extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_upload_outlined,
-                size: 14, color: Colors.blue.shade600),
+            Icon(
+              Icons.cloud_upload_outlined,
+              size: 14,
+              color: Colors.blue.shade600,
+            ),
             const SizedBox(width: 4),
             Text(
               '$count pending',

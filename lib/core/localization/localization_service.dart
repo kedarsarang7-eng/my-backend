@@ -29,40 +29,72 @@ class LocalizationService {
   /// Supported locales with their native names
   static const Map<String, LocaleInfo> supportedLocales = {
     'en': LocaleInfo(
-        code: 'en',
-        nativeName: 'English',
-        englishName: 'English',
-        flag: '🇺🇸'),
+      code: 'en',
+      nativeName: 'English',
+      englishName: 'English',
+      flag: '🇺🇸',
+    ),
     'hi': LocaleInfo(
-        code: 'hi', nativeName: 'हिंदी', englishName: 'Hindi', flag: '🇮🇳'),
+      code: 'hi',
+      nativeName: 'हिंदी',
+      englishName: 'Hindi',
+      flag: '🇮🇳',
+    ),
     'mr': LocaleInfo(
-        code: 'mr', nativeName: 'मराठी', englishName: 'Marathi', flag: '🇮🇳'),
+      code: 'mr',
+      nativeName: 'मराठी',
+      englishName: 'Marathi',
+      flag: '🇮🇳',
+    ),
     'gu': LocaleInfo(
-        code: 'gu',
-        nativeName: 'ગુજરાતી',
-        englishName: 'Gujarati',
-        flag: '🇮🇳'),
+      code: 'gu',
+      nativeName: 'ગુજરાતી',
+      englishName: 'Gujarati',
+      flag: '🇮🇳',
+    ),
     'ta': LocaleInfo(
-        code: 'ta', nativeName: 'தமிழ்', englishName: 'Tamil', flag: '🇮🇳'),
+      code: 'ta',
+      nativeName: 'தமிழ்',
+      englishName: 'Tamil',
+      flag: '🇮🇳',
+    ),
     'te': LocaleInfo(
-        code: 'te', nativeName: 'తెలుగు', englishName: 'Telugu', flag: '🇮🇳'),
+      code: 'te',
+      nativeName: 'తెలుగు',
+      englishName: 'Telugu',
+      flag: '🇮🇳',
+    ),
     'kn': LocaleInfo(
-        code: 'kn', nativeName: 'ಕನ್ನಡ', englishName: 'Kannada', flag: '🇮🇳'),
+      code: 'kn',
+      nativeName: 'ಕನ್ನಡ',
+      englishName: 'Kannada',
+      flag: '🇮🇳',
+    ),
     'ml': LocaleInfo(
-        code: 'ml',
-        nativeName: 'മലയാളം',
-        englishName: 'Malayalam',
-        flag: '🇮🇳'),
+      code: 'ml',
+      nativeName: 'മലയാളം',
+      englishName: 'Malayalam',
+      flag: '🇮🇳',
+    ),
     'bn': LocaleInfo(
-        code: 'bn', nativeName: 'বাংলা', englishName: 'Bengali', flag: '🇮🇳'),
+      code: 'bn',
+      nativeName: 'বাংলা',
+      englishName: 'Bengali',
+      flag: '🇮🇳',
+    ),
     'pa': LocaleInfo(
-        code: 'pa', nativeName: 'ਪੰਜਾਬੀ', englishName: 'Punjabi', flag: '🇮🇳'),
+      code: 'pa',
+      nativeName: 'ਪੰਜਾਬੀ',
+      englishName: 'Punjabi',
+      flag: '🇮🇳',
+    ),
     'ur': LocaleInfo(
-        code: 'ur',
-        nativeName: 'اردو',
-        englishName: 'Urdu',
-        flag: '🇵🇰',
-        isRtl: true),
+      code: 'ur',
+      nativeName: 'اردو',
+      englishName: 'Urdu',
+      flag: '🇵🇰',
+      isRtl: true,
+    ),
   };
 
   /// Check if user has completed initial language selection
@@ -93,8 +125,10 @@ class LocalizationService {
     void Function(String status, double progress)? onProgress,
   ) async {
     try {
-      developer.log('Starting language setup for: ${locale.languageCode}',
-          name: 'LocalizationService');
+      developer.log(
+        'Starting language setup for: ${locale.languageCode}',
+        name: 'LocalizationService',
+      );
 
       // Step 1: Loading translations (simulated delay for UX)
       onProgress?.call('Loading translations...', 0.25);
@@ -102,8 +136,10 @@ class LocalizationService {
 
       // Validate locale is supported
       if (!supportedLocales.containsKey(locale.languageCode)) {
-        developer.log('Unsupported locale: ${locale.languageCode}',
-            name: 'LocalizationService');
+        developer.log(
+          'Unsupported locale: ${locale.languageCode}',
+          name: 'LocalizationService',
+        );
         return false;
       }
 
@@ -121,18 +157,25 @@ class LocalizationService {
       // Mark setup as complete
       await prefs.setBool(_setupCompleteKey, true);
       await prefs.setInt(
-          _setupTimestampKey, DateTime.now().millisecondsSinceEpoch);
+        _setupTimestampKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
 
       // Step 4: Complete
       onProgress?.call('Ready!', 1.0);
       await Future.delayed(const Duration(milliseconds: 200));
 
-      developer.log('Language setup complete for: ${locale.languageCode}',
-          name: 'LocalizationService');
+      developer.log(
+        'Language setup complete for: ${locale.languageCode}',
+        name: 'LocalizationService',
+      );
       return true;
     } catch (e, stack) {
-      developer.log('Language setup failed: $e',
-          name: 'LocalizationService', stackTrace: stack);
+      developer.log(
+        'Language setup failed: $e',
+        name: 'LocalizationService',
+        stackTrace: stack,
+      );
       return false;
     }
   }
@@ -141,8 +184,10 @@ class LocalizationService {
   Future<void> quickSetLocale(Locale locale) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, locale.languageCode);
-    developer.log('Quick locale change to: ${locale.languageCode}',
-        name: 'LocalizationService');
+    developer.log(
+      'Quick locale change to: ${locale.languageCode}',
+      name: 'LocalizationService',
+    );
   }
 
   /// Validate that all required keys exist for a locale

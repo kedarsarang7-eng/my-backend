@@ -15,9 +15,9 @@ class GstRepository {
 
   /// Get GST settings for a user
   Future<GstSettingsModel?> getGstSettings(String userId) async {
-    final result = await (_db.select(_db.gstSettings)
-          ..where((t) => t.id.equals(userId)))
-        .getSingleOrNull();
+    final result = await (_db.select(
+      _db.gstSettings,
+    )..where((t) => t.id.equals(userId))).getSingleOrNull();
 
     if (result == null) return null;
 
@@ -40,7 +40,9 @@ class GstRepository {
 
   /// Save or update GST settings
   Future<void> saveGstSettings(GstSettingsModel settings) async {
-    await _db.into(_db.gstSettings).insertOnConflictUpdate(
+    await _db
+        .into(_db.gstSettings)
+        .insertOnConflictUpdate(
           GstSettingsCompanion(
             id: Value(settings.id),
             gstin: Value(settings.gstin),
@@ -71,9 +73,9 @@ class GstRepository {
 
   /// Get GST details for a bill
   Future<GstInvoiceDetailModel?> getGstDetailsByBillId(String billId) async {
-    final result = await (_db.select(_db.gstInvoiceDetails)
-          ..where((t) => t.billId.equals(billId)))
-        .getSingleOrNull();
+    final result = await (_db.select(
+      _db.gstInvoiceDetails,
+    )..where((t) => t.billId.equals(billId))).getSingleOrNull();
 
     if (result == null) return null;
 
@@ -102,7 +104,9 @@ class GstRepository {
   /// Save GST invoice details
   Future<void> saveGstInvoiceDetail(GstInvoiceDetailModel detail) async {
     final map = detail.toMap();
-    await _db.into(_db.gstInvoiceDetails).insertOnConflictUpdate(
+    await _db
+        .into(_db.gstInvoiceDetails)
+        .insertOnConflictUpdate(
           GstInvoiceDetailsCompanion(
             id: Value(detail.id),
             billId: Value(detail.billId),
@@ -133,13 +137,16 @@ class GstRepository {
     required DateTime endDate,
   }) async {
     // Join with bills to filter by userId and date
-    final query = _db.select(_db.gstInvoiceDetails).join([
-      innerJoin(
-          _db.bills, _db.bills.id.equalsExp(_db.gstInvoiceDetails.billId)),
-    ])
-      ..where(_db.bills.userId.equals(userId))
-      ..where(_db.bills.billDate.isBetweenValues(startDate, endDate))
-      ..where(_db.bills.deletedAt.isNull());
+    final query =
+        _db.select(_db.gstInvoiceDetails).join([
+            innerJoin(
+              _db.bills,
+              _db.bills.id.equalsExp(_db.gstInvoiceDetails.billId),
+            ),
+          ])
+          ..where(_db.bills.userId.equals(userId))
+          ..where(_db.bills.billDate.isBetweenValues(startDate, endDate))
+          ..where(_db.bills.deletedAt.isNull());
 
     final results = await query.get();
 
@@ -174,28 +181,30 @@ class GstRepository {
 
   /// Get all HSN codes
   Future<List<HsnCodeModel>> getAllHsnCodes() async {
-    final results = await (_db.select(_db.hsnMaster)
-          ..where((t) => t.isActive.equals(true)))
-        .get();
+    final results = await (_db.select(
+      _db.hsnMaster,
+    )..where((t) => t.isActive.equals(true))).get();
 
     return results
-        .map((r) => HsnCodeModel(
-              hsnCode: r.hsnCode ?? r.code,
-              description: r.description ?? '',
-              cgstRate: r.cgstRate,
-              sgstRate: r.sgstRate,
-              igstRate: r.igstRate,
-              unit: r.unit,
-              isActive: r.isActive,
-            ))
+        .map(
+          (r) => HsnCodeModel(
+            hsnCode: r.hsnCode ?? r.code,
+            description: r.description ?? '',
+            cgstRate: r.cgstRate,
+            sgstRate: r.sgstRate,
+            igstRate: r.igstRate,
+            unit: r.unit,
+            isActive: r.isActive,
+          ),
+        )
         .toList();
   }
 
   /// Get HSN code by code
   Future<HsnCodeModel?> getHsnCode(String hsnCode) async {
-    final result = await (_db.select(_db.hsnMaster)
-          ..where((t) => t.hsnCode.equals(hsnCode)))
-        .getSingleOrNull();
+    final result = await (_db.select(
+      _db.hsnMaster,
+    )..where((t) => t.hsnCode.equals(hsnCode))).getSingleOrNull();
 
     if (result == null) return null;
 
@@ -212,7 +221,9 @@ class GstRepository {
 
   /// Save HSN code
   Future<void> saveHsnCode(HsnCodeModel hsn) async {
-    await _db.into(_db.hsnMaster).insertOnConflictUpdate(
+    await _db
+        .into(_db.hsnMaster)
+        .insertOnConflictUpdate(
           HsnMasterCompanion(
             hsnCode: Value(hsn.hsnCode),
             description: Value(hsn.description),
@@ -237,22 +248,27 @@ class GstRepository {
 
   /// Search HSN codes by description or code
   Future<List<HsnCodeModel>> searchHsnCodes(String query) async {
-    final results = await (_db.select(_db.hsnMaster)
-          ..where(
-              (t) => t.hsnCode.contains(query) | t.description.contains(query))
-          ..where((t) => t.isActive.equals(true)))
-        .get();
+    final results =
+        await (_db.select(_db.hsnMaster)
+              ..where(
+                (t) =>
+                    t.hsnCode.contains(query) | t.description.contains(query),
+              )
+              ..where((t) => t.isActive.equals(true)))
+            .get();
 
     return results
-        .map((r) => HsnCodeModel(
-              hsnCode: r.hsnCode ?? r.code,
-              description: r.description ?? '',
-              cgstRate: r.cgstRate,
-              sgstRate: r.sgstRate,
-              igstRate: r.igstRate,
-              unit: r.unit,
-              isActive: r.isActive,
-            ))
+        .map(
+          (r) => HsnCodeModel(
+            hsnCode: r.hsnCode ?? r.code,
+            description: r.description ?? '',
+            cgstRate: r.cgstRate,
+            sgstRate: r.sgstRate,
+            igstRate: r.igstRate,
+            unit: r.unit,
+            isActive: r.isActive,
+          ),
+        )
         .toList();
   }
 }

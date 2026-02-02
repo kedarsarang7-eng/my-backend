@@ -180,17 +180,21 @@ class _SmartVoiceBillSheetState extends ConsumerState<SmartVoiceBillSheet> {
                           : FuturisticColors.primaryGradient,
                       boxShadow: [
                         BoxShadow(
-                          color: (_isListening
-                                  ? FuturisticColors.error
-                                  : FuturisticColors.primary)
-                              .withOpacity(0.5),
+                          color:
+                              (_isListening
+                                      ? FuturisticColors.error
+                                      : FuturisticColors.primary)
+                                  .withOpacity(0.5),
                           blurRadius: 20,
                           spreadRadius: 2,
-                        )
+                        ),
                       ],
                     ),
-                    child: Icon(_isListening ? Icons.stop : Icons.mic,
-                        size: 40, color: Colors.white),
+                    child: Icon(
+                      _isListening ? Icons.stop : Icons.mic,
+                      size: 40,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -207,7 +211,7 @@ class _SmartVoiceBillSheetState extends ConsumerState<SmartVoiceBillSheet> {
             if (_isProcessing) ...[
               const SizedBox(height: 20),
               LinearProgressIndicator(color: FuturisticColors.accent),
-            ]
+            ],
           ],
         ),
       ),
@@ -232,13 +236,14 @@ class _SmartVoiceBillSheetState extends ConsumerState<SmartVoiceBillSheet> {
                 Text(
                   'Confirm Bill',
                   style: AppTypography.headlineSmall.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: FuturisticColors.primary),
+                    fontWeight: FontWeight.bold,
+                    color: FuturisticColors.primary,
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
-                )
+                ),
               ],
             ),
             const Divider(),
@@ -247,26 +252,32 @@ class _SmartVoiceBillSheetState extends ConsumerState<SmartVoiceBillSheet> {
             ModernCard(
               padding: EdgeInsets.zero,
               child: ListTile(
-                leading:
-                    Icon(Icons.person_outline, color: FuturisticColors.accent),
+                leading: Icon(
+                  Icons.person_outline,
+                  color: FuturisticColors.accent,
+                ),
                 title: Text(intent.customerName ?? 'Walk-in Customer'),
-                subtitle:
-                    Text('Payment: ${intent.paymentMode.name.toUpperCase()}'),
+                subtitle: Text(
+                  'Payment: ${intent.paymentMode.name.toUpperCase()}',
+                ),
                 // Edit button removed - use voice commands to modify
               ),
             ),
 
             const SizedBox(height: 10),
-            Text('Items',
-                style: AppTypography.bodyLarge
-                    .copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              'Items',
+              style: AppTypography.bodyLarge.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
 
             // Items List
             Expanded(
               child: ListView.separated(
                 itemCount: intent.items.length,
-                separatorBuilder: (_, __) => const Divider(height: 1),
+                separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (context, index) {
                   final item = intent.items[index];
                   final isKnown = item.productId.isNotEmpty;
@@ -277,18 +288,22 @@ class _SmartVoiceBillSheetState extends ConsumerState<SmartVoiceBillSheet> {
                       backgroundColor: isKnown
                           ? FuturisticColors.success.withOpacity(0.1)
                           : FuturisticColors.warning.withOpacity(0.1),
-                      child: Text(item.name.isNotEmpty ? item.name[0] : '?',
-                          style: TextStyle(
-                              color: isKnown
-                                  ? FuturisticColors.success
-                                  : FuturisticColors.warning)),
+                      child: Text(
+                        item.name.isNotEmpty ? item.name[0] : '?',
+                        style: TextStyle(
+                          color: isKnown
+                              ? FuturisticColors.success
+                              : FuturisticColors.warning,
+                        ),
+                      ),
                     ),
                     title: Text(item.name, style: AppTypography.bodyMedium),
                     subtitle: Text('${item.quantity} ${item.unit}'),
                     trailing: Text(
                       '₹${item.amount.toStringAsFixed(2)}',
-                      style: AppTypography.bodyLarge
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: AppTypography.bodyLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   );
                 },

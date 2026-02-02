@@ -146,8 +146,9 @@ class _AddTankDialogState extends State<AddTankDialog> {
                     // Capacity input
                     TextFormField(
                       controller: _capacityController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Tank Capacity',
                         hintText: 'Maximum storage capacity',
@@ -171,8 +172,9 @@ class _AddTankDialogState extends State<AddTankDialog> {
                     // Initial stock input
                     TextFormField(
                       controller: _initialStockController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Initial Stock (Optional)',
                         hintText: 'Current stock level',
@@ -261,8 +263,9 @@ class _AddTankDialogState extends State<AddTankDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error: \$e'),
-              backgroundColor: FuturisticColors.error),
+            content: Text('Error: \$e'),
+            backgroundColor: FuturisticColors.error,
+          ),
         );
       }
     } finally {

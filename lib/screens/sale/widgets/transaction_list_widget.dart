@@ -52,13 +52,19 @@ class TransactionListWidget extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.receipt_long_rounded,
-                    size: 64, color: Colors.grey[400]),
+                Icon(
+                  Icons.receipt_long_rounded,
+                  size: 64,
+                  color: Colors.grey[400],
+                ),
                 const SizedBox(height: 16),
-                Text(emptyMessage,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: isDark ? Colors.white70 : Colors.black54)),
+                Text(
+                  emptyMessage,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isDark ? Colors.white70 : Colors.black54,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 if (onAddPressed != null)
                   ElevatedButton.icon(
@@ -84,8 +90,11 @@ class TransactionListWidget extends ConsumerWidget {
   }
 
   Widget _buildBillCard(BuildContext context, Bill bill, bool isDark) {
-    final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 2,
+    );
     final dateFormat = DateFormat('dd MMM yyyy');
 
     Color statusColor = Colors.grey;
@@ -93,8 +102,10 @@ class TransactionListWidget extends ConsumerWidget {
     if (bill.status.toLowerCase() == 'partial') statusColor = Colors.orange;
     if (bill.status.toLowerCase() == 'unpaid') statusColor = Colors.red;
 
-    final balanceAmount =
-        (bill.grandTotal - bill.paidAmount).clamp(0.0, double.infinity);
+    final balanceAmount = (bill.grandTotal - bill.paidAmount).clamp(
+      0.0,
+      double.infinity,
+    );
 
     return Card(
       color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
@@ -123,8 +134,10 @@ class TransactionListWidget extends ConsumerWidget {
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -187,11 +200,16 @@ class TransactionListWidget extends ConsumerWidget {
   }
 
   void _showBillDetail(BuildContext context, Bill bill, bool isDark) {
-    final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 2,
+    );
     final dateFormat = DateFormat('dd MMM yyyy, hh:mm a');
-    final balanceAmount =
-        (bill.grandTotal - bill.paidAmount).clamp(0.0, double.infinity);
+    final balanceAmount = (bill.grandTotal - bill.paidAmount).clamp(
+      0.0,
+      double.infinity,
+    );
 
     showModalBottomSheet(
       context: context,
@@ -232,12 +250,16 @@ class TransactionListWidget extends ConsumerWidget {
             _detailRow('Reference', '#${bill.invoiceNumber}', isDark),
             _detailRow('Type', 'SALE', isDark),
             _detailRow(
-                'Party',
-                bill.customerName.isNotEmpty ? bill.customerName : 'N/A',
-                isDark),
+              'Party',
+              bill.customerName.isNotEmpty ? bill.customerName : 'N/A',
+              isDark,
+            ),
             _detailRow('Date', dateFormat.format(bill.date), isDark),
             _detailRow(
-                'Amount', currencyFormat.format(bill.grandTotal), isDark),
+              'Amount',
+              currencyFormat.format(bill.grandTotal),
+              isDark,
+            ),
             _detailRow('Paid', currencyFormat.format(bill.paidAmount), isDark),
             _detailRow('Balance', currencyFormat.format(balanceAmount), isDark),
             _detailRow('Status', bill.status.toUpperCase(), isDark),
@@ -257,9 +279,7 @@ class TransactionListWidget extends ConsumerWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: isDark ? Colors.white60 : Colors.grey[600],
-            ),
+            style: TextStyle(color: isDark ? Colors.white60 : Colors.grey[600]),
           ),
           Text(
             value,

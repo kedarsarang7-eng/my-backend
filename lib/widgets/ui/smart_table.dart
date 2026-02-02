@@ -34,12 +34,19 @@ class SmartTable<T> extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.search_off_rounded,
-                size: 48, color: FuturisticColors.textSecondary),
+            const Icon(
+              Icons.search_off_rounded,
+              size: 48,
+              color: FuturisticColors.textSecondary,
+            ),
             const SizedBox(height: 16),
-            Text(emptyMessage,
-                style: const TextStyle(
-                    color: FuturisticColors.textSecondary, fontSize: 16)),
+            Text(
+              emptyMessage,
+              style: const TextStyle(
+                color: FuturisticColors.textSecondary,
+                fontSize: 16,
+              ),
+            ),
           ],
         ),
       );
@@ -72,57 +79,70 @@ class SmartTable<T> extends StatelessWidget {
             ),
             child: Row(
               children: columns
-                  .map((col) => Expanded(
-                        flex: col.flex,
-                        child: Text(
-                          col.title.toUpperCase(),
-                          style: const TextStyle(
-                            color: FuturisticColors.textSecondary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
-                          ),
+                  .map(
+                    (col) => Expanded(
+                      flex: col.flex,
+                      child: Text(
+                        col.title.toUpperCase(),
+                        style: const TextStyle(
+                          color: FuturisticColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
           ),
           const Divider(
-              height: 1, thickness: 1, color: FuturisticColors.border),
+            height: 1,
+            thickness: 1,
+            color: FuturisticColors.border,
+          ),
 
           // BODY
           Expanded(
             child: ListView.separated(
               itemCount: data.length,
-              separatorBuilder: (_, __) => const Divider(
-                  height: 1, thickness: 0.5, color: FuturisticColors.border),
+              separatorBuilder: (_, _) => const Divider(
+                height: 1,
+                thickness: 0.5,
+                color: FuturisticColors.border,
+              ),
               itemBuilder: (context, index) {
                 final item = data[index];
                 return Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    hoverColor:
-                        FuturisticColors.surfaceHighlight.withOpacity(0.5),
+                    hoverColor: FuturisticColors.surfaceHighlight.withOpacity(
+                      0.5,
+                    ),
                     onTap: onRowClick != null ? () => onRowClick!(item) : null,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       child: Row(
                         children: columns
-                            .map((col) => Expanded(
-                                  flex: col.flex,
-                                  child: col.builder != null
-                                      ? col.builder!(item)
-                                      : Text(
-                                          col.valueMapper!(item),
-                                          style: const TextStyle(
-                                            color: FuturisticColors.textPrimary,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
+                            .map(
+                              (col) => Expanded(
+                                flex: col.flex,
+                                child: col.builder != null
+                                    ? col.builder!(item)
+                                    : Text(
+                                        col.valueMapper!(item),
+                                        style: const TextStyle(
+                                          color: FuturisticColors.textPrimary,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                ))
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),

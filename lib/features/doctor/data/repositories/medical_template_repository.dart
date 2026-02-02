@@ -13,8 +13,8 @@ class MedicalTemplateRepository {
   MedicalTemplateRepository({
     required AppDatabase db,
     required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  }) : _db = db,
+       _syncManager = syncManager;
 
   static const String collectionName =
       'medical_templates'; // Firestore collection
@@ -22,7 +22,9 @@ class MedicalTemplateRepository {
   /// Create a new template
   Future<void> createTemplate(MedicalTemplateModel template) async {
     try {
-      await _db.into(_db.medicalTemplates).insert(
+      await _db
+          .into(_db.medicalTemplates)
+          .insert(
             MedicalTemplatesCompanion.insert(
               id: template.id,
               userId: template.userId,
@@ -34,43 +36,54 @@ class MedicalTemplateRepository {
             ),
           );
 
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: template.userId,
-        operationType: SyncOperationType.create,
-        targetCollection: collectionName,
-        documentId: template.id,
-        payload: template.toMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: template.userId,
+          operationType: SyncOperationType.create,
+          targetCollection: collectionName,
+          documentId: template.id,
+          payload: template.toMap(),
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to save template');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to save template',
+      );
       rethrow;
     }
   }
 
   /// Get templates by type
   Future<List<MedicalTemplateModel>> getTemplatesByType(
-      String userId, String type) async {
-    final rows = await (_db.select(_db.medicalTemplates)
-          ..where((t) => t.userId.equals(userId) & t.type.equals(type))
-          ..orderBy([(t) => OrderingTerm.asc(t.title)]))
-        .get();
+    String userId,
+    String type,
+  ) async {
+    final rows =
+        await (_db.select(_db.medicalTemplates)
+              ..where((t) => t.userId.equals(userId) & t.type.equals(type))
+              ..orderBy([(t) => OrderingTerm.asc(t.title)]))
+            .get();
 
     return rows.map((row) => _mapToModel(row)).toList();
   }
 
   /// Delete template
   Future<void> deleteTemplate(String id, String userId) async {
-    await (_db.delete(_db.medicalTemplates)..where((t) => t.id.equals(id)))
-        .go();
+    await (_db.delete(
+      _db.medicalTemplates,
+    )..where((t) => t.id.equals(id))).go();
 
-    await _syncManager.enqueue(SyncQueueItem.create(
-      userId: userId,
-      operationType: SyncOperationType.delete,
-      targetCollection: collectionName,
-      documentId: id,
-      payload: {},
-    ));
+    await _syncManager.enqueue(
+      SyncQueueItem.create(
+        userId: userId,
+        operationType: SyncOperationType.delete,
+        targetCollection: collectionName,
+        documentId: id,
+        payload: {},
+      ),
+    );
   }
 
   MedicalTemplateModel _mapToModel(MedicalTemplateEntity row) {

@@ -51,183 +51,176 @@ class BusinessTypeConfig {
   });
 
   static List<BusinessTypeConfig> get all => [
-        BusinessTypeConfig(
-          type: BusinessType.grocery,
-          name: 'Grocery Store',
-          description: 'Fruits, vegetables, daily essentials',
-          emoji: '🛒',
-          primaryColor: const Color(0xFF4CAF50),
-          secondaryColor: const Color(0xFFE8F5E9),
-          billColumns: ['Item Name', 'Qty', 'Rate', 'Discount', 'Total'],
-          icon: Icons.shopping_basket_rounded,
-          assetImage: 'assets/images/onboarding/grocery_store.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.pharmacy,
-          name: 'Medical / Pharmacy',
-          description: 'Medicines, healthcare products',
-          emoji: '💊',
-          primaryColor: const Color(0xFF2196F3),
-          secondaryColor: const Color(0xFFE3F2FD),
-          billColumns: [
-            'Medicine',
-            'Batch No',
-            'Expiry',
-            'Qty',
-            'MRP',
-            'Total'
-          ],
-          icon: Icons.medical_services_rounded,
-          assetImage: 'assets/images/onboarding/pharmacy.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.restaurant,
-          name: 'Restaurant / Hotel',
-          description: 'Food, beverages, hospitality',
-          emoji: '🍽️',
-          primaryColor: const Color(0xFFFF5722),
-          secondaryColor: const Color(0xFFFBE9E7),
-          billColumns: ['Table', 'Item', 'Qty', 'Price', 'GST', 'Total'],
-          icon: Icons.restaurant_rounded,
-          assetImage: 'assets/images/onboarding/restaurant.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.clothing,
-          name: 'Clothing / Fashion',
-          description: 'Apparel, accessories, footwear',
-          emoji: '👕',
-          primaryColor: const Color(0xFF9C27B0),
-          secondaryColor: const Color(0xFFF3E5F5),
-          billColumns: [
-            'Item',
-            'Size',
-            'Color',
-            'Qty',
-            'Price',
-            'Discount',
-            'Total'
-          ],
-          icon: Icons.checkroom_rounded,
-          assetImage: 'assets/images/onboarding/clothing_store.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.electronics,
-          name: 'Mobile / Electronics',
-          description: 'Phones, gadgets, accessories',
-          emoji: '📱',
-          primaryColor: const Color(0xFF607D8B),
-          secondaryColor: const Color(0xFFECEFF1),
-          billColumns: [
-            'Product',
-            'IMEI/Serial',
-            'Warranty',
-            'Qty',
-            'Price',
-            'Total'
-          ],
-          icon: Icons.phone_android_rounded,
-          assetImage: 'assets/images/onboarding/mobile_shop.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.hardware,
-          name: 'Hardware Store',
-          description: 'Tools, building materials',
-          emoji: '🔧',
-          primaryColor: const Color(0xFF795548),
-          secondaryColor: const Color(0xFFEFEBE9),
-          billColumns: ['Item', 'Brand', 'Qty', 'Unit', 'Rate', 'Total'],
-          icon: Icons.hardware_rounded,
-          assetImage: 'assets/images/onboarding/hardware_store.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.service,
-          name: 'Service Business',
-          description: 'Salon, repair, consulting',
-          emoji: '💈',
-          primaryColor: const Color(0xFF00BCD4),
-          secondaryColor: const Color(0xFFE0F7FA),
-          billColumns: ['Service', 'Duration', 'Rate', 'Notes', 'Total'],
-          icon: Icons.miscellaneous_services_rounded,
-          assetImage: 'assets/images/onboarding/service_business.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.mobileShop,
-          name: 'Mobile Shop',
-          description: 'Smartphones, repairs, accessories',
-          emoji: '📱',
-          primaryColor: const Color(0xFF3F51B5),
-          secondaryColor: const Color(0xFFC5CAE9),
-          billColumns: ['Model', 'IMEI', 'Qty', 'Rate', 'Total'],
-          icon: Icons.smartphone_rounded,
-          assetImage: 'assets/images/onboarding/mobile_shop.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.computerShop,
-          name: 'Computer & IT',
-          description: 'Laptops, parts, repairs',
-          emoji: '💻',
-          primaryColor: const Color(0xFF673AB7),
-          secondaryColor: const Color(0xFFD1C4E9),
-          billColumns: ['Product', 'Serial No', 'Qty', 'Rate', 'Total'],
-          icon: Icons.computer_rounded,
-          assetImage: 'assets/images/onboarding/electronics.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.wholesale,
-          name: 'Wholesale / Distributor',
-          description: 'Bulk supply, B2B trading',
-          emoji: '📦',
-          primaryColor: const Color(0xFF795548),
-          secondaryColor: const Color(0xFFD7CCC8),
-          billColumns: ['Item', 'Pack Size', 'Qty', 'Rate', 'Total'],
-          icon: Icons.inventory_2_rounded,
-          assetImage: 'assets/images/onboarding/warehouse.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.petrolPump,
-          name: 'Petrol Pump',
-          description: 'Fuel station management',
-          emoji: '⛽',
-          primaryColor: const Color(0xFFD32F2F),
-          secondaryColor: const Color(0xFFFFCDD2),
-          billColumns: ['Fuel', 'Nozzle', 'Liters', 'Rate', 'Total'],
-          icon: Icons.local_gas_station_rounded,
-          assetImage: 'assets/images/onboarding/petrol_pump.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.vegetablesBroker,
-          name: 'Mandi / Veg Broker',
-          description: 'Vegetable commission agent',
-          emoji: '🥦',
-          primaryColor: const Color(0xFF2E7D32),
-          secondaryColor: const Color(0xFFC8E6C9),
-          billColumns: ['Farmer', 'Item', 'Weight', 'Rate', 'Total'],
-          icon: Icons.agriculture_rounded,
-          assetImage: 'assets/images/onboarding/vegetables.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.clinic,
-          name: 'Doctor Clinic / OPD',
-          description: 'Patient prescriptions & billing',
-          emoji: '👨‍⚕️',
-          primaryColor: const Color(0xFF009688),
-          secondaryColor: const Color(0xFFB2DFDB),
-          billColumns: ['Service', 'Medicine', 'Dosage', 'Fees', 'Total'],
-          icon: Icons.local_hospital_rounded,
-          assetImage: 'assets/images/onboarding/clinic.jpg',
-        ),
-        BusinessTypeConfig(
-          type: BusinessType.other,
-          name: 'Other / General',
-          description: 'Multi-category business',
-          emoji: '🏪',
-          primaryColor: const Color(0xFF607D8B),
-          secondaryColor: const Color(0xFFCFD8DC),
-          billColumns: ['Item', 'Qty', 'Rate', 'Total'],
-          icon: Icons.store_rounded,
-          assetImage: 'assets/images/onboarding/general_store.jpg',
-        ),
-      ];
+    BusinessTypeConfig(
+      type: BusinessType.grocery,
+      name: 'Grocery Store',
+      description: 'Fruits, vegetables, daily essentials',
+      emoji: '🛒',
+      primaryColor: const Color(0xFF4CAF50),
+      secondaryColor: const Color(0xFFE8F5E9),
+      billColumns: ['Item Name', 'Qty', 'Rate', 'Discount', 'Total'],
+      icon: Icons.shopping_basket_rounded,
+      assetImage: 'assets/images/onboarding/grocery_store.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.pharmacy,
+      name: 'Medical / Pharmacy',
+      description: 'Medicines, healthcare products',
+      emoji: '💊',
+      primaryColor: const Color(0xFF2196F3),
+      secondaryColor: const Color(0xFFE3F2FD),
+      billColumns: ['Medicine', 'Batch No', 'Expiry', 'Qty', 'MRP', 'Total'],
+      icon: Icons.medical_services_rounded,
+      assetImage: 'assets/images/onboarding/pharmacy.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.restaurant,
+      name: 'Restaurant / Hotel',
+      description: 'Food, beverages, hospitality',
+      emoji: '🍽️',
+      primaryColor: const Color(0xFFFF5722),
+      secondaryColor: const Color(0xFFFBE9E7),
+      billColumns: ['Table', 'Item', 'Qty', 'Price', 'GST', 'Total'],
+      icon: Icons.restaurant_rounded,
+      assetImage: 'assets/images/onboarding/restaurant.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.clothing,
+      name: 'Clothing / Fashion',
+      description: 'Apparel, accessories, footwear',
+      emoji: '👕',
+      primaryColor: const Color(0xFF9C27B0),
+      secondaryColor: const Color(0xFFF3E5F5),
+      billColumns: [
+        'Item',
+        'Size',
+        'Color',
+        'Qty',
+        'Price',
+        'Discount',
+        'Total',
+      ],
+      icon: Icons.checkroom_rounded,
+      assetImage: 'assets/images/onboarding/clothing_store.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.electronics,
+      name: 'Mobile / Electronics',
+      description: 'Phones, gadgets, accessories',
+      emoji: '📱',
+      primaryColor: const Color(0xFF607D8B),
+      secondaryColor: const Color(0xFFECEFF1),
+      billColumns: [
+        'Product',
+        'IMEI/Serial',
+        'Warranty',
+        'Qty',
+        'Price',
+        'Total',
+      ],
+      icon: Icons.phone_android_rounded,
+      assetImage: 'assets/images/onboarding/mobile_shop.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.hardware,
+      name: 'Hardware Store',
+      description: 'Tools, building materials',
+      emoji: '🔧',
+      primaryColor: const Color(0xFF795548),
+      secondaryColor: const Color(0xFFEFEBE9),
+      billColumns: ['Item', 'Brand', 'Qty', 'Unit', 'Rate', 'Total'],
+      icon: Icons.hardware_rounded,
+      assetImage: 'assets/images/onboarding/hardware_store.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.service,
+      name: 'Service Business',
+      description: 'Salon, repair, consulting',
+      emoji: '💈',
+      primaryColor: const Color(0xFF00BCD4),
+      secondaryColor: const Color(0xFFE0F7FA),
+      billColumns: ['Service', 'Duration', 'Rate', 'Notes', 'Total'],
+      icon: Icons.miscellaneous_services_rounded,
+      assetImage: 'assets/images/onboarding/service_business.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.mobileShop,
+      name: 'Mobile Shop',
+      description: 'Smartphones, repairs, accessories',
+      emoji: '📱',
+      primaryColor: const Color(0xFF3F51B5),
+      secondaryColor: const Color(0xFFC5CAE9),
+      billColumns: ['Model', 'IMEI', 'Qty', 'Rate', 'Total'],
+      icon: Icons.smartphone_rounded,
+      assetImage: 'assets/images/onboarding/mobile_shop.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.computerShop,
+      name: 'Computer & IT',
+      description: 'Laptops, parts, repairs',
+      emoji: '💻',
+      primaryColor: const Color(0xFF673AB7),
+      secondaryColor: const Color(0xFFD1C4E9),
+      billColumns: ['Product', 'Serial No', 'Qty', 'Rate', 'Total'],
+      icon: Icons.computer_rounded,
+      assetImage: 'assets/images/onboarding/electronics.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.wholesale,
+      name: 'Wholesale / Distributor',
+      description: 'Bulk supply, B2B trading',
+      emoji: '📦',
+      primaryColor: const Color(0xFF795548),
+      secondaryColor: const Color(0xFFD7CCC8),
+      billColumns: ['Item', 'Pack Size', 'Qty', 'Rate', 'Total'],
+      icon: Icons.inventory_2_rounded,
+      assetImage: 'assets/images/onboarding/warehouse.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.petrolPump,
+      name: 'Petrol Pump',
+      description: 'Fuel station management',
+      emoji: '⛽',
+      primaryColor: const Color(0xFFD32F2F),
+      secondaryColor: const Color(0xFFFFCDD2),
+      billColumns: ['Fuel', 'Nozzle', 'Liters', 'Rate', 'Total'],
+      icon: Icons.local_gas_station_rounded,
+      assetImage: 'assets/images/onboarding/petrol_pump.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.vegetablesBroker,
+      name: 'Mandi / Veg Broker',
+      description: 'Vegetable commission agent',
+      emoji: '🥦',
+      primaryColor: const Color(0xFF2E7D32),
+      secondaryColor: const Color(0xFFC8E6C9),
+      billColumns: ['Farmer', 'Item', 'Weight', 'Rate', 'Total'],
+      icon: Icons.agriculture_rounded,
+      assetImage: 'assets/images/onboarding/vegetables.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.clinic,
+      name: 'Doctor Clinic / OPD',
+      description: 'Patient prescriptions & billing',
+      emoji: '👨‍⚕️',
+      primaryColor: const Color(0xFF009688),
+      secondaryColor: const Color(0xFFB2DFDB),
+      billColumns: ['Service', 'Medicine', 'Dosage', 'Fees', 'Total'],
+      icon: Icons.local_hospital_rounded,
+      assetImage: 'assets/images/onboarding/clinic.jpg',
+    ),
+    BusinessTypeConfig(
+      type: BusinessType.other,
+      name: 'Other / General',
+      description: 'Multi-category business',
+      emoji: '🏪',
+      primaryColor: const Color(0xFF607D8B),
+      secondaryColor: const Color(0xFFCFD8DC),
+      billColumns: ['Item', 'Qty', 'Rate', 'Total'],
+      icon: Icons.store_rounded,
+      assetImage: 'assets/images/onboarding/general_store.jpg',
+    ),
+  ];
 
   static BusinessTypeConfig getConfig(BusinessType type) {
     return all.firstWhere((c) => c.type == type, orElse: () => all.last);
@@ -251,84 +244,84 @@ class LanguageConfig {
   });
 
   static List<LanguageConfig> get all => [
-        const LanguageConfig(
-          language: AppLanguage.english,
-          code: 'en',
-          nativeName: 'English',
-          englishName: 'English',
-          flag: '🇺🇸',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.hindi,
-          code: 'hi',
-          nativeName: 'हिंदी',
-          englishName: 'Hindi',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.marathi,
-          code: 'mr',
-          nativeName: 'मराठी',
-          englishName: 'Marathi',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.tamil,
-          code: 'ta',
-          nativeName: 'தமிழ்',
-          englishName: 'Tamil',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.telugu,
-          code: 'te',
-          nativeName: 'తెలుగు',
-          englishName: 'Telugu',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.kannada,
-          code: 'kn',
-          nativeName: 'ಕನ್ನಡ',
-          englishName: 'Kannada',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.malayalam,
-          code: 'ml',
-          nativeName: 'മലയാളം',
-          englishName: 'Malayalam',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.bengali,
-          code: 'bn',
-          nativeName: 'বাংলা',
-          englishName: 'Bengali',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.gujarati,
-          code: 'gu',
-          nativeName: 'ગુજરાતી',
-          englishName: 'Gujarati',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.punjabi,
-          code: 'pa',
-          nativeName: 'ਪੰਜਾਬੀ',
-          englishName: 'Punjabi',
-          flag: '🇮🇳',
-        ),
-        const LanguageConfig(
-          language: AppLanguage.urdu,
-          code: 'ur',
-          nativeName: 'اردو',
-          englishName: 'Urdu',
-          flag: '🇵🇰',
-        ),
-      ];
+    const LanguageConfig(
+      language: AppLanguage.english,
+      code: 'en',
+      nativeName: 'English',
+      englishName: 'English',
+      flag: '🇺🇸',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.hindi,
+      code: 'hi',
+      nativeName: 'हिंदी',
+      englishName: 'Hindi',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.marathi,
+      code: 'mr',
+      nativeName: 'मराठी',
+      englishName: 'Marathi',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.tamil,
+      code: 'ta',
+      nativeName: 'தமிழ்',
+      englishName: 'Tamil',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.telugu,
+      code: 'te',
+      nativeName: 'తెలుగు',
+      englishName: 'Telugu',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.kannada,
+      code: 'kn',
+      nativeName: 'ಕನ್ನಡ',
+      englishName: 'Kannada',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.malayalam,
+      code: 'ml',
+      nativeName: 'മലയാളം',
+      englishName: 'Malayalam',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.bengali,
+      code: 'bn',
+      nativeName: 'বাংলা',
+      englishName: 'Bengali',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.gujarati,
+      code: 'gu',
+      nativeName: 'ગુજરાતી',
+      englishName: 'Gujarati',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.punjabi,
+      code: 'pa',
+      nativeName: 'ਪੰਜਾਬੀ',
+      englishName: 'Punjabi',
+      flag: '🇮🇳',
+    ),
+    const LanguageConfig(
+      language: AppLanguage.urdu,
+      code: 'ur',
+      nativeName: 'اردو',
+      englishName: 'Urdu',
+      flag: '🇵🇰',
+    ),
+  ];
 }
 
 /// Onboarding Service - Manages onboarding state and data
@@ -370,8 +363,9 @@ class OnboardingService {
 
     // 2. Repository Check (Firestore)
     try {
-      isCompleted =
-          await sl<OnboardingRepository>().hasCompletedOnboarding(ownerId);
+      isCompleted = await sl<OnboardingRepository>().hasCompletedOnboarding(
+        ownerId,
+      );
     } catch (e) {
       debugPrint('[OnboardingService] Repository check failed: $e');
     }
@@ -412,7 +406,8 @@ class OnboardingService {
           debugPrint('[OnboardingService] Onboarding completed via repository');
         } else {
           debugPrint(
-              '[OnboardingService] Repository completion failed: ${result.errorMessage}');
+            '[OnboardingService] Repository completion failed: ${result.errorMessage}',
+          );
         }
       }
     } catch (e) {
@@ -477,10 +472,14 @@ class OnboardingService {
 
     final ownerId = sl<SessionManager>().ownerId;
     if (ownerId != null) {
-      final config =
-          LanguageConfig.all.firstWhere((l) => l.language == language);
-      await sl<ShopRepository>()
-          .saveLanguage(ownerId, language.name, config.code);
+      final config = LanguageConfig.all.firstWhere(
+        (l) => l.language == language,
+      );
+      await sl<ShopRepository>().saveLanguage(
+        ownerId,
+        language.name,
+        config.code,
+      );
     }
   }
 

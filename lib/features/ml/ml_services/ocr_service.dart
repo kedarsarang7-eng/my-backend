@@ -71,13 +71,15 @@ class MLKitOcrService {
 
     try {
       debugPrint(
-          'MLKitOcrService: Processing image with ${script.name} script');
+        'MLKitOcrService: Processing image with ${script.name} script',
+      );
       final inputImage = InputImage.fromFilePath(imagePath);
       final recognizer = _getRecognizer(script);
       final recognizedText = await recognizer.processImage(inputImage);
 
       debugPrint(
-          'MLKitOcrService: Found ${recognizedText.blocks.length} text blocks');
+        'MLKitOcrService: Found ${recognizedText.blocks.length} text blocks',
+      );
 
       return _parseRecognizedText(recognizedText, script);
     } catch (e, stack) {
@@ -138,7 +140,7 @@ class MLKitOcrService {
       'payable',
       'amount',
       'net',
-      'sum'
+      'sum',
     ];
     const gstKeywords = ['gst', 'tax', 'cgst', 'sgst', 'igst', 'vat'];
 
@@ -225,14 +227,16 @@ class MLKitOcrService {
         }
       }
 
-      items.add(ScannedItem(
-        name: name,
-        quantity: quantity,
-        price: price,
-        amount: quantity * price,
-        confidence: confidence,
-        rawLine: lineText,
-      ));
+      items.add(
+        ScannedItem(
+          name: name,
+          quantity: quantity,
+          price: price,
+          amount: quantity * price,
+          confidence: confidence,
+          rawLine: lineText,
+        ),
+      );
     }
 
     // Calculate overall confidence

@@ -144,10 +144,7 @@ User: "Hello, how are you?"
   }
 
   /// Simple chat completion (for non-SQL queries)
-  Future<String> chat({
-    required String message,
-    String? systemPrompt,
-  }) async {
+  Future<String> chat({required String message, String? systemPrompt}) async {
     try {
       final response = await http.post(
         Uri.parse(_baseUrl),

@@ -230,8 +230,10 @@ class AccountingService {
     await _lockingService.validateAction(userId, date);
 
     // 2. Fetch Original Entries
-    final entries =
-        await _journalService.getEntriesBySource(sourceType, sourceId);
+    final entries = await _journalService.getEntriesBySource(
+      sourceType,
+      sourceId,
+    );
 
     if (entries.isEmpty) {
       // Nothing to reverse (maybe legacy data or draft), just warn/return

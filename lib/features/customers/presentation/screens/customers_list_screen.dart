@@ -58,8 +58,10 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
                     style: const TextStyle(color: FuturisticColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'Search by Name or Phone...',
-                      prefixIcon: const Icon(Icons.search,
-                          color: FuturisticColors.textSecondary),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: FuturisticColors.textSecondary,
+                      ),
                       filled: true,
                       fillColor: FuturisticColors.surfaceHighlight,
                       border: OutlineInputBorder(
@@ -80,13 +82,17 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
             child: customersAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(
-                  child: Text('Error: $err',
-                      style: const TextStyle(color: FuturisticColors.error))),
+                child: Text(
+                  'Error: $err',
+                  style: const TextStyle(color: FuturisticColors.error),
+                ),
+              ),
               data: (customers) {
                 // Filter Logic
                 var filtered = customers.where((c) {
                   final query = _searchCtrl.text.toLowerCase();
-                  final matchesSearch = c.name.toLowerCase().contains(query) ||
+                  final matchesSearch =
+                      c.name.toLowerCase().contains(query) ||
                       (c.phone?.contains(query) ?? false);
 
                   if (_filter == 'Pending') {
@@ -108,8 +114,9 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>
-                                CustomerDetailScreen(customerId: c.id)),
+                          builder: (_) =>
+                              CustomerDetailScreen(customerId: c.id),
+                        ),
                       );
                     }
                   },
@@ -121,18 +128,24 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
                         children: [
                           CircleAvatar(
                             radius: 16,
-                            backgroundColor:
-                                FuturisticColors.primary.withOpacity(0.2),
-                            child: Text(c.name[0].toUpperCase(),
-                                style: const TextStyle(
-                                    color: FuturisticColors.primary,
-                                    fontWeight: FontWeight.bold)),
+                            backgroundColor: FuturisticColors.primary
+                                .withOpacity(0.2),
+                            child: Text(
+                              c.name[0].toUpperCase(),
+                              style: const TextStyle(
+                                color: FuturisticColors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 12),
-                          Text(c.name,
-                              style: const TextStyle(
-                                  color: FuturisticColors.textPrimary,
-                                  fontWeight: FontWeight.w600)),
+                          Text(
+                            c.name,
+                            style: const TextStyle(
+                              color: FuturisticColors.textPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -162,19 +175,26 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
                       builder: (c) => Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.receipt_long,
-                                color: FuturisticColors.accent1, size: 20),
+                            icon: const Icon(
+                              Icons.receipt_long,
+                              color: FuturisticColors.accent1,
+                              size: 20,
+                            ),
                             tooltip: 'New Bill',
                             onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) =>
-                                      BillCreationScreenV2(initialCustomer: c)),
+                                builder: (_) =>
+                                    BillCreationScreenV2(initialCustomer: c),
+                              ),
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.payment,
-                                color: FuturisticColors.success, size: 20),
+                            icon: const Icon(
+                              Icons.payment,
+                              color: FuturisticColors.success,
+                              size: 20,
+                            ),
                             tooltip: 'Record Payment',
                             onPressed: () => _showPaymentDialog(c),
                           ),
@@ -211,9 +231,10 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(
-              color: isSelected
-                  ? FuturisticColors.primary
-                  : FuturisticColors.border),
+            color: isSelected
+                ? FuturisticColors.primary
+                : FuturisticColors.border,
+          ),
         ),
       ),
     );
@@ -225,8 +246,10 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: FuturisticColors.cardBackground,
-        title: Text('Record Payment: ${c.name}',
-            style: const TextStyle(color: FuturisticColors.textPrimary)),
+        title: Text(
+          'Record Payment: ${c.name}',
+          style: const TextStyle(color: FuturisticColors.textPrimary),
+        ),
         content: TextField(
           controller: amountCtrl,
           keyboardType: TextInputType.number,
@@ -239,32 +262,39 @@ class _CustomersListScreenState extends ConsumerState<CustomersListScreen> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           FuturisticButton.primary(
-              label: 'Confirm',
-              icon: Icons.check,
-              onPressed: () async {
-                final amount = double.tryParse(amountCtrl.text);
-                final userId = sl<SessionManager>().ownerId;
-                if (amount != null && amount > 0 && userId != null) {
-                  final result = await sl<CustomersRepository>().recordPayment(
-                    customerId: c.id,
-                    amount: amount,
-                    userId: userId,
-                  );
-                  if (mounted) Navigator.pop(ctx);
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(result.isSuccess
-                          ? 'Payment Recorded'
-                          : 'Failed: ${result.errorMessage}'),
+            label: 'Confirm',
+            icon: Icons.check,
+            onPressed: () async {
+              final amount = double.tryParse(amountCtrl.text);
+              final userId = sl<SessionManager>().ownerId;
+              if (amount != null && amount > 0 && userId != null) {
+                final result = await sl<CustomersRepository>().recordPayment(
+                  customerId: c.id,
+                  amount: amount,
+                  userId: userId,
+                );
+                if (mounted) Navigator.pop(ctx);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        result.isSuccess
+                            ? 'Payment Recorded'
+                            : 'Failed: ${result.errorMessage}',
+                      ),
                       backgroundColor: result.isSuccess
                           ? FuturisticColors.success
                           : FuturisticColors.error,
-                    ));
-                  }
+                    ),
+                  );
                 }
-              })
+              }
+            },
+          ),
         ],
       ),
     );

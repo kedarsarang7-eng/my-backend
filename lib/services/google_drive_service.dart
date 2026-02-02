@@ -48,8 +48,9 @@ class GoogleDriveService {
 
       // Authenticate and authorize Drive scopes
       final user = await googleSignIn.authenticate(scopeHint: driveScopes);
-      final authResult =
-          await user.authorizationClient.authorizeScopes(driveScopes);
+      final authResult = await user.authorizationClient.authorizeScopes(
+        driveScopes,
+      );
 
       // Create HTTP client with access token
       final client = _AuthClient(http.Client(), authResult.accessToken);
@@ -170,8 +171,10 @@ class GoogleDriveService {
         ..parents = [folderId];
 
       final media = drive.Media(file.openRead(), await file.length());
-      final result =
-          await _driveApi!.files.create(driveFile, uploadMedia: media);
+      final result = await _driveApi!.files.create(
+        driveFile,
+        uploadMedia: media,
+      );
 
       debugPrint('GoogleDrive: Uploaded ${result.name} (${result.id})');
       return result.id;
@@ -182,8 +185,9 @@ class GoogleDriveService {
   }
 
   /// List backup files in Drive
-  Future<List<DriveBackupFile>> listBackups(
-      {String subfolder = 'Backups'}) async {
+  Future<List<DriveBackupFile>> listBackups({
+    String subfolder = 'Backups',
+  }) async {
     if (_driveApi == null || _appFolderId == null) return [];
 
     try {
@@ -199,13 +203,15 @@ class GoogleDriveService {
       );
 
       return (response.files ?? [])
-          .map((f) => DriveBackupFile(
-                id: f.id ?? '',
-                name: f.name ?? '',
-                size: int.tryParse(f.size ?? '0') ?? 0,
-                createdAt: f.createdTime,
-                modifiedAt: f.modifiedTime,
-              ))
+          .map(
+            (f) => DriveBackupFile(
+              id: f.id ?? '',
+              name: f.name ?? '',
+              size: int.tryParse(f.size ?? '0') ?? 0,
+              createdAt: f.createdTime,
+              modifiedAt: f.modifiedTime,
+            ),
+          )
           .toList();
     } catch (e) {
       debugPrint('GoogleDrive: List error: $e');
@@ -221,10 +227,12 @@ class GoogleDriveService {
       final tempDir = await getTemporaryDirectory();
       final localPath = '${tempDir.path}/$localName';
 
-      final media = await _driveApi!.files.get(
-        fileId,
-        downloadOptions: drive.DownloadOptions.fullMedia,
-      ) as drive.Media;
+      final media =
+          await _driveApi!.files.get(
+                fileId,
+                downloadOptions: drive.DownloadOptions.fullMedia,
+              )
+              as drive.Media;
 
       final file = File(localPath);
       final sink = file.openWrite();

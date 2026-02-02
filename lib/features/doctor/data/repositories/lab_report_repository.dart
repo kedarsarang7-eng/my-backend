@@ -12,8 +12,8 @@ class LabReportRepository {
   LabReportRepository({
     required AppDatabase db,
     required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  }) : _db = db,
+       _syncManager = syncManager;
 
   String get collectionName => 'labReports';
 
@@ -25,7 +25,9 @@ class LabReportRepository {
   Future<void> orderLabTest(LabReportModel report) async {
     final now = DateTime.now();
 
-    await _db.into(_db.labReports).insert(
+    await _db
+        .into(_db.labReports)
+        .insert(
           LabReportsCompanion.insert(
             id: report.id,
             patientId: report.patientId,
@@ -38,13 +40,15 @@ class LabReportRepository {
         );
 
     // Queue for sync
-    await _syncManager.enqueue(SyncQueueItem.create(
-      userId: report.doctorId,
-      operationType: SyncOperationType.create,
-      targetCollection: collectionName,
-      documentId: report.id,
-      payload: report.toMap(),
-    ));
+    await _syncManager.enqueue(
+      SyncQueueItem.create(
+        userId: report.doctorId,
+        operationType: SyncOperationType.create,
+        targetCollection: collectionName,
+        documentId: report.id,
+        payload: report.toMap(),
+      ),
+    );
   }
 
   // ============================================
@@ -53,31 +57,35 @@ class LabReportRepository {
 
   /// Get all lab reports for a patient
   Future<List<LabReportModel>> getReportsForPatient(String patientId) async {
-    final rows = await (_db.select(_db.labReports)
-          ..where((t) => t.patientId.equals(patientId))
-          ..orderBy([(t) => OrderingTerm.desc(t.uploadedAt)]))
-        .get();
+    final rows =
+        await (_db.select(_db.labReports)
+              ..where((t) => t.patientId.equals(patientId))
+              ..orderBy([(t) => OrderingTerm.desc(t.uploadedAt)]))
+            .get();
 
     return rows.map(_mapToModel).toList();
   }
 
   /// Get pending lab reports for a doctor
   Future<List<LabReportModel>> getPendingReports(String doctorId) async {
-    final rows = await (_db.select(_db.labReports)
-          ..where((t) =>
-              t.doctorId.equals(doctorId) &
-              t.status.isIn(['PENDING', 'COLLECTED', 'PROCESSING']))
-          ..orderBy([(t) => OrderingTerm.asc(t.uploadedAt)]))
-        .get();
+    final rows =
+        await (_db.select(_db.labReports)
+              ..where(
+                (t) =>
+                    t.doctorId.equals(doctorId) &
+                    t.status.isIn(['PENDING', 'COLLECTED', 'PROCESSING']),
+              )
+              ..orderBy([(t) => OrderingTerm.asc(t.uploadedAt)]))
+            .get();
 
     return rows.map(_mapToModel).toList();
   }
 
   /// Get lab report by ID
   Future<LabReportModel?> getById(String id) async {
-    final row = await (_db.select(_db.labReports)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.labReports,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (row == null) return null;
     return _mapToModel(row);
@@ -112,13 +120,15 @@ class LabReportRepository {
     // Get updated record for sync
     final updated = await getById(id);
     if (updated != null) {
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: updated.doctorId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: id,
-        payload: updated.toMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: updated.doctorId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: id,
+          payload: updated.toMap(),
+        ),
+      );
     }
   }
 
@@ -134,13 +144,15 @@ class LabReportRepository {
 
     final updated = await getById(id);
     if (updated != null) {
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: updated.doctorId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: id,
-        payload: updated.toMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: updated.doctorId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: id,
+          payload: updated.toMap(),
+        ),
+      );
     }
   }
 

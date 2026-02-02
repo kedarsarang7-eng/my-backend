@@ -14,8 +14,9 @@ class ProductBatchRepository {
     return (_db.select(_db.productBatches)
           ..where((t) => t.productId.equals(productId))
           ..where((t) => t.status.equals('ACTIVE'))
-          ..where((t) =>
-              t.stockQuantity.isBiggerThanValue(0)) // Only available stock
+          ..where(
+            (t) => t.stockQuantity.isBiggerThanValue(0),
+          ) // Only available stock
           ..orderBy([
             // Primary Sort: Expiry Date ASC (Earliest first)
             (t) =>
@@ -48,9 +49,9 @@ class ProductBatchRepository {
   /// Returns the new quantity
   Future<double> updateBatchStock(String batchId, double deltaQty) async {
     return await _db.transaction(() async {
-      final batch = await (_db.select(_db.productBatches)
-            ..where((t) => t.id.equals(batchId)))
-          .getSingle();
+      final batch = await (_db.select(
+        _db.productBatches,
+      )..where((t) => t.id.equals(batchId))).getSingle();
 
       final newQty = batch.stockQuantity + deltaQty;
 
@@ -61,12 +62,15 @@ class ProductBatchRepository {
         throw Exception("Insufficient stock in batch ${batch.batchNumber}");
       }
 
-      await (_db.update(_db.productBatches)..where((t) => t.id.equals(batchId)))
-          .write(ProductBatchesCompanion(
-        stockQuantity: Value(newQty),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false), // Trigger sync
-      ));
+      await (_db.update(
+        _db.productBatches,
+      )..where((t) => t.id.equals(batchId))).write(
+        ProductBatchesCompanion(
+          stockQuantity: Value(newQty),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false), // Trigger sync
+        ),
+      );
 
       return newQty;
     });
@@ -74,11 +78,13 @@ class ProductBatchRepository {
 
   /// Find a specific batch by number and product
   Future<ProductBatchEntity?> getBatchByNumber(
-      String productId, String batchNumber) {
-    return (_db.select(_db.productBatches)
-          ..where((t) =>
-              t.productId.equals(productId) &
-              t.batchNumber.equals(batchNumber)))
+    String productId,
+    String batchNumber,
+  ) {
+    return (_db.select(_db.productBatches)..where(
+          (t) =>
+              t.productId.equals(productId) & t.batchNumber.equals(batchNumber),
+        ))
         .getSingleOrNull();
   }
 }

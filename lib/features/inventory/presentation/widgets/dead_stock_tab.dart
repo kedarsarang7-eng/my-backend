@@ -30,18 +30,21 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
     try {
       final userId = sl<SessionManager>().ownerId;
       if (userId != null) {
-        final result = await sl<ProductsRepository>()
-            .getDeadStock(userId: userId, daysUnsold: _selectedDays);
+        final result = await sl<ProductsRepository>().getDeadStock(
+          userId: userId,
+          daysUnsold: _selectedDays,
+        );
         if (result.isSuccess) {
           final items = result.data ?? [];
           setState(() {
             _deadStockItems = items;
             _blockedCapital = items.fold(
-                0,
-                (sum, p) =>
-                    sum +
-                    (p.costPrice > 0 ? p.costPrice : p.sellingPrice * 0.7) *
-                        p.stockQuantity);
+              0,
+              (sum, p) =>
+                  sum +
+                  (p.costPrice > 0 ? p.costPrice : p.sellingPrice * 0.7) *
+                      p.stockQuantity,
+            );
             // Fallback to 70% of selling price if cost price not set
           });
         }
@@ -63,8 +66,10 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
           color: isDark ? const Color(0xFF1E293B) : Colors.white,
           child: Row(
             children: [
-              const Text('Unsold for:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Unsold for:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(width: 12),
               Wrap(
                 spacing: 8,
@@ -84,8 +89,9 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
                       color: isSelected
                           ? FuturisticColors.warning
                           : (isDark ? Colors.white70 : Colors.black87),
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -107,8 +113,9 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(16),
-            border:
-                Border.all(color: FuturisticColors.warning.withOpacity(0.3)),
+            border: Border.all(
+              color: FuturisticColors.warning.withOpacity(0.3),
+            ),
             boxShadow: [
               BoxShadow(
                 color: FuturisticColors.warning.withOpacity(0.1),
@@ -147,8 +154,11 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
                   color: FuturisticColors.warning.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.money_off,
-                    color: FuturisticColors.warning, size: 28),
+                child: const Icon(
+                  Icons.money_off,
+                  color: FuturisticColors.warning,
+                  size: 28,
+                ),
               ),
             ],
           ),
@@ -159,34 +169,34 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _deadStockItems.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.inventory_2_outlined,
-                              size: 64,
-                              color: FuturisticColors.success.withOpacity(0.5)),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Great job! No dead stock found.',
-                            style: TextStyle(
-                              color: isDark
-                                  ? Colors.white60
-                                  : Colors.grey.shade600,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.inventory_2_outlined,
+                        size: 64,
+                        color: FuturisticColors.success.withOpacity(0.5),
                       ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _deadStockItems.length,
-                      itemBuilder: (context, index) {
-                        final product = _deadStockItems[index];
-                        return _buildDeadStockCard(product, isDark);
-                      },
-                    ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Great job! No dead stock found.',
+                        style: TextStyle(
+                          color: isDark ? Colors.white60 : Colors.grey.shade600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _deadStockItems.length,
+                  itemBuilder: (context, index) {
+                    final product = _deadStockItems[index];
+                    return _buildDeadStockCard(product, isDark);
+                  },
+                ),
         ),
       ],
     );
@@ -210,7 +220,7 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
 
     final blockedValue =
         (p.costPrice > 0 ? p.costPrice : p.sellingPrice * 0.7) *
-            p.stockQuantity;
+        p.stockQuantity;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -245,7 +255,8 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
                 Text(
                   'Stock: ${p.stockQuantity} ${p.unit} | Blocked: ₹${blockedValue.toStringAsFixed(0)}',
                   style: TextStyle(
-                      color: isDark ? Colors.white60 : Colors.grey.shade600),
+                    color: isDark ? Colors.white60 : Colors.grey.shade600,
+                  ),
                 ),
               ],
             ),
@@ -271,8 +282,9 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: suggestionColor.withOpacity(0.1),
-              borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(12),
+              ),
             ),
             child: Row(
               children: [
@@ -288,8 +300,11 @@ class _DeadStockTabState extends ConsumerState<DeadStockTab> {
                     ),
                   ),
                 ),
-                Icon(Icons.chevron_right,
-                    size: 16, color: suggestionColor.withOpacity(0.5)),
+                Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: suggestionColor.withOpacity(0.5),
+                ),
               ],
             ),
           ),

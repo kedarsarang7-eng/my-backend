@@ -69,7 +69,8 @@ class ShortcutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonColor = color ??
+    final buttonColor =
+        color ??
         (isPrimary ? FuturisticColors.primary : FuturisticColors.surface);
 
     return Material(
@@ -167,26 +168,27 @@ class ShortcutActionBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.2),
-        border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.05)),
-        ),
+        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05))),
       ),
       child: Row(
         mainAxisAlignment: alignment,
-        children: buttons
-            .expand((config) => [
-                  ShortcutButton(
-                    label: config.label,
-                    shortcut: config.shortcut,
-                    icon: config.icon,
-                    onPressed: config.onPressed,
-                    isPrimary: config.isPrimary,
-                    color: config.color,
-                  ),
-                  const SizedBox(width: 12),
-                ])
-            .toList()
-          ..removeLast(), // Remove last spacer
+        children:
+            buttons
+                .expand(
+                  (config) => [
+                    ShortcutButton(
+                      label: config.label,
+                      shortcut: config.shortcut,
+                      icon: config.icon,
+                      onPressed: config.onPressed,
+                      isPrimary: config.isPrimary,
+                      color: config.color,
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                )
+                .toList()
+              ..removeLast(), // Remove last spacer
       ),
     );
   }

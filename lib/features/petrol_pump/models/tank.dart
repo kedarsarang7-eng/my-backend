@@ -33,10 +33,10 @@ class Tank {
     DateTime? updatedAt,
     this.lastDipReading,
     this.isActive = true,
-  })  : currentStock =
-            currentStock ?? (openingStock + purchaseQuantity - salesDeduction),
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : currentStock =
+           currentStock ?? (openingStock + purchaseQuantity - salesDeduction),
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Calculated stock based on opening + purchases - sales
   double get calculatedStock =>
@@ -130,23 +130,23 @@ class Tank {
   }
 
   Map<String, dynamic> toMap() => {
-        'tankId': tankId,
-        'tankName': tankName,
-        'fuelTypeId': fuelTypeId,
-        'fuelTypeName': fuelTypeName,
-        'capacity': capacity,
-        'openingStock': openingStock,
-        'purchaseQuantity': purchaseQuantity,
-        'salesDeduction': salesDeduction,
-        'currentStock': currentStock,
-        'calculatedStock': calculatedStock,
-        'stockVariance': stockVariance,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'lastDipReading': lastDipReading?.toIso8601String(),
-        'isActive': isActive,
-      };
+    'tankId': tankId,
+    'tankName': tankName,
+    'fuelTypeId': fuelTypeId,
+    'fuelTypeName': fuelTypeName,
+    'capacity': capacity,
+    'openingStock': openingStock,
+    'purchaseQuantity': purchaseQuantity,
+    'salesDeduction': salesDeduction,
+    'currentStock': currentStock,
+    'calculatedStock': calculatedStock,
+    'stockVariance': stockVariance,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'lastDipReading': lastDipReading?.toIso8601String(),
+    'isActive': isActive,
+  };
 
   factory Tank.fromMap(String id, Map<String, dynamic> map) {
     return Tank(

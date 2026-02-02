@@ -36,7 +36,8 @@ class _P2DCropScreenState extends State<P2DCropScreen> {
   void initState() {
     super.initState();
     // Initialize corners (default to near edges if not provided)
-    _corners = widget.initialCorners ??
+    _corners =
+        widget.initialCorners ??
         [
           const Offset(0.08, 0.08),
           const Offset(0.92, 0.08),
@@ -83,9 +84,9 @@ class _P2DCropScreenState extends State<P2DCropScreen> {
       }
     } catch (e) {
       debugPrint('Crop error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to process image')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to process image')));
     } finally {
       if (mounted) setState(() => _isProcessing = false);
     }
@@ -110,10 +111,7 @@ class _P2DCropScreenState extends State<P2DCropScreen> {
                   fit: StackFit.expand,
                   children: [
                     // Image
-                    Image.file(
-                      File(widget.imagePath),
-                      fit: BoxFit.contain,
-                    ),
+                    Image.file(File(widget.imagePath), fit: BoxFit.contain),
 
                     // Crop overlay
                     CustomPaint(
@@ -148,10 +146,7 @@ class _P2DCropScreenState extends State<P2DCropScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: Row(
@@ -196,10 +191,7 @@ class _P2DCropScreenState extends State<P2DCropScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: Row(
@@ -222,8 +214,9 @@ class _P2DCropScreenState extends State<P2DCropScreen> {
                             ? kP2DAccentCyan.withOpacity(0.2)
                             : kP2DGlassSurface,
                         border: Border.all(
-                          color:
-                              _autoEnhance ? kP2DAccentCyan : kP2DGlassBorder,
+                          color: _autoEnhance
+                              ? kP2DAccentCyan
+                              : kP2DGlassBorder,
                         ),
                       ),
                       child: Row(
@@ -347,10 +340,7 @@ class _CropOverlayPainter extends CustomPainter {
       cropPath,
     );
 
-    canvas.drawPath(
-      combined,
-      Paint()..color = Colors.black.withOpacity(0.6),
-    );
+    canvas.drawPath(combined, Paint()..color = Colors.black.withOpacity(0.6));
 
     // Crop border with glow
     final borderPaint = Paint()

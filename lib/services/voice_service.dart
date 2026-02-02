@@ -67,10 +67,12 @@ class VoiceService {
     }
 
     // 2. Extract Quantity with Unit (keywords: kg, g, l, ml, box, packet, pcs, tablets)
-    final qtyUnitRegex =
-        RegExp(r'(\d+(\.\d+)?)\s*(kg|g|l|ml|box|packet|pcs|tablets|strips)');
-    final qtyUnitMatch =
-        qtyUnitRegex.firstMatch(name); // Search in remaining text
+    final qtyUnitRegex = RegExp(
+      r'(\d+(\.\d+)?)\s*(kg|g|l|ml|box|packet|pcs|tablets|strips)',
+    );
+    final qtyUnitMatch = qtyUnitRegex.firstMatch(
+      name,
+    ); // Search in remaining text
     if (qtyUnitMatch != null) {
       qty = double.tryParse(qtyUnitMatch.group(1) ?? '');
       unit = qtyUnitMatch.group(3) ?? 'pcs';

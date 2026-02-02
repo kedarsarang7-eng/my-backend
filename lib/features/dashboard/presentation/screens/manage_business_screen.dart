@@ -78,7 +78,9 @@ class _ManageBusinessDashboardState
   void initState() {
     super.initState();
     _fadeController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
     _fadeController.forward();
   }
 
@@ -116,18 +118,17 @@ class _ManageBusinessDashboardState
               // Header
               SliverToBoxAdapter(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Manage Business",
-                            style: headingStyle,
-                          ),
+                          Text("Manage Business", style: headingStyle),
                           _buildRequestsIcon(context, isDark),
                         ],
                       ),
@@ -161,52 +162,58 @@ class _ManageBusinessDashboardState
                       ),
                       // Business Profile (New)
                       GlassCard(
-                          borderRadius: 16,
-                          child: _buildListItem(
-                            title: "Business Profile",
-                            isDark: isDark,
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const BusinessProfileScreen())),
-                          )),
+                        borderRadius: 16,
+                        child: _buildListItem(
+                          title: "Business Profile",
+                          isDark: isDark,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const BusinessProfileScreen(),
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 16),
 
                       // Parties Section (New)
                       GlassCard(
-                          borderRadius: 16,
-                          child: _buildExpandableSection(
-                              title: "Parties (Ledger)",
-                              icon: Icons.people_alt_rounded,
-                              color: Colors.orangeAccent,
+                        borderRadius: 16,
+                        child: _buildExpandableSection(
+                          title: "Parties (Ledger)",
+                          icon: Icons.people_alt_rounded,
+                          color: Colors.orangeAccent,
+                          isDark: isDark,
+                          isExpanded: _isPartiesExpanded,
+                          onToggle: () {
+                            setState(() {
+                              _isPartiesExpanded = !_isPartiesExpanded;
+                            });
+                          },
+                          children: [
+                            _buildListItem(
+                              title: "My Customers",
                               isDark: isDark,
-                              isExpanded: _isPartiesExpanded,
-                              onToggle: () {
-                                setState(() {
-                                  _isPartiesExpanded = !_isPartiesExpanded;
-                                });
-                              },
-                              children: [
-                                _buildListItem(
-                                  title: "My Customers",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const CustomersListScreen())),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const CustomersListScreen(),
                                 ),
-                                _buildListItem(
-                                  title: "My Suppliers",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const VendorPayoutsScreen())),
+                              ),
+                            ),
+                            _buildListItem(
+                              title: "My Suppliers",
+                              isDark: isDark,
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const VendorPayoutsScreen(),
                                 ),
-                              ])),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 16),
 
                       Padding(
@@ -240,53 +247,61 @@ class _ManageBusinessDashboardState
                               title: "Revenue Overview",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const SaleHomeScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SaleHomeScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Receipt Entry",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const ReceiptEntryScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ReceiptEntryScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Return Inwards",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const ReturnInwardsScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ReturnInwardsScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Proforma & Bids",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const ProformaScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ProformaScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Booking Order",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const BookingOrderScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BookingOrderScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Dispatch Note",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const DispatchNoteScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const DispatchNoteScreen(),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -312,37 +327,42 @@ class _ManageBusinessDashboardState
                               title: "BuyFlow Dashboard",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const BuyFlowDashboard())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BuyFlowDashboard(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Stock Entry",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const StockEntryScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const StockEntryScreen(),
+                                ),
+                              ),
                             ),
                             // Vendor Payouts moved to Parties Section as 'My Suppliers'
                             _buildListItem(
                               title: "Stock Reversal",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const StockReversalScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const StockReversalScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Buy Orders",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const BuyOrdersScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BuyOrdersScreen(),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -365,13 +385,16 @@ class _ManageBusinessDashboardState
                             },
                             children: [
                               _buildListItem(
-                                  title: "Manage Pump",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const PetrolPumpManagementScreen()))),
+                                title: "Manage Pump",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const PetrolPumpManagementScreen(),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -395,33 +418,42 @@ class _ManageBusinessDashboardState
                             },
                             children: [
                               _buildListItem(
-                                  title: "Table Management",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const TableManagementScreen(
-                                                  vendorId: 'SYSTEM')))),
+                                title: "Table Management",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const TableManagementScreen(
+                                      vendorId: 'SYSTEM',
+                                    ),
+                                  ),
+                                ),
+                              ),
                               _buildListItem(
-                                  title: "Kitchen Display (KDS)",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const KitchenDisplayScreen(
-                                                  vendorId:
-                                                      'SYSTEM')))), // Use SYSTEM or session ID
+                                title: "Kitchen Display (KDS)",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const KitchenDisplayScreen(
+                                      vendorId: 'SYSTEM',
+                                    ),
+                                  ),
+                                ),
+                              ), // Use SYSTEM or session ID
                               _buildListItem(
-                                  title: "Menu Management",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const FoodMenuManagementScreen(
-                                                  vendorId: 'SYSTEM')))),
+                                title: "Menu Management",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const FoodMenuManagementScreen(
+                                          vendorId: 'SYSTEM',
+                                        ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -445,37 +477,47 @@ class _ManageBusinessDashboardState
                             },
                             children: [
                               _buildListItem(
-                                  title: "Doctor Dashboard",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const DoctorDashboardScreen()))),
+                                title: "Doctor Dashboard",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const DoctorDashboardScreen(),
+                                  ),
+                                ),
+                              ),
                               _buildListItem(
-                                  title: "Appointments",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const AppointmentScreen()))),
+                                title: "Appointments",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const AppointmentScreen(),
+                                  ),
+                                ),
+                              ),
                               _buildListItem(
-                                  title: "Patients Registry",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const PatientListScreen()))),
+                                title: "Patients Registry",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const PatientListScreen(),
+                                  ),
+                                ),
+                              ),
                               _buildListItem(
-                                  title: "Prescriptions",
-                                  isDark: isDark,
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const SafePrescriptionListScreen()))),
+                                title: "Prescriptions",
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const SafePrescriptionListScreen(),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -501,44 +543,52 @@ class _ManageBusinessDashboardState
                               title: "Analytics Hub",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const ReportsHubScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ReportsHubScreen(),
+                                ),
+                              ),
                               isHighlight: true,
                             ),
                             _buildListItem(
                               title: "Turnover Analysis",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const BillingReportsScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BillingReportsScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Income Statement",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const PnlScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const PnlScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Financial Position",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const BalanceScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BalanceScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Print Settings",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const PrintMenuScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const PrintMenuScreen(),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -564,17 +614,21 @@ class _ManageBusinessDashboardState
                               title: "Bank Accounts",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const BankScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BankScreen(),
+                                ),
+                              ),
                             ),
                             _buildListItem(
                               title: "Backup & Restore",
                               isDark: isDark,
                               onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const BackupScreen())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BackupScreen(),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -606,8 +660,9 @@ class _ManageBusinessDashboardState
         InkWell(
           onTap: onToggle,
           borderRadius: BorderRadius.vertical(
-              top: const Radius.circular(16),
-              bottom: isExpanded ? Radius.zero : const Radius.circular(16)),
+            top: const Radius.circular(16),
+            bottom: isExpanded ? Radius.zero : const Radius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(
@@ -648,12 +703,12 @@ class _ManageBusinessDashboardState
         // Expanded Content
         AnimatedCrossFade(
           firstChild: Container(),
-          secondChild: Column(children: [
-            const Divider(height: 1, thickness: 0.5),
-            ...children,
-          ]),
-          crossFadeState:
-              isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          secondChild: Column(
+            children: [const Divider(height: 1, thickness: 0.5), ...children],
+          ),
+          crossFadeState: isExpanded
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 300),
           sizeCurve: Curves.easeInOutQuart,
         ),
@@ -670,8 +725,12 @@ class _ManageBusinessDashboardState
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding:
-            const EdgeInsets.only(left: 60, right: 16, top: 12, bottom: 12),
+        padding: const EdgeInsets.only(
+          left: 60,
+          right: 16,
+          top: 12,
+          bottom: 12,
+        ),
         child: Row(
           children: [
             Expanded(
@@ -709,8 +768,10 @@ class _ManageBusinessDashboardState
         return Stack(
           children: [
             IconButton(
-              icon: Icon(Icons.notifications_active_rounded,
-                  color: isDark ? Colors.white70 : Colors.black87),
+              icon: Icon(
+                Icons.notifications_active_rounded,
+                color: isDark ? Colors.white70 : Colors.black87,
+              ),
               onPressed: () => _showRequestsSheet(context, requests),
             ),
             if (count > 0)
@@ -720,14 +781,19 @@ class _ManageBusinessDashboardState
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
-                      color: Colors.red, shape: BoxShape.circle),
-                  child: Text('$count',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold)),
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '$count',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              )
+              ),
           ],
         );
       },
@@ -735,7 +801,9 @@ class _ManageBusinessDashboardState
   }
 
   void _showRequestsSheet(
-      BuildContext context, List<ConnectionRequest> requests) {
+    BuildContext context,
+    List<ConnectionRequest> requests,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -749,18 +817,25 @@ class _ManageBusinessDashboardState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Connection Requests',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+            const Text(
+              'Connection Requests',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(height: 12),
             if (requests.isEmpty)
               const Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Center(
-                      child: Text('No pending requests',
-                          style: TextStyle(color: Colors.black54))))
+                padding: EdgeInsets.all(20),
+                child: Center(
+                  child: Text(
+                    'No pending requests',
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+              )
             else
               ListView.builder(
                 shrinkWrap: true,
@@ -770,28 +845,35 @@ class _ManageBusinessDashboardState
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                        req.customerName.isEmpty ? 'Unknown' : req.customerName,
-                        style: const TextStyle(color: Colors.black87)),
-                    subtitle: Text(req.customerPhone,
-                        style: const TextStyle(color: Colors.black54)),
+                      req.customerName.isEmpty ? 'Unknown' : req.customerName,
+                      style: const TextStyle(color: Colors.black87),
+                    ),
+                    subtitle: Text(
+                      req.customerPhone,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.check_circle,
-                              color: Colors.green),
+                          icon: const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          ),
                           onPressed: () async {
                             Navigator.pop(ctx); // Close first
                             try {
                               await ConnectionService().acceptRequest(req);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Accepted!')));
+                                  const SnackBar(content: Text('Accepted!')),
+                                );
                               }
                             } catch (e) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Error: $e')));
+                                  SnackBar(content: Text('Error: $e')),
+                                );
                               }
                             }
                           },

@@ -91,8 +91,9 @@ class _CustomerSearchSheetState extends State<CustomerSearchSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2)),
+              color: Colors.grey.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -104,8 +105,9 @@ class _CustomerSearchSheetState extends State<CustomerSearchSheet> {
                 filled: true,
                 fillColor: isDark ? Colors.black12 : Colors.grey.shade100,
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none),
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
@@ -125,9 +127,10 @@ class _CustomerSearchSheetState extends State<CustomerSearchSheet> {
                       final c = _filtered[index];
                       return ListTile(
                         leading: CircleAvatar(child: Text(c.name[0])),
-                        title: Text(c.name,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text(
+                          c.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         subtitle: Text(c.phone ?? ''),
                         onTap: () {
                           widget.onCustomerSelected(c);
@@ -150,8 +153,11 @@ class _CustomerSearchSheetState extends State<CustomerSearchSheet> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
-              Icon(Icons.auto_awesome,
-                  size: 16, color: Colors.purpleAccent.shade100),
+              Icon(
+                Icons.auto_awesome,
+                size: 16,
+                color: Colors.purpleAccent.shade100,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Predicted for You',

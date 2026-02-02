@@ -34,22 +34,20 @@ class SecurityMonitoringService {
 
   /// Start periodic anomaly detection
   void _startAnomalyDetection() {
-    _anomalyDetectionTimer = Timer.periodic(
-      const Duration(minutes: 5),
-      (_) async {
-        await _detectAnomalies();
-      },
-    );
+    _anomalyDetectionTimer = Timer.periodic(const Duration(minutes: 5), (
+      _,
+    ) async {
+      await _detectAnomalies();
+    });
   }
 
   /// Start periodic integrity checks
   void _startIntegrityChecks() {
-    _integrityCheckTimer = Timer.periodic(
-      const Duration(minutes: 10),
-      (_) async {
-        await _performIntegrityCheck();
-      },
-    );
+    _integrityCheckTimer = Timer.periodic(const Duration(minutes: 10), (
+      _,
+    ) async {
+      await _performIntegrityCheck();
+    });
   }
 
   /// Detect suspicious activity patterns
@@ -87,7 +85,8 @@ class SecurityMonitoringService {
       // Check configuration integrity
     } catch (e) {
       debugPrint(
-          '[SecurityMonitoringService._performIntegrityCheck] error: $e');
+        '[SecurityMonitoringService._performIntegrityCheck] error: $e',
+      );
       await _logSecurityIncident('INTEGRITY_CHECK_FAILED', e.toString());
     }
   }
@@ -120,7 +119,8 @@ class SecurityMonitoringService {
       _failedLoginAttempts = 0; // Reset after alert
     } catch (e) {
       debugPrint(
-          '[SecurityMonitoringService._alertBruteForceAttack] error: $e');
+        '[SecurityMonitoringService._alertBruteForceAttack] error: $e',
+      );
     }
   }
 
@@ -148,7 +148,8 @@ class SecurityMonitoringService {
       _sqlInjectionAttempts = 0;
     } catch (e) {
       debugPrint(
-          '[SecurityMonitoringService._alertSQLInjectionAttempt] error: $e');
+        '[SecurityMonitoringService._alertSQLInjectionAttempt] error: $e',
+      );
     }
   }
 
@@ -203,7 +204,8 @@ class SecurityMonitoringService {
       _firestoreRuleViolations = 0;
     } catch (e) {
       debugPrint(
-          '[SecurityMonitoringService._alertFirestoreRuleViolation] error: $e');
+        '[SecurityMonitoringService._alertFirestoreRuleViolation] error: $e',
+      );
     }
   }
 
@@ -283,7 +285,8 @@ class SecurityMonitoringService {
       'appTamperingAttempts': _appTamperingAttempts,
       'firestoreRuleViolations': _firestoreRuleViolations,
       'suspiciousActivities': _suspiciousActivities,
-      'status': _failedLoginAttempts +
+      'status':
+          _failedLoginAttempts +
                   _sqlInjectionAttempts +
                   _appTamperingAttempts +
                   _firestoreRuleViolations ==

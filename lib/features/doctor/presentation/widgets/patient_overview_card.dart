@@ -11,23 +11,43 @@ class PatientOverviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _buildStatCard('Total Patients', data['total'].toString(), Icons.people,
-            FuturisticColors.primary),
+        _buildStatCard(
+          'Total Patients',
+          data['total'].toString(),
+          Icons.people,
+          FuturisticColors.primary,
+        ),
         const SizedBox(width: 16),
-        _buildStatCard('New Patients', data['new'].toString(), Icons.person_add,
-            FuturisticColors.success),
+        _buildStatCard(
+          'New Patients',
+          data['new'].toString(),
+          Icons.person_add,
+          FuturisticColors.success,
+        ),
         const SizedBox(width: 16),
-        _buildStatCard('Returning', data['returning'].toString(), Icons.loop,
-            FuturisticColors.warning),
+        _buildStatCard(
+          'Returning',
+          data['returning'].toString(),
+          Icons.loop,
+          FuturisticColors.warning,
+        ),
         const SizedBox(width: 16),
-        _buildStatCard('Inactive', data['inactive'].toString(),
-            Icons.person_off, FuturisticColors.textDisabled),
+        _buildStatCard(
+          'Inactive',
+          data['inactive'].toString(),
+          Icons.person_off,
+          FuturisticColors.textDisabled,
+        ),
       ],
     );
   }
 
   Widget _buildStatCard(
-      String title, String value, IconData icon, Color color) {
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),

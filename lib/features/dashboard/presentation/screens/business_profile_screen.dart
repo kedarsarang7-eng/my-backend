@@ -100,12 +100,24 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
             children: [
               _buildTextField("Shop Name", _shopNameController, Icons.store),
               _buildTextField("Owner Name", _ownerNameController, Icons.person),
-              _buildTextField("Address", _addressController, Icons.location_on,
-                  maxLines: 3),
-              _buildTextField("Phone", _phoneController, Icons.phone,
-                  keyboardType: TextInputType.phone),
-              _buildTextField("Email", _emailController, Icons.email,
-                  keyboardType: TextInputType.emailAddress),
+              _buildTextField(
+                "Address",
+                _addressController,
+                Icons.location_on,
+                maxLines: 3,
+              ),
+              _buildTextField(
+                "Phone",
+                _phoneController,
+                Icons.phone,
+                keyboardType: TextInputType.phone,
+              ),
+              _buildTextField(
+                "Email",
+                _emailController,
+                Icons.email,
+                keyboardType: TextInputType.emailAddress,
+              ),
               _buildTextField("GSTIN", _gstinController, Icons.receipt_long),
               const SizedBox(height: 24),
               SizedBox(
@@ -116,13 +128,18 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: FuturisticColors.primary,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Save Changes",
+                      : const Text(
+                          "Save Changes",
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -133,8 +150,12 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
   }
 
   Widget _buildTextField(
-      String label, TextEditingController controller, IconData icon,
-      {int maxLines = 1, TextInputType? keyboardType}) {
+    String label,
+    TextEditingController controller,
+    IconData icon, {
+    int maxLines = 1,
+    TextInputType? keyboardType,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

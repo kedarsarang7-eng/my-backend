@@ -13,8 +13,8 @@ class OnDeviceAIService {
   static const int _maxHistoryLength = 10;
 
   OnDeviceAIService({required String groqApiKey})
-      : _groqService = GroqService(apiKey: groqApiKey),
-        _queryExecutor = QueryExecutor();
+    : _groqService = GroqService(apiKey: groqApiKey),
+      _queryExecutor = QueryExecutor();
 
   /// Process a user query (voice or text)
   /// Returns a natural language response

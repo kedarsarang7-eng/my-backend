@@ -51,193 +51,222 @@ void main() {
     const userId = 'testuser123';
     const customerId = 'customer456';
 
-    test('End-to-end: Create customer → Create bills → Calculate aging',
-        () async {
-      // 1. Create customer
-      await db.into(db.customers).insert(CustomersCompanion.insert(
-            id: customerId,
+    test(
+      'End-to-end: Create customer → Create bills → Calculate aging',
+      () async {
+        // 1. Create customer
+        await db
+            .into(db.customers)
+            .insert(
+              CustomersCompanion.insert(
+                id: customerId,
+                userId: userId,
+                name: 'Test Customer',
+                phone: const Value('1234567890'),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
+            );
+
+        // 2. Create ledger account for customer
+        await accountingRepo.createLedgerAccount(
+          userId: userId,
+          accountName: 'Customer - Test Customer',
+          accountType: 'RECEIVABLE',
+          linkedEntityType: 'CUSTOMER',
+          linkedEntityId: customerId,
+        );
+
+        // 3. Create bills of different ages
+        final now = DateTime.now();
+        final bills = [
+          _createBillCompanion(
+            'bill1',
+            userId,
+            customerId,
+            now.subtract(const Duration(days: 15)),
+            1000.0,
+          ),
+          _createBillCompanion(
+            'bill2',
+            userId,
+            customerId,
+            now.subtract(const Duration(days: 45)),
+            1500.0,
+          ),
+          _createBillCompanion(
+            'bill3',
+            userId,
+            customerId,
+            now.subtract(const Duration(days: 75)),
+            2000.0,
+          ),
+          _createBillCompanion(
+            'bill4',
+            userId,
+            customerId,
+            now.subtract(const Duration(days: 120)),
+            2500.0,
+          ),
+        ];
+
+        for (final bill in bills) {
+          await db.into(db.bills).insert(bill);
+
+          // Create journal entry for each bill (debit receivable, credit sales)
+          await accountingRepo.recordSalesInvoice(
             userId: userId,
-            name: 'Test Customer',
-            phone: const Value('1234567890'),
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+            customerId: customerId,
+            billId: bill.id.value,
+            amount: bill.grandTotal.value,
+            date: bill.billDate.value,
+          );
+        }
 
-      // 2. Create ledger account for customer
-      await accountingRepo.createLedgerAccount(
-        userId: userId,
-        accountName: 'Customer - Test Customer',
-        accountType: 'RECEIVABLE',
-        linkedEntityType: 'CUSTOMER',
-        linkedEntityId: customerId,
-      );
+        // 4. Get aging analysis
+        final agingReport = await ledgerService.getAgingAnalysis(
+          userId: userId,
+          partyId: customerId,
+          partyType: 'CUSTOMER',
+        );
 
-      // 3. Create bills of different ages
-      final now = DateTime.now();
-      final bills = [
-        _createBillCompanion(
-          'bill1',
-          userId,
-          customerId,
-          now.subtract(const Duration(days: 15)),
-          1000.0,
-        ),
-        _createBillCompanion(
-          'bill2',
-          userId,
-          customerId,
-          now.subtract(const Duration(days: 45)),
-          1500.0,
-        ),
-        _createBillCompanion(
-          'bill3',
-          userId,
-          customerId,
-          now.subtract(const Duration(days: 75)),
-          2000.0,
-        ),
-        _createBillCompanion(
-          'bill4',
-          userId,
-          customerId,
-          now.subtract(const Duration(days: 120)),
-          2500.0,
-        ),
-      ];
+        // 5. Verify results
+        expect(agingReport.partyId, customerId);
+        expect(agingReport.totalDue, 7000.0); // Sum of all bills
+        expect(agingReport.buckets.length, 4);
 
-      for (final bill in bills) {
-        await db.into(db.bills).insert(bill);
+        // Verify buckets have correct amounts (FIFO allocation)
+        expect(agingReport.zeroToThirty, greaterThan(0));
+        expect(agingReport.ninetyPlus, greaterThan(0));
 
-        // Create journal entry for each bill (debit receivable, credit sales)
+        // Total across buckets should match total due
+        final totalInBuckets =
+            agingReport.zeroToThirty +
+            agingReport.thirtyToSixty +
+            agingReport.sixtyToNinety +
+            agingReport.ninetyPlus;
+        expect(totalInBuckets, closeTo(agingReport.totalDue, 0.01));
+      },
+    );
+
+    test(
+      'End-to-end: Record payment → Verify balance update → Verify aging recalculation',
+      () async {
+        // 1. Setup customer and bills (similar to previous test)
+        await db
+            .into(db.customers)
+            .insert(
+              CustomersCompanion.insert(
+                id: customerId,
+                userId: userId,
+                name: 'Test Customer',
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
+            );
+
+        await accountingRepo.createLedgerAccount(
+          userId: userId,
+          accountName: 'Customer - Test Customer',
+          accountType: 'RECEIVABLE',
+          linkedEntityType: 'CUSTOMER',
+          linkedEntityId: customerId,
+        );
+
+        final billDate = DateTime.now().subtract(const Duration(days: 30));
+        await db
+            .into(db.bills)
+            .insert(
+              _createBillCompanion(
+                'bill1',
+                userId,
+                customerId,
+                billDate,
+                5000.0,
+              ),
+            );
+
         await accountingRepo.recordSalesInvoice(
           userId: userId,
           customerId: customerId,
-          billId: bill.id.value,
-          amount: bill.grandTotal.value,
-          date: bill.billDate.value,
+          billId: 'bill1',
+          amount: 5000.0,
+          date: billDate,
         );
-      }
 
-      // 4. Get aging analysis
-      final agingReport = await ledgerService.getAgingAnalysis(
-        userId: userId,
-        partyId: customerId,
-        partyType: 'CUSTOMER',
-      );
+        // 2. Get initial aging
+        final initialAging = await ledgerService.getAgingAnalysis(
+          userId: userId,
+          partyId: customerId,
+          partyType: 'CUSTOMER',
+        );
 
-      // 5. Verify results
-      expect(agingReport.partyId, customerId);
-      expect(agingReport.totalDue, 7000.0); // Sum of all bills
-      expect(agingReport.buckets.length, 4);
+        expect(initialAging.totalDue, 5000.0);
 
-      // Verify buckets have correct amounts (FIFO allocation)
-      expect(agingReport.zeroToThirty, greaterThan(0));
-      expect(agingReport.ninetyPlus, greaterThan(0));
+        // 3. Record payment of 2000
+        await accountingRepo.recordPayment(
+          userId: userId,
+          customerId: customerId,
+          billId: 'bill1',
+          amount: 2000.0,
+          date: DateTime.now(),
+        );
 
-      // Total across buckets should match total due
-      final totalInBuckets = agingReport.zeroToThirty +
-          agingReport.thirtyToSixty +
-          agingReport.sixtyToNinety +
-          agingReport.ninetyPlus;
-      expect(totalInBuckets, closeTo(agingReport.totalDue, 0.01));
-    });
+        // 4. Update bill paid amount
+        await (db.update(db.bills)..where((t) => t.id.equals('bill1'))).write(
+          const BillsCompanion(paidAmount: Value(2000.0)),
+        );
 
-    test(
-        'End-to-end: Record payment → Verify balance update → Verify aging recalculation',
-        () async {
-      // 1. Setup customer and bills (similar to previous test)
-      await db.into(db.customers).insert(CustomersCompanion.insert(
-            id: customerId,
-            userId: userId,
-            name: 'Test Customer',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+        // 5. Get updated aging
+        final updatedAging = await ledgerService.getAgingAnalysis(
+          userId: userId,
+          partyId: customerId,
+          partyType: 'CUSTOMER',
+        );
 
-      await accountingRepo.createLedgerAccount(
-        userId: userId,
-        accountName: 'Customer - Test Customer',
-        accountType: 'RECEIVABLE',
-        linkedEntityType: 'CUSTOMER',
-        linkedEntityId: customerId,
-      );
+        // 6. Verify balance reduced
+        expect(updatedAging.totalDue, 3000.0); // 5000 - 2000
 
-      final billDate = DateTime.now().subtract(const Duration(days: 30));
-      await db.into(db.bills).insert(
-            _createBillCompanion('bill1', userId, customerId, billDate, 5000.0),
-          );
+        // 7. Sync customer balance
+        await ledgerService.syncCustomerBalance(userId, customerId);
 
-      await accountingRepo.recordSalesInvoice(
-        userId: userId,
-        customerId: customerId,
-        billId: 'bill1',
-        amount: 5000.0,
-        date: billDate,
-      );
+        // 8. Verify customer table updated
+        final customer = await (db.select(
+          db.customers,
+        )..where((t) => t.id.equals(customerId))).getSingle();
 
-      // 2. Get initial aging
-      final initialAging = await ledgerService.getAgingAnalysis(
-        userId: userId,
-        partyId: customerId,
-        partyType: 'CUSTOMER',
-      );
-
-      expect(initialAging.totalDue, 5000.0);
-
-      // 3. Record payment of 2000
-      await accountingRepo.recordPayment(
-        userId: userId,
-        customerId: customerId,
-        billId: 'bill1',
-        amount: 2000.0,
-        date: DateTime.now(),
-      );
-
-      // 4. Update bill paid amount
-      await (db.update(db.bills)..where((t) => t.id.equals('bill1')))
-          .write(const BillsCompanion(paidAmount: Value(2000.0)));
-
-      // 5. Get updated aging
-      final updatedAging = await ledgerService.getAgingAnalysis(
-        userId: userId,
-        partyId: customerId,
-        partyType: 'CUSTOMER',
-      );
-
-      // 6. Verify balance reduced
-      expect(updatedAging.totalDue, 3000.0); // 5000 - 2000
-
-      // 7. Sync customer balance
-      await ledgerService.syncCustomerBalance(userId, customerId);
-
-      // 8. Verify customer table updated
-      final customer = await (db.select(db.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .getSingle();
-
-      expect(customer.totalDues, closeTo(3000.0, 0.01));
-    });
+        expect(customer.totalDues, closeTo(3000.0, 0.01));
+      },
+    );
 
     test('Data isolation: Multiple parties do not interfere', () async {
       // 1. Create two customers
       const customer1 = 'cust1';
       const customer2 = 'cust2';
 
-      await db.into(db.customers).insert(CustomersCompanion.insert(
-            id: customer1,
-            userId: userId,
-            name: 'Customer 1',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+      await db
+          .into(db.customers)
+          .insert(
+            CustomersCompanion.insert(
+              id: customer1,
+              userId: userId,
+              name: 'Customer 1',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
-      await db.into(db.customers).insert(CustomersCompanion.insert(
-            id: customer2,
-            userId: userId,
-            name: 'Customer 2',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+      await db
+          .into(db.customers)
+          .insert(
+            CustomersCompanion.insert(
+              id: customer2,
+              userId: userId,
+              name: 'Customer 2',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       // 2. Create ledgers
       await accountingRepo.createLedgerAccount(
@@ -257,14 +286,28 @@ void main() {
       );
 
       // 3. Create bills for each
-      await db.into(db.bills).insert(
+      await db
+          .into(db.bills)
+          .insert(
             _createBillCompanion(
-                'bill_c1', userId, customer1, DateTime.now(), 1000.0),
+              'bill_c1',
+              userId,
+              customer1,
+              DateTime.now(),
+              1000.0,
+            ),
           );
 
-      await db.into(db.bills).insert(
+      await db
+          .into(db.bills)
+          .insert(
             _createBillCompanion(
-                'bill_c2', userId, customer2, DateTime.now(), 2000.0),
+              'bill_c2',
+              userId,
+              customer2,
+              DateTime.now(),
+              2000.0,
+            ),
           );
 
       await accountingRepo.recordSalesInvoice(
@@ -303,13 +346,17 @@ void main() {
 
     test('syncCustomerBalance updates Customers table correctly', () async {
       // 1. Create customer
-      await db.into(db.customers).insert(CustomersCompanion.insert(
-            id: customerId,
-            userId: userId,
-            name: 'Sync Test Customer',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+      await db
+          .into(db.customers)
+          .insert(
+            CustomersCompanion.insert(
+              id: customerId,
+              userId: userId,
+              name: 'Sync Test Customer',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       // 2. Create ledger with initial balance
       await accountingRepo.createLedgerAccount(
@@ -321,9 +368,16 @@ void main() {
       );
 
       // 3. Record a bill
-      await db.into(db.bills).insert(
+      await db
+          .into(db.bills)
+          .insert(
             _createBillCompanion(
-                'bill_sync', userId, customerId, DateTime.now(), 3500.0),
+              'bill_sync',
+              userId,
+              customerId,
+              DateTime.now(),
+              3500.0,
+            ),
           );
 
       await accountingRepo.recordSalesInvoice(
@@ -338,9 +392,9 @@ void main() {
       await ledgerService.syncCustomerBalance(userId, customerId);
 
       // 5. Verify customer table updated
-      final customer = await (db.select(db.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .getSingle();
+      final customer = await (db.select(
+        db.customers,
+      )..where((t) => t.id.equals(customerId))).getSingle();
 
       expect(customer.totalDues, closeTo(3500.0, 0.01));
     });

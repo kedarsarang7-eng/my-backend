@@ -72,8 +72,9 @@ class ExportService {
       ),
       document: ExportDocument(
         id: bill.id,
-        number:
-            bill.id.substring(0, 8).toUpperCase(), // Placeholder if no number
+        number: bill.id
+            .substring(0, 8)
+            .toUpperCase(), // Placeholder if no number
         date: bill.date,
         type: 'TAX INVOICE', // Should be dynamic based on bill type
         status: bill.paymentMethod.toLowerCase() == 'credit' ? 'DUE' : 'PAID',

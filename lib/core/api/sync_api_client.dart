@@ -8,15 +8,16 @@ class SyncApiClient {
   final String _authToken; // In real app, fetch from AuthProvider
 
   SyncApiClient({String? baseUrl, required String authToken})
-      : _baseUrl = baseUrl ??
-            dotenv.env['API_BASE_URL'] ??
-            'http://localhost:8000/api/v1',
-        _authToken = authToken;
+    : _baseUrl =
+          baseUrl ??
+          dotenv.env['API_BASE_URL'] ??
+          'http://localhost:8000/api/v1',
+      _authToken = authToken;
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $_authToken',
+  };
 
   /// Push local changes to server
   Future<void> pushChanges(PushRequest request) async {
@@ -31,7 +32,8 @@ class SyncApiClient {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'Sync Push Failed: ${response.statusCode} - ${response.body}');
+          'Sync Push Failed: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       throw Exception('Network Error during Push: $e');
@@ -54,7 +56,8 @@ class SyncApiClient {
         return PullResponse.fromJson(data);
       } else {
         throw Exception(
-            'Sync Pull Failed: ${response.statusCode} - ${response.body}');
+          'Sync Pull Failed: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       throw Exception('Network Error during Pull: $e');

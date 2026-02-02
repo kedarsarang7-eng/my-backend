@@ -94,8 +94,10 @@ class _RevenueAnalyticsChartState extends State<RevenueAnalyticsChart> {
               ),
               // Total revenue badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -152,8 +154,10 @@ class _RevenueAnalyticsChartState extends State<RevenueAnalyticsChart> {
                   },
                   touchTooltipData: BarTouchTooltipData(
                     getTooltipColor: (_) => FuturisticColors.surfaceElevated,
-                    tooltipPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    tooltipPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
                         '₹${_formatNumber(rod.toY)}',
@@ -215,9 +219,11 @@ class _RevenueAnalyticsChartState extends State<RevenueAnalyticsChart> {
                     ),
                   ),
                   topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 gridData: FlGridData(
                   show: true,
@@ -232,41 +238,39 @@ class _RevenueAnalyticsChartState extends State<RevenueAnalyticsChart> {
                   },
                 ),
                 borderData: FlBorderData(show: false),
-                barGroups: List.generate(
-                  widget.data.length,
-                  (index) {
-                    final isTouched = index == touchedIndex;
-                    return BarChartGroupData(
-                      x: index,
-                      barRods: [
-                        BarChartRodData(
-                          toY: isTouched ? values[index] * 1.02 : values[index],
-                          gradient: LinearGradient(
-                            colors: isTouched
-                                ? [
-                                    FuturisticColors.accent1,
-                                    FuturisticColors.primary,
-                                  ]
-                                : [
-                                    FuturisticColors.primary,
-                                    FuturisticColors.accent1.withOpacity(0.7),
-                                  ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                          width: isTouched ? 20 : 16,
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(6)),
-                          backDrawRodData: BackgroundBarChartRodData(
-                            show: true,
-                            toY: maxY * 1.25,
-                            color: Colors.white.withOpacity(0.03),
-                          ),
+                barGroups: List.generate(widget.data.length, (index) {
+                  final isTouched = index == touchedIndex;
+                  return BarChartGroupData(
+                    x: index,
+                    barRods: [
+                      BarChartRodData(
+                        toY: isTouched ? values[index] * 1.02 : values[index],
+                        gradient: LinearGradient(
+                          colors: isTouched
+                              ? [
+                                  FuturisticColors.accent1,
+                                  FuturisticColors.primary,
+                                ]
+                              : [
+                                  FuturisticColors.primary,
+                                  FuturisticColors.accent1.withOpacity(0.7),
+                                ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
                         ),
-                      ],
-                    );
-                  },
-                ),
+                        width: isTouched ? 20 : 16,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(6),
+                        ),
+                        backDrawRodData: BackgroundBarChartRodData(
+                          show: true,
+                          toY: maxY * 1.25,
+                          color: Colors.white.withOpacity(0.03),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
               ),
             ),
           ),
@@ -286,9 +290,7 @@ class _RevenueAnalyticsChartState extends State<RevenueAnalyticsChart> {
         ],
       ),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: FuturisticColors.premiumBlue.withOpacity(0.2),
-      ),
+      border: Border.all(color: FuturisticColors.premiumBlue.withOpacity(0.2)),
       boxShadow: [
         // Premium blue glow
         BoxShadow(

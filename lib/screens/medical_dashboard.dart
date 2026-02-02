@@ -19,7 +19,9 @@ class _MedicalDashboardState extends ConsumerState<MedicalDashboard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 800), vsync: this);
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
     _controller.forward();
   }
 
@@ -72,15 +74,16 @@ class _MedicalDashboardState extends ConsumerState<MedicalDashboard>
                               color: Colors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.local_hospital,
-                                color: Colors.white, size: 24),
+                            child: const Icon(
+                              Icons.local_hospital,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Text(
                             'Dr. Dashboard',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
+                            style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -91,9 +94,9 @@ class _MedicalDashboardState extends ConsumerState<MedicalDashboard>
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         'Clinic Queue & Patient Records',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white70,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
                       ),
                     ],
                   ),
@@ -106,15 +109,13 @@ class _MedicalDashboardState extends ConsumerState<MedicalDashboard>
           SliverPadding(
             padding: const EdgeInsets.all(AppSpacing.md),
             sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  _buildQuickStats(context),
-                  const SizedBox(height: AppSpacing.xl),
-                  _buildActionGrid(context),
-                  const SizedBox(height: AppSpacing.xl),
-                  _buildRecentQueue(context),
-                ],
-              ),
+              delegate: SliverChildListDelegate([
+                _buildQuickStats(context),
+                const SizedBox(height: AppSpacing.xl),
+                _buildActionGrid(context),
+                const SizedBox(height: AppSpacing.xl),
+                _buildRecentQueue(context),
+              ]),
             ),
           ),
         ],
@@ -173,7 +174,8 @@ class _MedicalDashboardState extends ConsumerState<MedicalDashboard>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const PatientListScreen()),
+                builder: (context) => const PatientListScreen(),
+              ),
             );
           },
           iconColor: FuturisticColors.secondary,
@@ -202,9 +204,9 @@ class _MedicalDashboardState extends ConsumerState<MedicalDashboard>
       children: [
         Text(
           'Current Queue',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSpacing.md),
         // Empty State for now

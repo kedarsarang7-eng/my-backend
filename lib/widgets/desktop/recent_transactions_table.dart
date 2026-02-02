@@ -24,10 +24,7 @@ class RecentTransactionsTable extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            theme.cardColor,
-            theme.cardColor.withOpacity(0.85),
-          ],
+          colors: [theme.cardColor, theme.cardColor.withOpacity(0.85)],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
@@ -84,8 +81,10 @@ class RecentTransactionsTable extends StatelessWidget {
                   onTap: onViewAll,
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: FuturisticColors.accent1.withOpacity(0.3),
@@ -144,8 +143,9 @@ class RecentTransactionsTable extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 12,
-                          backgroundColor:
-                              FuturisticColors.primary.withOpacity(0.2),
+                          backgroundColor: FuturisticColors.primary.withOpacity(
+                            0.2,
+                          ),
                           child: Text(
                             customer.isNotEmpty
                                 ? customer[0].toUpperCase()
@@ -231,19 +231,11 @@ class RecentTransactionsTable extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            color.withOpacity(0.2),
-            color.withOpacity(0.1),
-          ],
+          colors: [color.withOpacity(0.2), color.withOpacity(0.1)],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color.withOpacity(0.4)),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.15),
-            blurRadius: 4,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: color.withOpacity(0.15), blurRadius: 4)],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

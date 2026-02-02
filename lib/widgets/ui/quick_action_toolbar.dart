@@ -20,7 +20,8 @@ class QuickActionToolbar extends StatelessWidget {
       decoration: const BoxDecoration(
         color: FuturisticColors.background,
         border: Border(
-            bottom: BorderSide(color: FuturisticColors.border, width: 1)),
+          bottom: BorderSide(color: FuturisticColors.border, width: 1),
+        ),
       ),
       child: Row(
         children: [
@@ -44,10 +45,9 @@ class QuickActionToolbar extends StatelessWidget {
           ] else
             const Spacer(),
           const SizedBox(width: 16),
-          ...actions.map((a) => Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: a,
-              )),
+          ...actions.map(
+            (a) => Padding(padding: const EdgeInsets.only(left: 12), child: a),
+          ),
         ],
       ),
     );

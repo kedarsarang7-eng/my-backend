@@ -10,7 +10,7 @@ enum BadgeStatus {
   paid,
   unpaid,
   overdue,
-  pending
+  pending,
 }
 
 /// Premium Status Badge
@@ -38,28 +38,28 @@ class StatusBadge extends StatelessWidget {
 
   /// Convenience constructors for common statuses
   const StatusBadge.paid({super.key, this.label = 'Paid'})
-      : type = BadgeStatus.paid,
-        outline = false,
-        showDot = true,
-        glow = true;
+    : type = BadgeStatus.paid,
+      outline = false,
+      showDot = true,
+      glow = true;
 
   const StatusBadge.unpaid({super.key, this.label = 'Unpaid'})
-      : type = BadgeStatus.unpaid,
-        outline = false,
-        showDot = true,
-        glow = false;
+    : type = BadgeStatus.unpaid,
+      outline = false,
+      showDot = true,
+      glow = false;
 
   const StatusBadge.overdue({super.key, this.label = 'Overdue'})
-      : type = BadgeStatus.overdue,
-        outline = false,
-        showDot = true,
-        glow = true;
+    : type = BadgeStatus.overdue,
+      outline = false,
+      showDot = true,
+      glow = true;
 
   const StatusBadge.pending({super.key, this.label = 'Pending'})
-      : type = BadgeStatus.pending,
-        outline = false,
-        showDot = true,
-        glow = false;
+    : type = BadgeStatus.pending,
+      outline = false,
+      showDot = true,
+      glow = false;
 
   Color _getColor() {
     switch (type) {
@@ -170,9 +170,6 @@ StatusBadge statusBadgeFromString(String status) {
         showDot: true,
       );
     default:
-      return StatusBadge(
-        label: status,
-        type: BadgeStatus.neutral,
-      );
+      return StatusBadge(label: status, type: BadgeStatus.neutral);
   }
 }

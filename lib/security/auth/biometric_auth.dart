@@ -192,12 +192,11 @@ class BiometricAuthService {
 
   /// Start session timeout monitoring
   void _startSessionTimeout() {
-    _sessionTimeoutTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) async {
-        await _checkSessionTimeout();
-      },
-    );
+    _sessionTimeoutTimer = Timer.periodic(const Duration(seconds: 30), (
+      _,
+    ) async {
+      await _checkSessionTimeout();
+    });
   }
 
   /// Check if session has timed out
@@ -225,27 +224,27 @@ class BiometricAuthService {
 
   /// Start inactivity timeout monitoring
   void _startInactivityTimeout() {
-    _inactivityTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) async {
-        // Check inactivity
-      },
-    );
+    _inactivityTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      // Check inactivity
+    });
   }
 
   /// Record failed authentication attempt (brute-force protection)
   Future<void> _recordFailedAuthAttempt() async {
     try {
-      final failedAttempts = int.tryParse(
-              await _secureStorage.read(key: 'failed_auth_attempts') ?? '0') ??
+      final failedAttempts =
+          int.tryParse(
+            await _secureStorage.read(key: 'failed_auth_attempts') ?? '0',
+          ) ??
           0;
 
       if (failedAttempts >= maxFailedAttempts) {
         // Lock account temporarily
         await _secureStorage.write(
           key: 'account_locked_until',
-          value:
-              DateTime.now().add(const Duration(minutes: 15)).toIso8601String(),
+          value: DateTime.now()
+              .add(const Duration(minutes: 15))
+              .toIso8601String(),
         );
 
         // In production: notify admin, trigger 2FA
@@ -263,8 +262,9 @@ class BiometricAuthService {
   /// Check if account is locked
   Future<bool> isAccountLocked() async {
     try {
-      final lockedUntil =
-          await _secureStorage.read(key: 'account_locked_until');
+      final lockedUntil = await _secureStorage.read(
+        key: 'account_locked_until',
+      );
 
       if (lockedUntil == null) {
         return false;

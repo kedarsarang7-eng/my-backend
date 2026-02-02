@@ -65,19 +65,19 @@ class FraudAlert {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'businessId': businessId,
-        'type': type.name,
-        'severity': severity.name,
-        'userId': userId,
-        'description': description,
-        'referenceId': referenceId,
-        'metadata': metadata,
-        'isAcknowledged': isAcknowledged,
-        'acknowledgedBy': acknowledgedBy,
-        'createdAt': createdAt.toIso8601String(),
-        'acknowledgedAt': acknowledgedAt?.toIso8601String(),
-      };
+    'id': id,
+    'businessId': businessId,
+    'type': type.name,
+    'severity': severity.name,
+    'userId': userId,
+    'description': description,
+    'referenceId': referenceId,
+    'metadata': metadata,
+    'isAcknowledged': isAcknowledged,
+    'acknowledgedBy': acknowledgedBy,
+    'createdAt': createdAt.toIso8601String(),
+    'acknowledgedAt': acknowledgedAt?.toIso8601String(),
+  };
 }
 
 /// Types of fraud alerts
@@ -155,9 +155,9 @@ class FraudDetectionService {
     required AppDatabase database,
     required OwnerPinService pinService,
     required AuditRepository auditRepository,
-  })  : _database = database,
-        _pinService = pinService,
-        _auditRepository = auditRepository;
+  }) : _database = database,
+       _pinService = pinService,
+       _auditRepository = auditRepository;
 
   /// Stream of new fraud alerts
   Stream<FraudAlert> get fraudAlerts => _alertController.stream;
@@ -183,7 +183,8 @@ class FraudDetectionService {
 
       final billEdits = logs.data!
           .where(
-              (log) => log.targetTableName == 'bills' && log.action == 'UPDATE')
+            (log) => log.targetTableName == 'bills' && log.action == 'UPDATE',
+          )
           .length;
 
       if (billEdits > threshold) {
@@ -261,7 +262,8 @@ class FraudDetectionService {
       }
     } catch (e) {
       debugPrint(
-          'FraudDetectionService: Error checking late night billing: $e');
+        'FraudDetectionService: Error checking late night billing: $e',
+      );
     }
   }
 
@@ -333,8 +335,8 @@ class FraudDetectionService {
         final severity = variance > tolerance * 5
             ? FraudSeverity.critical
             : variance > tolerance * 2
-                ? FraudSeverity.high
-                : FraudSeverity.medium;
+            ? FraudSeverity.high
+            : FraudSeverity.medium;
 
         await _createAlert(
           businessId: businessId,
@@ -371,10 +373,7 @@ class FraudDetectionService {
         userId: userId,
         description:
             'User with role "$userRole" attempted unauthorized action: $attemptedAction',
-        metadata: {
-          'attemptedAction': attemptedAction,
-          'userRole': userRole,
-        },
+        metadata: {'attemptedAction': attemptedAction, 'userRole': userRole},
       );
     } catch (e) {
       debugPrint('FraudDetectionService: Error checking role abuse: $e');
@@ -401,10 +400,7 @@ class FraudDetectionService {
           referenceId: billId,
           description:
               'Large transaction of ₹${amount.toStringAsFixed(2)} (threshold: ₹$threshold)',
-          metadata: {
-            'amount': amount,
-            'threshold': threshold,
-          },
+          metadata: {'amount': amount, 'threshold': threshold},
         );
       }
     } catch (e) {
@@ -447,10 +443,12 @@ class FraudDetectionService {
       return UserRiskScore.normal;
     }
 
-    final criticalCount =
-        userAlerts.where((a) => a.severity == FraudSeverity.critical).length;
-    final highCount =
-        userAlerts.where((a) => a.severity == FraudSeverity.high).length;
+    final criticalCount = userAlerts
+        .where((a) => a.severity == FraudSeverity.critical)
+        .length;
+    final highCount = userAlerts
+        .where((a) => a.severity == FraudSeverity.high)
+        .length;
 
     if (criticalCount > 0) return UserRiskScore.highRisk;
     if (highCount >= 3) return UserRiskScore.highRisk;
@@ -497,7 +495,8 @@ class FraudDetectionService {
     );
 
     debugPrint(
-        'FraudDetectionService: Created ${severity.name} alert: ${type.name}');
+      'FraudDetectionService: Created ${severity.name} alert: ${type.name}',
+    );
   }
 
   /// Dispose resources

@@ -107,68 +107,84 @@ void main() {
     await database.close();
   });
 
-  test('createPurchaseOrder should update Vendor ledger balances correctly',
-      () async {
-    // 1. Setup: Create a Vendor
-    final vendorId = 'vendor_1';
-    final userId = 'user_1';
-    await database.into(database.vendors).insert(VendorsCompanion.insert(
-          id: vendorId,
-          userId: userId,
-          name: 'Test Vendor',
-          totalPurchased: const Value(0.0),
-          totalOutstanding: const Value(0.0),
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ));
+  test(
+    'createPurchaseOrder should update Vendor ledger balances correctly',
+    () async {
+      // 1. Setup: Create a Vendor
+      final vendorId = 'vendor_1';
+      final userId = 'user_1';
+      await database
+          .into(database.vendors)
+          .insert(
+            VendorsCompanion.insert(
+              id: vendorId,
+              userId: userId,
+              name: 'Test Vendor',
+              totalPurchased: const Value(0.0),
+              totalOutstanding: const Value(0.0),
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
-    // 2. Action: Create a Purchase Order
-    // Bill: 10,000 Total, 2,000 Paid -> 8,000 Outstanding
-    await repository.createPurchaseOrder(
-      userId: userId,
-      vendorId: vendorId,
-      vendorName: 'Test Vendor',
-      invoiceNumber: 'INV-001',
-      totalAmount: 10000.0,
-      paidAmount: 2000.0,
-      status: 'COMPLETED',
-      items: [
-        PurchaseItem(
-          id: 'item_1',
-          productName: 'Test Item',
-          quantity: 10,
-          costPrice: 1000,
-          totalAmount: 10000,
-        )
-      ],
-    );
+      // 2. Action: Create a Purchase Order
+      // Bill: 10,000 Total, 2,000 Paid -> 8,000 Outstanding
+      await repository.createPurchaseOrder(
+        userId: userId,
+        vendorId: vendorId,
+        vendorName: 'Test Vendor',
+        invoiceNumber: 'INV-001',
+        totalAmount: 10000.0,
+        paidAmount: 2000.0,
+        status: 'COMPLETED',
+        items: [
+          PurchaseItem(
+            id: 'item_1',
+            productName: 'Test Item',
+            quantity: 10,
+            costPrice: 1000,
+            totalAmount: 10000,
+          ),
+        ],
+      );
 
-    // 3. Verify: Check Vendor Table
-    final vendor = await (database.select(database.vendors)
-          ..where((t) => t.id.equals(vendorId)))
-        .getSingle();
+      // 3. Verify: Check Vendor Table
+      final vendor = await (database.select(
+        database.vendors,
+      )..where((t) => t.id.equals(vendorId))).getSingle();
 
-    // Assertions
-    expect(vendor.totalPurchased, 10000.0,
-        reason: 'Total Purchased should increase by bill amount');
-    expect(vendor.totalOutstanding, 8000.0,
+      // Assertions
+      expect(
+        vendor.totalPurchased,
+        10000.0,
+        reason: 'Total Purchased should increase by bill amount',
+      );
+      expect(
+        vendor.totalOutstanding,
+        8000.0,
         reason:
-            'Total Outstanding should increase by (Bill Amount - Paid Amount)');
-  });
+            'Total Outstanding should increase by (Bill Amount - Paid Amount)',
+      );
+    },
+  );
 
   test('createPurchaseOrder should queue sync for Vendor update', () async {
     // 1. Setup
     final vendorId = 'vendor_2';
     final userId = 'user_1';
-    await database.into(database.vendors).insert(VendorsCompanion.insert(
-          id: vendorId,
-          userId: userId,
-          name: 'Sync Test Vendor',
-          totalPurchased: const Value(1000.0),
-          totalOutstanding: const Value(500.0),
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ));
+    await database
+        .into(database.vendors)
+        .insert(
+          VendorsCompanion.insert(
+            id: vendorId,
+            userId: userId,
+            name: 'Sync Test Vendor',
+            totalPurchased: const Value(1000.0),
+            totalOutstanding: const Value(500.0),
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
 
     // Reset verify on syncManager (if verifying interactively, but here logic is embedded)
 

@@ -230,8 +230,9 @@ class IMEISerial {
       billId: map['billId'],
       customerId: map['customerId'],
       soldPrice: (map['soldPrice'] ?? 0).toDouble(),
-      soldDate:
-          map['soldDate'] != null ? DateTime.tryParse(map['soldDate']) : null,
+      soldDate: map['soldDate'] != null
+          ? DateTime.tryParse(map['soldDate'])
+          : null,
       warrantyMonths: map['warrantyMonths'] ?? 0,
       warrantyStartDate: map['warrantyStartDate'] != null
           ? DateTime.tryParse(map['warrantyStartDate'])

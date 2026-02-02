@@ -51,11 +51,8 @@ class OcrResult extends Equatable {
   });
 
   /// Create empty result for failed OCR
-  factory OcrResult.empty() => const OcrResult(
-        rawText: '',
-        items: [],
-        needsReview: true,
-      );
+  factory OcrResult.empty() =>
+      const OcrResult(rawText: '', items: [], needsReview: true);
 
   /// Calculate if review is needed based on item confidence
   bool get requiresUserReview =>
@@ -68,16 +65,16 @@ class OcrResult extends Equatable {
 
   @override
   List<Object?> get props => [
-        rawText,
-        items,
-        gst,
-        totalAmount,
-        shopName,
-        billDate,
-        detectedLanguage,
-        needsReview,
-        overallConfidence,
-      ];
+    rawText,
+    items,
+    gst,
+    totalAmount,
+    shopName,
+    billDate,
+    detectedLanguage,
+    needsReview,
+    overallConfidence,
+  ];
 
   OcrResult copyWith({
     String? rawText,

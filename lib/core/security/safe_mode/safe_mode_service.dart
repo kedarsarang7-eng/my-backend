@@ -60,14 +60,14 @@ class SafeModeState {
   }
 
   Map<String, dynamic> toMap() => {
-        'businessId': businessId,
-        'status': status.name,
-        'triggeredBy': triggeredBy,
-        'triggerReason': triggerReason,
-        'activatedAt': activatedAt?.toIso8601String(),
-        'expiresAt': expiresAt?.toIso8601String(),
-        'requiresManualExit': requiresManualExit,
-      };
+    'businessId': businessId,
+    'status': status.name,
+    'triggeredBy': triggeredBy,
+    'triggerReason': triggerReason,
+    'activatedAt': activatedAt?.toIso8601String(),
+    'expiresAt': expiresAt?.toIso8601String(),
+    'requiresManualExit': requiresManualExit,
+  };
 
   factory SafeModeState.fromMap(Map<String, dynamic> map) {
     return SafeModeState(
@@ -164,9 +164,9 @@ class SafeModeService {
     FirebaseFirestore? firestore,
     required TrustedDeviceService deviceService,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _deviceService = deviceService,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _deviceService = deviceService,
+       _auditRepository = auditRepository;
 
   /// Stream of safe mode state changes
   Stream<SafeModeState> get stateChanges => _stateController.stream;
@@ -188,8 +188,10 @@ class SafeModeService {
 
     // Fetch from Firestore
     try {
-      final doc =
-          await _firestore.collection('safe_mode_states').doc(businessId).get();
+      final doc = await _firestore
+          .collection('safe_mode_states')
+          .doc(businessId)
+          .get();
 
       if (!doc.exists) {
         return SafeModeState(businessId: businessId);
@@ -239,8 +241,11 @@ class SafeModeService {
     // Check: >3 PIN overrides in 30 min
     if (isPinOverride) {
       _tracker.recordAction(businessId, 'PIN_OVERRIDE');
-      final pinOverrides =
-          _tracker.getActionCount(businessId, 'PIN_OVERRIDE', 30);
+      final pinOverrides = _tracker.getActionCount(
+        businessId,
+        'PIN_OVERRIDE',
+        30,
+      );
       if (pinOverrides > maxPinOverridesIn30Min) {
         triggers.add('Too many PIN overrides ($pinOverrides in 30 minutes)');
       }
@@ -312,8 +317,9 @@ class SafeModeService {
     );
 
     debugPrint(
-        'SafeModeService: ${isPanicLock ? "PANIC LOCK" : "Safe mode"} activated. '
-        'Reason: $reason. Duration: ${effectiveDuration.inMinutes} minutes.');
+      'SafeModeService: ${isPanicLock ? "PANIC LOCK" : "Safe mode"} activated. '
+      'Reason: $reason. Duration: ${effectiveDuration.inMinutes} minutes.',
+    );
 
     return state;
   }
@@ -331,7 +337,8 @@ class SafeModeService {
 
     if (!deviceResult.isValid) {
       throw SafeModeException(
-          'Panic lock can only be activated from trusted device');
+        'Panic lock can only be activated from trusted device',
+      );
     }
 
     return activateSafeMode(
@@ -360,14 +367,17 @@ class SafeModeService {
 
     if (!deviceResult.isValid) {
       throw SafeModeException(
-          'Safe mode can only be exited from trusted device');
+        'Safe mode can only be exited from trusted device',
+      );
     }
 
     // Check cooling period for panic lock
     if (state.isPanicLock && !state.isExpired) {
       final remaining = state.timeRemaining;
-      throw SafeModeException('Panic lock cooling period not complete. '
-          'Wait ${remaining.inMinutes} more minutes.');
+      throw SafeModeException(
+        'Panic lock cooling period not complete. '
+        'Wait ${remaining.inMinutes} more minutes.',
+      );
     }
 
     await _exitSafeMode(businessId, reason);

@@ -180,7 +180,9 @@ class _AddVendorScreenState extends ConsumerState<AddVendorScreen> {
                     : const Text(
                         "Create Vendor",
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
               ),
             ),
@@ -222,16 +224,19 @@ class _AddVendorScreenState extends ConsumerState<AddVendorScreen> {
             prefixIcon: Icon(icon, color: Colors.blueAccent),
             hintText: hint,
             hintStyle: TextStyle(
-                color: isDark ? Colors.white24 : Colors.grey.shade400),
+              color: isDark ? Colors.white24 : Colors.grey.shade400,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                  color: isDark ? Colors.white10 : Colors.grey.shade200),
+                color: isDark ? Colors.white10 : Colors.grey.shade200,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                  color: isDark ? Colors.white10 : Colors.grey.shade200),
+                color: isDark ? Colors.white10 : Colors.grey.shade200,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),

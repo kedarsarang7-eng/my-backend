@@ -49,17 +49,17 @@ class AccountingPeriodModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'name': name,
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
-        'isLocked': isLocked,
-        'lockedAt': lockedAt?.toIso8601String(),
-        'lockedByUserId': lockedByUserId,
-        'isSynced': isSynced,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'name': name,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'isLocked': isLocked,
+    'lockedAt': lockedAt?.toIso8601String(),
+    'lockedByUserId': lockedByUserId,
+    'isSynced': isSynced,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
   factory AccountingPeriodModel.fromMap(Map<String, dynamic> map) =>
       AccountingPeriodModel(
@@ -67,16 +67,20 @@ class AccountingPeriodModel {
         userId: map['userId'] ?? '',
         name: map['name'] ?? '',
         startDate: DateTime.parse(
-            map['startDate'] ?? DateTime.now().toIso8601String()),
-        endDate:
-            DateTime.parse(map['endDate'] ?? DateTime.now().toIso8601String()),
+          map['startDate'] ?? DateTime.now().toIso8601String(),
+        ),
+        endDate: DateTime.parse(
+          map['endDate'] ?? DateTime.now().toIso8601String(),
+        ),
         isLocked: map['isLocked'] ?? false,
-        lockedAt:
-            map['lockedAt'] != null ? DateTime.tryParse(map['lockedAt']) : null,
+        lockedAt: map['lockedAt'] != null
+            ? DateTime.tryParse(map['lockedAt'])
+            : null,
         lockedByUserId: map['lockedByUserId'],
         isSynced: map['isSynced'] ?? false,
         createdAt: DateTime.parse(
-            map['createdAt'] ?? DateTime.now().toIso8601String()),
+          map['createdAt'] ?? DateTime.now().toIso8601String(),
+        ),
       );
 
   AccountingPeriodModel copyWith({

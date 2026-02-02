@@ -53,8 +53,9 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('Attendance'),
         backgroundColor: Colors.transparent,
@@ -82,18 +83,16 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _todayAttendance.isEmpty
-                    ? _buildEmptyState(isDark)
-                    : RefreshIndicator(
-                        onRefresh: _loadAttendance,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _todayAttendance.length,
-                          itemBuilder: (_, i) => _buildAttendanceCard(
-                            _todayAttendance[i],
-                            isDark,
-                          ),
-                        ),
-                      ),
+                ? _buildEmptyState(isDark)
+                : RefreshIndicator(
+                    onRefresh: _loadAttendance,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: _todayAttendance.length,
+                      itemBuilder: (_, i) =>
+                          _buildAttendanceCard(_todayAttendance[i], isDark),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -101,7 +100,8 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
   }
 
   Widget _buildDateHeader(bool isDark, ThemeData theme) {
-    final isToday = _selectedDate.day == DateTime.now().day &&
+    final isToday =
+        _selectedDate.day == DateTime.now().day &&
         _selectedDate.month == DateTime.now().month &&
         _selectedDate.year == DateTime.now().year;
 
@@ -134,10 +134,7 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
               children: [
                 Text(
                   isToday ? 'Today' : DateFormat('EEEE').format(_selectedDate),
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 Text(
                   DateFormat('dd MMMM, yyyy').format(_selectedDate),
@@ -188,19 +185,31 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
       child: Row(
         children: [
           _buildSummaryTile(
-              'Present', present.toString(), Colors.green, isDark),
+            'Present',
+            present.toString(),
+            Colors.green,
+            isDark,
+          ),
           const SizedBox(width: 12),
           _buildSummaryTile('Absent', absent.toString(), Colors.red, isDark),
           const SizedBox(width: 12),
           _buildSummaryTile(
-              'Not Marked', notMarked.toString(), Colors.orange, isDark),
+            'Not Marked',
+            notMarked.toString(),
+            Colors.orange,
+            isDark,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSummaryTile(
-      String label, String value, Color color, bool isDark) {
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -298,9 +307,11 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
                   if (isMarked && checkIn != null)
                     Row(
                       children: [
-                        Icon(Icons.login,
-                            size: 12,
-                            color: isDark ? Colors.white38 : Colors.grey),
+                        Icon(
+                          Icons.login,
+                          size: 12,
+                          color: isDark ? Colors.white38 : Colors.grey,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           DateFormat.Hm().format(checkIn),
@@ -311,9 +322,11 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
                         ),
                         if (checkOut != null) ...[
                           const SizedBox(width: 12),
-                          Icon(Icons.logout,
-                              size: 12,
-                              color: isDark ? Colors.white38 : Colors.grey),
+                          Icon(
+                            Icons.logout,
+                            size: 12,
+                            color: isDark ? Colors.white38 : Colors.grey,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             DateFormat.Hm().format(checkOut),
@@ -328,10 +341,7 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
                   else
                     Text(
                       'Not marked yet',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.orange[400],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.orange[400]),
                     ),
                 ],
               ),
@@ -365,8 +375,10 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
               )
             else
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
@@ -427,9 +439,7 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
           const SizedBox(height: 8),
           Text(
             'Add staff members first',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.grey,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.grey),
           ),
         ],
       ),
@@ -485,7 +495,9 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
   }
 
   Future<void> _markAttendance(
-      StaffModel staff, AttendanceStatus status) async {
+    StaffModel staff,
+    AttendanceStatus status,
+  ) async {
     final userId = sl<SessionManager>().ownerId;
     if (userId == null) return;
 
@@ -502,8 +514,9 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('${staff.name} marked as ${_formatStatus(status.name)}'),
+          content: Text(
+            '${staff.name} marked as ${_formatStatus(status.name)}',
+          ),
           backgroundColor: _getStatusColor(status.name),
         ),
       );

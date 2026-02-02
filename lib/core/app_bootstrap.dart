@@ -47,7 +47,9 @@ class AppBootstrap {
   }) async {
     if (_isInitialized) {
       monitoringService.warning(
-          'AppBootstrap', 'Already initialized, skipping');
+        'AppBootstrap',
+        'Already initialized, skipping',
+      );
       return;
     }
 
@@ -60,8 +62,10 @@ class AppBootstrap {
         minLogLevel: kDebugMode ? LogLevel.debug : LogLevel.info,
         enableCrashlytics: !kDebugMode,
       );
-      _monitoring!
-          .info('AppBootstrap', 'Starting enterprise services initialization');
+      _monitoring!.info(
+        'AppBootstrap',
+        'Starting enterprise services initialization',
+      );
       _monitoring!.setUserId(userId);
 
       // 2. Initialize Database
@@ -70,14 +74,19 @@ class AppBootstrap {
 
       // Verify database health
       final healthCheck = await _database!.performHealthCheck(userId);
-      _monitoring!
-          .info('AppBootstrap', 'Database initialized', metadata: healthCheck);
+      _monitoring!.info(
+        'AppBootstrap',
+        'Database initialized',
+        metadata: healthCheck,
+      );
 
       // 2.5. Enable SQLite WAL mode for better performance
       _monitoring!.info('AppBootstrap', 'Enabling database optimizations...');
       final walEnabled = await DatabaseOptimizer.enableWalMode(_database!);
       _monitoring!.info(
-          'AppBootstrap', 'WAL mode: ${walEnabled ? "enabled" : "failed"}');
+        'AppBootstrap',
+        'WAL mode: ${walEnabled ? "enabled" : "failed"}',
+      );
 
       // 3. Initialize Sync Manager
       _monitoring!.info('AppBootstrap', 'Initializing sync manager...');
@@ -148,13 +157,21 @@ class AppBootstrap {
 
       stopwatch.stop();
       _isInitialized = true;
-      _monitoring!.info('AppBootstrap', 'All services initialized', metadata: {
-        'initializationTimeMs': stopwatch.elapsedMilliseconds,
-        'userId': userId.length > 8 ? userId.substring(0, 8) : userId,
-      });
+      _monitoring!.info(
+        'AppBootstrap',
+        'All services initialized',
+        metadata: {
+          'initializationTimeMs': stopwatch.elapsedMilliseconds,
+          'userId': userId.length > 8 ? userId.substring(0, 8) : userId,
+        },
+      );
     } catch (e, stack) {
-      _monitoring?.fatal('AppBootstrap', 'Failed to initialize services',
-          error: e, stackTrace: stack);
+      _monitoring?.fatal(
+        'AppBootstrap',
+        'Failed to initialize services',
+        error: e,
+        stackTrace: stack,
+      );
       rethrow;
     }
   }
@@ -194,8 +211,12 @@ class AppBootstrap {
       _monitoring?.info('AppBootstrap', 'All services shut down gracefully');
       _monitoring?.dispose();
     } catch (e, stack) {
-      _monitoring?.error('AppBootstrap', 'Error during shutdown',
-          error: e, stackTrace: stack);
+      _monitoring?.error(
+        'AppBootstrap',
+        'Error during shutdown',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 }

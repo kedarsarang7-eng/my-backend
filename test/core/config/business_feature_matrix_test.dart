@@ -8,18 +8,26 @@ void main() {
       final caps = BusinessCapabilities.get(BusinessType.grocery);
 
       // ✅ Must Have
-      expect(caps.accessProductAdd,
-          isA<bool>()); // Just checking it exists, true by check
-      expect(caps.accessProductAdd, isTrue,
-          reason: 'Grocery should have Add Item');
+      expect(
+        caps.accessProductAdd,
+        isA<bool>(),
+      ); // Just checking it exists, true by check
+      expect(
+        caps.accessProductAdd,
+        isTrue,
+        reason: 'Grocery should have Add Item',
+      );
       expect(caps.accessInventoryList, isTrue);
       expect(caps.accessInvoiceList, isTrue);
       expect(caps.accessLowStockAlert, isTrue);
       expect(caps.accessPurchaseOrder, isTrue);
 
       // ❌ Blocked / Not Present
-      expect(caps.accessServiceStatus, isFalse,
-          reason: 'Grocery not a service');
+      expect(
+        caps.accessServiceStatus,
+        isFalse,
+        reason: 'Grocery not a service',
+      );
       expect(caps.supportsPrescriptions, isFalse);
     });
 
@@ -57,13 +65,19 @@ void main() {
       final caps = BusinessCapabilities.get(BusinessType.service);
 
       // ✅ Must Have
-      expect(caps.supportsGymMode, isTrue,
-          reason: 'Service uses Job Sheets (GymMode alias)');
+      expect(
+        caps.supportsGymMode,
+        isTrue,
+        reason: 'Service uses Job Sheets (GymMode alias)',
+      );
       expect(caps.accessInvoiceCreate, isTrue);
 
       // ❌ Blocked
-      expect(caps.accessProductAdd, isFalse,
-          reason: 'Service does not add Items (per checklist)');
+      expect(
+        caps.accessProductAdd,
+        isFalse,
+        reason: 'Service does not add Items (per checklist)',
+      );
       expect(caps.accessInventoryList, isFalse);
       expect(caps.accessSupplierBill, isFalse);
     });

@@ -99,17 +99,13 @@ class _RateReviewScreenState extends State<RateReviewScreen> {
             Center(
               child: Column(
                 children: [
-                  const Icon(
-                    Icons.restaurant,
-                    size: 48,
-                    color: Colors.orange,
-                  ),
+                  const Icon(Icons.restaurant, size: 48, color: Colors.orange),
                   const SizedBox(height: 8),
                   Text(
                     widget.restaurantName,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -199,8 +195,9 @@ class _RateReviewScreenState extends State<RateReviewScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 filled: true,
-                fillColor:
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
+                fillColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
               ),
             ),
 
@@ -210,8 +207,9 @@ class _RateReviewScreenState extends State<RateReviewScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed:
-                    _overallRating > 0 && !_isSubmitting ? _submitReview : null,
+                onPressed: _overallRating > 0 && !_isSubmitting
+                    ? _submitReview
+                    : null,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(16),
                   backgroundColor: Theme.of(context).colorScheme.primary,
@@ -275,8 +273,9 @@ class _RateReviewScreenState extends State<RateReviewScreen> {
         ),
         const SizedBox(height: 8),
         Row(
-          mainAxisAlignment:
-              isMain ? MainAxisAlignment.center : MainAxisAlignment.start,
+          mainAxisAlignment: isMain
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           children: List.generate(5, (index) {
             final starRating = index + 1;
             return GestureDetector(
@@ -423,10 +422,8 @@ class QuickRatingDialog extends StatefulWidget {
   }) {
     return showDialog<int>(
       context: context,
-      builder: (context) => QuickRatingDialog(
-        orderId: orderId,
-        restaurantName: restaurantName,
-      ),
+      builder: (context) =>
+          QuickRatingDialog(orderId: orderId, restaurantName: restaurantName),
     );
   }
 }
@@ -437,24 +434,15 @@ class _QuickRatingDialogState extends State<QuickRatingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.restaurant,
-            size: 48,
-            color: Colors.orange,
-          ),
+          const Icon(Icons.restaurant, size: 48, color: Colors.orange),
           const SizedBox(height: 16),
           const Text(
             'How was your meal?',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
           Row(

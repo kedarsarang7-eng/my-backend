@@ -23,36 +23,47 @@ class PrintMenuScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildMenuCard(
+              context,
+              "Print Sale Bills",
+              "View and print customer invoices",
+              Icons.receipt_long_rounded,
+              Colors.blue,
+              isDark,
+              () => Navigator.push(
                 context,
-                "Print Sale Bills",
-                "View and print customer invoices",
-                Icons.receipt_long_rounded,
-                Colors.blue,
-                isDark,
-                () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const BillingReportsScreen()))),
+                MaterialPageRoute(builder: (_) => const BillingReportsScreen()),
+              ),
+            ),
             const SizedBox(width: 24),
             _buildMenuCard(
+              context,
+              "Print Purchase Bills",
+              "View and print vendor invoices",
+              Icons.shopping_bag_outlined,
+              Colors.orange,
+              isDark,
+              () => Navigator.push(
                 context,
-                "Print Purchase Bills",
-                "View and print vendor invoices",
-                Icons.shopping_bag_outlined,
-                Colors.orange,
-                isDark,
-                () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const PurchaseDashboardScreen()))),
+                MaterialPageRoute(
+                  builder: (_) => const PurchaseDashboardScreen(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMenuCard(BuildContext context, String title, String subtitle,
-      IconData icon, Color color, bool isDark, VoidCallback onTap) {
+  Widget _buildMenuCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    bool isDark,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -60,23 +71,27 @@ class PrintMenuScreen extends ConsumerWidget {
         width: 350,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E293B) : Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                color: isDark ? Colors.white10 : Colors.grey.shade200),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ]),
+          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDark ? Colors.white10 : Colors.grey.shade200,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                  color: color.withOpacity(0.1), shape: BoxShape.circle),
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
               child: Icon(icon, color: color, size: 30),
             ),
             const SizedBox(width: 20),
@@ -84,21 +99,30 @@ class PrintMenuScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87)),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text(subtitle,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: isDark ? Colors.white54 : Colors.black54)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isDark ? Colors.white54 : Colors.black54,
+                    ),
+                  ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded,
-                size: 16, color: isDark ? Colors.white38 : Colors.grey)
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              color: isDark ? Colors.white38 : Colors.grey,
+            ),
           ],
         ),
       ),

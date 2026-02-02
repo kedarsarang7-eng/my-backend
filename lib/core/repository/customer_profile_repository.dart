@@ -71,18 +71,20 @@ class CustomerProfileRepository {
 
       await database.into(database.customerProfiles).insert(companion);
 
-      final profile = await (database.select(database.customerProfiles)
-            ..where((t) => t.id.equals(profileId)))
-          .getSingle();
+      final profile = await (database.select(
+        database.customerProfiles,
+      )..where((t) => t.id.equals(profileId))).getSingle();
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: shopId, // Shop owns this profile
-        operationType: SyncOperationType.create,
-        targetCollection: collectionName,
-        documentId: profileId,
-        payload: _entityToMap(profile),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: shopId, // Shop owns this profile
+          operationType: SyncOperationType.create,
+          targetCollection: collectionName,
+          documentId: profileId,
+          payload: _entityToMap(profile),
+        ),
+      );
 
       return profile;
     }, 'createProfile');
@@ -90,11 +92,12 @@ class CustomerProfileRepository {
 
   /// Get profile by ID
   Future<RepositoryResult<CustomerProfileEntity?>> getProfileById(
-      String profileId) async {
+    String profileId,
+  ) async {
     return await errorHandler.runSafe<CustomerProfileEntity?>(() async {
-      return await (database.select(database.customerProfiles)
-            ..where((t) => t.id.equals(profileId)))
-          .getSingleOrNull();
+      return await (database.select(
+        database.customerProfiles,
+      )..where((t) => t.id.equals(profileId))).getSingleOrNull();
     }, 'getProfileById');
   }
 
@@ -104,20 +107,23 @@ class CustomerProfileRepository {
     required String customerId,
   }) async {
     return await errorHandler.runSafe<CustomerProfileEntity?>(() async {
-      return await (database.select(database.customerProfiles)
-            ..where((t) =>
-                t.shopId.equals(shopId) & t.customerId.equals(customerId)))
+      return await (database.select(database.customerProfiles)..where(
+            (t) => t.shopId.equals(shopId) & t.customerId.equals(customerId),
+          ))
           .getSingleOrNull();
     }, 'getProfileForShopCustomer');
   }
 
   /// Get all profiles for a customer (all linked shops)
   Future<RepositoryResult<List<CustomerProfileEntity>>> getProfilesForCustomer(
-      String customerId) async {
+    String customerId,
+  ) async {
     return await errorHandler.runSafe<List<CustomerProfileEntity>>(() async {
       return await (database.select(database.customerProfiles)
-            ..where((t) =>
-                t.customerId.equals(customerId) & t.status.equals('ACTIVE'))
+            ..where(
+              (t) =>
+                  t.customerId.equals(customerId) & t.status.equals('ACTIVE'),
+            )
             ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
           .get();
     }, 'getProfilesForCustomer');
@@ -125,7 +131,8 @@ class CustomerProfileRepository {
 
   /// Get all profiles for a shop (all linked customers)
   Future<RepositoryResult<List<CustomerProfileEntity>>> getProfilesForShop(
-      String shopId) async {
+    String shopId,
+  ) async {
     return await errorHandler.runSafe<List<CustomerProfileEntity>>(() async {
       return await (database.select(database.customerProfiles)
             ..where((t) => t.shopId.equals(shopId) & t.status.equals('ACTIVE'))
@@ -147,22 +154,25 @@ class CustomerProfileRepository {
     required String shopId,
     required String customerProfileId,
   }) async {
-    final profile = await (database.select(database.customerProfiles)
-          ..where((t) =>
-              t.id.equals(customerProfileId) &
-              t.shopId.equals(shopId) &
-              t.status.equals('ACTIVE')))
-        .getSingleOrNull();
+    final profile =
+        await (database.select(database.customerProfiles)..where(
+              (t) =>
+                  t.id.equals(customerProfileId) &
+                  t.shopId.equals(shopId) &
+                  t.status.equals('ACTIVE'),
+            ))
+            .getSingleOrNull();
     return profile != null;
   }
 
   /// Get profile by QR hash (for QR linking validation)
   Future<RepositoryResult<CustomerProfileEntity?>> getProfileByQrHash(
-      String qrHash) async {
+    String qrHash,
+  ) async {
     return await errorHandler.runSafe<CustomerProfileEntity?>(() async {
-      return await (database.select(database.customerProfiles)
-            ..where((t) => t.qrHash.equals(qrHash)))
-          .getSingleOrNull();
+      return await (database.select(
+        database.customerProfiles,
+      )..where((t) => t.qrHash.equals(qrHash))).getSingleOrNull();
     }, 'getProfileByQrHash');
   }
 
@@ -173,27 +183,31 @@ class CustomerProfileRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.customerProfiles)
-            ..where((t) => t.id.equals(profileId)))
-          .write(CustomerProfilesCompanion(
-        status: const Value('BLOCKED'),
-        blockReason: Value(reason),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.customerProfiles,
+      )..where((t) => t.id.equals(profileId))).write(
+        CustomerProfilesCompanion(
+          status: const Value('BLOCKED'),
+          blockReason: Value(reason),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       // Queue for sync
-      final profile = await (database.select(database.customerProfiles)
-            ..where((t) => t.id.equals(profileId)))
-          .getSingleOrNull();
+      final profile = await (database.select(
+        database.customerProfiles,
+      )..where((t) => t.id.equals(profileId))).getSingleOrNull();
       if (profile != null) {
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: profile.shopId,
-          operationType: SyncOperationType.update,
-          targetCollection: collectionName,
-          documentId: profileId,
-          payload: {'status': 'BLOCKED', 'blockReason': reason},
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: profile.shopId,
+            operationType: SyncOperationType.update,
+            targetCollection: collectionName,
+            documentId: profileId,
+            payload: {'status': 'BLOCKED', 'blockReason': reason},
+          ),
+        );
       }
     }, 'blockProfile');
   }
@@ -202,14 +216,16 @@ class CustomerProfileRepository {
   Future<RepositoryResult<void>> unblockProfile(String profileId) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.customerProfiles)
-            ..where((t) => t.id.equals(profileId)))
-          .write(CustomerProfilesCompanion(
-        status: const Value('ACTIVE'),
-        blockReason: const Value(null),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.customerProfiles,
+      )..where((t) => t.id.equals(profileId))).write(
+        CustomerProfilesCompanion(
+          status: const Value('ACTIVE'),
+          blockReason: const Value(null),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'unblockProfile');
   }
 
@@ -220,13 +236,15 @@ class CustomerProfileRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.customerProfiles)
-            ..where((t) => t.id.equals(profileId)))
-          .write(CustomerProfilesCompanion(
-        displayName: Value(displayName),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.customerProfiles,
+      )..where((t) => t.id.equals(profileId))).write(
+        CustomerProfilesCompanion(
+          displayName: Value(displayName),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'updateDisplayName');
   }
 

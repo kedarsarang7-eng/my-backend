@@ -32,7 +32,9 @@ class MockFirebaseAuth {
   }
 
   Future<MockUserCredential> signInWithPhoneNumber(
-      String phone, String otp) async {
+    String phone,
+    String otp,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 100));
     final user = MockFirebaseUser(
       uid: 'test-uid-${DateTime.now().millisecondsSinceEpoch}',
@@ -135,7 +137,10 @@ class MockDocument {
 
   Future<MockDocumentSnapshot> get() async {
     return MockDocumentSnapshot(
-        id: id, data: _exists ? _data : null, exists: _exists);
+      id: id,
+      data: _exists ? _data : null,
+      exists: _exists,
+    );
   }
 }
 
@@ -144,9 +149,11 @@ class MockDocumentSnapshot {
   final Map<String, dynamic>? _data;
   final bool exists;
 
-  MockDocumentSnapshot(
-      {required this.id, Map<String, dynamic>? data, this.exists = false})
-      : _data = data;
+  MockDocumentSnapshot({
+    required this.id,
+    Map<String, dynamic>? data,
+    this.exists = false,
+  }) : _data = data;
 
   Map<String, dynamic>? data() => _data;
 }
@@ -193,7 +200,7 @@ class MockFirestoreService {
     required Map<String, dynamic> billData,
   }) async {
     await _firestore.collection('users').doc(ownerId).set({
-      'bills': {billId: billData}
+      'bills': {billId: billData},
     });
   }
 
@@ -209,8 +216,8 @@ class MockFirestoreService {
           'name': name,
           'phone': phone,
           'createdAt': DateTime.now().toIso8601String(),
-        }
-      }
+        },
+      },
     });
   }
 }
@@ -228,8 +235,10 @@ void main() {
     });
 
     test('signInWithPhoneNumber should create user', () async {
-      final credential =
-          await auth.signInWithPhoneNumber('+919876543210', '123456');
+      final credential = await auth.signInWithPhoneNumber(
+        '+919876543210',
+        '123456',
+      );
 
       expect(credential.user, isNotNull);
       expect(credential.user.phoneNumber, '+919876543210');
@@ -320,8 +329,10 @@ void main() {
     });
 
     test('get non-existent document', () async {
-      final snapshot =
-          await firestore.collection('users').doc('non-existent').get();
+      final snapshot = await firestore
+          .collection('users')
+          .doc('non-existent')
+          .get();
 
       expect(snapshot.exists, false);
       expect(snapshot.data(), null);
@@ -358,11 +369,7 @@ void main() {
     });
 
     test('getUserRole should return correct role', () async {
-      await service.createUser(
-        uid: 'owner-1',
-        role: 'owner',
-        name: 'Owner',
-      );
+      await service.createUser(uid: 'owner-1', role: 'owner', name: 'Owner');
 
       await service.createUser(
         uid: 'customer-1',
@@ -414,8 +421,10 @@ void main() {
 
     test('complete auth flow: sign in + create user doc', () async {
       // Step 1: Sign in
-      final credential =
-          await auth.signInWithPhoneNumber('+919876543210', '123456');
+      final credential = await auth.signInWithPhoneNumber(
+        '+919876543210',
+        '123456',
+      );
       final uid = credential.user.uid;
 
       // Step 2: Create user document
@@ -434,8 +443,10 @@ void main() {
 
     test('sign out should preserve user data', () async {
       // Sign in and create user
-      final credential =
-          await auth.signInWithPhoneNumber('+919876543210', '123456');
+      final credential = await auth.signInWithPhoneNumber(
+        '+919876543210',
+        '123456',
+      );
       await firestoreService.createUser(
         uid: credential.user.uid,
         role: 'customer',
@@ -463,10 +474,9 @@ void main() {
 
     test('update non-existent document should throw', () async {
       expect(
-        () => firestore
-            .collection('users')
-            .doc('non-existent')
-            .update({'name': 'Test'}),
+        () => firestore.collection('users').doc('non-existent').update({
+          'name': 'Test',
+        }),
         throwsException,
       );
     });
@@ -501,8 +511,9 @@ void main() {
       await firestore.collection('users').doc('u2').set({'role': 'customer'});
       await firestore.collection('users').doc('u3').set({'role': 'owner'});
 
-      final owners =
-          firestore.collection('users').where('role', isEqualTo: 'owner');
+      final owners = firestore
+          .collection('users')
+          .where('role', isEqualTo: 'owner');
       expect(owners.length, 2);
     });
   });

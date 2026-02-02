@@ -49,17 +49,19 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
       final userId = sl<SessionManager>().ownerId;
       if (userId == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('User not logged in')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('User not logged in')));
         }
         return;
       }
-      final result = await sl<BillsRepository>()
-          .getAll(userId: userId); // Get all for now (no limit param)
+      final result = await sl<BillsRepository>().getAll(
+        userId: userId,
+      ); // Get all for now (no limit param)
       final bills = result.data ?? [];
 
-      final bill = bills.where((b) => b.invoiceNumber == invoice).firstOrNull ??
+      final bill =
+          bills.where((b) => b.invoiceNumber == invoice).firstOrNull ??
           bills.where((b) => b.id == invoice).firstOrNull;
 
       if (bill != null) {
@@ -121,25 +123,26 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
       final itemsToReturn = _selectedBill!.items
           .where((i) => _selectedItemIds.contains(i.productId))
           .map((i) {
-        final returnQ = _returnQty[i.productId] ?? 1;
-        // Create a copy with returned quantity
-        // We need to recalculate tax/amounts for the returned chunk
-        // Simple way: copy and set qty, assuming logic handles it?
-        // BillItem constructor calculates total.
-        return BillItem(
-          productId: i.productId,
-          productName: i.productName,
-          qty: returnQ,
-          price: i.price,
-          unit: i.unit,
-          gstRate: i.gstRate,
-          cgst: i.cgst / i.qty * returnQ, // Pro-rated
-          sgst: i.sgst / i.qty * returnQ,
-          igst: i.igst / i.qty * returnQ,
-          size: i.size,
-          color: i.color,
-        );
-      }).toList();
+            final returnQ = _returnQty[i.productId] ?? 1;
+            // Create a copy with returned quantity
+            // We need to recalculate tax/amounts for the returned chunk
+            // Simple way: copy and set qty, assuming logic handles it?
+            // BillItem constructor calculates total.
+            return BillItem(
+              productId: i.productId,
+              productName: i.productName,
+              qty: returnQ,
+              price: i.price,
+              unit: i.unit,
+              gstRate: i.gstRate,
+              cgst: i.cgst / i.qty * returnQ, // Pro-rated
+              sgst: i.sgst / i.qty * returnQ,
+              igst: i.igst / i.qty * returnQ,
+              size: i.size,
+              color: i.color,
+            );
+          })
+          .toList();
 
       await _returnService.processReturn(
         originalBill: _selectedBill!,
@@ -206,15 +209,22 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Customer: ${_selectedBill!.customerName}',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(
-                          'Date: ${_selectedBill!.date.toLocal().toString().split(' ')[0]}'),
+                        'Customer: ${_selectedBill!.customerName}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Date: ${_selectedBill!.date.toLocal().toString().split(' ')[0]}',
+                      ),
                     ],
                   ),
-                  Text('Total: ₹${_selectedBill!.grandTotal}',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(
+                    'Total: ₹${_selectedBill!.grandTotal}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -235,7 +245,8 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                       children: [
                         if (item.size != null || item.color != null)
                           Text(
-                              'Size: ${item.size ?? '-'} | Color: ${item.color ?? '-'}'),
+                            'Size: ${item.size ?? '-'} | Color: ${item.color ?? '-'}',
+                          ),
                         Text('Original Qty: ${item.qty}'),
                       ],
                     ),
@@ -244,16 +255,19 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  onPressed: () =>
-                                      _updateQty(item, returnQ - 1)),
-                              Text('$returnQ',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
+                                icon: const Icon(Icons.remove_circle_outline),
+                                onPressed: () => _updateQty(item, returnQ - 1),
+                              ),
+                              Text(
+                                '$returnQ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               IconButton(
-                                  icon: const Icon(Icons.add_circle_outline),
-                                  onPressed: () =>
-                                      _updateQty(item, returnQ + 1)),
+                                icon: const Icon(Icons.add_circle_outline),
+                                onPressed: () => _updateQty(item, returnQ + 1),
+                              ),
                             ],
                           )
                         : null,
@@ -267,9 +281,10 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, -5))
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
+                  ),
                 ],
               ),
               child: Column(
@@ -279,20 +294,21 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                       const Text('Restock Items:'),
                       const SizedBox(width: 8),
                       Switch(
-                          value: _restock,
-                          onChanged: (val) => setState(() => _restock = val)),
+                        value: _restock,
+                        onChanged: (val) => setState(() => _restock = val),
+                      ),
                       const Spacer(),
                       DropdownButton<String>(
                         value: _reason,
-                        items: [
-                          'Size Mismatch',
-                          'Defect',
-                          'Wrong Item',
-                          'Other'
-                        ]
-                            .map((e) =>
-                                DropdownMenuItem(value: e, child: Text(e)))
-                            .toList(),
+                        items:
+                            ['Size Mismatch', 'Defect', 'Wrong Item', 'Other']
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ),
+                                )
+                                .toList(),
                         onChanged: (val) => setState(() => _reason = val!),
                       ),
                     ],
@@ -304,14 +320,17 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                       const Text(
                         'Refund Amount:',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         '₹${_totalRefund.toStringAsFixed(2)}',
                         style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.redAccent,
+                        ),
                       ),
                     ],
                   ),
@@ -329,9 +348,13 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('CONFIRM RETURN',
+                          : const Text(
+                              'CONFIRM RETURN',
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -339,9 +362,7 @@ class _ReturnBillScreenState extends State<ReturnBillScreen> {
             ),
           ] else
             const Expanded(
-              child: Center(
-                child: Text('Enter Invoice Number to Search'),
-              ),
+              child: Center(child: Text('Enter Invoice Number to Search')),
             ),
         ],
       ),

@@ -103,10 +103,7 @@ class NetworkSecurityService {
   /// Check for Man-in-the-Middle attack indicators
   Future<bool> checkForMITMAttack(String domain) async {
     try {
-      final socket = await SecureSocket.connect(
-        domain,
-        443,
-      );
+      final socket = await SecureSocket.connect(domain, 443);
 
       final cert = socket.peerCertificate;
 
@@ -126,10 +123,7 @@ class NetworkSecurityService {
   /// Checks expiration, validity period, and certificate chain
   Future<bool> validateDomainCertificate(String domain) async {
     try {
-      final socket = await SecureSocket.connect(
-        domain,
-        443,
-      );
+      final socket = await SecureSocket.connect(domain, 443);
 
       final cert = socket.peerCertificate;
 

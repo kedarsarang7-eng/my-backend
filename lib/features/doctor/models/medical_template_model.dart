@@ -19,14 +19,14 @@ class MedicalTemplateModel {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'type': type,
-        'title': title,
-        'content': content,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'type': type,
+    'title': title,
+    'content': content,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory MedicalTemplateModel.fromMap(Map<String, dynamic> map) {
     return MedicalTemplateModel(

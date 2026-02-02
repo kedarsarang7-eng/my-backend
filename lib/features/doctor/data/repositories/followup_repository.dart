@@ -54,15 +54,15 @@ class FollowUpModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'prescriptionId': prescriptionId,
-        'visitId': visitId,
-        'patientId': patientId,
-        'patientName': patientName,
-        'doctorId': doctorId,
-        'followUpDate': followUpDate.toIso8601String(),
-        'reason': reason,
-        'status': status.name,
-      };
+    'prescriptionId': prescriptionId,
+    'visitId': visitId,
+    'patientId': patientId,
+    'patientName': patientName,
+    'doctorId': doctorId,
+    'followUpDate': followUpDate.toIso8601String(),
+    'reason': reason,
+    'status': status.name,
+  };
 }
 
 /// FollowUp Repository - Derives follow-ups from Prescription.nextVisitDate
@@ -84,8 +84,9 @@ class FollowUpRepository {
     final today = DateTime(now.year, now.month, now.day);
 
     // Query prescriptions with nextVisitDate >= today
-    final prescriptions = await _db.customSelect(
-      '''
+    final prescriptions = await _db
+        .customSelect(
+          '''
       SELECT 
         p.id as prescription_id,
         p.visit_id,
@@ -103,11 +104,12 @@ class FollowUpRepository {
       ORDER BY p.next_visit_date ASC
       LIMIT 50
       ''',
-      variables: [
-        Variable.withString(doctorId),
-        Variable.withDateTime(today),
-      ],
-    ).get();
+          variables: [
+            Variable.withString(doctorId),
+            Variable.withDateTime(today),
+          ],
+        )
+        .get();
 
     return prescriptions.map((row) {
       return FollowUpModel(
@@ -128,8 +130,9 @@ class FollowUpRepository {
     final today = DateTime(now.year, now.month, now.day);
 
     // Prescriptions with nextVisitDate < today
-    final prescriptions = await _db.customSelect(
-      '''
+    final prescriptions = await _db
+        .customSelect(
+          '''
       SELECT 
         p.id as prescription_id,
         p.visit_id,
@@ -153,11 +156,12 @@ class FollowUpRepository {
       ORDER BY p.next_visit_date DESC
       LIMIT 50
       ''',
-      variables: [
-        Variable.withString(doctorId),
-        Variable.withDateTime(today),
-      ],
-    ).get();
+          variables: [
+            Variable.withString(doctorId),
+            Variable.withDateTime(today),
+          ],
+        )
+        .get();
 
     return prescriptions.map((row) {
       return FollowUpModel(
@@ -179,8 +183,9 @@ class FollowUpRepository {
     final startOfDay = DateTime(now.year, now.month, now.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
-    final prescriptions = await _db.customSelect(
-      '''
+    final prescriptions = await _db
+        .customSelect(
+          '''
       SELECT 
         p.id as prescription_id,
         p.visit_id,
@@ -198,12 +203,13 @@ class FollowUpRepository {
         AND p.deleted_at IS NULL
       ORDER BY p.next_visit_date ASC
       ''',
-      variables: [
-        Variable.withString(doctorId),
-        Variable.withDateTime(startOfDay),
-        Variable.withDateTime(endOfDay),
-      ],
-    ).get();
+          variables: [
+            Variable.withString(doctorId),
+            Variable.withDateTime(startOfDay),
+            Variable.withDateTime(endOfDay),
+          ],
+        )
+        .get();
 
     return prescriptions.map((row) {
       return FollowUpModel(
@@ -221,8 +227,9 @@ class FollowUpRepository {
 
   /// Get follow-ups for a specific patient
   Future<List<FollowUpModel>> getPatientFollowUps(String patientId) async {
-    final prescriptions = await _db.customSelect(
-      '''
+    final prescriptions = await _db
+        .customSelect(
+          '''
       SELECT 
         p.id as prescription_id,
         p.visit_id,
@@ -239,8 +246,9 @@ class FollowUpRepository {
       ORDER BY p.next_visit_date DESC
       LIMIT 20
       ''',
-      variables: [Variable.withString(patientId)],
-    ).get();
+          variables: [Variable.withString(patientId)],
+        )
+        .get();
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -268,8 +276,9 @@ class FollowUpRepository {
     final startOfDay = DateTime(now.year, now.month, now.day);
     final endOfTomorrow = startOfDay.add(const Duration(days: 2));
 
-    final result = await _db.customSelect(
-      '''
+    final result = await _db
+        .customSelect(
+          '''
       SELECT COUNT(*) as count
       FROM prescriptions p
       WHERE p.doctor_id = ?
@@ -278,12 +287,13 @@ class FollowUpRepository {
         AND p.next_visit_date < ?
         AND p.deleted_at IS NULL
       ''',
-      variables: [
-        Variable.withString(doctorId),
-        Variable.withDateTime(startOfDay),
-        Variable.withDateTime(endOfTomorrow),
-      ],
-    ).getSingle();
+          variables: [
+            Variable.withString(doctorId),
+            Variable.withDateTime(startOfDay),
+            Variable.withDateTime(endOfTomorrow),
+          ],
+        )
+        .getSingle();
 
     return result.read<int>('count');
   }
@@ -294,34 +304,38 @@ class FollowUpRepository {
     final today = DateTime(now.year, now.month, now.day);
 
     return (_db.select(_db.prescriptions)
-          ..where((p) =>
-              p.doctorId.equals(doctorId) &
-              p.nextVisitDate.isBiggerOrEqualValue(today) &
-              p.deletedAt.isNull())
+          ..where(
+            (p) =>
+                p.doctorId.equals(doctorId) &
+                p.nextVisitDate.isBiggerOrEqualValue(today) &
+                p.deletedAt.isNull(),
+          )
           ..orderBy([(p) => OrderingTerm.asc(p.nextVisitDate)])
           ..limit(50))
         .watch()
         .asyncMap((prescriptions) async {
-      // Fetch patient names for all prescriptions
-      final followUps = <FollowUpModel>[];
-      for (final p in prescriptions) {
-        if (p.nextVisitDate == null) continue;
+          // Fetch patient names for all prescriptions
+          final followUps = <FollowUpModel>[];
+          for (final p in prescriptions) {
+            if (p.nextVisitDate == null) continue;
 
-        final patient = await (_db.select(_db.patients)
-              ..where((pt) => pt.id.equals(p.patientId)))
-            .getSingleOrNull();
+            final patient = await (_db.select(
+              _db.patients,
+            )..where((pt) => pt.id.equals(p.patientId))).getSingleOrNull();
 
-        followUps.add(FollowUpModel(
-          prescriptionId: p.id,
-          visitId: p.visitId,
-          patientId: p.patientId,
-          patientName: patient?.name,
-          doctorId: p.doctorId ?? p.userId,
-          followUpDate: p.nextVisitDate!,
-          reason: p.advice,
-        ));
-      }
-      return followUps;
-    });
+            followUps.add(
+              FollowUpModel(
+                prescriptionId: p.id,
+                visitId: p.visitId,
+                patientId: p.patientId,
+                patientName: patient?.name,
+                doctorId: p.doctorId ?? p.userId,
+                followUpDate: p.nextVisitDate!,
+                reason: p.advice,
+              ),
+            );
+          }
+          return followUps;
+        });
   }
 }

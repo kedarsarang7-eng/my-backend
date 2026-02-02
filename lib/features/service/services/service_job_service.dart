@@ -14,8 +14,8 @@ class ServiceJobService {
   final IMEISerialRepository _imeiRepository;
 
   ServiceJobService(AppDatabase db)
-      : _jobRepository = ServiceJobRepository(db),
-        _imeiRepository = IMEISerialRepository(db);
+    : _jobRepository = ServiceJobRepository(db),
+      _imeiRepository = IMEISerialRepository(db);
 
   // ============================================================================
   // SERVICE JOB OPERATIONS
@@ -51,8 +51,10 @@ class ServiceJobService {
     String? imeiSerialId;
 
     if (imeiOrSerial != null && imeiOrSerial.isNotEmpty) {
-      final imeiRecord =
-          await _imeiRepository.getByNumber(userId, imeiOrSerial);
+      final imeiRecord = await _imeiRepository.getByNumber(
+        userId,
+        imeiOrSerial,
+      );
       if (imeiRecord != null) {
         isUnderWarranty = imeiRecord.isWarrantyActive;
         originalBillId = imeiRecord.billId;
@@ -114,7 +116,9 @@ class ServiceJobService {
 
   /// Get jobs by status
   Future<List<ServiceJob>> getJobsByStatus(
-      String userId, ServiceJobStatus status) {
+    String userId,
+    ServiceJobStatus status,
+  ) {
     return _jobRepository.getServiceJobsByStatus(userId, status);
   }
 
@@ -270,10 +274,7 @@ class ServiceJobService {
     if (job == null) return;
 
     await _jobRepository.updateServiceJob(
-      job.copyWith(
-        billId: billId,
-        updatedAt: DateTime.now(),
-      ),
+      job.copyWith(billId: billId, updatedAt: DateTime.now()),
     );
   }
 
@@ -287,8 +288,9 @@ class ServiceJobService {
     final job = await _jobRepository.getServiceJobById(jobId);
     if (job == null) return;
 
-    final newAdvance =
-        isAdvance ? job.advanceReceived + amount : job.advanceReceived;
+    final newAdvance = isAdvance
+        ? job.advanceReceived + amount
+        : job.advanceReceived;
     final newPaid = job.amountPaid + amount;
     final newStatus = newPaid >= job.grandTotal ? 'PAID' : 'PARTIAL';
 
@@ -369,7 +371,9 @@ class ServiceJobService {
 
   /// Get customer's purchase history (devices they bought)
   Future<List<IMEISerial>> getCustomerDevices(
-      String userId, String customerId) {
+    String userId,
+    String customerId,
+  ) {
     return _imeiRepository.getByCustomer(userId, customerId);
   }
 

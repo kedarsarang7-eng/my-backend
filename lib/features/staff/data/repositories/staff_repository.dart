@@ -36,7 +36,9 @@ class StaffRepository {
       final id = const Uuid().v4();
       final now = DateTime.now();
 
-      await _db.into(_db.staffMembers).insert(
+      await _db
+          .into(_db.staffMembers)
+          .insert(
             StaffMembersCompanion.insert(
               id: id,
               userId: userId,
@@ -53,9 +55,9 @@ class StaffRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.staffMembers)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.staffMembers,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Failed to add staff member');
@@ -83,7 +85,8 @@ class StaffRepository {
 
       final entities = await query.get();
       return RepositoryResult.success(
-          entities.map((e) => StaffModelX.fromEntity(e)).toList());
+        entities.map((e) => StaffModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching staff: $e');
     }
@@ -92,9 +95,9 @@ class StaffRepository {
   /// Get staff member by ID
   Future<RepositoryResult<StaffModel>> getStaffById(String id) async {
     try {
-      final entity = await (_db.select(_db.staffMembers)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.staffMembers,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Staff member not found');
@@ -118,20 +121,23 @@ class StaffRepository {
     bool? isActive,
   }) async {
     try {
-      await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id)))
-          .write(StaffMembersCompanion(
-        name: name != null ? Value(name) : const Value.absent(),
-        phone: phone != null ? Value(phone) : const Value.absent(),
-        email: email != null ? Value(email) : const Value.absent(),
-        role: role != null ? Value(role) : const Value.absent(),
-        baseSalary:
-            baseSalary != null ? Value(baseSalary) : const Value.absent(),
-        salaryType:
-            salaryType != null ? Value(salaryType) : const Value.absent(),
-        isActive: isActive != null ? Value(isActive) : const Value.absent(),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id))).write(
+        StaffMembersCompanion(
+          name: name != null ? Value(name) : const Value.absent(),
+          phone: phone != null ? Value(phone) : const Value.absent(),
+          email: email != null ? Value(email) : const Value.absent(),
+          role: role != null ? Value(role) : const Value.absent(),
+          baseSalary: baseSalary != null
+              ? Value(baseSalary)
+              : const Value.absent(),
+          salaryType: salaryType != null
+              ? Value(salaryType)
+              : const Value.absent(),
+          isActive: isActive != null ? Value(isActive) : const Value.absent(),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       return RepositoryResult.success(null);
     } catch (e) {
@@ -142,14 +148,15 @@ class StaffRepository {
   /// Soft delete staff member
   Future<RepositoryResult<void>> deleteStaff(String id) async {
     try {
-      await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id)))
-          .write(StaffMembersCompanion(
-        isActive: const Value(false),
-        deletedAt: Value(DateTime.now()),
-        leftAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(_db.staffMembers)..where((t) => t.id.equals(id))).write(
+        StaffMembersCompanion(
+          isActive: const Value(false),
+          deletedAt: Value(DateTime.now()),
+          leftAt: Value(DateTime.now()),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       return RepositoryResult.success(null);
     } catch (e) {
@@ -183,7 +190,9 @@ class StaffRepository {
         hoursWorked = checkOut.difference(checkIn).inMinutes / 60;
       }
 
-      await _db.into(_db.staffAttendance).insert(
+      await _db
+          .into(_db.staffAttendance)
+          .insert(
             StaffAttendanceCompanion.insert(
               id: id,
               staffId: staffId,
@@ -201,9 +210,9 @@ class StaffRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.staffAttendance)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.staffAttendance,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Failed to mark attendance');
@@ -222,16 +231,20 @@ class StaffRepository {
     required DateTime toDate,
   }) async {
     try {
-      final entities = await (_db.select(_db.staffAttendance)
-            ..where((t) =>
-                t.staffId.equals(staffId) &
-                t.date.isBiggerOrEqualValue(fromDate) &
-                t.date.isSmallerOrEqualValue(toDate))
-            ..orderBy([(t) => OrderingTerm.desc(t.date)]))
-          .get();
+      final entities =
+          await (_db.select(_db.staffAttendance)
+                ..where(
+                  (t) =>
+                      t.staffId.equals(staffId) &
+                      t.date.isBiggerOrEqualValue(fromDate) &
+                      t.date.isSmallerOrEqualValue(toDate),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+              .get();
 
       return RepositoryResult.success(
-          entities.map((e) => AttendanceModelX.fromEntity(e)).toList());
+        entities.map((e) => AttendanceModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching attendance: $e');
     }
@@ -303,7 +316,8 @@ class StaffRepository {
 
   /// Get today's attendance for all staff
   Future<RepositoryResult<List<Map<String, dynamic>>>> getTodayAttendance(
-      String userId) async {
+    String userId,
+  ) async {
     try {
       final today = DateTime.now();
       final startOfDay = DateTime(today.year, today.month, today.day);
@@ -315,11 +329,13 @@ class StaffRepository {
       }
 
       // Get today's attendance records
-      final attendanceRecords = await (_db.select(_db.staffAttendance)
-            ..where((t) =>
-                t.userId.equals(userId) &
-                t.date.isBiggerOrEqualValue(startOfDay)))
-          .get();
+      final attendanceRecords =
+          await (_db.select(_db.staffAttendance)..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.date.isBiggerOrEqualValue(startOfDay),
+              ))
+              .get();
 
       final attendanceMap = {for (var a in attendanceRecords) a.staffId: a};
 
@@ -364,7 +380,9 @@ class StaffRepository {
       final totalDeductions = advances + otherDeductions;
       final netSalary = grossSalary - totalDeductions;
 
-      await _db.into(_db.salaryRecords).insert(
+      await _db
+          .into(_db.salaryRecords)
+          .insert(
             SalaryRecordsCompanion.insert(
               id: id,
               staffId: staffId,
@@ -391,9 +409,9 @@ class StaffRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.salaryRecords)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.salaryRecords,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Failed to create salary record');
@@ -424,7 +442,8 @@ class StaffRepository {
 
       final entities = await query.get();
       return RepositoryResult.success(
-          entities.map((e) => SalaryModelX.fromEntity(e)).toList());
+        entities.map((e) => SalaryModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching salaries: $e');
     }
@@ -439,9 +458,9 @@ class StaffRepository {
   }) async {
     try {
       // Get current salary record
-      final entity = await (_db.select(_db.salaryRecords)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.salaryRecords,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Salary record not found');
@@ -450,16 +469,19 @@ class StaffRepository {
       final newPaidAmount = entity.paidAmount + amount;
       final status = newPaidAmount >= entity.netSalary ? 'PAID' : 'PARTIAL';
 
-      await (_db.update(_db.salaryRecords)..where((t) => t.id.equals(id)))
-          .write(SalaryRecordsCompanion(
-        paidAmount: Value(newPaidAmount),
-        status: Value(status),
-        paidAt: Value(DateTime.now()),
-        paymentMode: Value(paymentMode),
-        paymentReference: Value(paymentReference),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.salaryRecords,
+      )..where((t) => t.id.equals(id))).write(
+        SalaryRecordsCompanion(
+          paidAmount: Value(newPaidAmount),
+          status: Value(status),
+          paidAt: Value(DateTime.now()),
+          paymentMode: Value(paymentMode),
+          paymentReference: Value(paymentReference),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       return RepositoryResult.success(null);
     } catch (e) {
@@ -469,19 +491,25 @@ class StaffRepository {
 
   /// Get pending salaries for a user
   Future<RepositoryResult<List<SalaryModel>>> getPendingSalaries(
-      String userId) async {
+    String userId,
+  ) async {
     try {
-      final entities = await (_db.select(_db.salaryRecords)
-            ..where((t) =>
-                t.userId.equals(userId) & t.status.isIn(['PENDING', 'PARTIAL']))
-            ..orderBy([
-              (t) => OrderingTerm.asc(t.year),
-              (t) => OrderingTerm.asc(t.month),
-            ]))
-          .get();
+      final entities =
+          await (_db.select(_db.salaryRecords)
+                ..where(
+                  (t) =>
+                      t.userId.equals(userId) &
+                      t.status.isIn(['PENDING', 'PARTIAL']),
+                )
+                ..orderBy([
+                  (t) => OrderingTerm.asc(t.year),
+                  (t) => OrderingTerm.asc(t.month),
+                ]))
+              .get();
 
       return RepositoryResult.success(
-          entities.map((e) => SalaryModelX.fromEntity(e)).toList());
+        entities.map((e) => SalaryModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching pending salaries: $e');
     }

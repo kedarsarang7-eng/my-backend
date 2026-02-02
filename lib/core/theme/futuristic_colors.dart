@@ -48,13 +48,13 @@ class FuturisticColors {
 
   // Shadows/Glows
   static List<BoxShadow> neonShadow(Color color) => [
-        BoxShadow(
-          color: color.withOpacity(0.25),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-          spreadRadius: 0,
-        ),
-      ];
+    BoxShadow(
+      color: color.withOpacity(0.25),
+      blurRadius: 16,
+      offset: const Offset(0, 4),
+      spreadRadius: 0,
+    ),
+  ];
 
   static List<BoxShadow> glassShadow = [
     BoxShadow(
@@ -137,14 +137,13 @@ class FuturisticColors {
     double blurRadius = 12,
     double spreadRadius = 0,
     double opacity = 0.3,
-  }) =>
-      [
-        BoxShadow(
-          color: (color ?? premiumBlue).withOpacity(opacity),
-          blurRadius: blurRadius,
-          spreadRadius: spreadRadius,
-        ),
-      ];
+  }) => [
+    BoxShadow(
+      color: (color ?? premiumBlue).withOpacity(opacity),
+      blurRadius: blurRadius,
+      spreadRadius: spreadRadius,
+    ),
+  ];
 
   /// Premium card border with glow effect
   static BoxDecoration premiumCardDecoration({
@@ -152,22 +151,21 @@ class FuturisticColors {
     double borderWidth = 1,
     double borderRadius = 12,
     Color? backgroundColor,
-  }) =>
-      BoxDecoration(
-        color: backgroundColor ?? surface,
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: (borderColor ?? premiumBlue).withOpacity(0.3),
-          width: borderWidth,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: (borderColor ?? premiumBlue).withOpacity(0.1),
-            blurRadius: 8,
-            spreadRadius: 0,
-          ),
-        ],
-      );
+  }) => BoxDecoration(
+    color: backgroundColor ?? surface,
+    borderRadius: BorderRadius.circular(borderRadius),
+    border: Border.all(
+      color: (borderColor ?? premiumBlue).withOpacity(0.3),
+      width: borderWidth,
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: (borderColor ?? premiumBlue).withOpacity(0.1),
+        blurRadius: 8,
+        spreadRadius: 0,
+      ),
+    ],
+  );
 
   /// Starfield overlay gradient for background texture
   static const LinearGradient starfieldOverlay = LinearGradient(
@@ -195,25 +193,22 @@ class FuturisticColors {
   static BoxDecoration iconGlowDecoration({
     Color? accentColor,
     bool isActive = false,
-  }) =>
-      BoxDecoration(
-        color: (accentColor ?? premiumBlue).withOpacity(isActive ? 0.2 : 0.1),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: isActive
-            ? [
-                BoxShadow(
-                  color: (accentColor ?? premiumBlue).withOpacity(0.4),
-                  blurRadius: 12,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
-      );
+  }) => BoxDecoration(
+    color: (accentColor ?? premiumBlue).withOpacity(isActive ? 0.2 : 0.1),
+    borderRadius: BorderRadius.circular(10),
+    boxShadow: isActive
+        ? [
+            BoxShadow(
+              color: (accentColor ?? premiumBlue).withOpacity(0.4),
+              blurRadius: 12,
+              spreadRadius: 1,
+            ),
+          ]
+        : null,
+  );
 
   /// Premium content area background decoration with star effect support
-  static BoxDecoration premiumContentBackground({
-    Color? backgroundColor,
-  }) =>
+  static BoxDecoration premiumContentBackground({Color? backgroundColor}) =>
       BoxDecoration(
         color: backgroundColor ?? background,
         gradient: LinearGradient(
@@ -227,10 +222,6 @@ class FuturisticColors {
       );
 
   /// Top bar glow border for premium effect
-  static Border topBarGlowBorder() => Border(
-        bottom: BorderSide(
-          color: premiumBlue.withOpacity(0.2),
-          width: 1,
-        ),
-      );
+  static Border topBarGlowBorder() =>
+      Border(bottom: BorderSide(color: premiumBlue.withOpacity(0.2), width: 1));
 }

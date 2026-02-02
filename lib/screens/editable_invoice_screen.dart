@@ -58,7 +58,8 @@ class _EditableInvoiceScreenState extends State<EditableInvoiceScreen> {
   }
 
   void _initializeInvoice() {
-    _invoice = widget.initialInvoice ??
+    _invoice =
+        widget.initialInvoice ??
         EditableInvoice.empty(
           ownerName: widget.ownerName,
           shopName: widget.shopName,
@@ -69,36 +70,47 @@ class _EditableInvoiceScreenState extends State<EditableInvoiceScreen> {
 
   void _initializeControllers() {
     _customerNameCtrl = TextEditingController(text: _invoice.customerName);
-    _customerVillageCtrl =
-        TextEditingController(text: _invoice.customerVillage);
+    _customerVillageCtrl = TextEditingController(
+      text: _invoice.customerVillage,
+    );
     _notesCtrl = TextEditingController(text: _invoice.notes);
 
     // Items
     for (final item in _invoice.items) {
       _itemNameCtrls.add(TextEditingController(text: item.itemName));
-      _itemManQtyCtrls
-          .add(TextEditingController(text: item.manQuantity?.toString() ?? ''));
-      _itemKiloCtrls
-          .add(TextEditingController(text: item.kiloWeight.toStringAsFixed(2)));
+      _itemManQtyCtrls.add(
+        TextEditingController(text: item.manQuantity?.toString() ?? ''),
+      );
+      _itemKiloCtrls.add(
+        TextEditingController(text: item.kiloWeight.toStringAsFixed(2)),
+      );
       _itemRatePerKiloCtrls.add(
-          TextEditingController(text: item.ratePerKilo.toStringAsFixed(2)));
-      _itemManRateCtrls
-          .add(TextEditingController(text: item.manRate?.toString() ?? ''));
+        TextEditingController(text: item.ratePerKilo.toStringAsFixed(2)),
+      );
+      _itemManRateCtrls.add(
+        TextEditingController(text: item.manRate?.toString() ?? ''),
+      );
     }
 
     // Charges
     _okshanCtrl = TextEditingController(
-        text: _invoice.charges.okshanKharcha.toStringAsFixed(2));
+      text: _invoice.charges.okshanKharcha.toStringAsFixed(2),
+    );
     _nagarpalikaCtrl = TextEditingController(
-        text: _invoice.charges.nagarpalika.toStringAsFixed(2));
+      text: _invoice.charges.nagarpalika.toStringAsFixed(2),
+    );
     _commissionCtrl = TextEditingController(
-        text: _invoice.charges.commission.toStringAsFixed(2));
-    _hamaliCtrl =
-        TextEditingController(text: _invoice.charges.hamali.toStringAsFixed(2));
+      text: _invoice.charges.commission.toStringAsFixed(2),
+    );
+    _hamaliCtrl = TextEditingController(
+      text: _invoice.charges.hamali.toStringAsFixed(2),
+    );
     _vetChithiCtrl = TextEditingController(
-        text: _invoice.charges.vetChithi.toStringAsFixed(2));
+      text: _invoice.charges.vetChithi.toStringAsFixed(2),
+    );
     _gadiKhadaCtrl = TextEditingController(
-        text: _invoice.charges.gadiKhada.toStringAsFixed(2));
+      text: _invoice.charges.gadiKhada.toStringAsFixed(2),
+    );
   }
 
   @override
@@ -446,89 +458,91 @@ class _EditableInvoiceScreenState extends State<EditableInvoiceScreen> {
                   DataColumn(label: Text('क्रिया')),
                 ],
                 rows: List.generate(_itemNameCtrls.length, (index) {
-                  return DataRow(cells: [
-                    DataCell(
-                      SizedBox(
-                        width: 100,
-                        child: TextField(
-                          controller: _itemNameCtrls[index],
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        SizedBox(
+                          width: 100,
+                          child: TextField(
+                            controller: _itemNameCtrls[index],
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    DataCell(
-                      SizedBox(
-                        width: 60,
-                        child: TextField(
-                          controller: _itemManQtyCtrls[index],
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
+                      DataCell(
+                        SizedBox(
+                          width: 60,
+                          child: TextField(
+                            controller: _itemManQtyCtrls[index],
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                            onChanged: (_) => setState(() {}),
                           ),
-                          onChanged: (_) => setState(() {}),
                         ),
                       ),
-                    ),
-                    DataCell(
-                      SizedBox(
-                        width: 60,
-                        child: TextField(
-                          controller: _itemKiloCtrls[index],
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
+                      DataCell(
+                        SizedBox(
+                          width: 60,
+                          child: TextField(
+                            controller: _itemKiloCtrls[index],
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                            onChanged: (_) => setState(() {}),
                           ),
-                          onChanged: (_) => setState(() {}),
                         ),
                       ),
-                    ),
-                    DataCell(
-                      SizedBox(
-                        width: 60,
-                        child: TextField(
-                          controller: _itemRatePerKiloCtrls[index],
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
+                      DataCell(
+                        SizedBox(
+                          width: 60,
+                          child: TextField(
+                            controller: _itemRatePerKiloCtrls[index],
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                            onChanged: (_) => setState(() {}),
                           ),
-                          onChanged: (_) => setState(() {}),
                         ),
                       ),
-                    ),
-                    DataCell(
-                      SizedBox(
-                        width: 60,
-                        child: TextField(
-                          controller: _itemManRateCtrls[index],
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
+                      DataCell(
+                        SizedBox(
+                          width: 60,
+                          child: TextField(
+                            controller: _itemManRateCtrls[index],
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                            onChanged: (_) => setState(() {}),
                           ),
-                          onChanged: (_) => setState(() {}),
                         ),
                       ),
-                    ),
-                    DataCell(
-                      Text(
-                        '₹${_calculateItemTotal(index).toStringAsFixed(2)}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      DataCell(
+                        Text(
+                          '₹${_calculateItemTotal(index).toStringAsFixed(2)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    DataCell(
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _removeItemRow(index),
-                        iconSize: 18,
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _removeItemRow(index),
+                          iconSize: 18,
+                        ),
                       ),
-                    ),
-                  ]);
+                    ],
+                  );
                 }),
               ),
             ),
@@ -567,9 +581,7 @@ class _EditableInvoiceScreenState extends State<EditableInvoiceScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Expanded(
-            child: Text(label),
-          ),
+          Expanded(child: Text(label)),
           SizedBox(
             width: 120,
             child: TextField(
@@ -616,8 +628,13 @@ class _EditableInvoiceScreenState extends State<EditableInvoiceScreen> {
     );
   }
 
-  Widget _buildTotalRow(String label, double amount,
-      {bool isBold = false, bool isLarge = false, Color color = Colors.black}) {
+  Widget _buildTotalRow(
+    String label,
+    double amount, {
+    bool isBold = false,
+    bool isLarge = false,
+    Color color = Colors.black,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

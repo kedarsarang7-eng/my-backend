@@ -107,26 +107,32 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
             decoration: BoxDecoration(
               color: FuturisticColors.surface,
               borderRadius: BorderRadius.circular(24),
-              border:
-                  Border.all(color: FuturisticColors.accent1.withOpacity(0.1)),
+              border: Border.all(
+                color: FuturisticColors.accent1.withOpacity(0.1),
+              ),
             ),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Personal Information',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                  const Text(
+                    'Personal Information',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                   const SizedBox(height: 24),
 
                   // Name
                   TextFormField(
                     controller: _nameController,
                     decoration: const InputDecoration(
-                        labelText: 'Full Name', icon: Icon(Icons.person)),
+                      labelText: 'Full Name',
+                      icon: Icon(Icons.person),
+                    ),
                     validator: (v) => v!.isEmpty ? 'Required' : null,
                   ),
                   const SizedBox(height: 16),
@@ -135,7 +141,9 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
                   TextFormField(
                     controller: _phoneController,
                     decoration: const InputDecoration(
-                        labelText: 'Phone Number', icon: Icon(Icons.phone)),
+                      labelText: 'Phone Number',
+                      icon: Icon(Icons.phone),
+                    ),
                     keyboardType: TextInputType.phone,
                     validator: (v) => v!.isEmpty ? 'Required' : null,
                   ),
@@ -148,7 +156,9 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
                         child: TextFormField(
                           controller: _ageController,
                           decoration: const InputDecoration(
-                              labelText: 'Age', icon: Icon(Icons.cake)),
+                            labelText: 'Age',
+                            icon: Icon(Icons.cake),
+                          ),
                           keyboardType: TextInputType.number,
                           validator: (v) => v!.isEmpty ? 'Required' : null,
                         ),
@@ -158,10 +168,14 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
                         child: DropdownButtonFormField<String>(
                           value: _selectedGender,
                           decoration: const InputDecoration(
-                              labelText: 'Gender', icon: Icon(Icons.male)),
+                            labelText: 'Gender',
+                            icon: Icon(Icons.male),
+                          ),
                           items: ['Male', 'Female', 'Other']
-                              .map((e) =>
-                                  DropdownMenuItem(value: e, child: Text(e)))
+                              .map(
+                                (e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)),
+                              )
                               .toList(),
                           onChanged: (v) =>
                               setState(() => _selectedGender = v!),
@@ -175,20 +189,25 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
                   DropdownButtonFormField<String>(
                     value: _selectedBloodGroup,
                     decoration: const InputDecoration(
-                        labelText: 'Blood Group', icon: Icon(Icons.bloodtype)),
-                    items: [
-                      'Unknown',
-                      'A+',
-                      'A-',
-                      'B+',
-                      'B-',
-                      'O+',
-                      'O-',
-                      'AB+',
-                      'AB-'
-                    ]
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
+                      labelText: 'Blood Group',
+                      icon: Icon(Icons.bloodtype),
+                    ),
+                    items:
+                        [
+                              'Unknown',
+                              'A+',
+                              'A-',
+                              'B+',
+                              'B-',
+                              'O+',
+                              'O-',
+                              'AB+',
+                              'AB-',
+                            ]
+                            .map(
+                              (e) => DropdownMenuItem(value: e, child: Text(e)),
+                            )
+                            .toList(),
                     onChanged: (v) => setState(() => _selectedBloodGroup = v!),
                   ),
                   const SizedBox(height: 16),
@@ -197,39 +216,47 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
                   TextFormField(
                     controller: _addressController,
                     decoration: const InputDecoration(
-                        labelText: 'Address', icon: Icon(Icons.home)),
+                      labelText: 'Address',
+                      icon: Icon(Icons.home),
+                    ),
                     maxLines: 3,
                   ),
                   const SizedBox(height: 24),
 
                   // Medical History Section
-                  const Text('Medical History',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Medical History',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 16),
 
                   // Chronic Conditions Chips
-                  const Text('Chronic Conditions:',
-                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  const Text(
+                    'Chronic Conditions:',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: _commonConditions.map((condition) {
-                      final isSelected =
-                          _selectedConditions.contains(condition);
+                      final isSelected = _selectedConditions.contains(
+                        condition,
+                      );
                       return FilterChip(
                         label: Text(condition),
                         selected: isSelected,
-                        selectedColor:
-                            FuturisticColors.primary.withOpacity(0.2),
+                        selectedColor: FuturisticColors.primary.withOpacity(
+                          0.2,
+                        ),
                         checkmarkColor: FuturisticColors.primary,
                         labelStyle: TextStyle(
                           color: isSelected
                               ? FuturisticColors.primary
                               : Colors.black87,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                         onSelected: (selected) {
                           setState(() {
@@ -249,8 +276,9 @@ class _AddPatientScreenState extends ConsumerState<AddPatientScreen> {
                   TextFormField(
                     controller: _allergiesController,
                     decoration: const InputDecoration(
-                        labelText: 'Allergies (Optional)',
-                        icon: Icon(Icons.warning_amber)),
+                      labelText: 'Allergies (Optional)',
+                      icon: Icon(Icons.warning_amber),
+                    ),
                     maxLines: 2,
                   ),
                   const SizedBox(height: 32),

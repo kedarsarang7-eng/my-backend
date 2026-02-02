@@ -35,11 +35,12 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
       final db = sl<AppDatabase>();
 
       // Query deposits for date range
-      final deposits = await (db.select(db.cashDeposits)
-            ..where((d) => d.depositDate.isBiggerOrEqualValue(_startDate))
-            ..where((d) => d.depositDate.isSmallerOrEqualValue(_endDate))
-            ..orderBy([(d) => OrderingTerm.desc(d.depositDate)]))
-          .get();
+      final deposits =
+          await (db.select(db.cashDeposits)
+                ..where((d) => d.depositDate.isBiggerOrEqualValue(_startDate))
+                ..where((d) => d.depositDate.isSmallerOrEqualValue(_endDate))
+                ..orderBy([(d) => OrderingTerm.desc(d.depositDate)]))
+              .get();
 
       double total = 0;
       double pending = 0;
@@ -59,9 +60,9 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading deposits: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading deposits: $e')));
       }
     }
   }
@@ -94,10 +95,7 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
             icon: const Icon(Icons.date_range),
             onPressed: _selectDateRange,
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadDeposits,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadDeposits),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -126,15 +124,20 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             _buildSummaryItem(
-                                'Total Deposited',
-                                '₹${_totalDeposited.toStringAsFixed(0)}',
-                                Colors.green),
+                              'Total Deposited',
+                              '₹${_totalDeposited.toStringAsFixed(0)}',
+                              Colors.green,
+                            ),
                             _buildSummaryItem(
-                                'Pending',
-                                '₹${_pendingDeposit.toStringAsFixed(0)}',
-                                Colors.orange),
+                              'Pending',
+                              '₹${_pendingDeposit.toStringAsFixed(0)}',
+                              Colors.orange,
+                            ),
                             _buildSummaryItem(
-                                'Deposits', '${_deposits.length}', Colors.blue),
+                              'Deposits',
+                              '${_deposits.length}',
+                              Colors.blue,
+                            ),
                           ],
                         ),
                       ],
@@ -146,7 +149,8 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
                 Expanded(
                   child: _deposits.isEmpty
                       ? const Center(
-                          child: Text('No deposits found for this period'))
+                          child: Text('No deposits found for this period'),
+                        )
                       : ListView.builder(
                           padding: const EdgeInsets.all(16),
                           itemCount: _deposits.length,
@@ -166,9 +170,14 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
       children: [
         Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         const SizedBox(height: 4),
-        Text(value,
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
       ],
     );
   }
@@ -200,7 +209,9 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
                   Text(
                     '₹${deposit.amount.toStringAsFixed(2)}',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     'Deposited: ${dateFormat.format(deposit.depositDate)}',
@@ -223,9 +234,10 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
               child: Text(
                 deposit.status,
                 style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: statusColor),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: statusColor,
+                ),
               ),
             ),
           ],
@@ -276,8 +288,9 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: slipController,
-                decoration:
-                    const InputDecoration(labelText: 'Deposit Slip Number'),
+                decoration: const InputDecoration(
+                  labelText: 'Deposit Slip Number',
+                ),
               ),
             ],
           ),
@@ -317,15 +330,19 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
       final db = sl<AppDatabase>();
       final id = DateTime.now().millisecondsSinceEpoch.toString();
 
-      await db.into(db.cashDeposits).insert(CashDepositsCompanion.insert(
-            id: id,
-            ownerId: sl<SessionManager>().ownerId ?? 'unknown',
-            depositDate: depositDate,
-            amount: amount,
-            collectionDate: DateTime.now(),
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+      await db
+          .into(db.cashDeposits)
+          .insert(
+            CashDepositsCompanion.insert(
+              id: id,
+              ownerId: sl<SessionManager>().ownerId ?? 'unknown',
+              depositDate: depositDate,
+              amount: amount,
+              collectionDate: DateTime.now(),
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       _loadDeposits();
 
@@ -336,9 +353,9 @@ class _CashDepositReportScreenState extends State<CashDepositReportScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error adding deposit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error adding deposit: $e')));
       }
     }
   }

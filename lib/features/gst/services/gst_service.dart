@@ -173,26 +173,26 @@ class GstService {
       taxableValue: summary.taxableValue,
       cgstRate: summary.hsnSummary.isNotEmpty
           ? summary.hsnSummary.first.cgstAmount /
-              (summary.hsnSummary.first.taxableValue > 0
-                  ? summary.hsnSummary.first.taxableValue
-                  : 1) *
-              100
+                (summary.hsnSummary.first.taxableValue > 0
+                    ? summary.hsnSummary.first.taxableValue
+                    : 1) *
+                100
           : 0,
       cgstAmount: summary.cgstAmount,
       sgstRate: summary.hsnSummary.isNotEmpty
           ? summary.hsnSummary.first.sgstAmount /
-              (summary.hsnSummary.first.taxableValue > 0
-                  ? summary.hsnSummary.first.taxableValue
-                  : 1) *
-              100
+                (summary.hsnSummary.first.taxableValue > 0
+                    ? summary.hsnSummary.first.taxableValue
+                    : 1) *
+                100
           : 0,
       sgstAmount: summary.sgstAmount,
       igstRate: summary.hsnSummary.isNotEmpty
           ? summary.hsnSummary.first.igstAmount /
-              (summary.hsnSummary.first.taxableValue > 0
-                  ? summary.hsnSummary.first.taxableValue
-                  : 1) *
-              100
+                (summary.hsnSummary.first.taxableValue > 0
+                    ? summary.hsnSummary.first.taxableValue
+                    : 1) *
+                100
           : 0,
       igstAmount: summary.igstAmount,
       hsnSummary: summary.hsnSummary,
@@ -477,42 +477,50 @@ class GstComplianceChecker {
 
     // 1. E-Way Bill Check (>₹50,000 for movement of goods)
     if (invoiceAmount > 50000 && !hasEwaybill && distance > 0) {
-      warnings.add(const ComplianceWarning(
-        code: 'EWB001',
-        severity: 'ERROR',
-        message: 'E-Way Bill required for invoice amount >₹50,000',
-        action: 'Generate E-Way Bill before dispatch',
-      ));
+      warnings.add(
+        const ComplianceWarning(
+          code: 'EWB001',
+          severity: 'ERROR',
+          message: 'E-Way Bill required for invoice amount >₹50,000',
+          action: 'Generate E-Way Bill before dispatch',
+        ),
+      );
     }
 
     // 2. GSTIN validation for B2B
     if (isB2b && (customerGstin == null || customerGstin.isEmpty)) {
-      warnings.add(const ComplianceWarning(
-        code: 'GST001',
-        severity: 'ERROR',
-        message: 'Customer GSTIN required for B2B invoice',
-        action: 'Add customer GSTIN before generating invoice',
-      ));
+      warnings.add(
+        const ComplianceWarning(
+          code: 'GST001',
+          severity: 'ERROR',
+          message: 'Customer GSTIN required for B2B invoice',
+          action: 'Add customer GSTIN before generating invoice',
+        ),
+      );
     }
 
     // 3. HSN code requirement
     if (hsnCode == null || hsnCode.isEmpty) {
-      warnings.add(const ComplianceWarning(
-        code: 'HSN001',
-        severity: 'WARNING',
-        message: 'HSN code missing - required for GST returns',
-        action: 'Add HSN/SAC code to products',
-      ));
+      warnings.add(
+        const ComplianceWarning(
+          code: 'HSN001',
+          severity: 'WARNING',
+          message: 'HSN code missing - required for GST returns',
+          action: 'Add HSN/SAC code to products',
+        ),
+      );
     }
 
     // 4. Large B2C invoice warning
     if (!isB2b && invoiceAmount > 250000) {
-      warnings.add(const ComplianceWarning(
-        code: 'B2C001',
-        severity: 'INFO',
-        message: 'Large B2C invoice - will be reported in B2CL section',
-        action: 'Ensure customer state code is correct',
-      ));
+      warnings.add(
+        const ComplianceWarning(
+          code: 'B2C001',
+          severity: 'INFO',
+          message: 'Large B2C invoice - will be reported in B2CL section',
+          action: 'Ensure customer state code is correct',
+        ),
+      );
     }
 
     // 5. E-Invoice threshold (>₹5 Cr turnover)

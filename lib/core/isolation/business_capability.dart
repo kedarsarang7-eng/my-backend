@@ -4,7 +4,7 @@
 /// to specific BusinessTypes. This serves as the "Permission Matrix"
 /// for the application.
 enum BusinessCapability {
-// ==============================================================================
+  // ==============================================================================
   // 1. Product / Item Management
   // ==============================================================================
   useProductAdd,
@@ -60,19 +60,16 @@ enum BusinessCapability {
   usePatientRegistry,
   useDrugSchedule,
   useSaltSearch, // New: Pharmacy specific
-
   // UI / Input Methods
   useBarcodeScanner,
   useScanOCR,
   useVoiceInput, // Future ready
-
   // Inventory / Stock (Legacy aliases or specific behaviors)
   useBatchExpiry,
   useStockManagement, // Alias for useStockEntry + useVisibleStock
   useLowStockAlerts, // Alias for useLowStockAlert
   useMultiUnit, // Box/Pcs handling (Wholesale)
   useNegativeStock, // Allow selling without stock (optional)
-
   // Hardware / Dimensions
   useDimensions, // Hardware (Sq.ft/Mtr)
   useLooseQuantities,
@@ -203,7 +200,6 @@ final Map<String, Set<BusinessCapability>> businessCapabilityRegistry = {
     BusinessCapability.useSupplierBill,
     BusinessCapability
         .usePurchaseRegister, // ⚠️ -> Included based on 'Optional' logic or check
-
     // Specialized
     BusinessCapability.usePrescription,
     BusinessCapability.useDoctorLinking,
@@ -470,7 +466,6 @@ final Map<String, Set<BusinessCapability>> businessCapabilityRegistry = {
     // Alerts: ⚠️
     BusinessCapability.useDailySnapshot, // ⚠️
     BusinessCapability.useRevenueOverview, // ⚠️
-
     // 5. Purchase
     BusinessCapability
         .usePurchaseOrder, // ❌ (Checklist says NO for Purchase Orders for Hardware? Wait, Checklist says ✅ for Purchase Orders for Hardware)
@@ -551,7 +546,6 @@ final Map<String, Set<BusinessCapability>> businessCapabilityRegistry = {
     BusinessCapability.useDeadStock,
     BusinessCapability.useInventorySearch,
     BusinessCapability.useInventoryExport, // ✅
-
     // 3. Invoice
     BusinessCapability.useInvoiceList,
     BusinessCapability.useInvoiceSearch,
@@ -559,7 +553,6 @@ final Map<String, Set<BusinessCapability>> businessCapabilityRegistry = {
     BusinessCapability.useSalesReturn,
     BusinessCapability.useProformaInvoice, // ✅
     BusinessCapability.useDispatchNote, // ✅
-
     // 4. Alerts
     BusinessCapability.useLowStockAlert,
     BusinessCapability.useGeneralAlerts,

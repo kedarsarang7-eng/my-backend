@@ -31,7 +31,8 @@ class EncryptionService {
     final keyObj = encrypt_pkg.Key(key);
     final iv = encrypt_pkg.IV.fromLength(16);
     final encr = encrypt_pkg.Encrypter(
-        encrypt_pkg.AES(keyObj, mode: encrypt_pkg.AESMode.cbc));
+      encrypt_pkg.AES(keyObj, mode: encrypt_pkg.AESMode.cbc),
+    );
     final cipher = encr.encrypt(plain, iv: iv);
     return cipher.base64;
   }
@@ -41,7 +42,8 @@ class EncryptionService {
     final keyObj = encrypt_pkg.Key(key);
     final iv = encrypt_pkg.IV.fromLength(16);
     final encr = encrypt_pkg.Encrypter(
-        encrypt_pkg.AES(keyObj, mode: encrypt_pkg.AESMode.cbc));
+      encrypt_pkg.AES(keyObj, mode: encrypt_pkg.AESMode.cbc),
+    );
     final dec = encr.decrypt64(cipherBase64, iv: iv);
     return dec;
   }

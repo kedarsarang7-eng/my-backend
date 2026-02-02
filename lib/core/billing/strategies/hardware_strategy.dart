@@ -41,7 +41,10 @@ class HardwareStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildWeightField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Weight',
       value: item.weight ?? '',
@@ -53,7 +56,10 @@ class HardwareStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildHsnField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'HSN Code',
       value: item.hsn,

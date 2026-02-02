@@ -9,13 +9,7 @@
 library;
 
 /// Account Groups (Top-level classification)
-enum AccountGroup {
-  assets,
-  liabilities,
-  income,
-  expenses,
-  equity,
-}
+enum AccountGroup { assets, liabilities, income, expenses, equity }
 
 extension AccountGroupExtension on AccountGroup {
   String get displayName {
@@ -179,31 +173,32 @@ class LedgerAccountModel {
       openingIsDebit ? openingBalance : -openingBalance;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'name': name,
-        'accountGroup': group.value,
-        'accountType': type.value,
-        'currentBalance': currentBalance,
-        'openingBalance': openingBalance,
-        'openingIsDebit': openingIsDebit,
-        'isSystem': isSystem,
-        'parentId': parentId,
-        'linkedEntityType': linkedEntityType,
-        'linkedEntityId': linkedEntityId,
-        'isActive': isActive,
-        'isSynced': isSynced,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'name': name,
+    'accountGroup': group.value,
+    'accountType': type.value,
+    'currentBalance': currentBalance,
+    'openingBalance': openingBalance,
+    'openingIsDebit': openingIsDebit,
+    'isSystem': isSystem,
+    'parentId': parentId,
+    'linkedEntityType': linkedEntityType,
+    'linkedEntityId': linkedEntityId,
+    'isActive': isActive,
+    'isSynced': isSynced,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory LedgerAccountModel.fromMap(Map<String, dynamic> map) =>
       LedgerAccountModel(
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         name: map['name'] ?? '',
-        group:
-            AccountGroupExtension.fromString(map['accountGroup'] ?? 'ASSETS'),
+        group: AccountGroupExtension.fromString(
+          map['accountGroup'] ?? 'ASSETS',
+        ),
         type: AccountTypeExtension.fromString(map['accountType'] ?? 'OTHER'),
         currentBalance: (map['currentBalance'] ?? 0).toDouble(),
         openingBalance: (map['openingBalance'] ?? 0).toDouble(),
@@ -215,9 +210,11 @@ class LedgerAccountModel {
         isActive: map['isActive'] ?? true,
         isSynced: map['isSynced'] ?? false,
         createdAt: DateTime.parse(
-            map['createdAt'] ?? DateTime.now().toIso8601String()),
+          map['createdAt'] ?? DateTime.now().toIso8601String(),
+        ),
         updatedAt: DateTime.parse(
-            map['updatedAt'] ?? DateTime.now().toIso8601String()),
+          map['updatedAt'] ?? DateTime.now().toIso8601String(),
+        ),
       );
 
   LedgerAccountModel copyWith({

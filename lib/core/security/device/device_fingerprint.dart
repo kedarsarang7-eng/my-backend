@@ -148,15 +148,15 @@ class DeviceFingerprint {
 
   /// Serialize to map
   Map<String, dynamic> toMap() => {
-        'installationId': installationId,
-        'deviceId': deviceId,
-        'platform': platform,
-        'osVersion': osVersion,
-        'appVersion': appVersion,
-        'deviceModel': deviceModel,
-        'fingerprintHash': fingerprintHash,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'installationId': installationId,
+    'deviceId': deviceId,
+    'platform': platform,
+    'osVersion': osVersion,
+    'appVersion': appVersion,
+    'deviceModel': deviceModel,
+    'fingerprintHash': fingerprintHash,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
   /// Deserialize from map
   factory DeviceFingerprint.fromMap(Map<String, dynamic> map) {
@@ -168,7 +168,8 @@ class DeviceFingerprint {
       appVersion: map['appVersion'] as String? ?? '',
       deviceModel: map['deviceModel'] as String? ?? '',
       fingerprintHash: map['fingerprintHash'] as String,
-      createdAt: DateTime.tryParse(map['createdAt'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(map['createdAt'] as String? ?? '') ??
           DateTime.now(),
     );
   }
@@ -213,10 +214,7 @@ class TrustedDevice {
     return status == TrustedDeviceStatus.active && !isInCoolingPeriod;
   }
 
-  TrustedDevice copyWith({
-    DateTime? lastUsedAt,
-    TrustedDeviceStatus? status,
-  }) {
+  TrustedDevice copyWith({DateTime? lastUsedAt, TrustedDeviceStatus? status}) {
     return TrustedDevice(
       id: id,
       businessId: businessId,
@@ -231,24 +229,25 @@ class TrustedDevice {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'businessId': businessId,
-        'ownerId': ownerId,
-        'fingerprint': fingerprint.toMap(),
-        'deviceName': deviceName,
-        'registeredAt': registeredAt.toIso8601String(),
-        'lastUsedAt': lastUsedAt?.toIso8601String(),
-        'isPrimary': isPrimary,
-        'status': status.name,
-      };
+    'id': id,
+    'businessId': businessId,
+    'ownerId': ownerId,
+    'fingerprint': fingerprint.toMap(),
+    'deviceName': deviceName,
+    'registeredAt': registeredAt.toIso8601String(),
+    'lastUsedAt': lastUsedAt?.toIso8601String(),
+    'isPrimary': isPrimary,
+    'status': status.name,
+  };
 
   factory TrustedDevice.fromMap(Map<String, dynamic> map) {
     return TrustedDevice(
       id: map['id'] as String,
       businessId: map['businessId'] as String,
       ownerId: map['ownerId'] as String,
-      fingerprint:
-          DeviceFingerprint.fromMap(map['fingerprint'] as Map<String, dynamic>),
+      fingerprint: DeviceFingerprint.fromMap(
+        map['fingerprint'] as Map<String, dynamic>,
+      ),
       deviceName: map['deviceName'] as String,
       registeredAt: DateTime.parse(map['registeredAt'] as String),
       lastUsedAt: map['lastUsedAt'] != null

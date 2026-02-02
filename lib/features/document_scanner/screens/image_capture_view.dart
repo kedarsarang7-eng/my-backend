@@ -87,8 +87,9 @@ class _ImageCaptureViewState extends State<ImageCaptureView> {
       // Fallback to gallery on error (e.g. no camera)
       try {
         final ImagePicker picker = ImagePicker();
-        final XFile? image =
-            await picker.pickImage(source: ImageSource.gallery);
+        final XFile? image = await picker.pickImage(
+          source: ImageSource.gallery,
+        );
         if (image != null) {
           widget.onImageCaptured(image);
         }

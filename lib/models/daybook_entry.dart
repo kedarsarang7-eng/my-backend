@@ -142,7 +142,10 @@ class DayBookEntry {
 
   /// Create an empty entry for a new day
   factory DayBookEntry.forDate(
-      String businessId, DateTime date, double openingBalance) {
+    String businessId,
+    DateTime date,
+    double openingBalance,
+  ) {
     final now = DateTime.now();
     return DayBookEntry(
       id: '${businessId}_${_dateKey(date)}',
@@ -210,8 +213,9 @@ class DayBookEntry {
       'paymentsReceivedCount': paymentsReceivedCount,
       'paymentsMadeCount': paymentsMadeCount,
       'isReconciled': isReconciled,
-      'reconciledAt':
-          reconciledAt != null ? Timestamp.fromDate(reconciledAt!) : null,
+      'reconciledAt': reconciledAt != null
+          ? Timestamp.fromDate(reconciledAt!)
+          : null,
       'reconciledBy': reconciledBy,
       'reconciliationNotes': reconciliationNotes,
       'reconciliationDifference': reconciliationDifference,

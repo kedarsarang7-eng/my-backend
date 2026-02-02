@@ -66,21 +66,26 @@ class _UpcomingPaymentsPanelState extends State<UpcomingPaymentsPanel> {
                   Text(
                     'Pending Payments',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: FuturisticColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: FuturisticColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   const Text(
                     'Collect these soon',
                     style: TextStyle(
-                        color: FuturisticColors.textSecondary, fontSize: 12),
+                      color: FuturisticColors.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
               // Icon or Action
-              const Icon(Icons.calendar_today,
-                  color: FuturisticColors.primary, size: 20),
+              const Icon(
+                Icons.calendar_today,
+                color: FuturisticColors.primary,
+                size: 20,
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -92,13 +97,16 @@ class _UpcomingPaymentsPanelState extends State<UpcomingPaymentsPanel> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.check_circle_outline,
-                        color: FuturisticColors.success.withOpacity(0.5),
-                        size: 48),
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: FuturisticColors.success.withOpacity(0.5),
+                      size: 48,
+                    ),
                     const SizedBox(height: 16),
-                    const Text('All caught up!',
-                        style:
-                            TextStyle(color: FuturisticColors.textSecondary)),
+                    const Text(
+                      'All caught up!',
+                      style: TextStyle(color: FuturisticColors.textSecondary),
+                    ),
                   ],
                 ),
               ),
@@ -107,7 +115,7 @@ class _UpcomingPaymentsPanelState extends State<UpcomingPaymentsPanel> {
             Expanded(
               child: ListView.separated(
                 itemCount: _payments.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                separatorBuilder: (_, _) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final bill = _payments[index];
                   // Calculate due date (assuming 7 days credit if not in DB)
@@ -136,22 +144,30 @@ class _UpcomingPaymentsPanelState extends State<UpcomingPaymentsPanel> {
                         // Date Box
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: FuturisticColors.surface,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Column(
                             children: [
-                              Text(DateFormat('MMM').format(dueDate),
-                                  style: const TextStyle(
-                                      color: FuturisticColors.textSecondary,
-                                      fontSize: 10)),
-                              Text(DateFormat('d').format(dueDate),
-                                  style: const TextStyle(
-                                      color: FuturisticColors.textPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
+                              Text(
+                                DateFormat('MMM').format(dueDate),
+                                style: const TextStyle(
+                                  color: FuturisticColors.textSecondary,
+                                  fontSize: 10,
+                                ),
+                              ),
+                              Text(
+                                DateFormat('d').format(dueDate),
+                                style: const TextStyle(
+                                  color: FuturisticColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -164,8 +180,9 @@ class _UpcomingPaymentsPanelState extends State<UpcomingPaymentsPanel> {
                               Text(
                                 hasCustomer ? customerName : 'Walk-in',
                                 style: const TextStyle(
-                                    color: FuturisticColors.textPrimary,
-                                    fontWeight: FontWeight.w600),
+                                  color: FuturisticColors.textPrimary,
+                                  fontWeight: FontWeight.w600,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -186,11 +203,13 @@ class _UpcomingPaymentsPanelState extends State<UpcomingPaymentsPanel> {
                         ),
 
                         Text(
-                          NumberFormat.currency(symbol: '₹')
-                              .format(bill.grandTotal - bill.paidAmount),
+                          NumberFormat.currency(
+                            symbol: '₹',
+                          ).format(bill.grandTotal - bill.paidAmount),
                           style: const TextStyle(
-                              color: FuturisticColors.textPrimary,
-                              fontWeight: FontWeight.bold),
+                            color: FuturisticColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),

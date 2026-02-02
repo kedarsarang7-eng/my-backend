@@ -43,13 +43,12 @@ class QrValidationResult {
     required String shopId,
     String? customerProfileId,
     Map<String, dynamic>? payload,
-  }) =>
-      QrValidationResult(
-        isValid: true,
-        shopId: shopId,
-        customerProfileId: customerProfileId,
-        payload: payload,
-      );
+  }) => QrValidationResult(
+    isValid: true,
+    shopId: shopId,
+    customerProfileId: customerProfileId,
+    payload: payload,
+  );
 
   factory QrValidationResult.invalid(String error) =>
       QrValidationResult(isValid: false, error: error);
@@ -110,8 +109,8 @@ class SecureQrService {
       'shopId': shopId,
       'issuedAt': issuedAt,
       'expiresAt': expiresAt,
-      if (shopName != null) 'shopName': shopName,
-      if (businessType != null) 'businessType': businessType,
+      'shopName': ?shopName,
+      'businessType': ?businessType,
     };
 
     // Generate signature
@@ -201,7 +200,8 @@ class SecureQrService {
 
     if (!_verifySignature(payloadWithoutSig, signature)) {
       return QrValidationResult.invalid(
-          'Invalid signature - QR may be tampered');
+        'Invalid signature - QR may be tampered',
+      );
     }
 
     // Check expiry
@@ -246,10 +246,7 @@ class SecureQrService {
       return QrValidationResult.invalid('Missing owner_uid in legacy format');
     }
 
-    return QrValidationResult.valid(
-      shopId: ownerUid,
-      payload: payload,
-    );
+    return QrValidationResult.valid(shopId: ownerUid, payload: payload);
   }
 
   /// Sign payload with HMAC-SHA256
@@ -297,7 +294,7 @@ class SecureQrService {
     final issuedAt = now.millisecondsSinceEpoch ~/ 1000;
     final expiresAt =
         now.add(Duration(minutes: expiryMinutes)).millisecondsSinceEpoch ~/
-            1000;
+        1000;
     final nonce = const Uuid().v4();
 
     final payload = <String, dynamic>{
@@ -306,7 +303,7 @@ class SecureQrService {
       'issuedAt': issuedAt,
       'expiresAt': expiresAt,
       'nonce': nonce, // One-time use nonce
-      if (customerProfileId != null) 'customerProfileId': customerProfileId,
+      'customerProfileId': ?customerProfileId,
     };
 
     final signature = _signPayload(payload);
@@ -372,8 +369,9 @@ class SecureQrService {
       if (expiresAtStr != null) {
         final expiresAt = int.tryParse(expiresAtStr);
         if (expiresAt != null) {
-          final expiryTime =
-              DateTime.fromMillisecondsSinceEpoch(expiresAt * 1000);
+          final expiryTime = DateTime.fromMillisecondsSinceEpoch(
+            expiresAt * 1000,
+          );
           if (DateTime.now().isAfter(expiryTime)) {
             return QrValidationResult.invalid('Link has expired');
           }
@@ -388,10 +386,7 @@ class SecureQrService {
         return QrValidationResult.invalid('Invalid signature - Link tampered');
       }
 
-      return QrValidationResult.valid(
-        shopId: shopId,
-        payload: params,
-      );
+      return QrValidationResult.valid(shopId: shopId, payload: params);
     } catch (e) {
       return QrValidationResult.invalid('Validation error: $e');
     }

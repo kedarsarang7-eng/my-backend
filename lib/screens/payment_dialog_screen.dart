@@ -136,10 +136,7 @@ class _PaymentDialogScreenState extends State<PaymentDialogScreen> {
               // Header
               const Text(
                 'Payment',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
 
@@ -235,10 +232,7 @@ class _PaymentDialogScreenState extends State<PaymentDialogScreen> {
                                   : Colors.grey,
                             ),
                             const SizedBox(height: 4),
-                            const Text(
-                              'Cash',
-                              style: TextStyle(fontSize: 12),
-                            ),
+                            const Text('Cash', style: TextStyle(fontSize: 12)),
                           ],
                         ),
                       ),
@@ -288,8 +282,9 @@ class _PaymentDialogScreenState extends State<PaymentDialogScreen> {
               // Amount Input
               TextField(
                 controller: _amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Amount to Pay',
                   prefixText: '₹ ',
@@ -347,8 +342,9 @@ class _PaymentDialogScreenState extends State<PaymentDialogScreen> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed:
-                          _isLoading ? null : () => Navigator.pop(context),
+                      onPressed: _isLoading
+                          ? null
+                          : () => Navigator.pop(context),
                       child: const Text('Cancel'),
                     ),
                   ),

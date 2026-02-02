@@ -37,13 +37,11 @@ class _NeonButtonState extends State<NeonButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: kP2DAnimationFast,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _controller = AnimationController(vsync: this, duration: kP2DAnimationFast);
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.9,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -99,10 +97,7 @@ class _NeonButtonState extends State<NeonButton>
     );
 
     if (widget.tooltip != null) {
-      return Tooltip(
-        message: widget.tooltip!,
-        child: button,
-      );
+      return Tooltip(message: widget.tooltip!, child: button);
     }
     return button;
   }
@@ -169,8 +164,9 @@ class _CaptureButtonState extends State<CaptureButton>
         animation: _pulseController,
         builder: (context, child) {
           final scale = 1.0 + (_pulseController.value * 0.08);
-          final glowOpacity =
-              widget.isReady ? 0.3 + (_pulseController.value * 0.3) : 0.0;
+          final glowOpacity = widget.isReady
+              ? 0.3 + (_pulseController.value * 0.3)
+              : 0.0;
 
           return Transform.scale(
             scale: scale,

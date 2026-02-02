@@ -58,8 +58,9 @@ class _OwnerAuthGuardState extends State<OwnerAuthGuard> {
         try {
           // We strive to verify, but if this fails due to network/timeout, we shouldn't block
           // a valid session.
-          final record =
-              await ownerAccountService.fetchOwnerRecord(uid: user.uid);
+          final record = await ownerAccountService.fetchOwnerRecord(
+            uid: user.uid,
+          );
           if (record != null) {
             final authUid = record['authUid'] as String?;
             if (authUid != null && authUid != user.uid) {
@@ -79,7 +80,8 @@ class _OwnerAuthGuardState extends State<OwnerAuthGuard> {
       final allowed = loggedInOwner && ownerMatches;
 
       debugPrint(
-          'OwnerAuthGuard: allowed=$allowed, loggedIn=$loggedIn, role=$role, ownerMatch=$ownerMatches, userUID=${user?.uid}');
+        'OwnerAuthGuard: allowed=$allowed, loggedIn=$loggedIn, role=$role, ownerMatch=$ownerMatches, userUID=${user?.uid}',
+      );
 
       if (!mounted) return;
       setState(() {
@@ -105,9 +107,7 @@ class _OwnerAuthGuardState extends State<OwnerAuthGuard> {
   @override
   Widget build(BuildContext context) {
     if (!_checked) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (!_authorized) {

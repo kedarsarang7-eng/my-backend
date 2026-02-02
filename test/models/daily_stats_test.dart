@@ -145,18 +145,20 @@ void main() {
       expect(stats.activeOrders, 500);
     });
 
-    test('paidAmount + unpaidAmount should typically equal totalInvoiceValue',
-        () {
-      final stats = VendorStats(
-        totalInvoiceValue: 100000.0,
-        paidAmount: 60000.0,
-        unpaidAmount: 40000.0,
-        todayPurchase: 5000.0,
-        activeOrders: 5,
-      );
+    test(
+      'paidAmount + unpaidAmount should typically equal totalInvoiceValue',
+      () {
+        final stats = VendorStats(
+          totalInvoiceValue: 100000.0,
+          paidAmount: 60000.0,
+          unpaidAmount: 40000.0,
+          todayPurchase: 5000.0,
+          activeOrders: 5,
+        );
 
-      expect(stats.paidAmount + stats.unpaidAmount, stats.totalInvoiceValue);
-    });
+        expect(stats.paidAmount + stats.unpaidAmount, stats.totalInvoiceValue);
+      },
+    );
 
     test('should handle zero active orders', () {
       final stats = VendorStats(

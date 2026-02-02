@@ -32,8 +32,9 @@ class PetrolPumpDashboardWidgets extends StatelessWidget {
 
         return Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           color: activeShift != null
               ? FuturisticColors.paidBackground
               : FuturisticColors.unpaidBackground,
@@ -72,13 +73,17 @@ class PetrolPumpDashboardWidgets extends StatelessWidget {
                         Text(
                           '${activeShift.shiftName} • Started ${activeShift.startTime.hour}:${activeShift.startTime.minute}',
                           style: TextStyle(
-                              color: Colors.grey.shade700, fontSize: 13),
+                            color: Colors.grey.shade700,
+                            fontSize: 13,
+                          ),
                         ),
                       ] else
                         Text(
                           'Tap to open a new shift',
                           style: TextStyle(
-                              color: Colors.grey.shade700, fontSize: 13),
+                            color: Colors.grey.shade700,
+                            fontSize: 13,
+                          ),
                         ),
                     ],
                   ),
@@ -93,7 +98,8 @@ class PetrolPumpDashboardWidgets extends StatelessWidget {
                         ? FuturisticColors.success
                         : Colors.blue,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                   child: Text(activeShift != null ? 'Manage' : 'Open Shift'),
                 ),
@@ -136,7 +142,9 @@ class PetrolPumpDashboardWidgets extends StatelessWidget {
                     Text(
                       fuel.fuelName,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 14),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -165,8 +173,9 @@ class PetrolPumpDashboardWidgets extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        final lowStockTanks =
-            snapshot.data!.where((t) => t.isLowStock).toList();
+        final lowStockTanks = snapshot.data!
+            .where((t) => t.isLowStock)
+            .toList();
 
         if (lowStockTanks.isEmpty) return const SizedBox.shrink();
 

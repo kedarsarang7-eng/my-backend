@@ -23,11 +23,13 @@ class WordExportAdapter implements ExportAdapter {
     } catch (e) {
       // Fallback or explicit error
       throw Exception(
-          'Word Template not found at $templatePath. Please ensure the asset exists.');
+        'Word Template not found at $templatePath. Please ensure the asset exists.',
+      );
     }
 
-    final docx =
-        await DocxTemplate.fromBytes(templateBytes.buffer.asUint8List());
+    final docx = await DocxTemplate.fromBytes(
+      templateBytes.buffer.asUint8List(),
+    );
 
     final content = Content();
 
@@ -41,9 +43,14 @@ class WordExportAdapter implements ExportAdapter {
     // --- DOCUMENT ---
     content.add(TextContent('invoice_no', data.document.number));
     content.add(
-        TextContent('date', data.document.date.toString().substring(0, 10)));
-    content.add(TextContent(
-        'due_date', data.document.dueDate?.toString().substring(0, 10) ?? ''));
+      TextContent('date', data.document.date.toString().substring(0, 10)),
+    );
+    content.add(
+      TextContent(
+        'due_date',
+        data.document.dueDate?.toString().substring(0, 10) ?? '',
+      ),
+    );
 
     // --- PARTY ---
     content.add(TextContent('customer_name', data.party.name));

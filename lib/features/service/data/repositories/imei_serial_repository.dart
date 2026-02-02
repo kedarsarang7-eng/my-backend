@@ -18,7 +18,9 @@ class IMEISerialRepository {
     final id = imei.id.isEmpty ? const Uuid().v4() : imei.id;
     final now = DateTime.now();
 
-    await _db.into(_db.iMEISerials).insert(
+    await _db
+        .into(_db.iMEISerials)
+        .insert(
           IMEISerialsCompanion.insert(
             id: id,
             userId: imei.userId,
@@ -57,25 +59,30 @@ class IMEISerialRepository {
 
   /// Check if IMEI/Serial already exists
   Future<bool> exists(String userId, String imeiOrSerial) async {
-    final count = await (_db.selectOnly(_db.iMEISerials)
-          ..addColumns([_db.iMEISerials.id.count()])
-          ..where(_db.iMEISerials.userId.equals(userId) &
-              _db.iMEISerials.imeiOrSerial.equals(imeiOrSerial) &
-              _db.iMEISerials.deletedAt.isNull()))
-        .map((row) => row.read(_db.iMEISerials.id.count()) ?? 0)
-        .getSingle();
+    final count =
+        await (_db.selectOnly(_db.iMEISerials)
+              ..addColumns([_db.iMEISerials.id.count()])
+              ..where(
+                _db.iMEISerials.userId.equals(userId) &
+                    _db.iMEISerials.imeiOrSerial.equals(imeiOrSerial) &
+                    _db.iMEISerials.deletedAt.isNull(),
+              ))
+            .map((row) => row.read(_db.iMEISerials.id.count()) ?? 0)
+            .getSingle();
 
     return count > 0;
   }
 
   /// Check if IMEI/Serial is available for sale
   Future<bool> isAvailableForSale(String userId, String imeiOrSerial) async {
-    final entity = await (_db.select(_db.iMEISerials)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.imeiOrSerial.equals(imeiOrSerial) &
-              t.deletedAt.isNull()))
-        .getSingleOrNull();
+    final entity =
+        await (_db.select(_db.iMEISerials)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.imeiOrSerial.equals(imeiOrSerial) &
+                  t.deletedAt.isNull(),
+            ))
+            .getSingleOrNull();
 
     if (entity == null) return false;
     return entity.status == IMEISerialStatus.inStock.value;
@@ -83,9 +90,9 @@ class IMEISerialRepository {
 
   /// Get IMEI/Serial by ID
   Future<IMEISerial?> getById(String id) async {
-    final entity = await (_db.select(_db.iMEISerials)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final entity = await (_db.select(
+      _db.iMEISerials,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (entity == null) return null;
     return _entityToModel(entity);
@@ -93,12 +100,14 @@ class IMEISerialRepository {
 
   /// Get IMEI/Serial by number
   Future<IMEISerial?> getByNumber(String userId, String imeiOrSerial) async {
-    final entity = await (_db.select(_db.iMEISerials)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.imeiOrSerial.equals(imeiOrSerial) &
-              t.deletedAt.isNull()))
-        .getSingleOrNull();
+    final entity =
+        await (_db.select(_db.iMEISerials)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.imeiOrSerial.equals(imeiOrSerial) &
+                  t.deletedAt.isNull(),
+            ))
+            .getSingleOrNull();
 
     if (entity == null) return null;
     return _entityToModel(entity);
@@ -106,50 +115,62 @@ class IMEISerialRepository {
 
   /// Get all IMEI/Serials for a user
   Future<List<IMEISerial>> getAll(String userId) async {
-    final entities = await (_db.select(_db.iMEISerials)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
-          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-        .get();
+    final entities =
+        await (_db.select(_db.iMEISerials)
+              ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get in-stock IMEI/Serials
   Future<List<IMEISerial>> getInStock(String userId) async {
-    final entities = await (_db.select(_db.iMEISerials)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.status.equals(IMEISerialStatus.inStock.value))
-          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-        .get();
+    final entities =
+        await (_db.select(_db.iMEISerials)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.deletedAt.isNull() &
+                    t.status.equals(IMEISerialStatus.inStock.value),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get IMEI/Serials for a product
   Future<List<IMEISerial>> getByProduct(String userId, String productId) async {
-    final entities = await (_db.select(_db.iMEISerials)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.productId.equals(productId) &
-              t.deletedAt.isNull())
-          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-        .get();
+    final entities =
+        await (_db.select(_db.iMEISerials)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.productId.equals(productId) &
+                    t.deletedAt.isNull(),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get IMEI/Serials for a customer (purchase history)
   Future<List<IMEISerial>> getByCustomer(
-      String userId, String customerId) async {
-    final entities = await (_db.select(_db.iMEISerials)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.customerId.equals(customerId) &
-              t.deletedAt.isNull())
-          ..orderBy([(t) => OrderingTerm.desc(t.soldDate)]))
-        .get();
+    String userId,
+    String customerId,
+  ) async {
+    final entities =
+        await (_db.select(_db.iMEISerials)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.customerId.equals(customerId) &
+                    t.deletedAt.isNull(),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.soldDate)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
@@ -157,13 +178,16 @@ class IMEISerialRepository {
   /// Get devices under warranty
   Future<List<IMEISerial>> getUnderWarranty(String userId) async {
     final now = DateTime.now();
-    final entities = await (_db.select(_db.iMEISerials)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.warrantyEndDate.isBiggerThanValue(now))
-          ..orderBy([(t) => OrderingTerm.asc(t.warrantyEndDate)]))
-        .get();
+    final entities =
+        await (_db.select(_db.iMEISerials)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.deletedAt.isNull() &
+                    t.warrantyEndDate.isBiggerThanValue(now),
+              )
+              ..orderBy([(t) => OrderingTerm.asc(t.warrantyEndDate)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
@@ -244,14 +268,19 @@ class IMEISerialRepository {
 
   /// Get stock count for product (IMEI-tracked)
   Future<int> getInStockCount(String userId, String productId) async {
-    final count = await (_db.selectOnly(_db.iMEISerials)
-          ..addColumns([_db.iMEISerials.id.count()])
-          ..where(_db.iMEISerials.userId.equals(userId) &
-              _db.iMEISerials.productId.equals(productId) &
-              _db.iMEISerials.status.equals(IMEISerialStatus.inStock.value) &
-              _db.iMEISerials.deletedAt.isNull()))
-        .map((row) => row.read(_db.iMEISerials.id.count()) ?? 0)
-        .getSingle();
+    final count =
+        await (_db.selectOnly(_db.iMEISerials)
+              ..addColumns([_db.iMEISerials.id.count()])
+              ..where(
+                _db.iMEISerials.userId.equals(userId) &
+                    _db.iMEISerials.productId.equals(productId) &
+                    _db.iMEISerials.status.equals(
+                      IMEISerialStatus.inStock.value,
+                    ) &
+                    _db.iMEISerials.deletedAt.isNull(),
+              ))
+            .map((row) => row.read(_db.iMEISerials.id.count()) ?? 0)
+            .getSingle();
 
     return count;
   }

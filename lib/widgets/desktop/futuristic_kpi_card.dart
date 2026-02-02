@@ -113,11 +113,7 @@ class _FuturisticKpiCardState extends State<FuturisticKpiCard> {
                             ]
                           : null,
                     ),
-                    child: Icon(
-                      widget.icon,
-                      size: 20,
-                      color: color,
-                    ),
+                    child: Icon(widget.icon, size: 20, color: color),
                   ),
                 ],
               ),
@@ -155,8 +151,8 @@ class _FuturisticKpiCardState extends State<FuturisticKpiCard> {
                         color: widget.isPositive == null
                             ? FuturisticColors.textSecondary
                             : (widget.isPositive!
-                                ? FuturisticColors.success
-                                : FuturisticColors.error),
+                                  ? FuturisticColors.success
+                                  : FuturisticColors.error),
                       ),
                     ),
                   ],
@@ -194,10 +190,7 @@ class CompactKpiCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: FuturisticColors.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: accentColor.withOpacity(0.15),
-          width: 1,
-        ),
+        border: Border.all(color: accentColor.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
@@ -244,11 +237,7 @@ class KpiCardRow extends StatelessWidget {
   final List<FuturisticKpiCard> cards;
   final double spacing;
 
-  const KpiCardRow({
-    super.key,
-    required this.cards,
-    this.spacing = 16,
-  });
+  const KpiCardRow({super.key, required this.cards, this.spacing = 16});
 
   @override
   Widget build(BuildContext context) {

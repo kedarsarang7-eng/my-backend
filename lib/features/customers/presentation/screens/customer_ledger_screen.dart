@@ -73,7 +73,7 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
               return _buildVendorSelector(vendors);
             },
             loading: () => const LinearProgressIndicator(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
 
           // Ledger Entries
@@ -105,10 +105,7 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
         children: [
           Text(
             'Select Vendor',
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+            style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
@@ -120,23 +117,23 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
             items: vendors.map((v) {
               return DropdownMenuItem(
                 value: v.vendorId,
-                child: Text(
-                  v.vendorName,
-                  style: GoogleFonts.poppins(),
-                ),
+                child: Text(v.vendorName, style: GoogleFonts.poppins()),
               );
             }).toList(),
             onChanged: (value) {
               setState(() {
                 _selectedVendorId = value;
-                _selectedVendor =
-                    vendors.firstWhere((v) => v.vendorId == value);
+                _selectedVendor = vendors.firstWhere(
+                  (v) => v.vendorId == value,
+                );
               });
             },
           ),
@@ -173,10 +170,7 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
             children: [
               Text(
                 'Current Balance',
-                style: GoogleFonts.poppins(
-                  color: Colors.white70,
-                  fontSize: 12,
-                ),
+                style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12),
               ),
               const SizedBox(height: 4),
               Text(
@@ -209,10 +203,12 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
   }
 
   Widget _buildLedgerList() {
-    final entriesAsync = ref.watch(customerLedgerEntriesProvider((
-      customerId: widget.customerId,
-      vendorId: _selectedVendorId!,
-    )));
+    final entriesAsync = ref.watch(
+      customerLedgerEntriesProvider((
+        customerId: widget.customerId,
+        vendorId: _selectedVendorId!,
+      )),
+    );
 
     return entriesAsync.when(
       data: (entries) {
@@ -227,9 +223,7 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(
-        child: Text('Error: $e'),
-      ),
+      error: (e, _) => Center(child: Text('Error: $e')),
     );
   }
 
@@ -265,9 +259,7 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
             children: [
               Text(
                 entry.referenceNumber ?? entry.entryTypeString,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
               ),
               Text(
                 '${isDebit ? '+' : '-'}₹${entry.amount.toStringAsFixed(0)}',
@@ -284,17 +276,11 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
             children: [
               Text(
                 DateFormat('dd MMM yyyy').format(entry.entryDate),
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
               ),
               Text(
                 'Bal: ₹${entry.runningBalance.toStringAsFixed(0)}',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -318,8 +304,11 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.account_balance_wallet_outlined,
-              size: 64, color: Colors.grey.shade400),
+          Icon(
+            Icons.account_balance_wallet_outlined,
+            size: 64,
+            color: Colors.grey.shade400,
+          ),
           const SizedBox(height: 16),
           Text(
             'Select a vendor to view ledger',
@@ -335,8 +324,11 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.receipt_long_outlined,
-              size: 64, color: Colors.grey.shade400),
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 64,
+            color: Colors.grey.shade400,
+          ),
           const SizedBox(height: 16),
           Text(
             'No transactions yet',
@@ -358,9 +350,9 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Generating PDF...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Generating PDF...')));
 
     try {
       // Get ledger entries
@@ -372,9 +364,9 @@ class _CustomerLedgerScreenState extends ConsumerState<CustomerLedgerScreen> {
 
       if (!result.isSuccess || result.data == null || result.data!.isEmpty) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No entries to export')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('No entries to export')));
         }
         return;
       }

@@ -34,15 +34,21 @@ class _TankListScreenState extends State<TankListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.propane_tank_outlined,
-                      size: 64, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.propane_tank_outlined,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
                   const SizedBox(height: 16),
-                  Text('No tanks configured',
-                      style:
-                          TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+                  Text(
+                    'No tanks configured',
+                    style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Tap + to add your first tank',
-                      style: TextStyle(color: Colors.grey.shade500)),
+                  Text(
+                    'Tap + to add your first tank',
+                    style: TextStyle(color: Colors.grey.shade500),
+                  ),
                 ],
               ),
             );
@@ -53,8 +59,9 @@ class _TankListScreenState extends State<TankListScreen> {
             itemCount: tanks.length,
             itemBuilder: (context, index) {
               final tank = tanks[index];
-              final fillPercentage =
-                  tank.capacity > 0 ? (tank.currentStock / tank.capacity) : 0.0;
+              final fillPercentage = tank.capacity > 0
+                  ? (tank.currentStock / tank.capacity)
+                  : 0.0;
 
               return Card(
                 child: Padding(
@@ -64,11 +71,17 @@ class _TankListScreenState extends State<TankListScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(tank.tankName,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
-                          Text(tank.fuelTypeName ?? 'Fuel',
-                              style: const TextStyle(color: Colors.blue)),
+                          Text(
+                            tank.tankName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            tank.fuelTypeName ?? 'Fuel',
+                            style: const TextStyle(color: Colors.blue),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -83,9 +96,11 @@ class _TankListScreenState extends State<TankListScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              'Current: ${tank.currentStock.toStringAsFixed(2)} L'),
+                            'Current: ${tank.currentStock.toStringAsFixed(2)} L',
+                          ),
                           Text(
-                              'Capacity: ${tank.capacity.toStringAsFixed(0)} L'),
+                            'Capacity: ${tank.capacity.toStringAsFixed(0)} L',
+                          ),
                         ],
                       ),
                       const Divider(height: 24),
@@ -103,7 +118,7 @@ class _TankListScreenState extends State<TankListScreen> {
                             onPressed: () => _showDipReadingDialog(tank),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -141,9 +156,6 @@ class _TankListScreenState extends State<TankListScreen> {
   }
 
   void _showAddTankDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => const AddTankDialog(),
-    );
+    showDialog(context: context, builder: (context) => const AddTankDialog());
   }
 }

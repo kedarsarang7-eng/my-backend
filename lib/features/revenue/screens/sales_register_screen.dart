@@ -109,8 +109,14 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
       filtered = filtered.where((b) => b.date.isAfter(_startDate!)).toList();
     }
     if (_endDate != null) {
-      final endOfDay =
-          DateTime(_endDate!.year, _endDate!.month, _endDate!.day, 23, 59, 59);
+      final endOfDay = DateTime(
+        _endDate!.year,
+        _endDate!.month,
+        _endDate!.day,
+        23,
+        59,
+        59,
+      );
       filtered = filtered.where((b) => b.date.isBefore(endOfDay)).toList();
     }
 
@@ -161,7 +167,8 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  'Exported ${result.recordCount} invoices to ${result.filePath}'),
+                'Exported ${result.recordCount} invoices to ${result.filePath}',
+              ),
               backgroundColor: const Color(0xFF10B981),
               duration: const Duration(seconds: 4),
             ),
@@ -243,18 +250,23 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black87),
               decoration: InputDecoration(
                 hintText: 'Search by invoice # or customer...',
-                hintStyle:
-                    TextStyle(color: isDark ? Colors.white38 : Colors.grey),
-                prefixIcon: Icon(Icons.search,
-                    color: isDark ? Colors.white38 : Colors.grey),
+                hintStyle: TextStyle(
+                  color: isDark ? Colors.white38 : Colors.grey,
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: isDark ? Colors.white38 : Colors.grey,
+                ),
                 filled: true,
                 fillColor: isDark ? const Color(0xFF0F172A) : Colors.grey[100],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
             ),
           ),
@@ -339,8 +351,10 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
 
   Widget _buildSummaryRow(bool isDark) {
     final totalSales = _filteredBills.fold(0.0, (sum, b) => sum + b.grandTotal);
-    final totalCollected =
-        _filteredBills.fold(0.0, (sum, b) => sum + b.paidAmount);
+    final totalCollected = _filteredBills.fold(
+      0.0,
+      (sum, b) => sum + b.paidAmount,
+    );
     final totalDue = totalSales - totalCollected;
 
     return Container(
@@ -348,24 +362,37 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
       color: isDark ? const Color(0xFF0F172A) : Colors.grey[100],
       child: Row(
         children: [
-          _buildSummaryChip('Total Sales', '₹${totalSales.toStringAsFixed(0)}',
-              const Color(0xFF10B981), isDark),
+          _buildSummaryChip(
+            'Total Sales',
+            '₹${totalSales.toStringAsFixed(0)}',
+            const Color(0xFF10B981),
+            isDark,
+          ),
           const SizedBox(width: 16),
           _buildSummaryChip(
-              'Collected',
-              '₹${totalCollected.toStringAsFixed(0)}',
-              const Color(0xFF06B6D4),
-              isDark),
+            'Collected',
+            '₹${totalCollected.toStringAsFixed(0)}',
+            const Color(0xFF06B6D4),
+            isDark,
+          ),
           const SizedBox(width: 16),
-          _buildSummaryChip('Due', '₹${totalDue.toStringAsFixed(0)}',
-              const Color(0xFFEF4444), isDark),
+          _buildSummaryChip(
+            'Due',
+            '₹${totalDue.toStringAsFixed(0)}',
+            const Color(0xFFEF4444),
+            isDark,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSummaryChip(
-      String label, String value, Color color, bool isDark) {
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -435,39 +462,48 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
         columns: [
           DataColumn(
             label: _buildSortableHeader('Date', 'date', isDark),
-            onSort: (_, __) => _toggleSort('date'),
+            onSort: (_, _) => _toggleSort('date'),
           ),
           DataColumn(
             label: _buildSortableHeader('Invoice #', 'invoice', isDark),
           ),
           DataColumn(
             label: _buildSortableHeader('Customer', 'customer', isDark),
-            onSort: (_, __) => _toggleSort('customer'),
+            onSort: (_, _) => _toggleSort('customer'),
           ),
           DataColumn(
             label: _buildSortableHeader('Amount', 'amount', isDark),
-            onSort: (_, __) => _toggleSort('amount'),
+            onSort: (_, _) => _toggleSort('amount'),
             numeric: true,
           ),
           DataColumn(
-              label: Text('Paid',
-                  style: TextStyle(
-                      color: isDark ? Colors.white70 : Colors.black87))),
+            label: Text(
+              'Paid',
+              style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+            ),
+          ),
           DataColumn(
-              label: Text('Due',
-                  style: TextStyle(
-                      color: isDark ? Colors.white70 : Colors.black87))),
+            label: Text(
+              'Due',
+              style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+            ),
+          ),
           DataColumn(
-              label: Text('Status',
-                  style: TextStyle(
-                      color: isDark ? Colors.white70 : Colors.black87))),
+            label: Text(
+              'Status',
+              style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+            ),
+          ),
           DataColumn(
-              label: Text('Actions',
-                  style: TextStyle(
-                      color: isDark ? Colors.white70 : Colors.black87))),
+            label: Text(
+              'Actions',
+              style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+            ),
+          ),
         ],
-        rows:
-            _filteredBills.map((bill) => _buildDataRow(bill, isDark)).toList(),
+        rows: _filteredBills
+            .map((bill) => _buildDataRow(bill, isDark))
+            .toList(),
       ),
     );
   }
@@ -517,60 +553,74 @@ class _SalesRegisterScreenState extends ConsumerState<SalesRegisterScreen> {
 
     return DataRow(
       cells: [
-        DataCell(Text(
-          DateFormat('dd/MM/yyyy').format(bill.date),
-          style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-        )),
-        DataCell(Text(
-          bill.invoiceNumber,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: isDark ? Colors.white : Colors.black87,
+        DataCell(
+          Text(
+            DateFormat('dd/MM/yyyy').format(bill.date),
+            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
           ),
-        )),
-        DataCell(Text(
-          bill.customerName.isEmpty ? 'Walk-in' : bill.customerName,
-          style: TextStyle(color: isDark ? Colors.white70 : Colors.grey[700]),
-        )),
-        DataCell(Text(
-          '₹${bill.grandTotal.toStringAsFixed(0)}',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.black87,
+        ),
+        DataCell(
+          Text(
+            bill.invoiceNumber,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
           ),
-        )),
-        DataCell(Text(
-          '₹${bill.paidAmount.toStringAsFixed(0)}',
-          style: const TextStyle(color: Color(0xFF10B981)),
-        )),
-        DataCell(Text(
-          '₹${due.toStringAsFixed(0)}',
-          style: TextStyle(
-            color: due > 0
-                ? const Color(0xFFEF4444)
-                : (isDark ? Colors.white38 : Colors.grey),
+        ),
+        DataCell(
+          Text(
+            bill.customerName.isEmpty ? 'Walk-in' : bill.customerName,
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.grey[700]),
           ),
-        )),
+        ),
+        DataCell(
+          Text(
+            '₹${bill.grandTotal.toStringAsFixed(0)}',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+        ),
+        DataCell(
+          Text(
+            '₹${bill.paidAmount.toStringAsFixed(0)}',
+            style: const TextStyle(color: Color(0xFF10B981)),
+          ),
+        ),
+        DataCell(
+          Text(
+            '₹${due.toStringAsFixed(0)}',
+            style: TextStyle(
+              color: due > 0
+                  ? const Color(0xFFEF4444)
+                  : (isDark ? Colors.white38 : Colors.grey),
+            ),
+          ),
+        ),
         DataCell(_buildStatusBadge(isPaid, isPartial)),
-        DataCell(Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.visibility, size: 18),
-              color: isDark ? Colors.white54 : Colors.grey,
-              onPressed: () {
-                // View bill details
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.print, size: 18),
-              color: isDark ? Colors.white54 : Colors.grey,
-              onPressed: () {
-                // Print bill
-              },
-            ),
-          ],
-        )),
+        DataCell(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.visibility, size: 18),
+                color: isDark ? Colors.white54 : Colors.grey,
+                onPressed: () {
+                  // View bill details
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.print, size: 18),
+                color: isDark ? Colors.white54 : Colors.grey,
+                onPressed: () {
+                  // Print bill
+                },
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

@@ -62,9 +62,9 @@ class CleanupService {
 
     await _db.transaction(() async {
       // Fetch logs to archive
-      final logs = await (_db.select(_db.auditLogs)
-            ..where((t) => t.timestamp.isSmallerThanValue(cutoffDate)))
-          .get();
+      final logs = await (_db.select(
+        _db.auditLogs,
+      )..where((t) => t.timestamp.isSmallerThanValue(cutoffDate))).get();
 
       if (logs.isEmpty) return;
 
@@ -83,16 +83,18 @@ class CleanupService {
         final file = File('${archiveDir.path}/$filename');
 
         final logsJson = logs
-            .map((l) => {
-                  'id': l.id,
-                  'timestamp': l.timestamp.toIso8601String(),
-                  'action': l.action,
-                  'details':
-                      '${l.targetTableName}:${l.recordId}', // Constructed details
-                  'userId': l.userId,
-                  'previousHash': l.previousHash,
-                  'hash': l.currentHash, // Use currentHash
-                })
+            .map(
+              (l) => {
+                'id': l.id,
+                'timestamp': l.timestamp.toIso8601String(),
+                'action': l.action,
+                'details':
+                    '${l.targetTableName}:${l.recordId}', // Constructed details
+                'userId': l.userId,
+                'previousHash': l.previousHash,
+                'hash': l.currentHash, // Use currentHash
+              },
+            )
             .toList();
 
         final jsonString = jsonEncode(logsJson);
@@ -104,9 +106,9 @@ class CleanupService {
         debugPrint('CleanupService: Archived $count logs to $filename');
 
         // Delete from DB (Safe: already archived)
-        await (_db.delete(_db.auditLogs)
-              ..where((t) => t.timestamp.isSmallerThanValue(cutoffDate)))
-            .go();
+        await (_db.delete(
+          _db.auditLogs,
+        )..where((t) => t.timestamp.isSmallerThanValue(cutoffDate))).go();
       } catch (e) {
         debugPrint('CleanupService: Failed to archive logs: $e');
         // Abort transaction if archiving fails
@@ -124,11 +126,15 @@ class CleanupService {
   Future<int> _cleanSyncedQueueItems() async {
     final cutoffDate = DateTime.now().subtract(const Duration(days: 30));
 
-    final count = await (_db.delete(_db.syncQueue)
-          ..where((t) =>
-              t.status.equals(SyncStatus.synced.value) & // Use value (String)
-              t.lastAttemptAt.isSmallerThanValue(cutoffDate)))
-        .go();
+    final count =
+        await (_db.delete(_db.syncQueue)..where(
+              (t) =>
+                  t.status.equals(
+                    SyncStatus.synced.value,
+                  ) & // Use value (String)
+                  t.lastAttemptAt.isSmallerThanValue(cutoffDate),
+            ))
+            .go();
 
     if (count > 0) {
       debugPrint('CleanupService: Cleaned $count old synced items');

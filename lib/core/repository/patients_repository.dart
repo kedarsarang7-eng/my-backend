@@ -32,12 +32,15 @@ class PatientsRepository {
       // But if empty, we should generate? PatientsRepository usually expects ID.
       // We will assume ID is present.
 
-      await database.into(database.patients).insert(
+      await database
+          .into(database.patients)
+          .insert(
             PatientsCompanion.insert(
               id: patient.id,
               userId: patient.userId,
               customerId: Value(
-                  patient.customerId.isNotEmpty ? patient.customerId : null),
+                patient.customerId.isNotEmpty ? patient.customerId : null,
+              ),
               name: patient.name,
               phone: Value(patient.phone),
               age: Value(patient.age),
@@ -46,7 +49,8 @@ class PatientsRepository {
               allergies: Value(patient.allergies.join(',')),
               chronicConditions: Value(patient.chronicConditions.join(',')),
               emergencyContact: Value(
-                  '${patient.emergencyContactName}|${patient.emergencyContactPhone}'),
+                '${patient.emergencyContactName}|${patient.emergencyContactPhone}',
+              ),
               isActive: const Value(true),
               isSynced: const Value(false),
               createdAt: now,
@@ -74,24 +78,28 @@ class PatientsRepository {
       final now = DateTime.now();
       final updated = patient.copyWith(updatedAt: now);
 
-      await (database.update(database.patients)
-            ..where((t) => t.id.equals(patient.id)))
-          .write(PatientsCompanion(
-        name: Value(updated.name),
-        phone: Value(updated.phone),
-        customerId:
-            Value(updated.customerId.isNotEmpty ? updated.customerId : null),
-        age: Value(updated.age),
-        gender: Value(updated.gender),
-        bloodGroup: Value(updated.bloodGroup),
-        allergies: Value(updated.allergies.join(',')),
-        chronicConditions: Value(updated.chronicConditions.join(',')),
-        emergencyContact: Value(
-            '${updated.emergencyContactName}|${updated.emergencyContactPhone}'),
-        isActive: const Value(true),
-        isSynced: const Value(false),
-        updatedAt: Value(now),
-      ));
+      await (database.update(
+        database.patients,
+      )..where((t) => t.id.equals(patient.id))).write(
+        PatientsCompanion(
+          name: Value(updated.name),
+          phone: Value(updated.phone),
+          customerId: Value(
+            updated.customerId.isNotEmpty ? updated.customerId : null,
+          ),
+          age: Value(updated.age),
+          gender: Value(updated.gender),
+          bloodGroup: Value(updated.bloodGroup),
+          allergies: Value(updated.allergies.join(',')),
+          chronicConditions: Value(updated.chronicConditions.join(',')),
+          emergencyContact: Value(
+            '${updated.emergencyContactName}|${updated.emergencyContactPhone}',
+          ),
+          isActive: const Value(true),
+          isSynced: const Value(false),
+          updatedAt: Value(now),
+        ),
+      );
 
       // Queue for sync
       final item = SyncQueueItem.create(
@@ -110,9 +118,10 @@ class PatientsRepository {
   /// Get patient by ID
   Future<RepositoryResult<Patient?>> getById(String id) async {
     return await errorHandler.runSafe<Patient?>(() async {
-      final result = await (database.select(database.patients)
-            ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final result =
+          await (database.select(database.patients)
+                ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
+              .getSingleOrNull();
 
       if (result == null) return null;
       return _entityToPatient(result);
@@ -128,22 +137,26 @@ class PatientsRepository {
     return await errorHandler.runSafe<List<Patient>>(() async {
       if (query.isEmpty) {
         // Return recent patients
-        final recent = await (database.select(database.patients)
-              ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
-              ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
-              ..limit(limit))
-            .get();
+        final recent =
+            await (database.select(database.patients)
+                  ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
+                  ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+                  ..limit(limit))
+                .get();
         return recent.map(_entityToPatient).toList();
       }
 
-      final results = await (database.select(database.patients)
-            ..where((t) =>
-                t.userId.equals(userId) &
-                t.deletedAt.isNull() &
-                (t.name.like('%$query%') | t.phone.like('%$query%')))
-            ..orderBy([(t) => OrderingTerm.asc(t.name)])
-            ..limit(limit))
-          .get();
+      final results =
+          await (database.select(database.patients)
+                ..where(
+                  (t) =>
+                      t.userId.equals(userId) &
+                      t.deletedAt.isNull() &
+                      (t.name.like('%$query%') | t.phone.like('%$query%')),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.name)])
+                ..limit(limit))
+              .get();
 
       return results.map(_entityToPatient).toList();
     }, 'search');
@@ -178,7 +191,7 @@ class PatientsRepository {
           e.allergies?.split(',').where((s) => s.isNotEmpty).toList() ?? [],
       chronicConditions:
           e.chronicConditions?.split(',').where((s) => s.isNotEmpty).toList() ??
-              [],
+          [],
       emergencyContactName: ecName,
       emergencyContactPhone: ecPhone,
       createdAt: e.createdAt,

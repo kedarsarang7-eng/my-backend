@@ -48,20 +48,21 @@ void main() {
     });
 
     test(
-        'Calculate total with all components: qty * price - discount + tax + labor',
-        () {
-      final item = BillItem(
-        productId: 'p4',
-        productName: 'Complex Item',
-        qty: 2.0,
-        price: 50.0, // Base: 100
-        discount: 10.0, // -10 -> 90
-        cgst: 4.5, // +4.5 -> 94.5
-        sgst: 4.5, // +4.5 -> 99.0
-        laborCharge: 20.0, // +20 -> 119.0
-      );
-      expect(item.total, 119.0);
-    });
+      'Calculate total with all components: qty * price - discount + tax + labor',
+      () {
+        final item = BillItem(
+          productId: 'p4',
+          productName: 'Complex Item',
+          qty: 2.0,
+          price: 50.0, // Base: 100
+          discount: 10.0, // -10 -> 90
+          cgst: 4.5, // +4.5 -> 94.5
+          sgst: 4.5, // +4.5 -> 99.0
+          laborCharge: 20.0, // +20 -> 119.0
+        );
+        expect(item.total, 119.0);
+      },
+    );
 
     test('Edge case: Zero quantity', () {
       final item = BillItem(
@@ -86,25 +87,26 @@ void main() {
 
   group('Bill Grand Total Logic', () {
     test(
-        'Sanitized bill recalculates grand total from safe items logic (mock behavior check)',
-        () {
-      // Note: Bill.sanitized() creates safeItems but currently relies on existing grandTotal
-      // or user logic to sum them up. The Bill model specifically says:
-      // "Ideally we should recalculate item totals here too, but for now we trust the item.total"
-      // Let's verify if `sanitized` enforces non-negative grandTotal at least.
+      'Sanitized bill recalculates grand total from safe items logic (mock behavior check)',
+      () {
+        // Note: Bill.sanitized() creates safeItems but currently relies on existing grandTotal
+        // or user logic to sum them up. The Bill model specifically says:
+        // "Ideally we should recalculate item totals here too, but for now we trust the item.total"
+        // Let's verify if `sanitized` enforces non-negative grandTotal at least.
 
-      final bill = Bill(
-        id: 'b1',
-        customerId: 'c1',
-        date: DateTime.now(),
-        items: [],
-        grandTotal: -50.0, // Invalid negative
-        paidAmount: 100.0,
-      ).sanitized();
+        final bill = Bill(
+          id: 'b1',
+          customerId: 'c1',
+          date: DateTime.now(),
+          items: [],
+          grandTotal: -50.0, // Invalid negative
+          paidAmount: 100.0,
+        ).sanitized();
 
-      expect(bill.grandTotal, 0.0); // Should be clamped to 0
-      expect(bill.paidAmount, 0.0); // Paid amount limited by grand total
-    });
+        expect(bill.grandTotal, 0.0); // Should be clamped to 0
+        expect(bill.paidAmount, 0.0); // Paid amount limited by grand total
+      },
+    );
 
     test('Paid amount cannot exceed Grand Total', () {
       final bill = Bill(

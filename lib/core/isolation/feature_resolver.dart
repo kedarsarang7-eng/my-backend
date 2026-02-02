@@ -29,10 +29,13 @@ class FeatureResolver {
   ///
   /// Use this in Repository/Backend layers to prevent data leakage
   static void enforceAccess(
-      String businessType, BusinessCapability capability) {
+    String businessType,
+    BusinessCapability capability,
+  ) {
     if (!canAccess(businessType, capability)) {
       throw SecurityException(
-          'Access Denied: Business Type [$businessType] cannot use feature [${capability.name}]');
+        'Access Denied: Business Type [$businessType] cannot use feature [${capability.name}]',
+      );
     }
   }
 

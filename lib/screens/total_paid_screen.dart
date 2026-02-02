@@ -30,9 +30,9 @@ class _TotalPaidScreenState extends State<TotalPaidScreen> {
         title: Text(
           'Total Paid',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: FuturisticColors.primary,
-              ),
+            fontWeight: FontWeight.w800,
+            color: FuturisticColors.primary,
+          ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -105,7 +105,8 @@ class _TotalPaidScreenState extends State<TotalPaidScreen> {
                           borderRadius: BorderRadius.circular(12),
                           color: FuturisticColors.paidBackground,
                           border: Border.all(
-                              color: FuturisticColors.paid.withOpacity(0.3)),
+                            color: FuturisticColors.paid.withOpacity(0.3),
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,19 +116,13 @@ class _TotalPaidScreenState extends State<TotalPaidScreen> {
                               children: [
                                 Text(
                                   'Total Paid Amount',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: Colors.grey.shade600,
-                                      ),
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: Colors.grey.shade600),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   '₹${totalPaid.toStringAsFixed(2)}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
+                                  style: Theme.of(context).textTheme.titleLarge
                                       ?.copyWith(
                                         fontWeight: FontWeight.w800,
                                         color: FuturisticColors.paid,
@@ -147,8 +142,7 @@ class _TotalPaidScreenState extends State<TotalPaidScreen> {
                       Expanded(
                         child: ListView.separated(
                           itemCount: bills.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (context, idx) {
                             final b = bills[idx];
                             // No need to fetch customer N+1, use b.customerName
@@ -206,9 +200,9 @@ class _TotalPaidScreenState extends State<TotalPaidScreen> {
                                     children: [
                                       Text(
                                         b.date.toIso8601String().split('T')[0],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodySmall,
                                       ),
                                       Text(
                                         '₹${b.paidAmount.toStringAsFixed(2)}',

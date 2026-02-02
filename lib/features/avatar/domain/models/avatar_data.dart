@@ -92,21 +92,21 @@ class AvatarData extends Equatable {
 
   @override
   List<Object?> get props => [
-        skinTone,
-        faceShape,
-        hairStyle,
-        hairColor,
-        eyes,
-        eyebrows,
-        nose,
-        mouth,
-        glasses,
-        facialHair,
-        outfitTop,
-        outfitBottom,
-        outfitShoes,
-        outfitAccessories,
-      ];
+    skinTone,
+    faceShape,
+    hairStyle,
+    hairColor,
+    eyes,
+    eyebrows,
+    nose,
+    mouth,
+    glasses,
+    facialHair,
+    outfitTop,
+    outfitBottom,
+    outfitShoes,
+    outfitAccessories,
+  ];
 
   AvatarData copyWith({
     String? skinTone,

@@ -46,8 +46,10 @@ class _DesktopDashboardContentState
   }
 
   Future<List<Map<String, dynamic>>> _fetchSalesTrend() async {
-    final result =
-        await sl<ReportsRepository>().getSalesTrend(userId: _userId, days: 7);
+    final result = await sl<ReportsRepository>().getSalesTrend(
+      userId: _userId,
+      days: 7,
+    );
     return result.data ?? [];
   }
 
@@ -166,8 +168,10 @@ class _DesktopDashboardContentState
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
-                            child: CircularProgressIndicator(
-                                color: FuturisticColors.primary));
+                          child: CircularProgressIndicator(
+                            color: FuturisticColors.primary,
+                          ),
+                        );
                       }
                       final List<Map<String, dynamic>> trendData =
                           snapshot.data ?? [];

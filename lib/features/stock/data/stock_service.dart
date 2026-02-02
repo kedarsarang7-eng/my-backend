@@ -50,17 +50,21 @@ class StockService {
 
     // Multipart request
     var request = http.MultipartRequest(
-        'POST', Uri.parse('${ApiConfig.baseUrl}/stock/analyze-image'));
+      'POST',
+      Uri.parse('${ApiConfig.baseUrl}/stock/analyze-image'),
+    );
 
     final token = await _getToken();
     request.headers['Authorization'] = 'Bearer $token';
 
     request.fields['owner_uid'] = ownerId;
-    request.files.add(await http.MultipartFile.fromPath(
-      'file',
-      imageFile.path,
-      contentType: MediaType('image', 'jpeg'), // assist parsing
-    ));
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+        contentType: MediaType('image', 'jpeg'), // assist parsing
+      ),
+    );
 
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);

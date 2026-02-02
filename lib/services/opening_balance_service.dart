@@ -22,12 +22,12 @@ class OpeningBalanceEntry {
   });
 
   Map<String, dynamic> toMap() => {
-        'accountId': accountId,
-        'accountName': accountName,
-        'accountType': accountType,
-        'balance': balance,
-        'asOfDate': asOfDate.toIso8601String(),
-      };
+    'accountId': accountId,
+    'accountName': accountName,
+    'accountType': accountType,
+    'balance': balance,
+    'asOfDate': asOfDate.toIso8601String(),
+  };
 }
 
 /// Opening Balance Setup Result
@@ -58,15 +58,15 @@ class OpeningBalanceResult {
       stockEntriesCreated;
 
   Map<String, dynamic> toMap() => {
-        'success': success,
-        'cashEntriesCreated': cashEntriesCreated,
-        'bankEntriesCreated': bankEntriesCreated,
-        'customerEntriesCreated': customerEntriesCreated,
-        'supplierEntriesCreated': supplierEntriesCreated,
-        'stockEntriesCreated': stockEntriesCreated,
-        'totalEntriesCreated': totalEntriesCreated,
-        'errors': errors,
-      };
+    'success': success,
+    'cashEntriesCreated': cashEntriesCreated,
+    'bankEntriesCreated': bankEntriesCreated,
+    'customerEntriesCreated': customerEntriesCreated,
+    'supplierEntriesCreated': supplierEntriesCreated,
+    'stockEntriesCreated': stockEntriesCreated,
+    'totalEntriesCreated': totalEntriesCreated,
+    'errors': errors,
+  };
 }
 
 /// Opening Balance Service - Sets up opening balances for new businesses.
@@ -96,8 +96,8 @@ class OpeningBalanceService {
   OpeningBalanceService({
     FirebaseFirestore? firestore,
     JournalEntryService? journalService,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _journalService = journalService;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _journalService = journalService;
 
   // ============================================================
   // CASH OPENING BALANCE
@@ -170,19 +170,16 @@ class OpeningBalanceService {
         .collection('ledgers')
         .doc('CAPITAL_$userId');
 
-    batch.set(
-        capitalRef,
-        {
-          'ledgerId': 'CAPITAL_$userId',
-          'businessId': userId,
-          'name': 'Capital Account',
-          'group': 'equity',
-          'type': 'capital',
-          'openingBalance': 0,
-          'isSystem': true,
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true));
+    batch.set(capitalRef, {
+      'ledgerId': 'CAPITAL_$userId',
+      'businessId': userId,
+      'name': 'Capital Account',
+      'group': 'equity',
+      'type': 'capital',
+      'openingBalance': 0,
+      'isSystem': true,
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     await batch.commit();
     debugPrint('[OPENING] Cash balance set: ₹$amount as of $asOfDate');
@@ -214,22 +211,19 @@ class OpeningBalanceService {
         .collection('ledgers')
         .doc(ledgerId);
 
-    batch.set(
-        ledgerRef,
-        {
-          'ledgerId': ledgerId,
-          'businessId': userId,
-          'name': bankName,
-          'group': 'assets',
-          'type': 'bank',
-          'openingBalance': amount,
-          'openingBalanceDate': Timestamp.fromDate(asOfDate),
-          'isSystem': false,
-          'bankAccountId': bankAccountId,
-          'accountNumber': accountNumber,
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true));
+    batch.set(ledgerRef, {
+      'ledgerId': ledgerId,
+      'businessId': userId,
+      'name': bankName,
+      'group': 'assets',
+      'type': 'bank',
+      'openingBalance': amount,
+      'openingBalanceDate': Timestamp.fromDate(asOfDate),
+      'isSystem': false,
+      'bankAccountId': bankAccountId,
+      'accountNumber': accountNumber,
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     // 2. Create Opening Journal Entry
     final entryId = const Uuid().v4();
@@ -257,7 +251,8 @@ class OpeningBalanceService {
 
     await batch.commit();
     debugPrint(
-        '[OPENING] Bank balance set: $bankName ₹$amount as of $asOfDate');
+      '[OPENING] Bank balance set: $bankName ₹$amount as of $asOfDate',
+    );
   }
 
   // ============================================================
@@ -285,21 +280,18 @@ class OpeningBalanceService {
         .collection('ledgers')
         .doc(ledgerId);
 
-    batch.set(
-        ledgerRef,
-        {
-          'ledgerId': ledgerId,
-          'businessId': userId,
-          'name': customerName,
-          'group': 'assets', // Receivables are assets
-          'type': 'customer',
-          'openingBalance': amount,
-          'openingBalanceDate': Timestamp.fromDate(asOfDate),
-          'isSystem': false,
-          'partyId': customerId,
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true));
+    batch.set(ledgerRef, {
+      'ledgerId': ledgerId,
+      'businessId': userId,
+      'name': customerName,
+      'group': 'assets', // Receivables are assets
+      'type': 'customer',
+      'openingBalance': amount,
+      'openingBalanceDate': Timestamp.fromDate(asOfDate),
+      'isSystem': false,
+      'partyId': customerId,
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     // 2. Update Customer record with opening balance
     final customerRef = _firestore.collection('customers').doc(customerId);
@@ -365,33 +357,27 @@ class OpeningBalanceService {
         .collection('ledgers')
         .doc(ledgerId);
 
-    batch.set(
-        ledgerRef,
-        {
-          'ledgerId': ledgerId,
-          'businessId': userId,
-          'name': supplierName,
-          'group': 'liabilities', // Payables are liabilities
-          'type': 'supplier',
-          'openingBalance': amount,
-          'openingBalanceDate': Timestamp.fromDate(asOfDate),
-          'isSystem': false,
-          'partyId': supplierId,
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true));
+    batch.set(ledgerRef, {
+      'ledgerId': ledgerId,
+      'businessId': userId,
+      'name': supplierName,
+      'group': 'liabilities', // Payables are liabilities
+      'type': 'supplier',
+      'openingBalance': amount,
+      'openingBalanceDate': Timestamp.fromDate(asOfDate),
+      'isSystem': false,
+      'partyId': supplierId,
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     // 2. Update Supplier/Vendor record with opening balance
     final supplierRef = _firestore.collection('vendors').doc(supplierId);
-    batch.set(
-        supplierRef,
-        {
-          'totalDues': amount,
-          'openingBalance': amount,
-          'openingBalanceDate': Timestamp.fromDate(asOfDate),
-          'updatedAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true));
+    batch.set(supplierRef, {
+      'totalDues': amount,
+      'openingBalance': amount,
+      'openingBalanceDate': Timestamp.fromDate(asOfDate),
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     // 3. Create Opening Journal Entry (DR: Capital, CR: Supplier)
     // For liability opening, we debit capital to balance
@@ -521,19 +507,16 @@ class OpeningBalanceService {
         .collection('ledgers')
         .doc('STOCK_$userId');
 
-    batch.set(
-        stockLedgerRef,
-        {
-          'ledgerId': 'STOCK_$userId',
-          'businessId': userId,
-          'name': 'Inventory/Stock',
-          'group': 'assets',
-          'type': 'fixedAsset',
-          'openingBalance': 0,
-          'isSystem': true,
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true));
+    batch.set(stockLedgerRef, {
+      'ledgerId': 'STOCK_$userId',
+      'businessId': userId,
+      'name': 'Inventory/Stock',
+      'group': 'assets',
+      'type': 'fixedAsset',
+      'openingBalance': 0,
+      'isSystem': true,
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     await batch.commit();
     debugPrint('[OPENING] Stock set: $productName $quantity @ ₹$costPrice');
@@ -658,9 +641,11 @@ class OpeningBalanceService {
         'openingBalanceSetupAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      debugPrint('[OPENING] Bulk setup complete: Cash=$cashEntries, '
-          'Banks=$bankEntries, Customers=$customerEntries, '
-          'Suppliers=$supplierEntries, Stock=$stockEntries');
+      debugPrint(
+        '[OPENING] Bulk setup complete: Cash=$cashEntries, '
+        'Banks=$bankEntries, Customers=$customerEntries, '
+        'Suppliers=$supplierEntries, Stock=$stockEntries',
+      );
 
       return OpeningBalanceResult(
         success: errors.isEmpty,

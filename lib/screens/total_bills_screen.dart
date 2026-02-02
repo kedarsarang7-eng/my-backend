@@ -29,9 +29,9 @@ class _TotalBillsScreenState extends State<TotalBillsScreen> {
         title: Text(
           'Total Bills',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: FuturisticColors.primary,
-              ),
+            fontWeight: FontWeight.w800,
+            color: FuturisticColors.primary,
+          ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -110,15 +110,20 @@ class _TotalBillsScreenState extends State<TotalBillsScreen> {
                   // Apply date filter
                   final now = DateTime.now();
                   final today = DateTime(now.year, now.month, now.day);
-                  final weekStart =
-                      today.subtract(Duration(days: today.weekday - 1));
+                  final weekStart = today.subtract(
+                    Duration(days: today.weekday - 1),
+                  );
                   final monthStart = DateTime(now.year, now.month, 1);
 
                   if (_dateFilter == 'Daily') {
                     bills = bills
-                        .where((b) =>
-                            !b.date.isBefore(today) &&
-                            b.date.isBefore(today.add(const Duration(days: 1))))
+                        .where(
+                          (b) =>
+                              !b.date.isBefore(today) &&
+                              b.date.isBefore(
+                                today.add(const Duration(days: 1)),
+                              ),
+                        )
                         .toList();
                   } else if (_dateFilter == 'Weekly') {
                     bills = bills
@@ -136,16 +141,16 @@ class _TotalBillsScreenState extends State<TotalBillsScreen> {
 
                   return ListView.separated(
                     itemCount: bills.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (context, idx) {
                       final b = bills[idx];
                       // Use denormalized customerName from Bill
                       final statusColor =
                           b.status.toLowerCase().contains('paid')
-                              ? FuturisticColors.paid
-                              : (b.status.toLowerCase().contains('partial')
-                                  ? FuturisticColors.warning
-                                  : FuturisticColors.unpaid);
+                          ? FuturisticColors.paid
+                          : (b.status.toLowerCase().contains('partial')
+                                ? FuturisticColors.warning
+                                : FuturisticColors.unpaid);
 
                       return Container(
                         padding: const EdgeInsets.all(12),
@@ -158,7 +163,7 @@ class _TotalBillsScreenState extends State<TotalBillsScreen> {
                               color: Colors.black.withOpacity(0.05),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
-                            )
+                            ),
                           ],
                         ),
                         child: Column(
@@ -194,16 +199,16 @@ class _TotalBillsScreenState extends State<TotalBillsScreen> {
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 4),
+                                    horizontal: 12,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: statusColor.withOpacity(0.15),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     b.status,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
+                                    style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: statusColor,
                                           fontWeight: FontWeight.w600,
@@ -217,19 +222,15 @@ class _TotalBillsScreenState extends State<TotalBillsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  b.date
-                                      .toIso8601String()
-                                      .split('T')[0], // Safe Date Format
+                                  b.date.toIso8601String().split(
+                                    'T',
+                                  )[0], // Safe Date Format
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                                 Text(
                                   '₹${b.grandTotal.toStringAsFixed(2)}', // Use grandTotal (accurate)
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.w700),
                                 ),
                               ],
                             ),

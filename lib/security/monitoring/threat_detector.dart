@@ -34,12 +34,9 @@ class ThreatDetectionService {
 
   /// Start periodic threat monitoring
   void _startThreatMonitoring() {
-    _threatMonitorTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) async {
-        await _performThreatCheck();
-      },
-    );
+    _threatMonitorTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
+      await _performThreatCheck();
+    });
   }
 
   /// Perform comprehensive threat check
@@ -133,9 +130,7 @@ class ThreatDetectionService {
 
   /// Handle connectivity changes
   /// May indicate network attacks or unsafe networks
-  Future<void> _onConnectivityChanged(
-    List<ConnectivityResult> result,
-  ) async {
+  Future<void> _onConnectivityChanged(List<ConnectivityResult> result) async {
     try {
       if (result.isEmpty) {
         return;

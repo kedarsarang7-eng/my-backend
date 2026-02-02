@@ -60,9 +60,7 @@ class _FastLoginOptionsState extends State<FastLoginOptions> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PinLoginScreen(
-          onSuccess: widget.onPinSuccess,
-        ),
+        builder: (context) => PinLoginScreen(onSuccess: widget.onPinSuccess),
       ),
     );
   }
@@ -138,7 +136,9 @@ class _FastLoginOptionsState extends State<FastLoginOptions> {
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white),
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
               )
             : Row(
                 children: [

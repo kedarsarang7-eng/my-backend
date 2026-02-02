@@ -52,7 +52,8 @@ class BillRateLimiter {
         hardLimit: hardLimitBills,
         remainingInWindow: hardLimitBills - billCount,
         windowResetAt: _getWindowResetTime(userId),
-        message: 'Warning: You are approaching the rate limit. '
+        message:
+            'Warning: You are approaching the rate limit. '
             '${hardLimitBills - billCount} bills remaining in this window.',
       );
     }
@@ -73,7 +74,8 @@ class BillRateLimiter {
     _userBillTimestamps[userId]!.add(DateTime.now());
 
     debugPrint(
-        'BillRateLimiter: Recorded bill for $userId. Count: ${_userBillTimestamps[userId]!.length}');
+      'BillRateLimiter: Recorded bill for $userId. Count: ${_userBillTimestamps[userId]!.length}',
+    );
   }
 
   /// Clean up timestamps outside the window
@@ -161,14 +163,14 @@ class RateLimitResult {
   bool get isBlocked => status == RateLimitStatus.blocked;
 
   Map<String, dynamic> toJson() => {
-        'status': status.name,
-        'currentCount': currentCount,
-        'softLimit': softLimit,
-        'hardLimit': hardLimit,
-        'remainingInWindow': remainingInWindow,
-        'windowResetAt': windowResetAt.toIso8601String(),
-        if (message != null) 'message': message,
-      };
+    'status': status.name,
+    'currentCount': currentCount,
+    'softLimit': softLimit,
+    'hardLimit': hardLimit,
+    'remainingInWindow': remainingInWindow,
+    'windowResetAt': windowResetAt.toIso8601String(),
+    if (message != null) 'message': message,
+  };
 }
 
 /// Rate limit usage statistics
@@ -194,17 +196,17 @@ class RateLimitStats {
   double get utilizationPercent => (billsInWindow / hardLimit) * 100;
 
   Map<String, dynamic> toJson() => {
-        'userId': userId,
-        'billsInWindow': billsInWindow,
-        'softLimit': softLimit,
-        'hardLimit': hardLimit,
-        'windowDurationMinutes': windowDurationMinutes,
-        'utilizationPercent': utilizationPercent.toStringAsFixed(1),
-        if (oldestBillInWindow != null)
-          'oldestBillInWindow': oldestBillInWindow!.toIso8601String(),
-        if (newestBillInWindow != null)
-          'newestBillInWindow': newestBillInWindow!.toIso8601String(),
-      };
+    'userId': userId,
+    'billsInWindow': billsInWindow,
+    'softLimit': softLimit,
+    'hardLimit': hardLimit,
+    'windowDurationMinutes': windowDurationMinutes,
+    'utilizationPercent': utilizationPercent.toStringAsFixed(1),
+    if (oldestBillInWindow != null)
+      'oldestBillInWindow': oldestBillInWindow!.toIso8601String(),
+    if (newestBillInWindow != null)
+      'newestBillInWindow': newestBillInWindow!.toIso8601String(),
+  };
 }
 
 /// Rate limit status levels

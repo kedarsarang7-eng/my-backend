@@ -50,17 +50,19 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
       }
 
       if (next.message != null && next.message != previous?.message) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message!)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.message!)));
       }
     });
 
     return Scaffold(
       backgroundColor: FuturisticColors.background,
       appBar: AppBar(
-        title: const Text('Sync Status',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Sync Status',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: FuturisticColors.surface,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
@@ -94,11 +96,14 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
                 const SizedBox(height: 24),
 
                 // 2. Statistics Grid
-                const Text('Sync Statistics',
-                    style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
+                const Text(
+                  'Sync Statistics',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 12),
                 _buildStatsGrid(stats),
 
@@ -107,11 +112,14 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
                 // 3. Failed Items List (Async)
                 if (stats.failedCount > 0) ...[
                   const SizedBox(height: 24),
-                  const Text('Failed Items',
-                      style: TextStyle(
-                          color: FuturisticColors.error,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Failed Items',
+                    style: TextStyle(
+                      color: FuturisticColors.error,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   _buildFailedItemsList(),
                 ],
@@ -122,34 +130,43 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Live Activity Log',
-                        style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Live Activity Log',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     if (stats.inProgressCount > 0)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.blue.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(4),
-                          border:
-                              Border.all(color: Colors.blue.withOpacity(0.5)),
+                          border: Border.all(
+                            color: Colors.blue.withOpacity(0.5),
+                          ),
                         ),
                         child: const Row(
                           children: [
                             SizedBox(
-                                width: 8,
-                                height: 8,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2)),
+                              width: 8,
+                              height: 8,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
                             SizedBox(width: 6),
-                            Text("Syncing...",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              "Syncing...",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -204,16 +221,23 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
         children: [
           Icon(statusIcon, size: 48, color: statusColor),
           const SizedBox(height: 16),
-          Text(statusTitle,
-              style: TextStyle(
-                  color: statusColor,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            statusTitle,
+            style: TextStyle(
+              color: statusColor,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(statusDesc,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.7), fontSize: 14)),
+          Text(
+            statusDesc,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 14,
+            ),
+          ),
           if (hasErrors)
             Padding(
               padding: const EdgeInsets.only(top: 16),
@@ -243,23 +267,40 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
       childAspectRatio: 1.5,
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        _buildStatCard("Pending", "${stats.pendingCount}",
-            Icons.hourglass_empty, Colors.orange),
-        _buildStatCard("Synced Today", "${stats.syncedCount}",
-            Icons.check_circle_outline, FuturisticColors.success),
         _buildStatCard(
-            "In Progress", "${stats.inProgressCount}", Icons.sync, Colors.blue),
+          "Pending",
+          "${stats.pendingCount}",
+          Icons.hourglass_empty,
+          Colors.orange,
+        ),
         _buildStatCard(
-            "Failed / Dead",
-            "${stats.failedCount + stats.deadLetterCount}",
-            Icons.error_outline,
-            FuturisticColors.error),
+          "Synced Today",
+          "${stats.syncedCount}",
+          Icons.check_circle_outline,
+          FuturisticColors.success,
+        ),
+        _buildStatCard(
+          "In Progress",
+          "${stats.inProgressCount}",
+          Icons.sync,
+          Colors.blue,
+        ),
+        _buildStatCard(
+          "Failed / Dead",
+          "${stats.failedCount + stats.deadLetterCount}",
+          Icons.error_outline,
+          FuturisticColors.error,
+        ),
       ],
     );
   }
 
   Widget _buildStatCard(
-      String title, String value, IconData icon, Color color) {
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -275,17 +316,24 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
             children: [
               Icon(icon, size: 20, color: color),
               const SizedBox(width: 8),
-              Text(title,
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.6), fontSize: 13)),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 13,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(value,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
@@ -301,37 +349,49 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
         final failedItems = snapshot.data!;
 
         if (failedItems.isEmpty) {
-          return const Text('No active failed items found',
-              style: TextStyle(color: Colors.grey));
+          return const Text(
+            'No active failed items found',
+            style: TextStyle(color: Colors.grey),
+          );
         }
 
         return ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: failedItems.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final item = failedItems[index];
             return Container(
               decoration: BoxDecoration(
                 color: FuturisticColors.surface,
                 borderRadius: BorderRadius.circular(8),
-                border:
-                    Border.all(color: FuturisticColors.error.withOpacity(0.3)),
+                border: Border.all(
+                  color: FuturisticColors.error.withOpacity(0.3),
+                ),
               ),
               child: ListTile(
-                leading: const Icon(Icons.error_outline,
-                    color: FuturisticColors.error),
-                title: Text('${item.targetCollection}/${item.documentId}',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontFamily: 'monospace')),
-                subtitle: Text(item.lastError ?? 'Unknown Error',
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.5), fontSize: 12),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis),
+                leading: const Icon(
+                  Icons.error_outline,
+                  color: FuturisticColors.error,
+                ),
+                title: Text(
+                  '${item.targetCollection}/${item.documentId}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+                subtitle: Text(
+                  item.lastError ?? 'Unknown Error',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 12,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 trailing: IconButton(
                   icon: const Icon(Icons.refresh, color: Colors.blueAccent),
                   onPressed: () {
@@ -358,12 +418,15 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
       ),
       child: _liveLogs.isEmpty
           ? Center(
-              child: Text("Waiting for sync activity...",
-                  style: TextStyle(color: Colors.white.withOpacity(0.3))))
+              child: Text(
+                "Waiting for sync activity...",
+                style: TextStyle(color: Colors.white.withOpacity(0.3)),
+              ),
+            )
           : ListView.separated(
               padding: const EdgeInsets.all(12),
               itemCount: _liveLogs.length,
-              separatorBuilder: (_, __) =>
+              separatorBuilder: (_, _) =>
                   const Divider(height: 1, color: Colors.white10),
               itemBuilder: (context, index) {
                 final log = _liveLogs[index];
@@ -375,11 +438,14 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(time,
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(0.4),
-                              fontSize: 12,
-                              fontFamily: 'monospace')),
+                      Text(
+                        time,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.4),
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -401,17 +467,21 @@ class _RealSyncScreenState extends ConsumerState<RealSyncScreen> {
                               Text(
                                 log.failure!.message,
                                 style: TextStyle(
-                                    color:
-                                        FuturisticColors.error.withOpacity(0.8),
-                                    fontSize: 12),
+                                  color: FuturisticColors.error.withOpacity(
+                                    0.8,
+                                  ),
+                                  fontSize: 12,
+                                ),
                               ),
                           ],
                         ),
                       ),
                       if (log.isSuccess)
-                        Icon(Icons.check,
-                            size: 14,
-                            color: FuturisticColors.success.withOpacity(0.5)),
+                        Icon(
+                          Icons.check,
+                          size: 14,
+                          color: FuturisticColors.success.withOpacity(0.5),
+                        ),
                     ],
                   ),
                 );

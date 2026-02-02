@@ -35,169 +35,176 @@ class _PurchaseDashboardScreenState
     return Scaffold(
       backgroundColor: palette.mutedGray,
       body: StreamBuilder<List<PurchaseOrder>>(
-          stream: sl<PurchaseRepository>().watchAll(userId: ownerId),
-          builder: (context, snapshot) {
-            final purchases = snapshot.data ?? [];
+        stream: sl<PurchaseRepository>().watchAll(userId: ownerId),
+        builder: (context, snapshot) {
+          final purchases = snapshot.data ?? [];
 
-            // Compute stats from purchases
-            double totalInvoiceValue = 0;
-            double paidAmount = 0;
-            double unpaidAmount = 0;
-            double todayPurchase = 0;
-            int activeOrders = 0;
-            final today = DateTime.now();
+          // Compute stats from purchases
+          double totalInvoiceValue = 0;
+          double paidAmount = 0;
+          double unpaidAmount = 0;
+          double todayPurchase = 0;
+          int activeOrders = 0;
+          final today = DateTime.now();
 
-            for (var p in purchases) {
-              totalInvoiceValue += p.totalAmount;
-              paidAmount += p.paidAmount;
-              final unpaid =
-                  (p.totalAmount - p.paidAmount).clamp(0, double.infinity);
-              unpaidAmount += unpaid;
+          for (var p in purchases) {
+            totalInvoiceValue += p.totalAmount;
+            paidAmount += p.paidAmount;
+            final unpaid = (p.totalAmount - p.paidAmount).clamp(
+              0,
+              double.infinity,
+            );
+            unpaidAmount += unpaid;
 
-              // Today's purchases
-              if (p.purchaseDate.year == today.year &&
-                  p.purchaseDate.month == today.month &&
-                  p.purchaseDate.day == today.day) {
-                todayPurchase += p.totalAmount;
-              }
-
-              // Active (unpaid) orders
-              if (p.status != 'Paid') {
-                activeOrders++;
-              }
+            // Today's purchases
+            if (p.purchaseDate.year == today.year &&
+                p.purchaseDate.month == today.month &&
+                p.purchaseDate.day == today.day) {
+              todayPurchase += p.totalAmount;
             }
 
-            final stats = VendorStats(
-              totalInvoiceValue: totalInvoiceValue,
-              paidAmount: paidAmount,
-              unpaidAmount: unpaidAmount,
-              todayPurchase: todayPurchase,
-              activeOrders: activeOrders,
-            );
+            // Active (unpaid) orders
+            if (p.status != 'Paid') {
+              activeOrders++;
+            }
+          }
 
-            final hasData = totalInvoiceValue > 0;
+          final stats = VendorStats(
+            totalInvoiceValue: totalInvoiceValue,
+            paidAmount: paidAmount,
+            unpaidAmount: unpaidAmount,
+            todayPurchase: todayPurchase,
+            activeOrders: activeOrders,
+          );
 
-            return Stack(
-              children: [
-                // Background soft gradients
-                Positioned(
-                  top: -100,
-                  right: -100,
-                  child: Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          palette.leafGreen.withOpacity(0.3),
-                          Colors.transparent
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -50,
-                  left: -50,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          palette.tomatoRed.withOpacity(0.2),
-                          Colors.transparent
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+          final hasData = totalInvoiceValue > 0;
 
-                SafeArea(
-                  child: CustomScrollView(
-                    slivers: [
-                      _buildAppBar(context, palette),
-                      if (hasData) ...[
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: _buildGraphSection(context, palette, stats),
-                          ),
-                        ),
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          sliver: _buildStatGrid(context, palette, stats),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Recent Procurement",
-                                  style: GoogleFonts.inter(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const PurchaseHistoryScreen()));
-                                  },
-                                  child: Text(
-                                    "View All",
-                                    style: TextStyle(color: palette.leafGreen),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        _buildRecentList(context, palette, purchases),
-                        const SliverPadding(
-                            padding: EdgeInsets.only(bottom: 80)),
-                      ] else ...[
-                        SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.shopping_bag_outlined,
-                                    size: 64, color: Colors.white24),
-                                const SizedBox(height: 16),
-                                Text(
-                                  "No purchases yet",
-                                  style: GoogleFonts.outfit(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Add your first vendor invoice to see insights",
-                                  style:
-                                      GoogleFonts.inter(color: Colors.white54),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
+          return Stack(
+            children: [
+              // Background soft gradients
+              Positioned(
+                top: -100,
+                right: -100,
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        palette.leafGreen.withOpacity(0.3),
+                        Colors.transparent,
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ],
-            );
-          }),
+              ),
+              Positioned(
+                bottom: -50,
+                left: -50,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        palette.tomatoRed.withOpacity(0.2),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              SafeArea(
+                child: CustomScrollView(
+                  slivers: [
+                    _buildAppBar(context, palette),
+                    if (hasData) ...[
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: _buildGraphSection(context, palette, stats),
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        sliver: _buildStatGrid(context, palette, stats),
+                      ),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Recent Procurement",
+                                style: GoogleFonts.inter(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const PurchaseHistoryScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "View All",
+                                  style: TextStyle(color: palette.leafGreen),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      _buildRecentList(context, palette, purchases),
+                      const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+                    ] else ...[
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.shopping_bag_outlined,
+                                size: 64,
+                                color: Colors.white24,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                "No purchases yet",
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Add your first vendor invoice to see insights",
+                                style: GoogleFonts.inter(color: Colors.white54),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
       floatingActionButton: _buildSmartFab(palette),
     );
   }
@@ -248,8 +255,11 @@ class _PurchaseDashboardScreenState
                 height: 40,
                 borderRadius: BorderRadius.circular(12),
                 padding: const EdgeInsets.all(8),
-                child: const Icon(Icons.notifications_none,
-                    color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.notifications_none,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
             ],
           ),
@@ -259,7 +269,10 @@ class _PurchaseDashboardScreenState
   }
 
   Widget _buildGraphSection(
-      BuildContext context, AppColorPalette palette, VendorStats stats) {
+    BuildContext context,
+    AppColorPalette palette,
+    VendorStats stats,
+  ) {
     // Avoid division by zero for chart
     double total = stats.totalInvoiceValue;
     if (total == 0) total = 1; // Prevent NaN
@@ -323,10 +336,16 @@ class _PurchaseDashboardScreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildLegendItem(palette.leafGreen, "Paid",
-                  "₹${stats.paidAmount.toStringAsFixed(0)}"),
-              _buildLegendItem(palette.tomatoRed, "Unpaid",
-                  "₹${stats.unpaidAmount.toStringAsFixed(0)}"),
+              _buildLegendItem(
+                palette.leafGreen,
+                "Paid",
+                "₹${stats.paidAmount.toStringAsFixed(0)}",
+              ),
+              _buildLegendItem(
+                palette.tomatoRed,
+                "Unpaid",
+                "₹${stats.unpaidAmount.toStringAsFixed(0)}",
+              ),
             ],
           ),
         ],
@@ -347,9 +366,13 @@ class _PurchaseDashboardScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label, style: const TextStyle(color: Colors.white70)),
-            Text(amount,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            Text(
+              amount,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ],
@@ -357,7 +380,10 @@ class _PurchaseDashboardScreenState
   }
 
   Widget _buildStatGrid(
-      BuildContext context, AppColorPalette palette, VendorStats stats) {
+    BuildContext context,
+    AppColorPalette palette,
+    VendorStats stats,
+  ) {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -374,13 +400,18 @@ class _PurchaseDashboardScreenState
             children: [
               const Icon(Icons.shopping_bag_outlined, color: Colors.white),
               const Spacer(),
-              Text("Today's Procurement",
-                  style: GoogleFonts.inter(color: Colors.white70)),
-              Text("₹${stats.todayPurchase.toStringAsFixed(0)}",
-                  style: GoogleFonts.outfit(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
+              Text(
+                "Today's Procurement",
+                style: GoogleFonts.inter(color: Colors.white70),
+              ),
+              Text(
+                "₹${stats.todayPurchase.toStringAsFixed(0)}",
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
@@ -392,13 +423,18 @@ class _PurchaseDashboardScreenState
             children: [
               const Icon(Icons.inventory_2_outlined, color: Colors.white),
               const Spacer(),
-              Text("Vendor Orders",
-                  style: GoogleFonts.inter(color: Colors.white70)),
-              Text("${stats.activeOrders} Active",
-                  style: GoogleFonts.outfit(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
+              Text(
+                "Vendor Orders",
+                style: GoogleFonts.inter(color: Colors.white70),
+              ),
+              Text(
+                "${stats.activeOrders} Active",
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
@@ -406,8 +442,11 @@ class _PurchaseDashboardScreenState
     );
   }
 
-  Widget _buildRecentList(BuildContext context, AppColorPalette palette,
-      List<PurchaseOrder> purchases) {
+  Widget _buildRecentList(
+    BuildContext context,
+    AppColorPalette palette,
+    List<PurchaseOrder> purchases,
+  ) {
     final recent = purchases.take(5).toList();
 
     if (recent.isEmpty) {
@@ -415,65 +454,63 @@ class _PurchaseDashboardScreenState
     }
 
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final bill = recent[index];
-          final isPaid = bill.status == 'Paid';
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: GlassContainer(
-              opacity: 0.05,
-              child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: isPaid
-                        ? palette.leafGreen.withOpacity(0.1)
-                        : palette.tomatoRed.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    isPaid
-                        ? Icons.check_circle_outline
-                        : Icons.pending_outlined,
-                    color: isPaid ? palette.leafGreen : palette.tomatoRed,
-                  ),
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final bill = recent[index];
+        final isPaid = bill.status == 'Paid';
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: GlassContainer(
+            opacity: 0.05,
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isPaid
+                      ? palette.leafGreen.withOpacity(0.1)
+                      : palette.tomatoRed.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                title: Text(
-                  bill.vendorName ?? 'Unknown Vendor',
-                  style: GoogleFonts.inter(
-                      color: Colors.white, fontWeight: FontWeight.w600),
-                ),
-                subtitle: Text(
-                  "Bill #${bill.invoiceNumber} • ${bill.purchaseDate.day}/${bill.purchaseDate.month}",
-                  style: const TextStyle(color: Colors.white54, fontSize: 12),
-                ),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "₹${bill.totalAmount.toStringAsFixed(0)}",
-                      style: GoogleFonts.outfit(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    Text(
-                      bill.status,
-                      style: TextStyle(
-                        color: isPaid ? palette.leafGreen : palette.tomatoRed,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
+                child: Icon(
+                  isPaid ? Icons.check_circle_outline : Icons.pending_outlined,
+                  color: isPaid ? palette.leafGreen : palette.tomatoRed,
                 ),
               ),
+              title: Text(
+                bill.vendorName ?? 'Unknown Vendor',
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                "Bill #${bill.invoiceNumber} • ${bill.purchaseDate.day}/${bill.purchaseDate.month}",
+                style: const TextStyle(color: Colors.white54, fontSize: 12),
+              ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "₹${bill.totalAmount.toStringAsFixed(0)}",
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    bill.status,
+                    style: TextStyle(
+                      color: isPaid ? palette.leafGreen : palette.tomatoRed,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        },
-        childCount: recent.length,
-      ),
+          ),
+        );
+      }, childCount: recent.length),
     );
   }
 
@@ -486,8 +523,10 @@ class _PurchaseDashboardScreenState
       ),
       child: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const AddPurchaseScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddPurchaseScreen()),
+          );
         },
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -495,7 +534,9 @@ class _PurchaseDashboardScreenState
         label: Text(
           "Add Invoice",
           style: GoogleFonts.inter(
-              color: Colors.white, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

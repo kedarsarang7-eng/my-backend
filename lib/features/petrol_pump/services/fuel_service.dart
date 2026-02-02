@@ -31,15 +31,20 @@ class FuelService {
   Stream<List<FuelType>> getFuelTypes() {
     return _fuelCollection.snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) =>
-              FuelType.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) =>
+                FuelType.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+          )
           .toList();
     });
   }
 
   /// Update fuel rate
-  Future<void> updateFuelRate(String fuelId, double newRate,
-      {String? updatedBy}) async {
+  Future<void> updateFuelRate(
+    String fuelId,
+    double newRate, {
+    String? updatedBy,
+  }) async {
     final docRef = _fuelCollection.doc(fuelId);
     final doc = await docRef.get();
 

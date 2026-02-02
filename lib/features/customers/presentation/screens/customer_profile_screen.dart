@@ -74,7 +74,9 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
     });
 
     _animController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
 
     // Initial data fetch
@@ -131,7 +133,8 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => const NotificationSettingsScreen()),
+                  builder: (_) => const NotificationSettingsScreen(),
+                ),
               );
             },
           ),
@@ -147,7 +150,8 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         ),
         child: _controller.isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Colors.white))
+                child: CircularProgressIndicator(color: Colors.white),
+              )
             : RefreshIndicator(
                 onRefresh: _refreshData,
                 color: timeTheme.primaryColor,
@@ -198,13 +202,16 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border:
-                    Border.all(color: Colors.white.withOpacity(0.5), width: 3),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 3,
+                ),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10))
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
                 ],
               ),
               child: const CircleAvatar(
@@ -234,7 +241,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             fontWeight: FontWeight.bold,
             color: Colors.white,
             shadows: [
-              Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 10)
+              Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 10),
             ],
           ),
         ),
@@ -278,28 +285,37 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
           children: [
             Text(
               "Total Outstanding",
-              style: AppTypography.headlineSmall
-                  .copyWith(color: Colors.white70, fontWeight: FontWeight.w500),
+              style: AppTypography.headlineSmall.copyWith(
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               "₹${snap.outstandingBalance.toStringAsFixed(2)}",
-              style: AppTypography.displayMedium
-                  .copyWith(color: Colors.white, fontWeight: FontWeight.w800),
+              style: AppTypography.displayMedium.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             const SizedBox(height: 24),
             Row(
               children: [
                 _buildFinStat(
-                    "Total Paid",
-                    "₹${snap.totalReceived.toStringAsFixed(0)}",
-                    Icons.check_circle_outline),
+                  "Total Paid",
+                  "₹${snap.totalReceived.toStringAsFixed(0)}",
+                  Icons.check_circle_outline,
+                ),
                 Container(
-                    width: 1, height: 40, color: Colors.white.withOpacity(0.2)),
+                  width: 1,
+                  height: 40,
+                  color: Colors.white.withOpacity(0.2),
+                ),
                 _buildFinStat(
-                    "Bills",
-                    "${_controller.state.insights.totalTransactions}",
-                    Icons.receipt_long),
+                  "Bills",
+                  "${_controller.state.insights.totalTransactions}",
+                  Icons.receipt_long,
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -316,8 +332,9 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
               child: Center(
                 child: Text(
                   "Tap to view details", // Call to action
-                  style:
-                      AppTypography.bodySmall.copyWith(color: Colors.white70),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: Colors.white70,
+                  ),
                 ),
               ),
             ),
@@ -333,18 +350,27 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         children: [
           Icon(icon, color: Colors.white70, size: 20),
           const SizedBox(height: 4),
-          Text(value,
-              style: AppTypography.headlineSmall
-                  .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-          Text(label,
-              style: AppTypography.bodySmall.copyWith(color: Colors.white60)),
+          Text(
+            value,
+            style: AppTypography.headlineSmall.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            label,
+            style: AppTypography.bodySmall.copyWith(color: Colors.white60),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildMenuSection(
-      BuildContext context, WidgetRef ref, _TimeTheme theme) {
+    BuildContext context,
+    WidgetRef ref,
+    _TimeTheme theme,
+  ) {
     return Column(
       children: [
         _buildMenuCategory("Account", [
@@ -360,10 +386,13 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             title: "My Shops",
             subtitle: "Manage linked shops",
             color: Colors.orange,
-            onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const MyShopsScreen()))
-                .then((_) =>
-                    _refreshData()), // Refresh on return in case of switch
+            onTap: () =>
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MyShopsScreen()),
+                ).then(
+                  (_) => _refreshData(),
+                ), // Refresh on return in case of switch
           ),
           _buildMenuItem(
             icon: Icons.person_outline,
@@ -394,9 +423,11 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             subtitle: "Offers, Updates",
             color: Colors.amber,
             onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const NotificationSettingsScreen())),
+              context,
+              MaterialPageRoute(
+                builder: (_) => const NotificationSettingsScreen(),
+              ),
+            ),
           ),
         ]),
         const SizedBox(height: 16),
@@ -414,9 +445,9 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             subtitle: "App lock, password",
             color: Colors.red,
             onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const SecuritySettingsScreen())),
+              context,
+              MaterialPageRoute(builder: (_) => const SecuritySettingsScreen()),
+            ),
           ),
           _buildMenuItem(
             icon: Icons.help_outline,
@@ -424,7 +455,9 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             subtitle: "Common questions",
             color: Colors.teal,
             onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const HelpScreen())),
+              context,
+              MaterialPageRoute(builder: (_) => const HelpScreen()),
+            ),
           ),
           _buildMenuItem(
             icon: Icons.share_outlined,
@@ -432,15 +465,18 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             subtitle: "Share the app",
             color: Colors.pink,
             onTap: () => Share.share(
-                "Check out DukanX for managing your local shop bills! https://dukanx.com"),
+              "Check out DukanX for managing your local shop bills! https://dukanx.com",
+            ),
           ),
           _buildMenuItem(
             icon: Icons.policy_outlined,
             title: "Terms & Privacy",
             subtitle: "Read policies",
             color: Colors.grey,
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const TermsScreen())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const TermsScreen()),
+            ),
           ),
         ]),
         // Risk Management Removed (Vendor Only Feature)
@@ -492,13 +528,21 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         ),
         child: Icon(icon, color: color, size: 22),
       ),
-      title: Text(title,
-          style: AppTypography.headlineSmall
-              .copyWith(fontWeight: FontWeight.w600)),
-      subtitle: Text(subtitle,
-          style: AppTypography.bodyMedium.copyWith(color: Colors.grey[600])),
-      trailing:
-          const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+      title: Text(
+        title,
+        style: AppTypography.headlineSmall.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: AppTypography.bodyMedium.copyWith(color: Colors.grey[600]),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: Colors.grey,
+      ),
     );
   }
 
@@ -518,9 +562,12 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         ),
         child: Icon(icon, color: color, size: 22),
       ),
-      title: Text(title,
-          style: AppTypography.headlineSmall
-              .copyWith(fontWeight: FontWeight.w600)),
+      title: Text(
+        title,
+        style: AppTypography.headlineSmall.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       trailing: Switch.adaptive(
         value: themeState.isDark,
         onChanged: (val) {
@@ -538,16 +585,22 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         onPressed: () async {
           await sl<SessionManager>().signOut();
           if (context.mounted) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/login', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/login', (route) => false);
           }
         },
         icon: const Icon(Icons.logout, color: Colors.white70),
-        label: Text("Sign Out",
-            style: AppTypography.headlineSmall
-                .copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+        label: Text(
+          "Sign Out",
+          style: AppTypography.headlineSmall.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 20)),
+          padding: const EdgeInsets.symmetric(vertical: 20),
+        ),
       ),
     );
   }
@@ -556,9 +609,12 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
-        title: Text("Select Language",
-            style: AppTypography.headlineMedium
-                .copyWith(fontWeight: FontWeight.bold)),
+        title: Text(
+          "Select Language",
+          style: AppTypography.headlineMedium.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         children: [
           _langOption(context, ref, 'English', 'en'),
           _langOption(context, ref, 'हिन्दी', 'hi'),
@@ -570,7 +626,11 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
   }
 
   Widget _langOption(
-      BuildContext context, WidgetRef ref, String name, String code) {
+    BuildContext context,
+    WidgetRef ref,
+    String name,
+    String code,
+  ) {
     return SimpleDialogOption(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
       child: Text(name, style: AppTypography.headlineSmall),
@@ -600,15 +660,18 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
     if (customer == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Profile data not available yet. Please wait...')),
+          content: Text('Profile data not available yet. Please wait...'),
+        ),
       );
       return;
     }
 
     final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => EditProfileScreen(currentProfile: customer)));
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditProfileScreen(currentProfile: customer),
+      ),
+    );
 
     if (result == true) {
       _refreshData();
@@ -623,10 +686,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
 
     // Placeholder implementation:
     const phoneNumber = '919999999999'; // Default support
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
 
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
@@ -649,18 +709,26 @@ class _TimeTheme {
   static _TimeTheme get current {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return const _TimeTheme(
-          [Color(0xFF4CA1AF), Color(0xFFC4E0E5)], Color(0xFF4CA1AF));
+      return const _TimeTheme([
+        Color(0xFF4CA1AF),
+        Color(0xFFC4E0E5),
+      ], Color(0xFF4CA1AF));
     } else if (hour < 17) {
-      return const _TimeTheme(
-          [Color(0xFF56CCF2), Color(0xFF2F80ED)], Color(0xFF2F80ED));
+      return const _TimeTheme([
+        Color(0xFF56CCF2),
+        Color(0xFF2F80ED),
+      ], Color(0xFF2F80ED));
     } else if (hour < 20) {
-      return const _TimeTheme(
-          [Color(0xFFFF512F), Color(0xFFDD2476)], Color(0xFFDD2476));
+      return const _TimeTheme([
+        Color(0xFFFF512F),
+        Color(0xFFDD2476),
+      ], Color(0xFFDD2476));
     } else {
-      return const _TimeTheme(
-          [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
-          Color(0xFF2C5364));
+      return const _TimeTheme([
+        Color(0xFF0F2027),
+        Color(0xFF203A43),
+        Color(0xFF2C5364),
+      ], Color(0xFF2C5364));
     }
   }
 }

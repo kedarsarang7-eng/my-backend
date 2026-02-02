@@ -8,7 +8,7 @@ class GstComplianceService {
   final FirebaseFirestore _firestore;
 
   GstComplianceService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   // ============================================================
   // GSTR-1 (Outward Supplies)
@@ -56,70 +56,85 @@ class GstComplianceService {
 
       if (type == 'saleReturn') {
         // Credit Note
-        creditNotes.add(CreditNote(
-          noteNo: data['refNo'] ?? '',
-          noteDate:
-              DateTime.parse(data['date'] ?? DateTime.now().toIso8601String()),
-          originalInvoiceNo: data['originalInvoiceNo'] ?? '',
-          originalInvoiceDate: _parseDate(data['originalInvoiceDate']),
-          gstin: gstin,
-          taxableValue: taxable.abs(),
-          cgst: (data['cgstTotal'] ?? 0).toDouble().abs(),
-          sgst: (data['sgstTotal'] ?? 0).toDouble().abs(),
-          igst: (data['igstTotal'] ?? 0).toDouble().abs(),
-          total: amount.abs(),
-        ));
+        creditNotes.add(
+          CreditNote(
+            noteNo: data['refNo'] ?? '',
+            noteDate: DateTime.parse(
+              data['date'] ?? DateTime.now().toIso8601String(),
+            ),
+            originalInvoiceNo: data['originalInvoiceNo'] ?? '',
+            originalInvoiceDate: _parseDate(data['originalInvoiceDate']),
+            gstin: gstin,
+            taxableValue: taxable.abs(),
+            cgst: (data['cgstTotal'] ?? 0).toDouble().abs(),
+            sgst: (data['sgstTotal'] ?? 0).toDouble().abs(),
+            igst: (data['igstTotal'] ?? 0).toDouble().abs(),
+            total: amount.abs(),
+          ),
+        );
       } else if (gstin != null && gstin.isNotEmpty && gstin.length == 15) {
         // B2B - has valid GSTIN
-        b2bInvoices.add(B2BInvoice(
-          gstin: gstin,
-          invoiceNo: data['refNo'] ?? '',
-          invoiceDate:
-              DateTime.parse(data['date'] ?? DateTime.now().toIso8601String()),
-          taxableValue: taxable,
-          cgst: (data['cgstTotal'] ?? 0).toDouble(),
-          sgst: (data['sgstTotal'] ?? 0).toDouble(),
-          igst: (data['igstTotal'] ?? 0).toDouble(),
-          total: amount,
-          placeOfSupply: data['placeOfSupply'] ?? '',
-          isReverseCharge: data['isReverseCharge'] ?? false,
-        ));
+        b2bInvoices.add(
+          B2BInvoice(
+            gstin: gstin,
+            invoiceNo: data['refNo'] ?? '',
+            invoiceDate: DateTime.parse(
+              data['date'] ?? DateTime.now().toIso8601String(),
+            ),
+            taxableValue: taxable,
+            cgst: (data['cgstTotal'] ?? 0).toDouble(),
+            sgst: (data['sgstTotal'] ?? 0).toDouble(),
+            igst: (data['igstTotal'] ?? 0).toDouble(),
+            total: amount,
+            placeOfSupply: data['placeOfSupply'] ?? '',
+            isReverseCharge: data['isReverseCharge'] ?? false,
+          ),
+        );
       } else if (amount > 250000 && isInterState) {
         // B2C Large - Inter-state > Rs.2.5L
-        b2cLarge.add(B2CInvoice(
-          invoiceNo: data['refNo'] ?? '',
-          invoiceDate:
-              DateTime.parse(data['date'] ?? DateTime.now().toIso8601String()),
-          taxableValue: taxable,
-          igst: (data['igstTotal'] ?? 0).toDouble(),
-          total: amount,
-          placeOfSupply: data['placeOfSupply'] ?? '',
-        ));
+        b2cLarge.add(
+          B2CInvoice(
+            invoiceNo: data['refNo'] ?? '',
+            invoiceDate: DateTime.parse(
+              data['date'] ?? DateTime.now().toIso8601String(),
+            ),
+            taxableValue: taxable,
+            igst: (data['igstTotal'] ?? 0).toDouble(),
+            total: amount,
+            placeOfSupply: data['placeOfSupply'] ?? '',
+          ),
+        );
       } else if (type == 'export') {
         // Export Invoice
         // We assume export invoices have type='export' and shipping details in data
-        exportInvoices.add(ExportInvoice(
-          invoiceNo: data['refNo'] ?? '',
-          invoiceDate:
-              DateTime.parse(data['date'] ?? DateTime.now().toIso8601String()),
-          taxableValue: taxable,
-          igst: (data['igstTotal'] ?? 0).toDouble(),
-          portCode: data['portCode'] ?? '',
-          shippingBillNo: data['shippingBillNo'] ?? '',
-        ));
+        exportInvoices.add(
+          ExportInvoice(
+            invoiceNo: data['refNo'] ?? '',
+            invoiceDate: DateTime.parse(
+              data['date'] ?? DateTime.now().toIso8601String(),
+            ),
+            taxableValue: taxable,
+            igst: (data['igstTotal'] ?? 0).toDouble(),
+            portCode: data['portCode'] ?? '',
+            shippingBillNo: data['shippingBillNo'] ?? '',
+          ),
+        );
       } else {
         // B2C Small
-        b2cSmall.add(B2CInvoice(
-          invoiceNo: data['refNo'] ?? '',
-          invoiceDate:
-              DateTime.parse(data['date'] ?? DateTime.now().toIso8601String()),
-          taxableValue: taxable,
-          cgst: (data['cgstTotal'] ?? 0).toDouble(),
-          sgst: (data['sgstTotal'] ?? 0).toDouble(),
-          igst: (data['igstTotal'] ?? 0).toDouble(),
-          total: amount,
-          placeOfSupply: data['placeOfSupply'] ?? '',
-        ));
+        b2cSmall.add(
+          B2CInvoice(
+            invoiceNo: data['refNo'] ?? '',
+            invoiceDate: DateTime.parse(
+              data['date'] ?? DateTime.now().toIso8601String(),
+            ),
+            taxableValue: taxable,
+            cgst: (data['cgstTotal'] ?? 0).toDouble(),
+            sgst: (data['sgstTotal'] ?? 0).toDouble(),
+            igst: (data['igstTotal'] ?? 0).toDouble(),
+            total: amount,
+            placeOfSupply: data['placeOfSupply'] ?? '',
+          ),
+        );
       }
     }
 
@@ -246,7 +261,8 @@ class GstComplianceService {
       cgstPayable: cgstLiability > 0 ? cgstLiability : 0,
       sgstPayable: sgstLiability > 0 ? sgstLiability : 0,
       igstPayable: igstLiability > 0 ? igstLiability : 0,
-      totalPayable: (cgstLiability > 0 ? cgstLiability : 0) +
+      totalPayable:
+          (cgstLiability > 0 ? cgstLiability : 0) +
           (sgstLiability > 0 ? sgstLiability : 0) +
           (igstLiability > 0 ? igstLiability : 0),
     );
@@ -272,7 +288,8 @@ class GstComplianceService {
     final sgstDifference = gstr1.totalSgst - gstr3b.outwardSgst;
     final igstDifference = gstr1.totalIgst - gstr3b.outwardIgst;
 
-    final isReconciled = salesDifference.abs() < 1 &&
+    final isReconciled =
+        salesDifference.abs() < 1 &&
         cgstDifference.abs() < 1 &&
         sgstDifference.abs() < 1 &&
         igstDifference.abs() < 1;

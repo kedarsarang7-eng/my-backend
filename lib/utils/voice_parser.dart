@@ -27,7 +27,7 @@ class VoiceParser {
       'eight': '8',
       'nine': '9',
       'ten': '10',
-      'half': '0.5'
+      'half': '0.5',
     };
 
     numbers.forEach((key, value) {
@@ -44,7 +44,7 @@ class VoiceParser {
       '@',
       'for',
       'please add',
-      'add'
+      'add',
     ];
     for (var f in fillers) {
       text = text.replaceAll(RegExp(r'\b' + RegExp.escape(f) + r'\b'), '');
@@ -79,11 +79,13 @@ class VoiceParser {
     String name = segment;
 
     // 1. Extract GST (Look for 'gst 5%', 'tax 18', '5% gst')
-    final gstRegex =
-        RegExp(r'(?:gst|tax)\s*(\d+(\.\d+)?)%?|(\d+(\.\d+)?)%\s*(?:gst|tax)?');
+    final gstRegex = RegExp(
+      r'(?:gst|tax)\s*(\d+(\.\d+)?)%?|(\d+(\.\d+)?)%\s*(?:gst|tax)?',
+    );
     final gstMatch = gstRegex.firstMatch(name);
     if (gstMatch != null) {
-      String? val = gstMatch.group(1) ??
+      String? val =
+          gstMatch.group(1) ??
           gstMatch.group(3); // Group 1 for 'gst 5', Group 3 for '5% gst'
       if (val != null) {
         gstRate = double.tryParse(val) ?? 0.0;
@@ -155,8 +157,9 @@ class VoiceParser {
     };
 
     final unitsRegexStr = unitMap.keys.join('|');
-    final qtyUnitRegex =
-        RegExp(r'(\d+(\.\d+)?)\s*\b(' + unitsRegexStr + r')\b');
+    final qtyUnitRegex = RegExp(
+      r'(\d+(\.\d+)?)\s*\b(' + unitsRegexStr + r')\b',
+    );
     final qtyUnitMatch = qtyUnitRegex.firstMatch(name);
 
     if (qtyUnitMatch != null) {
@@ -189,8 +192,9 @@ class VoiceParser {
 
     return BillItem(
       productId: DateTime.now().microsecondsSinceEpoch.toString(),
-      productName:
-          _capitalize(name.replaceAll(RegExp(r'\s+'), ' ')), // Clean whitespace
+      productName: _capitalize(
+        name.replaceAll(RegExp(r'\s+'), ' '),
+      ), // Clean whitespace
       qty: qty ?? 1.0,
       price: price ?? 0.0,
       unit: unit,

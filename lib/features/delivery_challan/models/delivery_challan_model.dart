@@ -70,23 +70,23 @@ class DeliveryChallanItem {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'productId': productId,
-        'productName': productName,
-        'quantity': quantity,
-        'unit': unit,
-        'unitPrice': unitPrice,
-        'taxRate': taxRate,
-        'taxAmount': taxAmount,
-        'totalAmount': totalAmount,
-        'hsnCode': hsnCode,
-        'cgstRate': cgstRate,
-        'cgstAmount': cgstAmount,
-        'sgstRate': sgstRate,
-        'sgstAmount': sgstAmount,
-        'igstRate': igstRate,
-        'igstAmount': igstAmount,
-      };
+    'id': id,
+    'productId': productId,
+    'productName': productName,
+    'quantity': quantity,
+    'unit': unit,
+    'unitPrice': unitPrice,
+    'taxRate': taxRate,
+    'taxAmount': taxAmount,
+    'totalAmount': totalAmount,
+    'hsnCode': hsnCode,
+    'cgstRate': cgstRate,
+    'cgstAmount': cgstAmount,
+    'sgstRate': sgstRate,
+    'sgstAmount': sgstAmount,
+    'igstRate': igstRate,
+    'igstAmount': igstAmount,
+  };
 }
 
 class DeliveryChallan {
@@ -166,9 +166,11 @@ class DeliveryChallan {
       vehicleNumber: json['vehicleNumber'] as String?,
       eWayBillNumber: json['eWayBillNumber'] as String?,
       shippingAddress: json['shippingAddress'] as String?,
-      items: (json['items'] as List<dynamic>?)
-              ?.map((e) =>
-                  DeliveryChallanItem.fromJson(e as Map<String, dynamic>))
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map(
+                (e) => DeliveryChallanItem.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
       convertedBillId: json['convertedBillId'] as String?,
@@ -182,28 +184,28 @@ class DeliveryChallan {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'userId': userId,
-        'challanNumber': challanNumber,
-        'customerId': customerId,
-        'customerName': customerName,
-        'challanDate': challanDate.toIso8601String(),
-        'dueDate': dueDate?.toIso8601String(),
-        'subtotal': subtotal,
-        'taxAmount': taxAmount,
-        'grandTotal': grandTotal,
-        'status': status.name,
-        'transportMode': transportMode,
-        'vehicleNumber': vehicleNumber,
-        'eWayBillNumber': eWayBillNumber,
-        'shippingAddress': shippingAddress,
-        'items': items.map((e) => e.toJson()).toList(),
-        'convertedBillId': convertedBillId,
-        'isSynced': isSynced,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'deletedAt': deletedAt?.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'challanNumber': challanNumber,
+    'customerId': customerId,
+    'customerName': customerName,
+    'challanDate': challanDate.toIso8601String(),
+    'dueDate': dueDate?.toIso8601String(),
+    'subtotal': subtotal,
+    'taxAmount': taxAmount,
+    'grandTotal': grandTotal,
+    'status': status.name,
+    'transportMode': transportMode,
+    'vehicleNumber': vehicleNumber,
+    'eWayBillNumber': eWayBillNumber,
+    'shippingAddress': shippingAddress,
+    'items': items.map((e) => e.toJson()).toList(),
+    'convertedBillId': convertedBillId,
+    'isSynced': isSynced,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'deletedAt': deletedAt?.toIso8601String(),
+  };
 
   DeliveryChallan copyWith({
     String? id,

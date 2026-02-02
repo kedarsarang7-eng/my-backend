@@ -5,7 +5,7 @@ import '../../core/isolation/business_capability.dart';
 /// Defines what features are available for each business type
 /// Now powered by the Hard Isolation Registry.
 class BusinessCapabilities {
-// ==============================================================================
+  // ==============================================================================
   // 1. PRODUCT / ITEM MANAGEMENT
   // ==============================================================================
   final bool accessProductAdd;
@@ -132,94 +132,170 @@ class BusinessCapabilities {
 
     return BusinessCapabilities(
       // 1. Product
-      accessProductAdd:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useProductAdd),
-      accessProductName:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useProductName),
+      accessProductAdd: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useProductAdd,
+      ),
+      accessProductName: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useProductName,
+      ),
       accessProductSalePrice: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useProductSalePrice),
+        t,
+        BusinessCapability.useProductSalePrice,
+      ),
       accessProductStockQty: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useProductStockQty),
-      accessProductUnit:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useProductUnit),
-      accessProductTax:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useProductTax),
+        t,
+        BusinessCapability.useProductStockQty,
+      ),
+      accessProductUnit: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useProductUnit,
+      ),
+      accessProductTax: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useProductTax,
+      ),
       accessProductCategory: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useProductCategory),
+        t,
+        BusinessCapability.useProductCategory,
+      ),
 
       // 2. Inventory
-      accessInventoryList:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useInventoryList),
-      accessVisibleStock:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useVisibleStock),
-      accessDeadStock:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useDeadStock),
+      accessInventoryList: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useInventoryList,
+      ),
+      accessVisibleStock: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useVisibleStock,
+      ),
+      accessDeadStock: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useDeadStock,
+      ),
       accessInventorySearch: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useInventorySearch),
+        t,
+        BusinessCapability.useInventorySearch,
+      ),
       accessInventoryExport: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useInventoryExport),
+        t,
+        BusinessCapability.useInventoryExport,
+      ),
 
       // 3. Invoice
-      accessInvoiceList:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useInvoiceList),
-      accessInvoiceSearch:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useInvoiceSearch),
-      accessInvoiceCreate:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useInvoiceCreate),
-      accessSalesReturn:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useSalesReturn),
+      accessInvoiceList: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useInvoiceList,
+      ),
+      accessInvoiceSearch: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useInvoiceSearch,
+      ),
+      accessInvoiceCreate: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useInvoiceCreate,
+      ),
+      accessSalesReturn: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useSalesReturn,
+      ),
       accessProformaInvoice: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useProformaInvoice),
-      accessDispatchNote:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useDispatchNote),
+        t,
+        BusinessCapability.useProformaInvoice,
+      ),
+      accessDispatchNote: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useDispatchNote,
+      ),
 
       // 4. Alerts
-      accessLowStockAlert:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useLowStockAlert),
-      accessGeneralAlerts:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useGeneralAlerts),
-      accessDailySnapshot:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useDailySnapshot),
+      accessLowStockAlert: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useLowStockAlert,
+      ),
+      accessGeneralAlerts: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useGeneralAlerts,
+      ),
+      accessDailySnapshot: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useDailySnapshot,
+      ),
       accessRevenueOverview: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useRevenueOverview),
+        t,
+        BusinessCapability.useRevenueOverview,
+      ),
 
       // 5. Purchase
-      accessPurchaseOrder:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.usePurchaseOrder),
-      accessStockEntry:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useStockEntry),
-      accessStockReversal:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useStockReversal),
-      accessSupplierBill:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useSupplierBill),
+      accessPurchaseOrder: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.usePurchaseOrder,
+      ),
+      accessStockEntry: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useStockEntry,
+      ),
+      accessStockReversal: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useStockReversal,
+      ),
+      accessSupplierBill: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useSupplierBill,
+      ),
       accessPurchaseRegister: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.usePurchaseRegister),
+        t,
+        BusinessCapability.usePurchaseRegister,
+      ),
 
       // Legacy
       supportsBarcodeScan: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useBarcodeScanner),
-      supportsTextOCR:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useScanOCR),
-      supportsExpiry:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useBatchExpiry),
-      supportsBatch:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useBatchExpiry),
-      supportsSerialNumber:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useIMEI),
+        t,
+        BusinessCapability.useBarcodeScanner,
+      ),
+      supportsTextOCR: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useScanOCR,
+      ),
+      supportsExpiry: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useBatchExpiry,
+      ),
+      supportsBatch: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useBatchExpiry,
+      ),
+      supportsSerialNumber: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useIMEI,
+      ),
       supportsStock: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useStockManagement),
-      supportsGymMode:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useJobSheets),
-      supportsPrescriptions:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.usePrescription),
+        t,
+        BusinessCapability.useStockManagement,
+      ),
+      supportsGymMode: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useJobSheets,
+      ),
+      supportsPrescriptions: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.usePrescription,
+      ),
       ocrFocus: _getOcrFocus(type),
       accessKOT: iso.FeatureResolver.canAccess(t, BusinessCapability.useKOT),
       accessTableManagement: iso.FeatureResolver.canAccess(
-          t, BusinessCapability.useTableManagement),
-      accessCreditLimit:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useCreditLimit),
-      accessServiceStatus:
-          iso.FeatureResolver.canAccess(t, BusinessCapability.useServiceStatus),
+        t,
+        BusinessCapability.useTableManagement,
+      ),
+      accessCreditLimit: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useCreditLimit,
+      ),
+      accessServiceStatus: iso.FeatureResolver.canAccess(
+        t,
+        BusinessCapability.useServiceStatus,
+      ),
     );
   }
 

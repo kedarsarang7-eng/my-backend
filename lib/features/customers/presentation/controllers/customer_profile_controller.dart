@@ -148,8 +148,8 @@ class CustomerProfileController extends ChangeNotifier {
     required this.ownerId,
     CustomersRepository? customersRepo,
     BillsRepository? billsRepo,
-  })  : _customersRepo = customersRepo ?? sl<CustomersRepository>(),
-        _billsRepo = billsRepo ?? sl<BillsRepository>() {
+  }) : _customersRepo = customersRepo ?? sl<CustomersRepository>(),
+       _billsRepo = billsRepo ?? sl<BillsRepository>() {
     _init();
   }
 
@@ -159,24 +159,27 @@ class CustomerProfileController extends ChangeNotifier {
 
     // Watch customer changes
     // Attempt to watch specific customer if repository supports it, otherwise watch all filtered
-    _customerSub = _customersRepo.watchAll(userId: ownerId).map((customers) {
-      try {
-        return customers.firstWhere((c) => c.id == customerId);
-      } catch (_) {
-        return null;
-      }
-    }).listen((customer) {
-      if (customer != null) {
-        _onCustomerUpdate(customer);
-      } else {
-        // Fallback: Try fetching by ID directly if stream yields nothing (e.g. initial load or filter mismatch)
-        _customersRepo.getById(customerId).then((result) {
-          if (result.isSuccess && result.data != null) {
-            _onCustomerUpdate(result.data);
+    _customerSub = _customersRepo
+        .watchAll(userId: ownerId)
+        .map((customers) {
+          try {
+            return customers.firstWhere((c) => c.id == customerId);
+          } catch (_) {
+            return null;
           }
-        });
-      }
-    }, onError: _onError);
+        })
+        .listen((customer) {
+          if (customer != null) {
+            _onCustomerUpdate(customer);
+          } else {
+            // Fallback: Try fetching by ID directly if stream yields nothing (e.g. initial load or filter mismatch)
+            _customersRepo.getById(customerId).then((result) {
+              if (result.isSuccess && result.data != null) {
+                _onCustomerUpdate(result.data);
+              }
+            });
+          }
+        }, onError: _onError);
 
     // Watch bills for this customer
     _billsSub = _billsRepo
@@ -185,10 +188,7 @@ class CustomerProfileController extends ChangeNotifier {
   }
 
   void _onCustomerUpdate(Customer? customer) {
-    _state = _state.copyWith(
-      customer: customer,
-      isLoading: false,
-    );
+    _state = _state.copyWith(customer: customer, isLoading: false);
     notifyListeners();
   }
 
@@ -210,10 +210,7 @@ class CustomerProfileController extends ChangeNotifier {
 
   void _onError(Object error) {
     debugPrint('[CustomerProfileController] Error: $error');
-    _state = _state.copyWith(
-      isLoading: false,
-      error: error.toString(),
-    );
+    _state = _state.copyWith(isLoading: false, error: error.toString());
     notifyListeners();
   }
 
@@ -262,8 +259,10 @@ class CustomerProfileController extends ChangeNotifier {
     return CustomerFinancialSnapshot(
       totalBilled: totalBilled,
       totalReceived: totalReceived,
-      outstandingBalance:
-          (totalBilled - totalReceived).clamp(0, double.infinity),
+      outstandingBalance: (totalBilled - totalReceived).clamp(
+        0,
+        double.infinity,
+      ),
       hasOverdue: overdueCount > 0,
       overdueCount: overdueCount,
       unpaidBillsCount: unpaidCount,
@@ -324,8 +323,9 @@ class CustomerProfileController extends ChangeNotifier {
       spendingTrend = 'decreasing';
     }
 
-    final double avgDelay =
-        paidBillsCount > 0 ? totalPaymentDelay / paidBillsCount : 0.0;
+    final double avgDelay = paidBillsCount > 0
+        ? totalPaymentDelay / paidBillsCount
+        : 0.0;
 
     return CustomerInsights(
       averagePaymentDelayDays: avgDelay,

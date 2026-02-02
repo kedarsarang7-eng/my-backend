@@ -52,8 +52,10 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
 
           Expanded(
             child: StreamBuilder<List<AppointmentModel>>(
-              stream: sl<AppointmentRepository>()
-                  .watchAppointmentsForDoctor(ownerId, _selectedDate),
+              stream: sl<AppointmentRepository>().watchAppointmentsForDoctor(
+                ownerId,
+                _selectedDate,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -68,11 +70,16 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.event_available,
-                            size: 64, color: Colors.white.withOpacity(0.5)),
+                        Icon(
+                          Icons.event_available,
+                          size: 64,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
                         const SizedBox(height: 16),
-                        const Text('No appointments for this day',
-                            style: TextStyle(color: Colors.grey)),
+                        const Text(
+                          'No appointments for this day',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
@@ -94,36 +101,49 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                           child: Text(
                             DateFormat('HH:mm').format(appt.scheduledTime),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: FuturisticColors.primary),
+                              fontWeight: FontWeight.bold,
+                              color: FuturisticColors.primary,
+                            ),
                           ),
                         ),
                         title: Text(
-                            (appt.purpose?.isNotEmpty == true)
-                                ? appt.purpose!
-                                : 'General Consultation',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
+                          (appt.purpose?.isNotEmpty == true)
+                              ? appt.purpose!
+                              : 'General Consultation',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                         subtitle: Text(
-                            'Status: ${appt.status.name} \n${appt.notes}',
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.7))),
+                          'Status: ${appt.status.name} \n${appt.notes}',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
                         isThreeLine: true,
                         trailing: PopupMenuButton(
-                          icon:
-                              const Icon(Icons.more_vert, color: Colors.white),
+                          icon: const Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                          ),
                           itemBuilder: (context) => [
                             const PopupMenuItem(
-                                value: 'visit', child: Text('Start Visit')),
+                              value: 'visit',
+                              child: Text('Start Visit'),
+                            ),
                             const PopupMenuItem(
-                                value: 'prescribe',
-                                child: Text('Prescribe Medicine')),
+                              value: 'prescribe',
+                              child: Text('Prescribe Medicine'),
+                            ),
                             const PopupMenuItem(
-                                value: 'complete',
-                                child: Text('Mark Complete')),
+                              value: 'complete',
+                              child: Text('Mark Complete'),
+                            ),
                             const PopupMenuItem(
-                                value: 'cancel', child: Text('Cancel')),
+                              value: 'cancel',
+                              child: Text('Cancel'),
+                            ),
                           ],
                           onSelected: (val) async {
                             if (val == 'visit') {
@@ -146,7 +166,8 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => AddPrescriptionScreen(
-                                      preSelectedPatientId: appt.patientId),
+                                    preSelectedPatientId: appt.patientId,
+                                  ),
                                 ),
                               );
                               return;
@@ -155,9 +176,12 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                                 ? AppointmentStatus.completed
                                 : AppointmentStatus.cancelled;
                             final updated = appt.copyWith(
-                                status: newStatus, updatedAt: DateTime.now());
-                            await sl<AppointmentRepository>()
-                                .updateAppointment(updated);
+                              status: newStatus,
+                              updatedAt: DateTime.now(),
+                            );
+                            await sl<AppointmentRepository>().updateAppointment(
+                              updated,
+                            );
                           },
                         ),
                       ),
@@ -188,8 +212,9 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
               width: 60,
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color:
-                    isSelected ? FuturisticColors.primary : Colors.transparent,
+                color: isSelected
+                    ? FuturisticColors.primary
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.white10),
               ),
@@ -226,28 +251,35 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
 
   void _showAddDialog(BuildContext context, String doctorId) {
     final purposeController = TextEditingController();
-    final timeController =
-        TextEditingController(text: '10:00'); // Simple text for now
+    final timeController = TextEditingController(
+      text: '10:00',
+    ); // Simple text for now
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: FuturisticColors.surface,
-        title: const Text('Schedule Appointment',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Schedule Appointment',
+          style: TextStyle(color: Colors.white),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: purposeController,
-              decoration:
-                  const InputDecoration(labelText: 'Purpose', filled: true),
+              decoration: const InputDecoration(
+                labelText: 'Purpose',
+                filled: true,
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: timeController,
               decoration: const InputDecoration(
-                  labelText: 'Time (HH:MM)', filled: true),
+                labelText: 'Time (HH:MM)',
+                filled: true,
+              ),
               keyboardType: TextInputType.datetime,
             ),
           ],
@@ -264,8 +296,13 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                 final hour = int.parse(timeParts[0]);
                 final minute = int.parse(timeParts[1]);
 
-                final scheduledTime = DateTime(_selectedDate.year,
-                    _selectedDate.month, _selectedDate.day, hour, minute);
+                final scheduledTime = DateTime(
+                  _selectedDate.year,
+                  _selectedDate.month,
+                  _selectedDate.day,
+                  hour,
+                  minute,
+                );
 
                 final appt = AppointmentModel(
                   id: const Uuid().v4(),
@@ -286,7 +323,8 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: FuturisticColors.primary),
+              backgroundColor: FuturisticColors.primary,
+            ),
             child: const Text('Schedule'),
           ),
         ],

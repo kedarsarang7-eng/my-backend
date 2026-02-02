@@ -17,10 +17,10 @@ class OwnerAccountService {
     FirebaseFirestore? firestore,
     SessionManager? sessionManager,
     SessionService? session,
-  })  : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _sessionManager = sessionManager ?? sl<SessionManager>(),
-        _session = session ?? sessionService;
+  }) : _auth = auth ?? FirebaseAuth.instance,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _sessionManager = sessionManager ?? sl<SessionManager>(),
+       _session = session ?? sessionService;
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
@@ -50,33 +50,42 @@ class OwnerAccountService {
       data['docId'] = doc.id;
       return data;
     } on TimeoutException catch (e, st) {
-      developer.log('Owner lookup timed out: $e',
-          name: 'OwnerAccountService', stackTrace: st);
+      developer.log(
+        'Owner lookup timed out: $e',
+        name: 'OwnerAccountService',
+        stackTrace: st,
+      );
       throw TimeoutException('Timed out while contacting owner record.');
     } catch (e, st) {
-      developer.log('Failed to fetch owner record: $e',
-          name: 'OwnerAccountService', stackTrace: st);
+      developer.log(
+        'Failed to fetch owner record: $e',
+        name: 'OwnerAccountService',
+        stackTrace: st,
+      );
       rethrow;
     }
   }
 
   /// Returns true if an owner document already exists in Firestore.
-  Future<bool> ownerExists(
-      {Duration timeout = const Duration(seconds: 8)}) async {
+  Future<bool> ownerExists({
+    Duration timeout = const Duration(seconds: 8),
+  }) async {
     final uid = _auth.currentUser?.uid;
     final record = await fetchOwnerRecord(uid: uid, timeout: timeout);
     return record != null;
   }
 
-  Future<String?> fetchOwnerEmail(
-      {Duration timeout = const Duration(seconds: 8)}) async {
+  Future<String?> fetchOwnerEmail({
+    Duration timeout = const Duration(seconds: 8),
+  }) async {
     final uid = _auth.currentUser?.uid;
     final record = await fetchOwnerRecord(uid: uid, timeout: timeout);
     return record == null ? null : record['email'] as String?;
   }
 
-  Future<String?> fetchOwnerDocId(
-      {Duration timeout = const Duration(seconds: 8)}) async {
+  Future<String?> fetchOwnerDocId({
+    Duration timeout = const Duration(seconds: 8),
+  }) async {
     final uid = _auth.currentUser?.uid;
     final record = await fetchOwnerRecord(uid: uid, timeout: timeout);
     if (record == null) return null;
@@ -229,8 +238,10 @@ class OwnerAccountService {
       throw StateError('Failed to sign in. Please try again.');
     }
 
-    final snapshot =
-        await _ownersRef.where('authUid', isEqualTo: uid).limit(1).get();
+    final snapshot = await _ownersRef
+        .where('authUid', isEqualTo: uid)
+        .limit(1)
+        .get();
 
     if (snapshot.docs.isEmpty) {
       await _auth.signOut();

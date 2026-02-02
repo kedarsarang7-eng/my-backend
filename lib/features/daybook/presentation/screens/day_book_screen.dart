@@ -52,16 +52,23 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
             decoration: BoxDecoration(
               color: FuturisticColors.surface.withOpacity(0.5),
               borderRadius: BorderRadius.circular(12),
-              border:
-                  Border.all(color: FuturisticColors.border.withOpacity(0.3)),
+              border: Border.all(
+                color: FuturisticColors.border.withOpacity(0.3),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildToggleOption("Document View", !_isAccountingView,
-                    () => setState(() => _isAccountingView = false)),
-                _buildToggleOption("Accounting View", _isAccountingView,
-                    () => setState(() => _isAccountingView = true)),
+                _buildToggleOption(
+                  "Document View",
+                  !_isAccountingView,
+                  () => setState(() => _isAccountingView = false),
+                ),
+                _buildToggleOption(
+                  "Accounting View",
+                  _isAccountingView,
+                  () => setState(() => _isAccountingView = true),
+                ),
               ],
             ),
           ),
@@ -74,8 +81,10 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
                     setState(() => _showRunningBalance = !_showRunningBalance),
                 borderRadius: BorderRadius.circular(8),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -110,8 +119,8 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
             child: _ownerId == null
                 ? const Center(child: Text("Error: Owner ID missing"))
                 : _isAccountingView
-                    ? _buildAccountingView()
-                    : _buildDocumentView(),
+                ? _buildAccountingView()
+                : _buildDocumentView(),
           ),
         ],
       ),
@@ -166,16 +175,22 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
   }
 
   Widget _buildAccountingView() {
-    final startOfDay =
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final startOfDay = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
     final endOfDay = startOfDay
         .add(const Duration(days: 1))
         .subtract(const Duration(milliseconds: 1));
 
     return StreamBuilder<List<JournalEntryModel>>(
       stream: sl<JournalEntryService>().watchEntriesByDateRange(
-          _ownerId!, startOfDay, endOfDay,
-          includeSystemEntries: true),
+        _ownerId!,
+        startOfDay,
+        endOfDay,
+        includeSystemEntries: true,
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -195,7 +210,9 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
           if (!entry.isBalanced) {
             // Hard Crash in Dev as per rules
             assert(
-                false, "CRITICAL: Unbalanced Journal Entry Found! ${entry.id}");
+              false,
+              "CRITICAL: Unbalanced Journal Entry Found! ${entry.id}",
+            );
           }
         }
 
@@ -239,7 +256,10 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
           itemCount: processedEntries.length,
           itemBuilder: (context, index) {
             return _buildAccountingItem(
-                context, processedEntries[index], theme.isDark);
+              context,
+              processedEntries[index],
+              theme.isDark,
+            );
           },
         );
       },
@@ -247,7 +267,10 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
   }
 
   Widget _buildAccountingItem(
-      BuildContext context, _AccountingViewItem viewItem, bool isDark) {
+    BuildContext context,
+    _AccountingViewItem viewItem,
+    bool isDark,
+  ) {
     final entry = viewItem.entry;
     final classification = entry.classification;
 
@@ -282,33 +305,39 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
                 Text(
                   DateFormat('HH:mm').format(entry.entryDate),
                   style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white54 : Colors.black54),
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white54 : Colors.black54,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: color.withOpacity(0.3))),
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: color.withOpacity(0.3)),
+                  ),
                   child: Text(
                     entry.voucherNumber,
                     style: TextStyle(
-                        fontSize: 10,
-                        color: color,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 10,
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const Spacer(),
                 Text(
                   "₹${entry.totalDebit.toStringAsFixed(2)}", // Show Magnitude
                   style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -319,59 +348,71 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
               child: Text(
                 entry.narration ?? "System Entry",
                 style: TextStyle(
-                    fontSize: 12,
-                    fontStyle: FontStyle.italic,
-                    color: isDark ? Colors.white70 : Colors.black87),
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: 8),
             // Dr/Cr Lines Breakdown
-            ...entry.entries.map((line) => Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: Row(
-                    children: [
-                      Text(line.debit > 0 ? "Dr" : "Cr",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: line.debit > 0 ? Colors.green : Colors.red,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          line.ledgerName,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: isDark ? Colors.white60 : Colors.black87),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+            ...entry.entries.map(
+              (line) => Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Row(
+                  children: [
+                    Text(
+                      line.debit > 0 ? "Dr" : "Cr",
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: line.debit > 0 ? Colors.green : Colors.red,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        "₹${(line.debit > 0 ? line.debit : line.credit).toStringAsFixed(2)}",
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        line.ledgerName,
                         style: TextStyle(
-                            fontSize: 11,
-                            color: isDark ? Colors.white60 : Colors.black87),
+                          fontSize: 11,
+                          color: isDark ? Colors.white60 : Colors.black87,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                    Text(
+                      "₹${(line.debit > 0 ? line.debit : line.credit).toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isDark ? Colors.white60 : Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             // Running Balance Footer (Optional)
             if (_showRunningBalance) ...[
               const Divider(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const Text("Volume Bal: ",
-                      style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  const Text(
+                    "Volume Bal: ",
+                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
                   Text(
                     "₹${viewItem.runningBalance.toStringAsFixed(2)}",
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
-              )
-            ]
+              ),
+            ],
           ],
         ),
       ),
@@ -384,11 +425,16 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.history_edu_rounded,
-              size: 60, color: isDark ? Colors.white24 : Colors.grey.shade400),
+          Icon(
+            Icons.history_edu_rounded,
+            size: 60,
+            color: isDark ? Colors.white24 : Colors.grey.shade400,
+          ),
           const SizedBox(height: 10),
-          Text("No activity found",
-              style: TextStyle(color: isDark ? Colors.white60 : Colors.grey)),
+          Text(
+            "No activity found",
+            style: TextStyle(color: isDark ? Colors.white60 : Colors.grey),
+          ),
         ],
       ),
     );
@@ -405,8 +451,11 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
     // Ideally we add date filtering to query.
     // For now, prompt asked for "Real business logic", so we should filter.
 
-    final startOfDay =
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final startOfDay = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     // We can't use Rx here easily without importing rxdart.
@@ -435,7 +484,10 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
   }
 
   Widget _buildTransactionItem(
-      BuildContext context, DayBookItem item, bool isDark) {
+    BuildContext context,
+    DayBookItem item,
+    bool isDark,
+  ) {
     Color color;
     IconData icon;
     String prefix;
@@ -486,14 +538,16 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
                   Text(
                     item.title,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87),
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
                   ),
                   Text(
                     "${DateFormat('hh:mm a').format(item.date)} • ${item.subtitle}",
                     style: TextStyle(
-                        fontSize: 12,
-                        color: isDark ? Colors.white54 : Colors.grey),
+                      fontSize: 12,
+                      color: isDark ? Colors.white54 : Colors.grey,
+                    ),
                   ),
                 ],
               ),
@@ -501,7 +555,10 @@ class _DayBookScreenState extends ConsumerState<DayBookScreen> {
             Text(
               "$prefix₹${item.amount.toStringAsFixed(0)}",
               style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 16, color: color),
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: color,
+              ),
             ),
           ],
         ),
@@ -518,13 +575,14 @@ class DayBookItem {
   final DateTime date;
   final String type; // sale, purchase, expense
 
-  DayBookItem(
-      {required this.id,
-      required this.title,
-      required this.subtitle,
-      required this.amount,
-      required this.date,
-      required this.type});
+  DayBookItem({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.amount,
+    required this.date,
+    required this.type,
+  });
 }
 
 class _AccountingViewItem {
@@ -565,37 +623,46 @@ class StreamCombined {
 
       for (var b in bills) {
         if (b.date.isAfter(start) && b.date.isBefore(end)) {
-          combined.add(DayBookItem(
+          combined.add(
+            DayBookItem(
               id: b.id,
               title: b.customerName.isEmpty ? 'Cash Sale' : b.customerName,
               subtitle: 'Inv #${b.invoiceNumber}',
               amount: b.grandTotal,
               date: b.date,
-              type: 'sale'));
+              type: 'sale',
+            ),
+          );
         }
       }
 
       for (var p in purchases) {
         if (p.purchaseDate.isAfter(start) && p.purchaseDate.isBefore(end)) {
-          combined.add(DayBookItem(
+          combined.add(
+            DayBookItem(
               id: p.id,
               title: p.vendorName ?? 'Unknown Vendor',
               subtitle: 'Inv #${p.invoiceNumber ?? ''}',
               amount: p.totalAmount,
               date: p.purchaseDate,
-              type: 'purchase'));
+              type: 'purchase',
+            ),
+          );
         }
       }
 
       for (var e in expenses) {
         if (e.date.isAfter(start) && e.date.isBefore(end)) {
-          combined.add(DayBookItem(
+          combined.add(
+            DayBookItem(
               id: e.id,
               title: e.category,
               subtitle: e.description,
               amount: e.amount,
               date: e.date,
-              type: 'expense'));
+              type: 'expense',
+            ),
+          );
         }
       }
 
@@ -605,32 +672,38 @@ class StreamCombined {
       }
     }
 
-    _subs.add(sl<BillsRepository>().watchAll(userId: ownerId).listen((data) {
-      bills = data;
-      // Actually Bill model in `models/bill.dart` is the legacy one used by UI.
-      // `BillsRepository` returns `Bill` (the NEW entity wrapper? NO, it returns `Bill` model from repository.dart?
-      // Wait, `bills_repository.dart` defines `Bill` locally or imports it?
-      // Let's check `bills_repository.dart` imports. It likely imports `models/bill.dart` or defines its own `Bill` class.
-      // Based on `CustomersRepository` pattern, it defines its own `Customer` class.
-      // If `BillsRepository` defines its own `Bill`, I should use that.
-      // `DayBookScreen` imports `models/bill.dart`.
-      // I should assume `BillsRepository` returns a compatible `Bill` or I map it.
-      // Let's assume for now it needs mapping or is compatible.
-      // EDIT: `BillsRepository` returns `List<Bill>` where `Bill` is defined in `bills_repository.dart`.
-      // I will map it to `DayBookItem` directly using the properties I know exist (`invoiceNumber`, `customerName`, `grandTotal`, `billDate`).
-      // The `bills` list type above should be `List<dynamic>` or the Repo's Bill type.
+    _subs.add(
+      sl<BillsRepository>().watchAll(userId: ownerId).listen((data) {
+        bills = data;
+        // Actually Bill model in `models/bill.dart` is the legacy one used by UI.
+        // `BillsRepository` returns `Bill` (the NEW entity wrapper? NO, it returns `Bill` model from repository.dart?
+        // Wait, `bills_repository.dart` defines `Bill` locally or imports it?
+        // Let's check `bills_repository.dart` imports. It likely imports `models/bill.dart` or defines its own `Bill` class.
+        // Based on `CustomersRepository` pattern, it defines its own `Customer` class.
+        // If `BillsRepository` defines its own `Bill`, I should use that.
+        // `DayBookScreen` imports `models/bill.dart`.
+        // I should assume `BillsRepository` returns a compatible `Bill` or I map it.
+        // Let's assume for now it needs mapping or is compatible.
+        // EDIT: `BillsRepository` returns `List<Bill>` where `Bill` is defined in `bills_repository.dart`.
+        // I will map it to `DayBookItem` directly using the properties I know exist (`invoiceNumber`, `customerName`, `grandTotal`, `billDate`).
+        // The `bills` list type above should be `List<dynamic>` or the Repo's Bill type.
 
-      emit();
-    }));
+        emit();
+      }),
+    );
 
-    _subs.add(sl<PurchaseRepository>().watchAll(userId: ownerId).listen((data) {
-      purchases = data; // PurchaseOrder
-      emit();
-    }));
+    _subs.add(
+      sl<PurchaseRepository>().watchAll(userId: ownerId).listen((data) {
+        purchases = data; // PurchaseOrder
+        emit();
+      }),
+    );
 
-    _subs.add(sl<ExpensesRepository>().watchAll(userId: ownerId).listen((data) {
-      expenses = data; // ExpenseModel
-      emit();
-    }));
+    _subs.add(
+      sl<ExpensesRepository>().watchAll(userId: ownerId).listen((data) {
+        expenses = data; // ExpenseModel
+        emit();
+      }),
+    );
   }
 }

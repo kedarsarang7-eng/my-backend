@@ -45,7 +45,10 @@ class AccountingReportsService {
 
   // --- PROFIT AND LOSS ---
   Future<Map<String, dynamic>> getProfitAndLoss(
-      String businessId, DateTime start, DateTime end) async {
+    String businessId,
+    DateTime start,
+    DateTime end,
+  ) async {
     // 1. Fetch Entries for Income & Expenses within date range
     // ignore: unused_local_variable
     final snapshot = await _firestore
@@ -69,7 +72,7 @@ class AccountingReportsService {
       'cogs': 0.0, // Needs Stock Ledger
       'gross_profit': 0.0,
       'operating_expenses': totalExpenses,
-      'net_profit': totalRevenue - totalExpenses
+      'net_profit': totalRevenue - totalExpenses,
     };
   }
 }

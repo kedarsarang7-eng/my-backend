@@ -166,9 +166,11 @@ class _SecuritySetupWidgetState extends State<SecuritySetupWidget> {
                         labelText: 'Enter 4-6 digit PIN',
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscurePin
-                              ? Icons.visibility
-                              : Icons.visibility_off),
+                          icon: Icon(
+                            _obscurePin
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
                           onPressed: () =>
                               setState(() => _obscurePin = !_obscurePin),
                         ),
@@ -199,11 +201,14 @@ class _SecuritySetupWidgetState extends State<SecuritySetupWidget> {
                         labelText: 'Confirm PIN',
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscureConfirm
-                              ? Icons.visibility
-                              : Icons.visibility_off),
+                          icon: Icon(
+                            _obscureConfirm
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
                           onPressed: () => setState(
-                              () => _obscureConfirm = !_obscureConfirm),
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
                         ),
                         border: const OutlineInputBorder(),
                       ),
@@ -268,8 +273,9 @@ class _SecuritySetupWidgetState extends State<SecuritySetupWidget> {
                     ),
                     SwitchListTile(
                       title: const Text('Require PIN for Stock Adjustment'),
-                      subtitle:
-                          const Text('PIN needed for manual stock changes'),
+                      subtitle: const Text(
+                        'PIN needed for manual stock changes',
+                      ),
                       value: _requirePinForStockAdjustment,
                       onChanged: (v) =>
                           setState(() => _requirePinForStockAdjustment = v),

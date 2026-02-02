@@ -76,13 +76,13 @@ class _DamageLogsScreenState extends ConsumerState<DamageLogsScreen> {
       child: _loading
           ? const Center(child: CircularProgressIndicator())
           : _logs.isEmpty
-              ? _buildEmptyState(isDark)
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _logs.length,
-                  itemBuilder: (context, index) =>
-                      _buildLogCard(_logs[index], isDark),
-                ),
+          ? _buildEmptyState(isDark)
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _logs.length,
+              itemBuilder: (context, index) =>
+                  _buildLogCard(_logs[index], isDark),
+            ),
     );
   }
 
@@ -93,8 +93,11 @@ class _DamageLogsScreenState extends ConsumerState<DamageLogsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.check_circle_outline,
-              size: 64, color: isDark ? Colors.white24 : Colors.grey[300]),
+          Icon(
+            Icons.check_circle_outline,
+            size: 64,
+            color: isDark ? Colors.white24 : Colors.grey[300],
+          ),
           const SizedBox(height: 16),
           Text(
             'No damage or loss recorded',
@@ -131,8 +134,11 @@ class _DamageLogsScreenState extends ConsumerState<DamageLogsScreen> {
                 color: const Color(0xFFEF4444).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child:
-                  const Icon(Icons.remove, color: Color(0xFFEF4444), size: 20),
+              child: const Icon(
+                Icons.remove,
+                color: Color(0xFFEF4444),
+                size: 20,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(

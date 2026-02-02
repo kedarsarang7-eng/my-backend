@@ -25,12 +25,12 @@ class PreOrderService {
     required StockTransactionRepository stockTxnRepo,
     required VendorItemSnapshotRepository snapshotRepo,
     required ErrorHandler errorHandler,
-  })  : _requestRepository = requestRepository,
-        _billsRepository = billsRepository,
-        _productsRepository = productsRepository,
-        _stockTxnRepo = stockTxnRepo,
-        _snapshotRepo = snapshotRepo,
-        _errorHandler = errorHandler;
+  }) : _requestRepository = requestRepository,
+       _billsRepository = billsRepository,
+       _productsRepository = productsRepository,
+       _stockTxnRepo = stockTxnRepo,
+       _snapshotRepo = snapshotRepo,
+       _errorHandler = errorHandler;
 
   /// Create a bill from an approved pre-order request.
   /// This is a TRANSACTIONAL operation that:

@@ -22,11 +22,17 @@ void main() {
 
     test('Health factors should have explanation text', () {
       expect(
-          HealthFactorType.salesTrend.explanation, contains('sales decreased'));
-      expect(HealthFactorType.pendingPayments.explanation,
-          contains('pending payments'));
+        HealthFactorType.salesTrend.explanation,
+        contains('sales decreased'),
+      );
       expect(
-          HealthFactorType.stockHealth.explanation, contains('stock levels'));
+        HealthFactorType.pendingPayments.explanation,
+        contains('pending payments'),
+      );
+      expect(
+        HealthFactorType.stockHealth.explanation,
+        contains('stock levels'),
+      );
     });
 
     test('HealthGrade labels are correct', () {

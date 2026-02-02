@@ -203,9 +203,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
                   const SizedBox(height: 4),
                   Text(
                     'Created on ${_formatDate(_exchange!.createdAt)}',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                    ),
+                    style: TextStyle(color: Colors.white.withOpacity(0.8)),
                   ),
                 ],
               ),
@@ -253,7 +251,10 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
                 _buildInfoRow('IMEI/Serial', _exchange!.oldImeiSerial!, isDark),
               if (_exchange!.oldDeviceCondition != null)
                 _buildInfoRow(
-                    'Condition', _exchange!.oldDeviceCondition!, isDark),
+                  'Condition',
+                  _exchange!.oldDeviceCondition!,
+                  isDark,
+                ),
               _buildInfoRow(
                 'Exchange Value',
                 '₹${_exchange!.exchangeValue.toStringAsFixed(0)}',
@@ -300,9 +301,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
           ],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF6366F1).withOpacity(0.2),
-        ),
+        border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.2)),
       ),
       child: Row(
         children: [
@@ -354,11 +353,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
                 ),
               ],
             ),
-            child: const Icon(
-              Icons.swap_horiz,
-              color: Colors.white,
-              size: 24,
-            ),
+            child: const Icon(Icons.swap_horiz, color: Colors.white, size: 24),
           ),
           Expanded(
             child: Column(
@@ -432,8 +427,9 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
               gradient: LinearGradient(
                 colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
               ),
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Row(
               children: [
@@ -479,9 +475,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: isDark ? Colors.white54 : Colors.black54,
-            ),
+            style: TextStyle(color: isDark ? Colors.white54 : Colors.black54),
           ),
           Text(
             value,
@@ -508,9 +502,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
           ],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF6366F1).withOpacity(0.3),
-        ),
+        border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3)),
       ),
       child: Column(
         children: [
@@ -604,10 +596,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Balance Due',
-                  style: TextStyle(color: Colors.red),
-                ),
+                const Text('Balance Due', style: TextStyle(color: Colors.red)),
                 Text(
                   '₹${_exchange!.balanceAmount.toStringAsFixed(0)}',
                   style: const TextStyle(
@@ -636,9 +625,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black54,
-            ),
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
           ),
           Text(
             value,
@@ -667,10 +654,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 6),
           Text(
@@ -799,9 +783,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             child: const Text('Complete'),
           ),
         ],
@@ -838,9 +820,7 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Yes, Cancel'),
           ),
         ],
@@ -976,8 +956,8 @@ class _ExchangeDetailScreenState extends State<ExchangeDetailScreen> {
           color: isSelected
               ? const Color(0xFF6366F1).withOpacity(0.15)
               : (isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.grey.shade100),
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.grey.shade100),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? const Color(0xFF6366F1) : Colors.transparent,

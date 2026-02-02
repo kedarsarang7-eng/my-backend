@@ -81,8 +81,9 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
           startDate = DateTime(now.year, now.month, 1);
       }
 
-      final filteredBills =
-          bills.where((b) => b.date.isAfter(startDate)).toList();
+      final filteredBills = bills
+          .where((b) => b.date.isAfter(startDate))
+          .toList();
 
       // Calculate metrics
       _totalSales = 0;
@@ -114,11 +115,14 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
         final returns = await revenueRepo.watchReturns(userId).first;
 
         // Filter returns by selected period
-        final filteredReturns =
-            returns.where((r) => r.date.isAfter(startDate)).toList();
+        final filteredReturns = returns
+            .where((r) => r.date.isAfter(startDate))
+            .toList();
 
         _totalReturns = filteredReturns.fold(
-            0, (sum, item) => sum + item.totalReturnAmount);
+          0,
+          (sum, item) => sum + item.totalReturnAmount,
+        );
       } catch (e) {
         debugPrint('Error loading returns: $e');
         _totalReturns = 0;
@@ -164,9 +168,12 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
                     ? Colors.white
                     : Colors.black87,
               ),
-              items: ['Today', 'This Week', 'This Month', 'This Year']
-                  .map((p) => DropdownMenuItem(value: p, child: Text(p)))
-                  .toList(),
+              items: [
+                'Today',
+                'This Week',
+                'This Month',
+                'This Year',
+              ].map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
               onChanged: (value) {
                 if (value != null) {
                   setState(() => _selectedPeriod = value);
@@ -189,13 +196,16 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildMetricsCards(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
                 const SizedBox(height: 24),
                 _buildInvoiceBreakdown(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
                 const SizedBox(height: 24),
                 _buildRecentInvoices(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
               ],
             ),
     );
@@ -205,42 +215,55 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
     return Row(
       children: [
         Expanded(
-            child: _buildMetricCard(
-                'Total Sales',
-                '₹${_formatAmount(_totalSales)}',
-                Icons.trending_up,
-                const Color(0xFF10B981),
-                isDark)),
+          child: _buildMetricCard(
+            'Total Sales',
+            '₹${_formatAmount(_totalSales)}',
+            Icons.trending_up,
+            const Color(0xFF10B981),
+            isDark,
+          ),
+        ),
         const SizedBox(width: 16),
         Expanded(
-            child: _buildMetricCard(
-                'Collections',
-                '₹${_formatAmount(_totalCollections)}',
-                Icons.payments,
-                const Color(0xFF06B6D4),
-                isDark)),
+          child: _buildMetricCard(
+            'Collections',
+            '₹${_formatAmount(_totalCollections)}',
+            Icons.payments,
+            const Color(0xFF06B6D4),
+            isDark,
+          ),
+        ),
         const SizedBox(width: 16),
         Expanded(
-            child: _buildMetricCard(
-                'Outstanding',
-                '₹${_formatAmount(_totalOutstanding)}',
-                Icons.account_balance_wallet,
-                const Color(0xFFF59E0B),
-                isDark)),
+          child: _buildMetricCard(
+            'Outstanding',
+            '₹${_formatAmount(_totalOutstanding)}',
+            Icons.account_balance_wallet,
+            const Color(0xFFF59E0B),
+            isDark,
+          ),
+        ),
         const SizedBox(width: 16),
         Expanded(
-            child: _buildMetricCard(
-                'Returns',
-                '₹${_formatAmount(_totalReturns)}',
-                Icons.assignment_return,
-                const Color(0xFFEF4444),
-                isDark)),
+          child: _buildMetricCard(
+            'Returns',
+            '₹${_formatAmount(_totalReturns)}',
+            Icons.assignment_return,
+            const Color(0xFFEF4444),
+            isDark,
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildMetricCard(
-      String label, String value, IconData icon, Color color, bool isDark) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return GlassMorphism(
       blur: 10,
       opacity: 0.1,
@@ -308,18 +331,33 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
           Row(
             children: [
               Expanded(
-                child: _buildStatusItem('Paid', _paidInvoices, total,
-                    const Color(0xFF10B981), isDark),
+                child: _buildStatusItem(
+                  'Paid',
+                  _paidInvoices,
+                  total,
+                  const Color(0xFF10B981),
+                  isDark,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildStatusItem('Partial', _partialInvoices, total,
-                    const Color(0xFFF59E0B), isDark),
+                child: _buildStatusItem(
+                  'Partial',
+                  _partialInvoices,
+                  total,
+                  const Color(0xFFF59E0B),
+                  isDark,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildStatusItem('Unpaid', _unpaidInvoices, total,
-                    const Color(0xFFEF4444), isDark),
+                child: _buildStatusItem(
+                  'Unpaid',
+                  _unpaidInvoices,
+                  total,
+                  const Color(0xFFEF4444),
+                  isDark,
+                ),
               ),
             ],
           ),
@@ -329,7 +367,12 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
   }
 
   Widget _buildStatusItem(
-      String label, int count, int total, Color color, bool isDark) {
+    String label,
+    int count,
+    int total,
+    Color color,
+    bool isDark,
+  ) {
     final percent = total > 0 ? (count / total * 100) : 0.0;
 
     return Column(
@@ -358,17 +401,15 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: percent / 100,
-          backgroundColor:
-              isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200],
+          backgroundColor: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.grey[200],
           valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
         const SizedBox(height: 4),
         Text(
           '${percent.toStringAsFixed(1)}%',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-          ),
+          style: TextStyle(fontSize: 12, color: color),
         ),
       ],
     );
@@ -422,7 +463,7 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: _recentBills.length,
-                  separatorBuilder: (_, __) => Divider(
+                  separatorBuilder: (_, _) => Divider(
                     height: 1,
                     color: isDark
                         ? Colors.white.withOpacity(0.1)
@@ -448,25 +489,26 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
         width: 48,
         height: 48,
         decoration: BoxDecoration(
-          color: (isPaid
-                  ? const Color(0xFF10B981)
-                  : isPartial
+          color:
+              (isPaid
+                      ? const Color(0xFF10B981)
+                      : isPartial
                       ? const Color(0xFFF59E0B)
                       : const Color(0xFFEF4444))
-              .withOpacity(0.1),
+                  .withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
           isPaid
               ? Icons.check_circle
               : isPartial
-                  ? Icons.timelapse
-                  : Icons.pending,
+              ? Icons.timelapse
+              : Icons.pending,
           color: isPaid
               ? const Color(0xFF10B981)
               : isPartial
-                  ? const Color(0xFFF59E0B)
-                  : const Color(0xFFEF4444),
+              ? const Color(0xFFF59E0B)
+              : const Color(0xFFEF4444),
         ),
       ),
       title: Text(
@@ -497,10 +539,7 @@ class _RevenueOverviewScreenState extends ConsumerState<RevenueOverviewScreen> {
           if (!isPaid)
             Text(
               'Due: ₹${(bill.grandTotal - bill.paidAmount).toStringAsFixed(0)}',
-              style: TextStyle(
-                fontSize: 12,
-                color: const Color(0xFFEF4444),
-              ),
+              style: TextStyle(fontSize: 12, color: const Color(0xFFEF4444)),
             ),
         ],
       ),

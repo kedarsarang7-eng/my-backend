@@ -193,9 +193,7 @@ class _CreditLimitDialogState extends State<CreditLimitDialog> {
               TextField(
                 controller: _limitController,
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 style: TextStyle(
                   color: isDark ? Colors.white : Colors.black87,
                   fontSize: 18,
@@ -267,10 +265,7 @@ class _CreditLimitDialogState extends State<CreditLimitDialog> {
             final limit = _isUnlimited
                 ? 0.0
                 : double.tryParse(_limitController.text) ?? 0;
-            Navigator.pop(
-              context,
-              CreditLimitDialogResult(newLimit: limit),
-            );
+            Navigator.pop(context, CreditLimitDialogResult(newLimit: limit));
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,

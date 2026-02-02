@@ -13,8 +13,8 @@ class FinancialReportsService {
   FinancialReportsService({
     FirebaseFirestore? firestore,
     LedgerService? ledgerService,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _ledgerService = ledgerService ?? LedgerService();
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _ledgerService = ledgerService ?? LedgerService();
 
   // ============================================================
   // PROFIT & LOSS STATEMENT
@@ -33,8 +33,11 @@ class FinancialReportsService {
     DateTime toDate,
   ) async {
     // 1. Get all ledger entries in the period
-    final entries =
-        await _getLedgerEntriesInRange(businessId, fromDate, toDate);
+    final entries = await _getLedgerEntriesInRange(
+      businessId,
+      fromDate,
+      toDate,
+    );
 
     // Group entries by ledger
     final ledgerTotals = <String, _LedgerTotal>{};
@@ -71,9 +74,11 @@ class FinancialReportsService {
     double purchases = 0;
     double purchaseReturns = 0;
 
-    for (final ledger in ledgers.where((l) =>
-        l.type == LedgerType.purchase ||
-        l.name.toLowerCase().contains('purchase'))) {
+    for (final ledger in ledgers.where(
+      (l) =>
+          l.type == LedgerType.purchase ||
+          l.name.toLowerCase().contains('purchase'),
+    )) {
       final totals = ledgerTotals[ledger.ledgerId];
       if (totals != null) {
         if (ledger.name.toLowerCase().contains('return')) {
@@ -90,8 +95,9 @@ class FinancialReportsService {
 
     // 5. Calculate operating expenses
     double operatingExpenses = 0;
-    for (final ledger in ledgers.where((l) =>
-        l.group == LedgerGroup.expenses && l.type != LedgerType.purchase)) {
+    for (final ledger in ledgers.where(
+      (l) => l.group == LedgerGroup.expenses && l.type != LedgerType.purchase,
+    )) {
       final totals = ledgerTotals[ledger.ledgerId];
       if (totals != null) {
         operatingExpenses += totals.debit - totals.credit;
@@ -195,20 +201,24 @@ class FinancialReportsService {
     final closingStock = await _getStockValue(businessId, asOfDate);
     currentAssets += closingStock;
     totalAssets += closingStock;
-    assetDetails.add(LedgerBalance(
-      ledgerId: 'closing_stock',
-      name: 'Closing Stock',
-      balance: closingStock,
-    ));
+    assetDetails.add(
+      LedgerBalance(
+        ledgerId: 'closing_stock',
+        name: 'Closing Stock',
+        balance: closingStock,
+      ),
+    );
 
     // Calculate retained earnings (simplified - would need P&L integration)
     final retainedEarnings = totalAssets - totalLiabilities - equity;
     equity += retainedEarnings;
-    equityDetails.add(LedgerBalance(
-      ledgerId: 'retained_earnings',
-      name: 'Retained Earnings',
-      balance: retainedEarnings,
-    ));
+    equityDetails.add(
+      LedgerBalance(
+        ledgerId: 'retained_earnings',
+        name: 'Retained Earnings',
+        balance: retainedEarnings,
+      ),
+    );
 
     return BalanceSheet(
       businessId: businessId,
@@ -475,12 +485,16 @@ class FinancialReportsService {
         .limit(limit + 1);
 
     if (fromDate != null) {
-      query = query.where('date',
-          isGreaterThanOrEqualTo: fromDate.toIso8601String());
+      query = query.where(
+        'date',
+        isGreaterThanOrEqualTo: fromDate.toIso8601String(),
+      );
     }
     if (toDate != null) {
-      query =
-          query.where('date', isLessThanOrEqualTo: toDate.toIso8601String());
+      query = query.where(
+        'date',
+        isLessThanOrEqualTo: toDate.toIso8601String(),
+      );
     }
 
     if (startAfterDocId != null) {
@@ -531,8 +545,10 @@ class FinancialReportsService {
     }
 
     if (startAfterDocId != null) {
-      final startDoc =
-          await _firestore.collection('bills').doc(startAfterDocId).get();
+      final startDoc = await _firestore
+          .collection('bills')
+          .doc(startAfterDocId)
+          .get();
       if (startDoc.exists) {
         query = query.startAfterDocument(startDoc);
       }
@@ -595,8 +611,9 @@ class FinancialReportsService {
     DateTime? toDate,
     String? status,
   }) async {
-    Query query =
-        _firestore.collection('bills').where('ownerId', isEqualTo: businessId);
+    Query query = _firestore
+        .collection('bills')
+        .where('ownerId', isEqualTo: businessId);
 
     if (status != null) {
       query = query.where('status', isEqualTo: status);
@@ -620,12 +637,16 @@ class FinancialReportsService {
         .where('ledgerId', isEqualTo: ledgerId);
 
     if (fromDate != null) {
-      query = query.where('date',
-          isGreaterThanOrEqualTo: fromDate.toIso8601String());
+      query = query.where(
+        'date',
+        isGreaterThanOrEqualTo: fromDate.toIso8601String(),
+      );
     }
     if (toDate != null) {
-      query =
-          query.where('date', isLessThanOrEqualTo: toDate.toIso8601String());
+      query = query.where(
+        'date',
+        isLessThanOrEqualTo: toDate.toIso8601String(),
+      );
     }
 
     final countQuery = await query.count().get();
@@ -729,14 +750,16 @@ class FinancialReportsService {
 
       // Only add ledgers with non-zero balances
       if (debitBalance > 0.01 || creditBalance > 0.01) {
-        items.add(TrialBalanceItem(
-          ledgerId: ledger.ledgerId,
-          ledgerName: ledger.name,
-          ledgerGroup: ledger.group.toString().split('.').last,
-          ledgerType: ledger.type.toString().split('.').last,
-          debitBalance: debitBalance,
-          creditBalance: creditBalance,
-        ));
+        items.add(
+          TrialBalanceItem(
+            ledgerId: ledger.ledgerId,
+            ledgerName: ledger.name,
+            ledgerGroup: ledger.group.toString().split('.').last,
+            ledgerType: ledger.type.toString().split('.').last,
+            debitBalance: debitBalance,
+            creditBalance: creditBalance,
+          ),
+        );
 
         totalDebit += debitBalance;
         totalCredit += creditBalance;
@@ -819,21 +842,21 @@ class ProfitLossStatement {
       netRevenue > 0 ? (netProfit / netRevenue) * 100 : 0;
 
   Map<String, dynamic> toMap() => {
-        'businessId': businessId,
-        'fromDate': fromDate.toIso8601String(),
-        'toDate': toDate.toIso8601String(),
-        'salesRevenue': salesRevenue,
-        'salesReturns': salesReturns,
-        'netRevenue': netRevenue,
-        'openingStock': openingStock,
-        'purchases': purchases,
-        'purchaseReturns': purchaseReturns,
-        'closingStock': closingStock,
-        'cogs': cogs,
-        'grossProfit': grossProfit,
-        'operatingExpenses': operatingExpenses,
-        'netProfit': netProfit,
-      };
+    'businessId': businessId,
+    'fromDate': fromDate.toIso8601String(),
+    'toDate': toDate.toIso8601String(),
+    'salesRevenue': salesRevenue,
+    'salesReturns': salesReturns,
+    'netRevenue': netRevenue,
+    'openingStock': openingStock,
+    'purchases': purchases,
+    'purchaseReturns': purchaseReturns,
+    'closingStock': closingStock,
+    'cogs': cogs,
+    'grossProfit': grossProfit,
+    'operatingExpenses': operatingExpenses,
+    'netProfit': netProfit,
+  };
 }
 
 /// Balance Sheet
@@ -876,18 +899,18 @@ class BalanceSheet {
   });
 
   Map<String, dynamic> toMap() => {
-        'businessId': businessId,
-        'asOfDate': asOfDate.toIso8601String(),
-        'totalAssets': totalAssets,
-        'currentAssets': currentAssets,
-        'fixedAssets': fixedAssets,
-        'closingStock': closingStock,
-        'totalLiabilities': totalLiabilities,
-        'currentLiabilities': currentLiabilities,
-        'longTermLiabilities': longTermLiabilities,
-        'equity': equity,
-        'isBalanced': isBalanced,
-      };
+    'businessId': businessId,
+    'asOfDate': asOfDate.toIso8601String(),
+    'totalAssets': totalAssets,
+    'currentAssets': currentAssets,
+    'fixedAssets': fixedAssets,
+    'closingStock': closingStock,
+    'totalLiabilities': totalLiabilities,
+    'currentLiabilities': currentLiabilities,
+    'longTermLiabilities': longTermLiabilities,
+    'equity': equity,
+    'isBalanced': isBalanced,
+  };
 }
 
 /// Cash Flow Statement
@@ -914,7 +937,10 @@ class CashFlowStatement {
   });
 
   factory CashFlowStatement.empty(
-      String businessId, DateTime from, DateTime to) {
+    String businessId,
+    DateTime from,
+    DateTime to,
+  ) {
     return CashFlowStatement(
       businessId: businessId,
       fromDate: from,
@@ -934,16 +960,16 @@ class CashFlowStatement {
       netCashFromOperating + netCashFromInvesting + netCashFromFinancing;
 
   Map<String, dynamic> toMap() => {
-        'businessId': businessId,
-        'fromDate': fromDate.toIso8601String(),
-        'toDate': toDate.toIso8601String(),
-        'openingCashBalance': openingCashBalance,
-        'operatingActivities': operatingActivities.toMap(),
-        'investingActivities': investingActivities.toMap(),
-        'financingActivities': financingActivities.toMap(),
-        'closingCashBalance': closingCashBalance,
-        'netCashChange': netCashChange,
-      };
+    'businessId': businessId,
+    'fromDate': fromDate.toIso8601String(),
+    'toDate': toDate.toIso8601String(),
+    'openingCashBalance': openingCashBalance,
+    'operatingActivities': operatingActivities.toMap(),
+    'investingActivities': investingActivities.toMap(),
+    'financingActivities': financingActivities.toMap(),
+    'closingCashBalance': closingCashBalance,
+    'netCashChange': netCashChange,
+  };
 }
 
 /// Cash flow activity category
@@ -956,10 +982,10 @@ class CashFlowActivity {
   double get net => inflow - outflow;
 
   Map<String, dynamic> toMap() => {
-        'inflow': inflow,
-        'outflow': outflow,
-        'net': net,
-      };
+    'inflow': inflow,
+    'outflow': outflow,
+    'net': net,
+  };
 }
 
 /// Ledger balance for report details
@@ -993,11 +1019,11 @@ class PaginatedResult<T> {
   bool get isNotEmpty => items.isNotEmpty;
 
   Map<String, dynamic> toMap() => {
-        'items': items,
-        'hasMore': hasMore,
-        'lastDocId': lastDocId,
-        'totalFetched': totalFetched,
-      };
+    'items': items,
+    'hasMore': hasMore,
+    'lastDocId': lastDocId,
+    'totalFetched': totalFetched,
+  };
 }
 
 // ============================================================
@@ -1029,15 +1055,15 @@ class TrialBalance {
   });
 
   Map<String, dynamic> toMap() => {
-        'businessId': businessId,
-        'asOfDate': asOfDate.toIso8601String(),
-        'items': items.map((e) => e.toMap()).toList(),
-        'totalDebit': totalDebit,
-        'totalCredit': totalCredit,
-        'difference': difference,
-        'isBalanced': isBalanced,
-        'generatedAt': generatedAt.toIso8601String(),
-      };
+    'businessId': businessId,
+    'asOfDate': asOfDate.toIso8601String(),
+    'items': items.map((e) => e.toMap()).toList(),
+    'totalDebit': totalDebit,
+    'totalCredit': totalCredit,
+    'difference': difference,
+    'isBalanced': isBalanced,
+    'generatedAt': generatedAt.toIso8601String(),
+  };
 
   /// Get items grouped by ledger group
   Map<String, List<TrialBalanceItem>> get groupedItems {
@@ -1072,12 +1098,12 @@ class TrialBalanceItem {
   double get netBalance => debitBalance - creditBalance;
 
   Map<String, dynamic> toMap() => {
-        'ledgerId': ledgerId,
-        'ledgerName': ledgerName,
-        'ledgerGroup': ledgerGroup,
-        'ledgerType': ledgerType,
-        'debitBalance': debitBalance,
-        'creditBalance': creditBalance,
-        'netBalance': netBalance,
-      };
+    'ledgerId': ledgerId,
+    'ledgerName': ledgerName,
+    'ledgerGroup': ledgerGroup,
+    'ledgerType': ledgerType,
+    'debitBalance': debitBalance,
+    'creditBalance': creditBalance,
+    'netBalance': netBalance,
+  };
 }

@@ -27,7 +27,9 @@ class RevenueService {
 
   /// Stream receipts for a specific customer
   Stream<List<Receipt>> streamReceiptsByCustomer(
-      String ownerId, String customerId) {
+    String ownerId,
+    String customerId,
+  ) {
     return _revenueRepository
         .watchReceipts(ownerId)
         .map((list) => list.where((r) => r.customerId == customerId).toList());
@@ -71,7 +73,9 @@ class RevenueService {
 
   /// Add return inward
   Future<String> addReturnInward(
-      String ownerId, ReturnInward returnData) async {
+    String ownerId,
+    ReturnInward returnData,
+  ) async {
     final result = await _revenueRepository.addReturnInward(
       userId: ownerId,
       customerId: returnData.customerId,
@@ -122,7 +126,9 @@ class RevenueService {
 
   /// Convert proforma to invoice
   Future<String> convertProformaToInvoice(
-      String ownerId, String proformaId) async {
+    String ownerId,
+    String proformaId,
+  ) async {
     // Fetch proforma details
     final proformaResult = await _revenueRepository.getProformaById(proformaId);
     if (!proformaResult.isSuccess || proformaResult.data == null) {
@@ -139,14 +145,16 @@ class RevenueService {
       customerId: proforma.customerId,
       customerName: proforma.customerName,
       items: proforma.items
-          .map((i) => BillItem(
-                productId:
-                    '', // Proforma items might not have IDs? Or need to fetch
-                productName: i.itemName,
-                qty: i.quantity,
-                unit: i.unit,
-                price: i.rate,
-              ))
+          .map(
+            (i) => BillItem(
+              productId:
+                  '', // Proforma items might not have IDs? Or need to fetch
+              productName: i.itemName,
+              qty: i.quantity,
+              unit: i.unit,
+              price: i.rate,
+            ),
+          )
           .toList(),
       subtotal: proforma.subtotal,
       totalTax: proforma.taxAmount, // correct mapping
@@ -203,19 +211,20 @@ class RevenueService {
       // Record advance payment if any
       if (booking.advanceAmount > 0) {
         await addReceipt(
-            ownerId,
-            Receipt(
-              id: '',
-              ownerId: ownerId,
-              customerId: booking.customerId,
-              customerName: booking.customerName,
-              amount: booking.advanceAmount,
-              paymentMode: 'Cash',
-              notes: 'Advance for booking',
-              date: DateTime.now(),
-              createdAt: DateTime.now(),
-              isAdvancePayment: true,
-            ));
+          ownerId,
+          Receipt(
+            id: '',
+            ownerId: ownerId,
+            customerId: booking.customerId,
+            customerName: booking.customerName,
+            amount: booking.advanceAmount,
+            paymentMode: 'Cash',
+            notes: 'Advance for booking',
+            date: DateTime.now(),
+            createdAt: DateTime.now(),
+            isAdvancePayment: true,
+          ),
+        );
       }
       return result.data!;
     } else {
@@ -225,7 +234,10 @@ class RevenueService {
 
   /// Update booking status
   Future<void> updateBookingStatus(
-      String ownerId, String bookingId, BookingStatus status) async {
+    String ownerId,
+    String bookingId,
+    BookingStatus status,
+  ) async {
     final result = await _revenueRepository.updateBookingStatus(
       userId: ownerId,
       bookingId: bookingId,
@@ -254,13 +266,15 @@ class RevenueService {
       customerId: booking.customerId,
       customerName: booking.customerName,
       items: booking.items
-          .map((i) => BillItem(
-                productId: '',
-                productName: i.itemName,
-                qty: i.quantity,
-                unit: i.unit,
-                price: i.rate,
-              ))
+          .map(
+            (i) => BillItem(
+              productId: '',
+              productName: i.itemName,
+              qty: i.quantity,
+              unit: i.unit,
+              price: i.rate,
+            ),
+          )
           .toList(),
       grandTotal: booking.totalAmount,
       paidAmount: booking.advanceAmount, // Advance already paid

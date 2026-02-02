@@ -64,8 +64,9 @@ class _DashboardStatCardState extends State<DashboardStatCard>
           boxShadow: [
             // Premium blue glow effect
             BoxShadow(
-              color: FuturisticColors.premiumBlue
-                  .withOpacity(_isHovered ? 0.15 : 0.08),
+              color: FuturisticColors.premiumBlue.withOpacity(
+                _isHovered ? 0.15 : 0.08,
+              ),
               blurRadius: _isHovered ? 20 : 12,
               spreadRadius: _isHovered ? 2 : 0,
               offset: const Offset(0, 2),
@@ -163,23 +164,18 @@ class _DashboardStatCardState extends State<DashboardStatCard>
 
   Widget _buildTrendBadge() {
     final isPositive = widget.isPositive;
-    final badgeColor =
-        isPositive ? FuturisticColors.success : FuturisticColors.error;
+    final badgeColor = isPositive
+        ? FuturisticColors.success
+        : FuturisticColors.error;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            badgeColor.withOpacity(0.2),
-            badgeColor.withOpacity(0.1),
-          ],
+          colors: [badgeColor.withOpacity(0.2), badgeColor.withOpacity(0.1)],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: badgeColor.withOpacity(0.4),
-          width: 1,
-        ),
+        border: Border.all(color: badgeColor.withOpacity(0.4), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

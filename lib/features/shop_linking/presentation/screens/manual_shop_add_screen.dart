@@ -39,8 +39,11 @@ class _ManualShopAddScreenState extends ConsumerState<ManualShopAddScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (_) => ShopConfirmationScreen(
-                    ownerUid: input, shopData: shops.first)),
+              builder: (_) => ShopConfirmationScreen(
+                ownerUid: input,
+                shopData: shops.first,
+              ),
+            ),
           );
         }
       } else {
@@ -74,9 +77,10 @@ class _ManualShopAddScreenState extends ConsumerState<ManualShopAddScreen> {
         elevation: 0,
         iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
         titleTextStyle: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 20),
+          color: isDark ? Colors.white : Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -105,14 +109,17 @@ class _ManualShopAddScreenState extends ConsumerState<ManualShopAddScreen> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
                 labelText: "Shop ID",
-                labelStyle:
-                    TextStyle(color: isDark ? Colors.white54 : Colors.grey),
+                labelStyle: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.grey,
+                ),
                 hintText: "e.g. 7X892L...",
-                hintStyle:
-                    TextStyle(color: isDark ? Colors.white24 : Colors.black26),
+                hintStyle: TextStyle(
+                  color: isDark ? Colors.white24 : Colors.black26,
+                ),
                 filled: true,
-                fillColor:
-                    isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+                fillColor: isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -137,16 +144,20 @@ class _ManualShopAddScreenState extends ConsumerState<ManualShopAddScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   elevation: 0,
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Verify & Proceed",
+                    : const Text(
+                        "Verify & Proceed",
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
             ),
           ],

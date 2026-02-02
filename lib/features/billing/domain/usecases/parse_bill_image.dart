@@ -67,13 +67,16 @@ class ParseBillImage {
       if (text == shopName) continue;
       if (totalKeywords.any((k) => text.toLowerCase().contains(k))) continue;
 
-      items.add(BillItem(
+      items.add(
+        BillItem(
           productId: '',
           name: text.replaceAll(RegExp(r'[0-9.,]'), '').trim(),
           quantity: 1,
           rate: numbers.last,
           amount: numbers.last,
-          unit: 'pc'));
+          unit: 'pc',
+        ),
+      );
     }
 
     return Bill(
@@ -94,20 +97,25 @@ class ParseBillImage {
   Bill _parseAiText(String text) {
     try {
       // Clean up potential markdown code blocks
-      final cleanJson =
-          text.replaceAll('```json', '').replaceAll('```', '').trim();
+      final cleanJson = text
+          .replaceAll('```json', '')
+          .replaceAll('```', '')
+          .trim();
       final map = json.decode(cleanJson) as Map<String, dynamic>;
 
       final List<BillItem> items = [];
       if (map['items'] != null) {
         for (var it in (map['items'] as List)) {
-          items.add(BillItem(
+          items.add(
+            BillItem(
               productId: '',
               name: it['name']?.toString() ?? 'Unknown Item',
               quantity: (it['qty'] ?? 1).toDouble(),
               rate: (it['rate'] ?? 0).toDouble(),
               amount: (it['amount'] ?? 0).toDouble(),
-              unit: 'pc'));
+              unit: 'pc',
+            ),
+          );
         }
       }
 
@@ -215,13 +223,16 @@ class ParseBillImage {
         final name = line.replaceAll(RegExp(r'[0-9.,₹$]'), '').trim();
 
         if (name.length > 2) {
-          items.add(BillItem(
+          items.add(
+            BillItem(
               productId: '',
               name: name,
               quantity: 1,
               rate: amount,
               amount: amount,
-              unit: 'pc'));
+              unit: 'pc',
+            ),
+          );
         }
       }
     }
@@ -242,16 +253,16 @@ class ParseBillImage {
   }
 
   Bill _emptyBill() => Bill(
-        id: '',
-        items: [],
-        date: DateTime.now(),
-        shopName: 'Empty Scan',
-        totalAmount: 0,
-        subtotal: 0,
-        tax: 0,
-        discount: 0,
-        source: BillSource.scan,
-      );
+    id: '',
+    items: [],
+    date: DateTime.now(),
+    shopName: 'Empty Scan',
+    totalAmount: 0,
+    subtotal: 0,
+    tax: 0,
+    discount: 0,
+    source: BillSource.scan,
+  );
 
   bool _isValidShopName(String text) {
     if (text.length < 3) return false;

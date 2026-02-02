@@ -18,8 +18,8 @@ class PurchaseAccountingService {
   PurchaseAccountingService({
     AccountingEngine? accountingEngine,
     FirebaseFirestore? firestore,
-  })  : _accountingEngine = accountingEngine ?? AccountingEngine(),
-        _firestore = firestore ?? FirebaseFirestore.instance;
+  }) : _accountingEngine = accountingEngine ?? AccountingEngine(),
+       _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Post a purchase bill to the accounting system.
   ///
@@ -48,18 +48,20 @@ class PurchaseAccountingService {
     );
 
     final items = bill.items
-        .map((item) => TransactionItem(
-              txnItemId: '${bill.id}_${item.itemId}',
-              txnId: bill.id,
-              itemId: item.itemId,
-              itemName: item.itemName,
-              qty: item.qty,
-              rate: item.rate,
-              costPrice: item.rate, // Purchase rate is the cost price
-              gstAmount: item.cgst + item.sgst + item.igst,
-              gstRate: item.gstRate,
-              netAmount: item.total,
-            ))
+        .map(
+          (item) => TransactionItem(
+            txnItemId: '${bill.id}_${item.itemId}',
+            txnId: bill.id,
+            itemId: item.itemId,
+            itemName: item.itemName,
+            qty: item.qty,
+            rate: item.rate,
+            costPrice: item.rate, // Purchase rate is the cost price
+            gstAmount: item.cgst + item.sgst + item.igst,
+            gstRate: item.gstRate,
+            netAmount: item.total,
+          ),
+        )
         .toList();
 
     await _accountingEngine.postTransaction(
@@ -129,18 +131,20 @@ class PurchaseAccountingService {
     );
 
     final returnItems = returnedItems
-        .map((item) => TransactionItem(
-              txnItemId: 'RET_${originalBill.id}_${item.itemId}',
-              txnId: 'RET_${originalBill.id}',
-              itemId: item.itemId,
-              itemName: item.itemName,
-              qty: item.qty,
-              rate: item.rate,
-              costPrice: item.rate,
-              gstAmount: item.cgst + item.sgst + item.igst,
-              gstRate: item.gstRate,
-              netAmount: item.total,
-            ))
+        .map(
+          (item) => TransactionItem(
+            txnItemId: 'RET_${originalBill.id}_${item.itemId}',
+            txnId: 'RET_${originalBill.id}',
+            itemId: item.itemId,
+            itemName: item.itemName,
+            qty: item.qty,
+            rate: item.rate,
+            costPrice: item.rate,
+            gstAmount: item.cgst + item.sgst + item.igst,
+            gstRate: item.gstRate,
+            netAmount: item.total,
+          ),
+        )
         .toList();
 
     await _accountingEngine.postTransaction(
@@ -197,20 +201,20 @@ class PurchaseAccountingService {
         .collection('supplier_advances')
         .doc(advanceId)
         .set({
-      'advanceId': advanceId,
-      'supplierId': supplierId,
-      'supplierName': supplierName,
-      'amount': amount,
-      'usedAmount': 0.0,
-      'remainingAmount': amount,
-      'paymentMode': paymentMode,
-      'paymentDate': Timestamp.fromDate(paymentDate),
-      'referenceNumber': referenceNumber,
-      'notes': notes,
-      'status': 'ACTIVE', // ACTIVE, PARTIALLY_USED, FULLY_USED
-      'linkedBills': <String>[],
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+          'advanceId': advanceId,
+          'supplierId': supplierId,
+          'supplierName': supplierName,
+          'amount': amount,
+          'usedAmount': 0.0,
+          'remainingAmount': amount,
+          'paymentMode': paymentMode,
+          'paymentDate': Timestamp.fromDate(paymentDate),
+          'referenceNumber': referenceNumber,
+          'notes': notes,
+          'status': 'ACTIVE', // ACTIVE, PARTIALLY_USED, FULLY_USED
+          'linkedBills': <String>[],
+          'createdAt': FieldValue.serverTimestamp(),
+        });
 
     return advanceId;
   }
@@ -255,8 +259,9 @@ class PurchaseAccountingService {
       if (remainingAdvance <= 0) continue;
 
       // Calculate how much to apply
-      final applyAmount =
-          remainingAdvance >= remainingBill ? remainingBill : remainingAdvance;
+      final applyAmount = remainingAdvance >= remainingBill
+          ? remainingBill
+          : remainingAdvance;
 
       // Update advance record
       final newRemaining = remainingAdvance - applyAmount;
@@ -302,7 +307,8 @@ class PurchaseAccountingService {
         .doc(businessId)
         .collection('supplier_advances')
         .where('supplierId', isEqualTo: supplierId)
-        .where('status', whereIn: ['ACTIVE', 'PARTIALLY_USED']).get();
+        .where('status', whereIn: ['ACTIVE', 'PARTIALLY_USED'])
+        .get();
 
     double totalAdvance = 0.0;
     for (final doc in advancesSnapshot.docs) {
@@ -336,7 +342,8 @@ class PurchaseAccountingService {
 
   /// Get all pending advances across all suppliers.
   Future<List<Map<String, dynamic>>> getAllPendingAdvances(
-      String businessId) async {
+    String businessId,
+  ) async {
     final snapshot = await _firestore
         .collection('businesses')
         .doc(businessId)
@@ -355,7 +362,8 @@ class PurchaseAccountingService {
     final billsSnapshot = await _firestore
         .collection('purchase_bills')
         .where('ownerId', isEqualTo: businessId)
-        .where('status', whereIn: ['Unpaid', 'Partial']).get();
+        .where('status', whereIn: ['Unpaid', 'Partial'])
+        .get();
 
     final now = DateTime.now();
     final buckets = AgingBuckets();
@@ -406,12 +414,12 @@ class AgingBuckets {
   double get total => current + days31to60 + days61to90 + over90;
 
   Map<String, double> toMap() => {
-        'current': current,
-        'days31to60': days31to60,
-        'days61to90': days61to90,
-        'over90': over90,
-        'total': total,
-      };
+    'current': current,
+    'days31to60': days31to60,
+    'days61to90': days61to90,
+    'over90': over90,
+    'total': total,
+  };
 }
 
 /// Supplier aging report

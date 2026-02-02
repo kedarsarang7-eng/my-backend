@@ -34,11 +34,11 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
     _visitsFuture = sl<VisitsRepository>()
         .getVisitsForPatient(widget.patient.id)
         .then((result) {
-      if (result.isSuccess) {
-        return result.data ?? [];
-      }
-      return [];
-    });
+          if (result.isSuccess) {
+            return result.data ?? [];
+          }
+          return [];
+        });
   }
 
   @override
@@ -76,15 +76,20 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
                   color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child:
-                    const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               onPressed: () => Navigator.pop(context),
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.edit_rounded,
-                    color: Colors.white.withOpacity(0.8)),
+                icon: Icon(
+                  Icons.edit_rounded,
+                  color: Colors.white.withOpacity(0.8),
+                ),
                 onPressed: () {
                   // Edit Patient
                 },
@@ -133,9 +138,11 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
               if (context.mounted) {
                 // Navigate to Consultation
                 await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ConsultationScreen(visitId: visitId)));
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ConsultationScreen(visitId: visitId),
+                  ),
+                );
 
                 // Refresh list on return
                 if (mounted) {
@@ -146,12 +153,16 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
               }
             },
             backgroundColor: FuturisticColors.neonBlue,
-            icon: const Icon(Icons.medical_services_outlined,
-                color: Colors.white),
+            icon: const Icon(
+              Icons.medical_services_outlined,
+              color: Colors.white,
+            ),
             label: Text(
               'Start Visit',
               style: GoogleFonts.outfit(
-                  fontWeight: FontWeight.bold, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         );
@@ -185,10 +196,7 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
             height: 100,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  FuturisticColors.neonBlue,
-                  Colors.purple,
-                ],
+                colors: [FuturisticColors.neonBlue, Colors.purple],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -218,10 +226,7 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
           const SizedBox(height: 8),
           Text(
             '${patient.gender} • ${patient.age} years',
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              color: Colors.white70,
-            ),
+            style: GoogleFonts.outfit(fontSize: 16, color: Colors.white70),
           ),
           if (patient.phone != null) ...[
             const SizedBox(height: 8),
@@ -239,7 +244,7 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
                 ),
               ],
             ),
-          ]
+          ],
         ],
       ),
     );
@@ -273,7 +278,11 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
   }
 
   Widget _buildStatCard(
-      String title, String value, IconData icon, Color color) {
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -304,10 +313,7 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
           const SizedBox(height: 4),
           Text(
             title,
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              color: Colors.white60,
-            ),
+            style: GoogleFonts.outfit(fontSize: 14, color: Colors.white60),
           ),
         ],
       ),
@@ -330,23 +336,28 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
           ),
           const SizedBox(height: 16),
           // Blood Group
-          _buildInfoRow('Blood Group',
-              patient.bloodGroup.isNotEmpty ? patient.bloodGroup : 'Unknown'),
           _buildInfoRow(
-              'Allergies',
-              patient.allergies.isNotEmpty
-                  ? patient.allergies.join(', ')
-                  : 'None'),
+            'Blood Group',
+            patient.bloodGroup.isNotEmpty ? patient.bloodGroup : 'Unknown',
+          ),
           _buildInfoRow(
-              'Chronic Conditions',
-              patient.chronicConditions.isNotEmpty
-                  ? patient.chronicConditions.join(', ')
-                  : 'None'),
+            'Allergies',
+            patient.allergies.isNotEmpty
+                ? patient.allergies.join(', ')
+                : 'None',
+          ),
           _buildInfoRow(
-              'Emergency Contact',
-              patient.emergencyContactName.isNotEmpty
-                  ? patient.emergencyContactName
-                  : 'None'),
+            'Chronic Conditions',
+            patient.chronicConditions.isNotEmpty
+                ? patient.chronicConditions.join(', ')
+                : 'None',
+          ),
+          _buildInfoRow(
+            'Emergency Contact',
+            patient.emergencyContactName.isNotEmpty
+                ? patient.emergencyContactName
+                : 'None',
+          ),
         ],
       ),
     );
@@ -362,10 +373,7 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
             width: 140,
             child: Text(
               label,
-              style: GoogleFonts.outfit(
-                color: Colors.white60,
-                fontSize: 16,
-              ),
+              style: GoogleFonts.outfit(color: Colors.white60, fontSize: 16),
             ),
           ),
           Expanded(
@@ -410,9 +418,10 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
               if (visits.isNotEmpty)
                 TextButton(
                   onPressed: () {},
-                  child: Text('View All',
-                      style:
-                          GoogleFonts.outfit(color: FuturisticColors.neonBlue)),
+                  child: Text(
+                    'View All',
+                    style: GoogleFonts.outfit(color: FuturisticColors.neonBlue),
+                  ),
                 ),
             ],
           ),
@@ -443,8 +452,11 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
                       color: FuturisticColors.neonBlue.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(Icons.assignment_ind_rounded,
-                        color: FuturisticColors.neonBlue, size: 20),
+                    child: Icon(
+                      Icons.assignment_ind_rounded,
+                      color: FuturisticColors.neonBlue,
+                      size: 20,
+                    ),
                   ),
                   title: Text(
                     DateFormat('MMM d, yyyy • h:mm a').format(visit.visitDate),
@@ -457,8 +469,10 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
                     style: GoogleFonts.outfit(color: Colors.white38),
                   ),
                   trailing: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: visit.status == 'completed'
                           ? Colors.green.withOpacity(0.2)
@@ -479,10 +493,11 @@ class _PatientDetailScreenState extends ConsumerState<PatientDetailScreen> {
                   onTap: () {
                     // Navigate to Consultation View (Read Only) or Edit
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                ConsultationScreen(visitId: visit.id)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ConsultationScreen(visitId: visit.id),
+                      ),
+                    );
                   },
                 );
               },

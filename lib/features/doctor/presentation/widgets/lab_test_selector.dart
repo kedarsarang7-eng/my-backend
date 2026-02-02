@@ -4,10 +4,7 @@ import '../../../../core/theme/futuristic_colors.dart';
 class LabTestSelector extends StatefulWidget {
   final Function(List<Map<String, dynamic>>) onSelected;
 
-  const LabTestSelector({
-    super.key,
-    required this.onSelected,
-  });
+  const LabTestSelector({super.key, required this.onSelected});
 
   @override
   State<LabTestSelector> createState() => _LabTestSelectorState();
@@ -51,10 +48,11 @@ class _LabTestSelectorState extends State<LabTestSelector> {
         _filteredTests = List.from(_commonTests);
       } else {
         _filteredTests = _commonTests
-            .where((test) => test['name']
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()))
+            .where(
+              (test) => test['name'].toString().toLowerCase().contains(
+                query.toLowerCase(),
+              ),
+            )
             .toList();
       }
     });
@@ -163,10 +161,12 @@ class _LabTestSelectorState extends State<LabTestSelector> {
                   title: Text(
                     test['name'],
                     style: TextStyle(
-                      color:
-                          isSelected ? FuturisticColors.primary : Colors.white,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected
+                          ? FuturisticColors.primary
+                          : Colors.white,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                   subtitle: Text(
@@ -175,8 +175,9 @@ class _LabTestSelectorState extends State<LabTestSelector> {
                   ),
                   trailing: Icon(
                     isSelected ? Icons.check_circle : Icons.add_circle_outline,
-                    color:
-                        isSelected ? FuturisticColors.primary : Colors.white54,
+                    color: isSelected
+                        ? FuturisticColors.primary
+                        : Colors.white54,
                   ),
                   onTap: () {
                     setState(() {

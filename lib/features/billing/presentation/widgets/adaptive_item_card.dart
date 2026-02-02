@@ -147,8 +147,11 @@ class _AdaptiveItemCardState extends State<AdaptiveItemCard> {
 
           // Remove button
           IconButton(
-            icon: Icon(Icons.delete_outline,
-                color: Colors.red.shade400, size: 20),
+            icon: Icon(
+              Icons.delete_outline,
+              color: Colors.red.shade400,
+              size: 20,
+            ),
             onPressed: widget.onRemove,
             visualDensity: VisualDensity.compact,
           ),

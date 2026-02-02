@@ -99,10 +99,7 @@ class _P2DFilterScreenState extends State<P2DFilterScreen> {
               child: AnimatedOpacity(
                 opacity: _isProcessing ? 0.5 : 1.0,
                 duration: kP2DAnimationFast,
-                child: Image.memory(
-                  _processedImage!,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.memory(_processedImage!, fit: BoxFit.contain),
               ),
             ),
 
@@ -128,10 +125,7 @@ class _P2DFilterScreenState extends State<P2DFilterScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: Row(
@@ -174,10 +168,7 @@ class _P2DFilterScreenState extends State<P2DFilterScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: FilterCarousel(

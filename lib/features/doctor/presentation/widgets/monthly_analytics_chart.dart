@@ -39,8 +39,10 @@ class MonthlyAnalyticsChart extends StatelessWidget {
                 // Showing only non-zero or all 12
                 // Assuming map has 1-12
 
-                final heightFactor = (entry.value / 100)
-                    .clamp(0.1, 1.0); // Assuming scale of 100 max
+                final heightFactor = (entry.value / 100).clamp(
+                  0.1,
+                  1.0,
+                ); // Assuming scale of 100 max
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -52,14 +54,16 @@ class MonthlyAnalyticsChart extends StatelessWidget {
                         color: FuturisticColors.accent1,
                         borderRadius: BorderRadius.circular(4),
                         gradient: LinearGradient(
-                            colors: [
-                              FuturisticColors.accent1,
-                              FuturisticColors.accent2
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter),
+                          colors: [
+                            FuturisticColors.accent1,
+                            FuturisticColors.accent2,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                         boxShadow: FuturisticColors.neonShadow(
-                            FuturisticColors.accent1),
+                          FuturisticColors.accent1,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -93,7 +97,7 @@ class MonthlyAnalyticsChart extends StatelessWidget {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     if (month >= 1 && month <= 12) return months[month - 1];
     return '';

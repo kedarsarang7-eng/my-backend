@@ -32,10 +32,7 @@ import 'add_vendor_screen.dart';
 class PartyLedgerListScreen extends ConsumerStatefulWidget {
   final String? initialFilter;
 
-  const PartyLedgerListScreen({
-    super.key,
-    this.initialFilter,
-  });
+  const PartyLedgerListScreen({super.key, this.initialFilter});
 
   @override
   ConsumerState<PartyLedgerListScreen> createState() =>
@@ -94,22 +91,28 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
             color: FuturisticColors.surface.withOpacity(0.5),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-                color: FuturisticColors.premiumBlue.withOpacity(0.3)),
+              color: FuturisticColors.premiumBlue.withOpacity(0.3),
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: _filter,
               dropdownColor: FuturisticColors.surface,
               style: const TextStyle(color: Colors.white),
-              icon:
-                  const Icon(Icons.filter_list, color: Colors.white, size: 18),
+              icon: const Icon(
+                Icons.filter_list,
+                color: Colors.white,
+                size: 18,
+              ),
               onChanged: (val) {
                 if (val != null) setState(() => _filter = val);
               },
               items: const [
                 DropdownMenuItem(value: 'all', child: Text('All Parties')),
                 DropdownMenuItem(
-                    value: 'receivable', child: Text('Receivable Only')),
+                  value: 'receivable',
+                  child: Text('Receivable Only'),
+                ),
                 DropdownMenuItem(value: 'payable', child: Text('Payable Only')),
               ],
             ),
@@ -186,8 +189,10 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                   decoration: const InputDecoration(
                     hintText: 'Search by name or phone...',
                     hintStyle: TextStyle(color: FuturisticColors.textSecondary),
-                    prefixIcon: Icon(Icons.search,
-                        color: FuturisticColors.textSecondary),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: FuturisticColors.textSecondary,
+                    ),
                     border: InputBorder.none,
                     filled: true,
                     fillColor: FuturisticColors.surface,
@@ -263,15 +268,17 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
           if (isVendor) {
             // If filter is 'receivable', we want Vendor outstanding < 0?
             // Mobile logic lines 295: receivable -> vendors where outstanding < 0
-            items =
-                items.where((i) => (i as Vendor).totalOutstanding < 0).toList();
+            items = items
+                .where((i) => (i as Vendor).totalOutstanding < 0)
+                .toList();
           } else {
             items = items.where((i) => (i as Customer).totalDues > 0).toList();
           }
         } else if (_filter == 'payable') {
           if (isVendor) {
-            items =
-                items.where((i) => (i as Vendor).totalOutstanding > 0).toList();
+            items = items
+                .where((i) => (i as Vendor).totalOutstanding > 0)
+                .toList();
           } else {
             items = items
                 .where((i) => (i as Customer).totalDues < 0)
@@ -284,19 +291,21 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
           if (isVendor) {
             final v = i as Vendor;
             return _PartyData(
-                id: v.id,
-                name: v.name,
-                phone: v.phone,
-                balance: v.totalOutstanding,
-                type: 'VENDOR');
+              id: v.id,
+              name: v.name,
+              phone: v.phone,
+              balance: v.totalOutstanding,
+              type: 'VENDOR',
+            );
           } else {
             final c = i as Customer;
             return _PartyData(
-                id: c.id,
-                name: c.name,
-                phone: c.phone,
-                balance: c.totalDues,
-                type: 'CUSTOMER');
+              id: c.id,
+              name: c.name,
+              phone: c.phone,
+              balance: c.totalDues,
+              type: 'CUSTOMER',
+            );
           }
         }).toList();
 
@@ -310,14 +319,19 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                 children: [
                   CircleAvatar(
                     backgroundColor: FuturisticColors.primary.withOpacity(0.1),
-                    child: Text(p.name[0].toUpperCase(),
-                        style:
-                            const TextStyle(color: FuturisticColors.primary)),
+                    child: Text(
+                      p.name[0].toUpperCase(),
+                      style: const TextStyle(color: FuturisticColors.primary),
+                    ),
                   ),
                   const SizedBox(width: 12),
-                  Text(p.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text(
+                    p.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -360,9 +374,10 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                   }
                 }
 
-                return Text("₹${p.balance.abs().toStringAsFixed(2)} ($label)",
-                    style:
-                        TextStyle(color: color, fontWeight: FontWeight.bold));
+                return Text(
+                  "₹${p.balance.abs().toStringAsFixed(2)} ($label)",
+                  style: TextStyle(color: color, fontWeight: FontWeight.bold),
+                );
               },
             ),
           ],
@@ -380,8 +395,11 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
           },
           actionsBuilder: (p) => [
             IconButton(
-              icon: const Icon(Icons.visibility,
-                  color: FuturisticColors.accent1, size: 20),
+              icon: const Icon(
+                Icons.visibility,
+                color: FuturisticColors.accent1,
+                size: 20,
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -394,7 +412,7 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                   ),
                 );
               },
-            )
+            ),
           ],
         );
       },
@@ -441,8 +459,10 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         ),
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(Icons.filter_list,
-                color: isDark ? Colors.white : Colors.black),
+            icon: Icon(
+              Icons.filter_list,
+              color: isDark ? Colors.white : Colors.black,
+            ),
             onSelected: (value) {
               setState(() => _filter = value);
             },
@@ -451,15 +471,20 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                 value: 'all',
                 child: Row(
                   children: [
-                    Icon(Icons.all_inclusive,
-                        size: 18,
-                        color: _filter == 'all' ? Colors.blue : Colors.grey),
+                    Icon(
+                      Icons.all_inclusive,
+                      size: 18,
+                      color: _filter == 'all' ? Colors.blue : Colors.grey,
+                    ),
                     const SizedBox(width: 8),
-                    Text('All Parties',
-                        style: TextStyle(
-                            fontWeight: _filter == 'all'
-                                ? FontWeight.bold
-                                : FontWeight.normal)),
+                    Text(
+                      'All Parties',
+                      style: TextStyle(
+                        fontWeight: _filter == 'all'
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -467,17 +492,22 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                 value: 'receivable',
                 child: Row(
                   children: [
-                    Icon(Icons.arrow_downward,
-                        size: 18,
-                        color: _filter == 'receivable'
-                            ? Colors.orange
-                            : Colors.grey),
+                    Icon(
+                      Icons.arrow_downward,
+                      size: 18,
+                      color: _filter == 'receivable'
+                          ? Colors.orange
+                          : Colors.grey,
+                    ),
                     const SizedBox(width: 8),
-                    Text('Receivable Only',
-                        style: TextStyle(
-                            fontWeight: _filter == 'receivable'
-                                ? FontWeight.bold
-                                : FontWeight.normal)),
+                    Text(
+                      'Receivable Only',
+                      style: TextStyle(
+                        fontWeight: _filter == 'receivable'
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -485,16 +515,20 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
                 value: 'payable',
                 child: Row(
                   children: [
-                    Icon(Icons.arrow_upward,
-                        size: 18,
-                        color:
-                            _filter == 'payable' ? Colors.green : Colors.grey),
+                    Icon(
+                      Icons.arrow_upward,
+                      size: 18,
+                      color: _filter == 'payable' ? Colors.green : Colors.grey,
+                    ),
                     const SizedBox(width: 8),
-                    Text('Payable Only',
-                        style: TextStyle(
-                            fontWeight: _filter == 'payable'
-                                ? FontWeight.bold
-                                : FontWeight.normal)),
+                    Text(
+                      'Payable Only',
+                      style: TextStyle(
+                        fontWeight: _filter == 'payable'
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -511,20 +545,30 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         child: FloatingActionButton.extended(
           onPressed: () {
             if (_tabController.index == 0) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const AddCustomerScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AddCustomerScreen()),
+              );
             } else {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const AddVendorScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AddVendorScreen()),
+              );
             }
           },
           backgroundColor: Colors.transparent,
           elevation: 0,
-          label: Text(_tabController.index == 0 ? "Add Customer" : "Add Vendor",
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold)),
-          icon: Icon(_tabController.index == 0 ? Icons.person_add : Icons.store,
-              color: Colors.white),
+          label: Text(
+            _tabController.index == 0 ? "Add Customer" : "Add Vendor",
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          icon: Icon(
+            _tabController.index == 0 ? Icons.person_add : Icons.store,
+            color: Colors.white,
+          ),
         ),
       ),
       body: Column(
@@ -540,7 +584,8 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
               decoration: InputDecoration(
                 hintText: 'Search by name or phone...',
                 hintStyle: TextStyle(
-                    color: isDark ? Colors.white30 : Colors.grey.shade400),
+                  color: isDark ? Colors.white30 : Colors.grey.shade400,
+                ),
                 prefixIcon: const Icon(Icons.search, color: Colors.blue),
                 filled: true,
                 fillColor: isDark
@@ -591,9 +636,11 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         // Apply search filter
         if (_searchQuery.isNotEmpty) {
           customers = customers
-              .where((c) =>
-                  c.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                  (c.phone?.contains(_searchQuery) ?? false))
+              .where(
+                (c) =>
+                    c.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                    (c.phone?.contains(_searchQuery) ?? false),
+              )
               .toList();
         }
 
@@ -605,8 +652,9 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         }
 
         // Sort by outstanding (highest first)
-        customers
-            .sort((a, b) => b.totalDues.abs().compareTo(a.totalDues.abs()));
+        customers.sort(
+          (a, b) => b.totalDues.abs().compareTo(a.totalDues.abs()),
+        );
 
         if (customers.isEmpty) {
           return _buildEmptyState(
@@ -619,8 +667,12 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         }
 
         return ListView.builder(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 80),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 80,
+          ),
           itemCount: customers.length,
           itemBuilder: (context, index) {
             final customer = customers[index];
@@ -662,9 +714,11 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         // Apply search filter
         if (_searchQuery.isNotEmpty) {
           vendors = vendors
-              .where((v) =>
-                  v.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                  (v.phone?.contains(_searchQuery) ?? false))
+              .where(
+                (v) =>
+                    v.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                    (v.phone?.contains(_searchQuery) ?? false),
+              )
               .toList();
         }
 
@@ -676,8 +730,10 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
         }
 
         // Sort by outstanding
-        vendors.sort((a, b) =>
-            b.totalOutstanding.abs().compareTo(a.totalOutstanding.abs()));
+        vendors.sort(
+          (a, b) =>
+              b.totalOutstanding.abs().compareTo(a.totalOutstanding.abs()),
+        );
 
         if (vendors.isEmpty) {
           return _buildEmptyState(
@@ -691,13 +747,15 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
 
         return _buildPartyList(
           vendors
-              .map((v) => _PartyData(
-                    id: v.id,
-                    name: v.name,
-                    phone: v.phone,
-                    balance: v.totalOutstanding,
-                    type: 'VENDOR',
-                  ))
+              .map(
+                (v) => _PartyData(
+                  id: v.id,
+                  name: v.name,
+                  phone: v.phone,
+                  balance: v.totalOutstanding,
+                  type: 'VENDOR',
+                ),
+              )
               .toList(),
           isDark,
         );
@@ -893,10 +951,7 @@ class _PartyLedgerListScreenState extends ConsumerState<PartyLedgerListScreen>
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: TextStyle(color: Colors.grey.shade500),
-          ),
+          Text(subtitle, style: TextStyle(color: Colors.grey.shade500)),
         ],
       ),
     );

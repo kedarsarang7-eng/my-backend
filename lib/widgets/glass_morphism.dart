@@ -65,7 +65,8 @@ class GlassContainer extends StatelessWidget {
     );
 
     // Enhanced border with gradient support
-    final effectiveBorder = border ??
+    final effectiveBorder =
+        border ??
         (borderGradient != null
             ? null
             : Border.all(
@@ -79,14 +80,16 @@ class GlassContainer extends StatelessWidget {
     final glowShadows = showGlow
         ? [
             BoxShadow(
-              color: (glowColor ?? FuturisticColors.primary)
-                  .withOpacity(glowIntensity),
+              color: (glowColor ?? FuturisticColors.primary).withOpacity(
+                glowIntensity,
+              ),
               blurRadius: 20,
               spreadRadius: -2,
             ),
             BoxShadow(
-              color: (glowColor ?? FuturisticColors.primary)
-                  .withOpacity(glowIntensity * 0.5),
+              color: (glowColor ?? FuturisticColors.primary).withOpacity(
+                glowIntensity * 0.5,
+              ),
               blurRadius: 40,
               spreadRadius: -4,
             ),
@@ -177,10 +180,7 @@ class GradientBoxBorder extends BoxBorder {
   final Gradient gradient;
   final double width;
 
-  const GradientBoxBorder({
-    required this.gradient,
-    this.width = 1.0,
-  });
+  const GradientBoxBorder({required this.gradient, this.width = 1.0});
 
   @override
   BorderSide get bottom => BorderSide.none;
@@ -308,13 +308,13 @@ class _GlassCardState extends State<GlassCard>
       duration: AppAnimations.fast,
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: AppAnimations.pressedScale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: AppAnimations.defaultCurve,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: AppAnimations.pressedScale)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppAnimations.defaultCurve,
+          ),
+        );
   }
 
   @override
@@ -404,13 +404,13 @@ class _GlassButtonState extends State<GlassButton>
       duration: AppAnimations.fast,
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: AppAnimations.pressedScale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: AppAnimations.defaultCurve,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: AppAnimations.pressedScale)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppAnimations.defaultCurve,
+          ),
+        );
   }
 
   @override

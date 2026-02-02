@@ -33,19 +33,19 @@ class LanguageDetectionResult {
 
   /// Fallback result when detection fails
   factory LanguageDetectionResult.unknown() => const LanguageDetectionResult(
-        languageCode: 'und',
-        languageName: 'Unknown',
-        confidence: 0.0,
-        success: false,
-      );
+    languageCode: 'und',
+    languageName: 'Unknown',
+    confidence: 0.0,
+    success: false,
+  );
 
   /// Default to English
   factory LanguageDetectionResult.english() => const LanguageDetectionResult(
-        languageCode: 'en',
-        languageName: 'English',
-        confidence: 1.0,
-        success: true,
-      );
+    languageCode: 'en',
+    languageName: 'English',
+    confidence: 1.0,
+    success: true,
+  );
 }
 
 /// On-device language detection service
@@ -65,13 +65,15 @@ class LanguageDetectionService {
   Future<LanguageDetectionResult> detectLanguage(String text) async {
     if (kIsWeb) {
       debugPrint(
-          'LanguageDetectionService: Web not supported, defaulting to English');
+        'LanguageDetectionService: Web not supported, defaulting to English',
+      );
       return LanguageDetectionResult.english();
     }
 
     if (text.isEmpty || text.length < 10) {
       debugPrint(
-          'LanguageDetectionService: Text too short for reliable detection');
+        'LanguageDetectionService: Text too short for reliable detection',
+      );
       return LanguageDetectionResult.unknown();
     }
 
@@ -86,7 +88,8 @@ class LanguageDetectionService {
 
       final languageName = _getLanguageName(languageCode);
       debugPrint(
-          'LanguageDetectionService: Detected $languageName ($languageCode)');
+        'LanguageDetectionService: Detected $languageName ($languageCode)',
+      );
 
       return LanguageDetectionResult(
         languageCode: languageCode,
@@ -105,7 +108,8 @@ class LanguageDetectionService {
   ///
   /// Returns list of possible languages sorted by confidence
   Future<List<LanguageDetectionResult>> detectPossibleLanguages(
-      String text) async {
+    String text,
+  ) async {
     if (kIsWeb || text.isEmpty || text.length < 10) {
       return [LanguageDetectionResult.english()];
     }
@@ -116,12 +120,14 @@ class LanguageDetectionService {
 
       return languages
           .where((lang) => lang.languageTag != 'und')
-          .map((lang) => LanguageDetectionResult(
-                languageCode: lang.languageTag,
-                languageName: _getLanguageName(lang.languageTag),
-                confidence: lang.confidence,
-                success: true,
-              ))
+          .map(
+            (lang) => LanguageDetectionResult(
+              languageCode: lang.languageTag,
+              languageName: _getLanguageName(lang.languageTag),
+              confidence: lang.confidence,
+              success: true,
+            ),
+          )
           .toList()
         ..sort((a, b) => b.confidence.compareTo(a.confidence));
     } catch (e) {
@@ -165,7 +171,7 @@ class LanguageDetectionService {
       'ur',
       'kn',
       'or',
-      'ml'
+      'ml',
     };
     return supportedLanguages.contains(languageCode);
   }

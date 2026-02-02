@@ -15,8 +15,8 @@ class RestaurantTableRepository {
   static const _uuid = Uuid();
 
   RestaurantTableRepository({AppDatabase? db, ErrorHandler? errorHandler})
-      : _db = db ?? AppDatabase.instance,
-        _errorHandler = errorHandler ?? ErrorHandler.instance;
+    : _db = db ?? AppDatabase.instance,
+      _errorHandler = errorHandler ?? ErrorHandler.instance;
 
   // ============================================================================
   // TABLE CRUD OPERATIONS
@@ -33,7 +33,9 @@ class RestaurantTableRepository {
       final now = DateTime.now();
       final id = _uuid.v4();
 
-      await _db.into(_db.restaurantTables).insert(
+      await _db
+          .into(_db.restaurantTables)
+          .insert(
             RestaurantTablesCompanion.insert(
               id: id,
               vendorId: vendorId,
@@ -45,9 +47,9 @@ class RestaurantTableRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.restaurantTables)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final entity = await (_db.select(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return RestaurantTable.fromEntity(entity);
     }, 'createTable');
@@ -61,19 +63,23 @@ class RestaurantTableRepository {
     String? section,
   }) async {
     return await _errorHandler.runSafe<RestaurantTable>(() async {
-      await (_db.update(_db.restaurantTables)..where((t) => t.id.equals(id)))
-          .write(RestaurantTablesCompanion(
-        tableNumber:
-            tableNumber != null ? Value(tableNumber) : const Value.absent(),
-        capacity: capacity != null ? Value(capacity) : const Value.absent(),
-        section: section != null ? Value(section) : const Value.absent(),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(id))).write(
+        RestaurantTablesCompanion(
+          tableNumber: tableNumber != null
+              ? Value(tableNumber)
+              : const Value.absent(),
+          capacity: capacity != null ? Value(capacity) : const Value.absent(),
+          section: section != null ? Value(section) : const Value.absent(),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
-      final entity = await (_db.select(_db.restaurantTables)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final entity = await (_db.select(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return RestaurantTable.fromEntity(entity);
     }, 'updateTable');
@@ -82,12 +88,15 @@ class RestaurantTableRepository {
   /// Soft delete a table
   Future<RepositoryResult<void>> deleteTable(String id) async {
     return await _errorHandler.runSafe<void>(() async {
-      await (_db.update(_db.restaurantTables)..where((t) => t.id.equals(id)))
-          .write(RestaurantTablesCompanion(
-        deletedAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(id))).write(
+        RestaurantTablesCompanion(
+          deletedAt: Value(DateTime.now()),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'deleteTable');
   }
 
@@ -98,9 +107,9 @@ class RestaurantTableRepository {
   /// Get table by ID
   Future<RepositoryResult<RestaurantTable?>> getTableById(String id) async {
     return await _errorHandler.runSafe<RestaurantTable?>(() async {
-      final entity = await (_db.select(_db.restaurantTables)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       return entity != null ? RestaurantTable.fromEntity(entity) : null;
     }, 'getTableById');
@@ -108,15 +117,19 @@ class RestaurantTableRepository {
 
   /// Get all tables for a vendor
   Future<RepositoryResult<List<RestaurantTable>>> getTablesByVendor(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await _errorHandler.runSafe<List<RestaurantTable>>(() async {
-      final entities = await (_db.select(_db.restaurantTables)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.isActive.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
-          .get();
+      final entities =
+          await (_db.select(_db.restaurantTables)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.isActive.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
+              .get();
 
       return entities.map((e) => RestaurantTable.fromEntity(e)).toList();
     }, 'getTablesByVendor');
@@ -124,14 +137,18 @@ class RestaurantTableRepository {
 
   /// Get table by number
   Future<RepositoryResult<RestaurantTable?>> getTableByNumber(
-      String vendorId, String tableNumber) async {
+    String vendorId,
+    String tableNumber,
+  ) async {
     return await _errorHandler.runSafe<RestaurantTable?>(() async {
-      final entity = await (_db.select(_db.restaurantTables)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.tableNumber.equals(tableNumber) &
-                t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final entity =
+          await (_db.select(_db.restaurantTables)..where(
+                (t) =>
+                    t.vendorId.equals(vendorId) &
+                    t.tableNumber.equals(tableNumber) &
+                    t.deletedAt.isNull(),
+              ))
+              .getSingleOrNull();
 
       return entity != null ? RestaurantTable.fromEntity(entity) : null;
     }, 'getTableByNumber');
@@ -139,16 +156,21 @@ class RestaurantTableRepository {
 
   /// Get tables by section
   Future<RepositoryResult<List<RestaurantTable>>> getTablesBySection(
-      String vendorId, String section) async {
+    String vendorId,
+    String section,
+  ) async {
     return await _errorHandler.runSafe<List<RestaurantTable>>(() async {
-      final entities = await (_db.select(_db.restaurantTables)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.section.equals(section) &
-                t.isActive.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
-          .get();
+      final entities =
+          await (_db.select(_db.restaurantTables)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.section.equals(section) &
+                      t.isActive.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
+              .get();
 
       return entities.map((e) => RestaurantTable.fromEntity(e)).toList();
     }, 'getTablesBySection');
@@ -156,16 +178,20 @@ class RestaurantTableRepository {
 
   /// Get available tables
   Future<RepositoryResult<List<RestaurantTable>>> getAvailableTables(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await _errorHandler.runSafe<List<RestaurantTable>>(() async {
-      final entities = await (_db.select(_db.restaurantTables)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.status.equals(TableStatus.available.value) &
-                t.isActive.equals(true) &
-                t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
-          .get();
+      final entities =
+          await (_db.select(_db.restaurantTables)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.status.equals(TableStatus.available.value) &
+                      t.isActive.equals(true) &
+                      t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
+              .get();
 
       return entities.map((e) => RestaurantTable.fromEntity(e)).toList();
     }, 'getAvailableTables');
@@ -178,10 +204,12 @@ class RestaurantTableRepository {
   /// Watch all tables for a vendor
   Stream<List<RestaurantTable>> watchTables(String vendorId) {
     return (_db.select(_db.restaurantTables)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.isActive.equals(true) &
-              t.deletedAt.isNull())
+          ..where(
+            (t) =>
+                t.vendorId.equals(vendorId) &
+                t.isActive.equals(true) &
+                t.deletedAt.isNull(),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.tableNumber)]))
         .watch()
         .map((rows) => rows.map((e) => RestaurantTable.fromEntity(e)).toList());
@@ -193,15 +221,19 @@ class RestaurantTableRepository {
 
   /// Update table status
   Future<RepositoryResult<void>> updateTableStatus(
-      String tableId, TableStatus status) async {
+    String tableId,
+    TableStatus status,
+  ) async {
     return await _errorHandler.runSafe<void>(() async {
-      await (_db.update(_db.restaurantTables)
-            ..where((t) => t.id.equals(tableId)))
-          .write(RestaurantTablesCompanion(
-        status: Value(status.value),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(tableId))).write(
+        RestaurantTablesCompanion(
+          status: Value(status.value),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'updateTableStatus');
   }
 
@@ -231,15 +263,19 @@ class RestaurantTableRepository {
 
   /// Link QR code to table
   Future<RepositoryResult<void>> linkQrCode(
-      String tableId, String qrCodeId) async {
+    String tableId,
+    String qrCodeId,
+  ) async {
     return await _errorHandler.runSafe<void>(() async {
-      await (_db.update(_db.restaurantTables)
-            ..where((t) => t.id.equals(tableId)))
-          .write(RestaurantTablesCompanion(
-        qrCodeId: Value(qrCodeId),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.restaurantTables,
+      )..where((t) => t.id.equals(tableId))).write(
+        RestaurantTablesCompanion(
+          qrCodeId: Value(qrCodeId),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'linkQrCode');
   }
 
@@ -249,10 +285,11 @@ class RestaurantTableRepository {
 
   /// Get unsynced tables
   Future<List<RestaurantTable>> getUnsyncedTables(String vendorId) async {
-    final entities = await (_db.select(_db.restaurantTables)
-          ..where(
-              (t) => t.vendorId.equals(vendorId) & t.isSynced.equals(false)))
-        .get();
+    final entities =
+        await (_db.select(_db.restaurantTables)..where(
+              (t) => t.vendorId.equals(vendorId) & t.isSynced.equals(false),
+            ))
+            .get();
 
     return entities.map((e) => RestaurantTable.fromEntity(e)).toList();
   }
@@ -283,7 +320,9 @@ class RestaurantTableRepository {
         final tableNumber = (startNumber + i).toString();
         final id = _uuid.v4();
 
-        await _db.into(_db.restaurantTables).insert(
+        await _db
+            .into(_db.restaurantTables)
+            .insert(
               RestaurantTablesCompanion.insert(
                 id: id,
                 vendorId: vendorId,
@@ -295,9 +334,9 @@ class RestaurantTableRepository {
               ),
             );
 
-        final entity = await (_db.select(_db.restaurantTables)
-              ..where((t) => t.id.equals(id)))
-            .getSingle();
+        final entity = await (_db.select(
+          _db.restaurantTables,
+        )..where((t) => t.id.equals(id))).getSingle();
 
         tables.add(RestaurantTable.fromEntity(entity));
       }

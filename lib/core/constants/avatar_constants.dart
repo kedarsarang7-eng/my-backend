@@ -16,9 +16,15 @@ class AvatarConstants {
   static const List<AvatarDefinition> avatars = [
     // Male Avatars (10)
     AvatarDefinition(
-        id: 'm_01', category: categoryMale, label: 'Professional 1'),
+      id: 'm_01',
+      category: categoryMale,
+      label: 'Professional 1',
+    ),
     AvatarDefinition(
-        id: 'm_02', category: categoryMale, label: 'Professional 2'),
+      id: 'm_02',
+      category: categoryMale,
+      label: 'Professional 2',
+    ),
     AvatarDefinition(id: 'm_03', category: categoryMale, label: 'Shop Owner 1'),
     AvatarDefinition(id: 'm_04', category: categoryMale, label: 'Shop Owner 2'),
     AvatarDefinition(id: 'm_05', category: categoryMale, label: 'Trader 1'),
@@ -30,21 +36,39 @@ class AvatarConstants {
 
     // Female Avatars (10)
     AvatarDefinition(
-        id: 'f_01', category: categoryFemale, label: 'Professional 1'),
+      id: 'f_01',
+      category: categoryFemale,
+      label: 'Professional 1',
+    ),
     AvatarDefinition(
-        id: 'f_02', category: categoryFemale, label: 'Professional 2'),
+      id: 'f_02',
+      category: categoryFemale,
+      label: 'Professional 2',
+    ),
     AvatarDefinition(
-        id: 'f_03', category: categoryFemale, label: 'Shop Owner 1'),
+      id: 'f_03',
+      category: categoryFemale,
+      label: 'Shop Owner 1',
+    ),
     AvatarDefinition(
-        id: 'f_04', category: categoryFemale, label: 'Shop Owner 2'),
+      id: 'f_04',
+      category: categoryFemale,
+      label: 'Shop Owner 2',
+    ),
     AvatarDefinition(id: 'f_05', category: categoryFemale, label: 'Trader 1'),
     AvatarDefinition(id: 'f_06', category: categoryFemale, label: 'Trader 2'),
     AvatarDefinition(id: 'f_07', category: categoryFemale, label: 'Manager 1'),
     AvatarDefinition(id: 'f_08', category: categoryFemale, label: 'Manager 2'),
     AvatarDefinition(
-        id: 'f_09', category: categoryFemale, label: 'Executive 1'),
+      id: 'f_09',
+      category: categoryFemale,
+      label: 'Executive 1',
+    ),
     AvatarDefinition(
-        id: 'f_10', category: categoryFemale, label: 'Executive 2'),
+      id: 'f_10',
+      category: categoryFemale,
+      label: 'Executive 2',
+    ),
 
     // Neutral/Brand Avatars (10)
     AvatarDefinition(id: 'n_01', category: categoryNeutral, label: 'Store 1'),
@@ -54,9 +78,15 @@ class AvatarConstants {
     AvatarDefinition(id: 'n_05', category: categoryNeutral, label: 'Brand 1'),
     AvatarDefinition(id: 'n_06', category: categoryNeutral, label: 'Brand 2'),
     AvatarDefinition(
-        id: 'n_07', category: categoryNeutral, label: 'Abstract 1'),
+      id: 'n_07',
+      category: categoryNeutral,
+      label: 'Abstract 1',
+    ),
     AvatarDefinition(
-        id: 'n_08', category: categoryNeutral, label: 'Abstract 2'),
+      id: 'n_08',
+      category: categoryNeutral,
+      label: 'Abstract 2',
+    ),
     AvatarDefinition(id: 'n_09', category: categoryNeutral, label: 'Icon 1'),
     AvatarDefinition(id: 'n_10', category: categoryNeutral, label: 'Icon 2'),
   ];
@@ -71,8 +101,11 @@ class AvatarConstants {
   }
 
   /// Get default avatar
-  static const AvatarDefinition defaultAvatar =
-      AvatarDefinition(id: 'n_01', category: categoryNeutral, label: 'Default');
+  static const AvatarDefinition defaultAvatar = AvatarDefinition(
+    id: 'n_01',
+    category: categoryNeutral,
+    label: 'Default',
+  );
 }
 
 class AvatarDefinition {

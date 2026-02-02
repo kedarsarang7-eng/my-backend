@@ -25,7 +25,8 @@ export 'ui/button_hierarchy.dart';
 /// Futuristic Premium Color Palette
 /// Supports both light and dark mode with vibrant, modern colors
 @Deprecated(
-    'Use FuturisticColors from core/theme/futuristic_colors.dart instead')
+  'Use FuturisticColors from core/theme/futuristic_colors.dart instead',
+)
 class AppColors {
   // Primary - Futuristic Teal
   static const Color primary = Color(0xFF00D9A5);
@@ -206,19 +207,19 @@ class AppShadows {
 
   // Glow Shadows (for buttons, interactive elements)
   static List<BoxShadow> glowShadow(Color color) => [
-        BoxShadow(
-          color: color.withOpacity(0.3),
-          blurRadius: 16,
-          spreadRadius: -2,
-          offset: const Offset(0, 4),
-        ),
-        BoxShadow(
-          color: color.withOpacity(0.15),
-          blurRadius: 32,
-          spreadRadius: -4,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: color.withOpacity(0.3),
+      blurRadius: 16,
+      spreadRadius: -2,
+      offset: const Offset(0, 4),
+    ),
+    BoxShadow(
+      color: color.withOpacity(0.15),
+      blurRadius: 32,
+      spreadRadius: -4,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   // Soft Inner Shadow (for neumorphism)
   static List<BoxShadow> innerShadow = [
@@ -277,11 +278,7 @@ class AppGradients {
 
   // Shimmer Gradient (for loading states)
   static const LinearGradient shimmerGradient = LinearGradient(
-    colors: [
-      Color(0x00FFFFFF),
-      Color(0x33FFFFFF),
-      Color(0x00FFFFFF),
-    ],
+    colors: [Color(0x00FFFFFF), Color(0x33FFFFFF), Color(0x00FFFFFF)],
     stops: [0.0, 0.5, 1.0],
     begin: Alignment(-1.0, -0.5),
     end: Alignment(1.0, 0.5),
@@ -392,13 +389,13 @@ class _ModernCardState extends State<ModernCard>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: AppAnimations.pressedScale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: AppAnimations.defaultCurve,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: AppAnimations.pressedScale)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppAnimations.defaultCurve,
+          ),
+        );
   }
 
   @override
@@ -454,10 +451,7 @@ class _ModernCardState extends State<ModernCard>
                 width: 1,
               )
             : null,
-        boxShadow: [
-          ...AppShadows.cardShadow,
-          ...glowShadows,
-        ],
+        boxShadow: [...AppShadows.cardShadow, ...glowShadows],
       ),
       child: widget.child,
     );
@@ -552,14 +546,15 @@ class _AnimatedMenuCardState extends State<AnimatedMenuCard>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -578,7 +573,8 @@ class _AnimatedMenuCardState extends State<AnimatedMenuCard>
         opacity: _fadeAnimation,
         child: ModernCard(
           onTap: widget.onTap,
-          backgroundColor: widget.backgroundColor ??
+          backgroundColor:
+              widget.backgroundColor ??
               FuturisticColors.primary.withOpacity(0.1),
           child: Stack(
             children: [
@@ -595,9 +591,9 @@ class _AnimatedMenuCardState extends State<AnimatedMenuCard>
                     widget.title,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: FuturisticColors.textPrimary,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: FuturisticColors.textPrimary,
+                    ),
                   ),
                   if (widget.subtitle != null) ...[
                     const SizedBox(height: AppSpacing.sm),
@@ -605,8 +601,8 @@ class _AnimatedMenuCardState extends State<AnimatedMenuCard>
                       widget.subtitle!,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: FuturisticColors.textSecondary,
-                          ),
+                        color: FuturisticColors.textSecondary,
+                      ),
                     ),
                   ],
                 ],
@@ -683,18 +679,18 @@ class StatisticWidget extends StatelessWidget {
                     Text(
                       label,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: FuturisticColors.textSecondary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        color: FuturisticColors.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       value,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: FuturisticColors.textPrimary,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: FuturisticColors.textPrimary,
+                          ),
                     ),
                   ],
                 ),
@@ -702,8 +698,9 @@ class StatisticWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color:
-                      (iconColor ?? FuturisticColors.primary).withOpacity(0.1),
+                  color: (iconColor ?? FuturisticColors.primary).withOpacity(
+                    0.1,
+                  ),
                   borderRadius: BorderRadius.circular(AppBorderRadius.lg),
                 ),
                 child: Icon(
@@ -792,24 +789,22 @@ class ModernListTile extends StatelessWidget {
                       Text(
                         title,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: FuturisticColors.textPrimary,
-                            ),
+                          fontWeight: FontWeight.w600,
+                          color: FuturisticColors.textPrimary,
+                        ),
                       ),
                       if (subtitle != null) ...[
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           subtitle!,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: FuturisticColors.textSecondary,
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: FuturisticColors.textSecondary),
                         ),
                       ],
                     ],
                   ),
                 ),
-                if (trailing != null) trailing!,
+                ?trailing,
               ],
             ),
           ),
@@ -817,10 +812,7 @@ class ModernListTile extends StatelessWidget {
         if (showDivider)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            child: Divider(
-              height: 1,
-              color: FuturisticColors.divider,
-            ),
+            child: Divider(height: 1, color: FuturisticColors.divider),
           ),
       ],
     );
@@ -890,8 +882,8 @@ class _AnimatedLoadingWidgetState extends State<AnimatedLoadingWidget>
             Text(
               widget.message!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: FuturisticColors.textSecondary,
-                  ),
+                color: FuturisticColors.textSecondary,
+              ),
             ),
           ],
         ],

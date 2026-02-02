@@ -32,8 +32,10 @@ void main() {
 
     test('should log warning messages', () {
       monitoring.warning('TestTag', 'Warning message');
-      final logs =
-          monitoring.getRecentLogs(minLevel: LogLevel.warning, limit: 1);
+      final logs = monitoring.getRecentLogs(
+        minLevel: LogLevel.warning,
+        limit: 1,
+      );
       expect(logs.last.level, equals(LogLevel.warning));
     });
 
@@ -50,12 +52,15 @@ void main() {
       monitoring.warning('Test', 'Warning');
       monitoring.error('Test', 'Error');
 
-      final warningAndAbove =
-          monitoring.getRecentLogs(minLevel: LogLevel.warning);
+      final warningAndAbove = monitoring.getRecentLogs(
+        minLevel: LogLevel.warning,
+      );
       expect(
-          warningAndAbove
-              .every((l) => l.level.priority >= LogLevel.warning.priority),
-          isTrue);
+        warningAndAbove.every(
+          (l) => l.level.priority >= LogLevel.warning.priority,
+        ),
+        isTrue,
+      );
     });
 
     test('should limit log buffer size', () {
@@ -102,13 +107,9 @@ void main() {
 
     test('should record failed operations', () async {
       try {
-        await monitoring.measure<void>(
-          'failingOperation',
-          'test',
-          () async {
-            throw Exception('Test failure');
-          },
-        );
+        await monitoring.measure<void>('failingOperation', 'test', () async {
+          throw Exception('Test failure');
+        });
       } catch (_) {}
 
       final metrics = monitoring.getRecentMetrics(limit: 1);
@@ -127,10 +128,10 @@ void main() {
 
   group('Analytics Events', () {
     test('should track events with parameters', () {
-      monitoring.trackEvent('test_event', parameters: {
-        'item_id': '123',
-        'quantity': 5,
-      });
+      monitoring.trackEvent(
+        'test_event',
+        parameters: {'item_id': '123', 'quantity': 5},
+      );
 
       // Verify event was logged
       final logs = monitoring.getRecentLogs(limit: 1);
@@ -207,15 +208,8 @@ void main() {
     test('should serialize to JSON', () {
       final status = HealthStatus(
         isHealthy: true,
-        components: {
-          'database': true,
-          'firestore': true,
-          'connectivity': true,
-        },
-        metrics: {
-          'pendingSyncCount': 0,
-          'deadLetterCount': 0,
-        },
+        components: {'database': true, 'firestore': true, 'connectivity': true},
+        metrics: {'pendingSyncCount': 0, 'deadLetterCount': 0},
         timestamp: DateTime(2024, 12, 25, 10, 30),
       );
 

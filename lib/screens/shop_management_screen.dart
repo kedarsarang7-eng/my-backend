@@ -30,19 +30,20 @@ class _ShopManagementScreenState extends State<ShopManagementScreen> {
 
     setState(() => _isLoading = true);
     try {
-      final connections =
-          await sl<ConnectionService>().getAcceptedConnections();
+      final connections = await sl<ConnectionService>()
+          .getAcceptedConnections();
       if (mounted) {
         setState(() {
-          _linkedShops =
-              connections.map((m) => m['vendorId'] as String).toList();
+          _linkedShops = connections
+              .map((m) => m['vendorId'] as String)
+              .toList();
         });
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading shops: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading shops: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -66,9 +67,9 @@ class _ShopManagementScreenState extends State<ShopManagementScreen> {
       _loadLinkedShops();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to link shop: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to link shop: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -108,9 +109,9 @@ class _ShopManagementScreenState extends State<ShopManagementScreen> {
       _loadLinkedShops();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to unlink: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to unlink: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -126,9 +127,7 @@ class _ShopManagementScreenState extends State<ShopManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Manage Shops'),
-      ),
+      appBar: AppBar(title: const Text('Manage Shops')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -169,40 +168,37 @@ class _ShopManagementScreenState extends State<ShopManagementScreen> {
             const SizedBox(height: 24),
             const Text(
               'Linked Shops',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 8),
             Expanded(
               child: _isLoading && _linkedShops.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : _linkedShops.isEmpty
-                      ? const Center(
-                          child: Text('No shops linked yet.'),
-                        )
-                      : ListView.builder(
-                          itemCount: _linkedShops.length,
-                          itemBuilder: (context, index) {
-                            final shopId = _linkedShops[index];
-                            return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 4),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.store),
-                                ),
-                                title: Text('Shop ID: $shopId'),
-                                subtitle: const Text('Linked'),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.grey),
-                                  onPressed: () => _unlinkShop(shopId),
-                                ),
+                  ? const Center(child: Text('No shops linked yet.'))
+                  : ListView.builder(
+                      itemCount: _linkedShops.length,
+                      itemBuilder: (context, index) {
+                        final shopId = _linkedShops[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          child: ListTile(
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.store),
+                            ),
+                            title: Text('Shop ID: $shopId'),
+                            subtitle: const Text('Linked'),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.grey,
                               ),
-                            );
-                          },
-                        ),
+                              onPressed: () => _unlinkShop(shopId),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),

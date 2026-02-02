@@ -62,8 +62,11 @@ class BusinessGuard extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.lock_outline_rounded,
-                  size: 48, color: Colors.grey.shade400),
+              Icon(
+                Icons.lock_outline_rounded,
+                size: 48,
+                color: Colors.grey.shade400,
+              ),
               const SizedBox(height: 12),
               Text(
                 denialMessage!,

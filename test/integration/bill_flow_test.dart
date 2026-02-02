@@ -55,8 +55,11 @@ class FakeAccountingService extends Fake implements AccountingService {
 
 class FakeLockingService extends Fake implements LockingService {
   @override
-  Future<void> validateAction(String userId, DateTime date,
-      {LockOverrideContext? overrideContext}) async {
+  Future<void> validateAction(
+    String userId,
+    DateTime date, {
+    LockOverrideContext? overrideContext,
+  }) async {
     // Always valid
   }
 }
@@ -169,26 +172,34 @@ void main() {
     const productId = 'prod-1';
 
     // 1. SEED
-    await db.into(db.shops).insert(ShopsCompanion(
-          id: Value('shop-1'),
-          ownerId: Value(userId),
-          businessType: Value('grocery'),
-          name: Value('Test Shop'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-          allowNegativeStock: Value(false),
-        ));
+    await db
+        .into(db.shops)
+        .insert(
+          ShopsCompanion(
+            id: Value('shop-1'),
+            ownerId: Value(userId),
+            businessType: Value('grocery'),
+            name: Value('Test Shop'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+            allowNegativeStock: Value(false),
+          ),
+        );
 
-    await db.into(db.products).insert(ProductsCompanion(
-          id: Value(productId),
-          userId: Value(userId),
-          name: Value('Test Item'),
-          sellingPrice: Value(100.0),
-          costPrice: Value(80.0),
-          stockQuantity: Value(10.0),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.products)
+        .insert(
+          ProductsCompanion(
+            id: Value(productId),
+            userId: Value(userId),
+            name: Value('Test Item'),
+            sellingPrice: Value(100.0),
+            costPrice: Value(80.0),
+            stockQuantity: Value(10.0),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     // 2. PREPARE
     final billEntity = createDummyBill(
@@ -213,17 +224,20 @@ void main() {
     );
 
     // 4. VERIFY
-    expect(result.isSuccess, true,
-        reason: 'Bill creation failed: ${result.error?.message}');
+    expect(
+      result.isSuccess,
+      true,
+      reason: 'Bill creation failed: ${result.error?.message}',
+    );
 
-    final savedBill = await (db.select(db.bills)
-          ..where((t) => t.id.equals('bill-1')))
-        .getSingle();
+    final savedBill = await (db.select(
+      db.bills,
+    )..where((t) => t.id.equals('bill-1'))).getSingle();
     expect(savedBill.grandTotal, 200.0);
 
-    final savedProduct = await (db.select(db.products)
-          ..where((t) => t.id.equals(productId)))
-        .getSingle();
+    final savedProduct = await (db.select(
+      db.products,
+    )..where((t) => t.id.equals(productId))).getSingle();
     expect(savedProduct.stockQuantity, 8.0);
   });
 
@@ -231,25 +245,33 @@ void main() {
     const userId = 'user-2';
     const productId = 'prod-2';
 
-    await db.into(db.shops).insert(ShopsCompanion(
-          id: Value('shop-2'),
-          ownerId: Value(userId),
-          businessType: Value('grocery'),
-          name: Value('Strict Shop'),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-          allowNegativeStock: Value(false),
-        ));
+    await db
+        .into(db.shops)
+        .insert(
+          ShopsCompanion(
+            id: Value('shop-2'),
+            ownerId: Value(userId),
+            businessType: Value('grocery'),
+            name: Value('Strict Shop'),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+            allowNegativeStock: Value(false),
+          ),
+        );
 
-    await db.into(db.products).insert(ProductsCompanion(
-          id: Value(productId),
-          userId: Value(userId),
-          name: Value('Low Stock Item'),
-          sellingPrice: Value(100.0),
-          stockQuantity: Value(1.0),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.products)
+        .insert(
+          ProductsCompanion(
+            id: Value(productId),
+            userId: Value(userId),
+            name: Value('Low Stock Item'),
+            sellingPrice: Value(100.0),
+            stockQuantity: Value(1.0),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     final billEntity = createDummyBill(
       id: 'bill-2',
@@ -273,14 +295,14 @@ void main() {
 
     expect(result.isSuccess, false);
 
-    final savedBill = await (db.select(db.bills)
-          ..where((t) => t.id.equals('bill-2')))
-        .getSingleOrNull();
+    final savedBill = await (db.select(
+      db.bills,
+    )..where((t) => t.id.equals('bill-2'))).getSingleOrNull();
     expect(savedBill, isNull);
 
-    final savedProduct = await (db.select(db.products)
-          ..where((t) => t.id.equals(productId)))
-        .getSingle();
+    final savedProduct = await (db.select(
+      db.products,
+    )..where((t) => t.id.equals(productId))).getSingle();
     expect(savedProduct.stockQuantity, 1.0);
   });
 }

@@ -36,11 +36,15 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
     // 1. Detect High-Level Intents (Confirm/Cancel)
     if (_matches(text, ['confirm', 'save bill', 'sahi hai', 'done', 'lock'])) {
       return VoiceBillIntent(
-          type: VoiceBillIntentType.confirmBill, rawText: rawText);
+        type: VoiceBillIntentType.confirmBill,
+        rawText: rawText,
+      );
     }
     if (_matches(text, ['cancel', 'delete', 'discard', 'hatao'])) {
       return VoiceBillIntent(
-          type: VoiceBillIntentType.cancelBill, rawText: rawText);
+        type: VoiceBillIntentType.cancelBill,
+        rawText: rawText,
+      );
     }
 
     // Default Intent: Create/Update Bill
@@ -54,7 +58,8 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
     final customerRegexes = [
       RegExp(r'^(.*?)(\s+ko\b)'), // Hindi: "Rajesh ko"
       RegExp(
-          r'^bill\s+(?:for|to)\s+(.*?)(?:\s+laga|\s+start|\s+add|\s|$)'), // English: "Bill for Rajesh"
+        r'^bill\s+(?:for|to)\s+(.*?)(?:\s+laga|\s+start|\s+add|\s|$)',
+      ), // English: "Bill for Rajesh"
     ];
 
     for (var regex in customerRegexes) {
@@ -73,10 +78,21 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
       text = _remove(text, ['cash payment', 'cash', 'nagad', 'rokda']);
     } else if (_contains(text, ['online', 'upi', 'gpay', 'phonepe', 'qr'])) {
       paymentMode = VoicePaymentMode.online;
-      text = _remove(
-          text, ['online payment', 'online', 'upi', 'gpay', 'phonepe', 'qr']);
-    } else if (_contains(
-        text, ['udhari', 'credit', 'khata', 'later', 'baaki'])) {
+      text = _remove(text, [
+        'online payment',
+        'online',
+        'upi',
+        'gpay',
+        'phonepe',
+        'qr',
+      ]);
+    } else if (_contains(text, [
+      'udhari',
+      'credit',
+      'khata',
+      'later',
+      'baaki',
+    ])) {
       paymentMode = VoicePaymentMode.credit;
       text = _remove(text, ['udhari', 'credit', 'khata', 'later', 'baaki']);
     }
@@ -126,8 +142,10 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
 
     // 2. Split by numbers to isolate items
     // Regex: (\d+(?:\.\d+)?)\s+([^\d]+)  -> captures "2" "kg sugar"
-    final RegExp itemRegex =
-        RegExp(r'(\d+(?:\.\d+)?)\s*([a-z\s\%\.]+)', caseSensitive: false);
+    final RegExp itemRegex = RegExp(
+      r'(\d+(?:\.\d+)?)\s*([a-z\s\%\.]+)',
+      caseSensitive: false,
+    );
     final matches = itemRegex.allMatches(processed);
 
     List<BillItem> billItems = [];
@@ -211,14 +229,16 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
       }
 
       if (bestMatch != null) {
-        billItems.add(BillItem(
-          productId: bestMatch.id,
-          name: bestMatch.name, // Use canonical name
-          quantity: qty,
-          rate: bestMatch.sellingPrice,
-          amount: qty * bestMatch.sellingPrice,
-          unit: bestMatch.unit, // Use canonical unit
-        ));
+        billItems.add(
+          BillItem(
+            productId: bestMatch.id,
+            name: bestMatch.name, // Use canonical name
+            quantity: qty,
+            rate: bestMatch.sellingPrice,
+            amount: qty * bestMatch.sellingPrice,
+            unit: bestMatch.unit, // Use canonical unit
+          ),
+        );
       } else {
         // Unknown item
         _addRawItem(billItems, _capitalize(name), qty, unit);
@@ -229,14 +249,16 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
   }
 
   void _addRawItem(List<BillItem> items, String name, double qty, String unit) {
-    items.add(BillItem(
-      productId: '', // Empty ID indicates unknown/manual item
-      name: name,
-      quantity: qty,
-      rate: 0,
-      amount: 0,
-      unit: unit,
-    ));
+    items.add(
+      BillItem(
+        productId: '', // Empty ID indicates unknown/manual item
+        name: name,
+        quantity: qty,
+        rate: 0,
+        amount: 0,
+        unit: unit,
+      ),
+    );
   }
 
   String _capitalize(String s) {
@@ -269,7 +291,7 @@ class ParseVoiceIntent implements UseCase<VoiceBillIntent, String> {
       'das': '10',
       'aadha': '0.5',
       'half': '0.5',
-      'pav': '0.25'
+      'pav': '0.25',
     };
 
     String out = input;

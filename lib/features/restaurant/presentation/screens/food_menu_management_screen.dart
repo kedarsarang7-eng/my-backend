@@ -18,10 +18,7 @@ import '../../data/repositories/food_menu_repository.dart';
 class FoodMenuManagementScreen extends StatefulWidget {
   final String vendorId;
 
-  const FoodMenuManagementScreen({
-    super.key,
-    required this.vendorId,
-  });
+  const FoodMenuManagementScreen({super.key, required this.vendorId});
 
   @override
   State<FoodMenuManagementScreen> createState() =>
@@ -65,10 +62,7 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
       appBar: _buildPremiumAppBar(context, isDark),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildMenuItemsTab(isDark),
-          _buildCategoriesTab(isDark),
-        ],
+        children: [_buildMenuItemsTab(isDark), _buildCategoriesTab(isDark)],
       ),
     );
   }
@@ -76,8 +70,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
   PreferredSizeWidget _buildPremiumAppBar(BuildContext context, bool isDark) {
     return AppBar(
       elevation: 0,
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       title: Row(
         children: [
           Container(
@@ -87,8 +82,11 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
               borderRadius: BorderRadius.circular(AppBorderRadius.md),
               boxShadow: AppShadows.glowShadow(FuturisticColors.accent1),
             ),
-            child: const Icon(Icons.restaurant_menu,
-                color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.restaurant_menu,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Text(
@@ -109,8 +107,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
         unselectedLabelColor: isDark
             ? FuturisticColors.darkTextSecondary
             : FuturisticColors.textSecondary,
-        labelStyle:
-            AppTypography.labelMedium.copyWith(fontWeight: FontWeight.w600),
+        labelStyle: AppTypography.labelMedium.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
         tabs: const [
           Tab(icon: Icon(Icons.restaurant_menu), text: 'Menu Items'),
           Tab(icon: Icon(Icons.category), text: 'Categories'),
@@ -122,12 +121,15 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
           decoration: BoxDecoration(
             color: FuturisticColors.primary.withOpacity(0.15),
             borderRadius: BorderRadius.circular(AppBorderRadius.md),
-            border:
-                Border.all(color: FuturisticColors.primary.withOpacity(0.3)),
+            border: Border.all(
+              color: FuturisticColors.primary.withOpacity(0.3),
+            ),
           ),
           child: IconButton(
-            icon:
-                Icon(Icons.add_circle_outline, color: FuturisticColors.primary),
+            icon: Icon(
+              Icons.add_circle_outline,
+              color: FuturisticColors.primary,
+            ),
             onPressed: () => _showAddItemDialog(),
             tooltip: 'Add Item',
           ),
@@ -149,8 +151,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(FuturisticColors.primary),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      FuturisticColors.primary,
+                    ),
                   ),
                 );
               }
@@ -158,8 +161,8 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
               final items = snapshot.data ?? [];
               final filteredItems = _selectedCategoryId != null
                   ? items
-                      .where((i) => i.categoryId == _selectedCategoryId)
-                      .toList()
+                        .where((i) => i.categoryId == _selectedCategoryId)
+                        .toList()
                   : items;
 
               if (filteredItems.isEmpty) {
@@ -182,7 +185,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
   Widget _buildCategoryFilter(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       decoration: BoxDecoration(
         color: isDark
             ? FuturisticColors.darkSurfaceVariant
@@ -207,15 +212,17 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                     setState(() => _selectedCategoryId = null);
                   }, isDark),
                   const SizedBox(width: AppSpacing.sm),
-                  ..._categories.map((cat) => Padding(
-                        padding: const EdgeInsets.only(right: AppSpacing.sm),
-                        child: _buildFilterChip(
-                          cat.name,
-                          _selectedCategoryId == cat.id,
-                          () => setState(() => _selectedCategoryId = cat.id),
-                          isDark,
-                        ),
-                      )),
+                  ..._categories.map(
+                    (cat) => Padding(
+                      padding: const EdgeInsets.only(right: AppSpacing.sm),
+                      child: _buildFilterChip(
+                        cat.name,
+                        _selectedCategoryId == cat.id,
+                        () => setState(() => _selectedCategoryId = cat.id),
+                        isDark,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -226,7 +233,11 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
   }
 
   Widget _buildFilterChip(
-      String label, bool selected, VoidCallback onTap, bool isDark) {
+    String label,
+    bool selected,
+    VoidCallback onTap,
+    bool isDark,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -239,8 +250,8 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
           color: selected
               ? null
               : (isDark
-                  ? FuturisticColors.darkSurface
-                  : FuturisticColors.surface),
+                    ? FuturisticColors.darkSurface
+                    : FuturisticColors.surface),
           borderRadius: BorderRadius.circular(AppBorderRadius.xxl),
           border: selected
               ? null
@@ -249,8 +260,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                       ? FuturisticColors.darkDivider
                       : FuturisticColors.divider,
                 ),
-          boxShadow:
-              selected ? AppShadows.glowShadow(FuturisticColors.primary) : null,
+          boxShadow: selected
+              ? AppShadows.glowShadow(FuturisticColors.primary)
+              : null,
         ),
         child: Text(
           label,
@@ -258,8 +270,8 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
             color: selected
                 ? Colors.white
                 : (isDark
-                    ? FuturisticColors.darkTextPrimary
-                    : FuturisticColors.textPrimary),
+                      ? FuturisticColors.darkTextPrimary
+                      : FuturisticColors.textPrimary),
             fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
           ),
         ),
@@ -269,8 +281,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
 
   Widget _buildMenuItemCard(FoodMenuItem item, bool isDark) {
     return ModernCard(
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       onTap: () => _editItem(item),
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -284,7 +297,7 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                     width: 64,
                     height: 64,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _buildPlaceholder(isDark),
+                    errorBuilder: (_, _, _) => _buildPlaceholder(isDark),
                   ),
                 )
               : _buildPlaceholder(isDark),
@@ -314,8 +327,11 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                           border: Border.all(color: FuturisticColors.success),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: Icon(Icons.eco,
-                            size: 14, color: FuturisticColors.success),
+                        child: Icon(
+                          Icons.eco,
+                          size: 14,
+                          color: FuturisticColors.success,
+                        ),
                       ),
                     if (item.isSpicy)
                       const Padding(
@@ -432,8 +448,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
         final category = _categories[index];
         return ModernCard(
           key: ValueKey(category.id),
-          backgroundColor:
-              isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+          backgroundColor: isDark
+              ? FuturisticColors.darkSurface
+              : FuturisticColors.surface,
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
@@ -554,7 +571,8 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
     final priceCtrl = TextEditingController(text: item.price.toString());
     final descCtrl = TextEditingController(text: item.description ?? '');
     final prepTimeCtrl = TextEditingController(
-        text: item.preparationTimeMinutes?.toString() ?? '');
+      text: item.preparationTimeMinutes?.toString() ?? '',
+    );
     bool isVeg = item.isVegetarian;
     bool isSpicy = item.isSpicy;
 
@@ -587,8 +605,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                 TextField(
                   controller: prepTimeCtrl,
                   keyboardType: TextInputType.number,
-                  decoration:
-                      const InputDecoration(labelText: 'Prep Time (minutes)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Prep Time (minutes)',
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -671,7 +690,9 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                   decoration: const InputDecoration(labelText: 'Category'),
                   items: _categories.map((cat) {
                     return DropdownMenuItem(
-                        value: cat.id, child: Text(cat.name));
+                      value: cat.id,
+                      child: Text(cat.name),
+                    );
                   }).toList(),
                   onChanged: (v) =>
                       setDialogState(() => selectedCategoryId = v),
@@ -686,20 +707,23 @@ class _FoodMenuManagementScreenState extends State<FoodMenuManagementScreen>
                 TextField(
                   controller: prepTimeCtrl,
                   keyboardType: TextInputType.number,
-                  decoration:
-                      const InputDecoration(labelText: 'Prep Time (minutes)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Prep Time (minutes)',
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     Checkbox(
-                        value: isVeg,
-                        onChanged: (v) => setDialogState(() => isVeg = v!)),
+                      value: isVeg,
+                      onChanged: (v) => setDialogState(() => isVeg = v!),
+                    ),
                     const Text('Vegetarian'),
                     const SizedBox(width: 16),
                     Checkbox(
-                        value: isSpicy,
-                        onChanged: (v) => setDialogState(() => isSpicy = v!)),
+                      value: isSpicy,
+                      onChanged: (v) => setDialogState(() => isSpicy = v!),
+                    ),
                     const Text('Spicy'),
                   ],
                 ),

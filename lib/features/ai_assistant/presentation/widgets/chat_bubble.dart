@@ -4,11 +4,7 @@ class ChatBubbleUser extends StatelessWidget {
   final String message;
   final String? time;
 
-  const ChatBubbleUser({
-    super.key,
-    required this.message,
-    this.time,
-  });
+  const ChatBubbleUser({super.key, required this.message, this.time});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +12,9 @@ class ChatBubbleUser extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [Color(0xFF6A11CB), Color(0xFF2575FC)], // Blue -> Purple
@@ -71,11 +68,7 @@ class ChatBubbleAI extends StatelessWidget {
   final String message;
   final bool isTyping;
 
-  const ChatBubbleAI({
-    super.key,
-    required this.message,
-    this.isTyping = false,
-  });
+  const ChatBubbleAI({super.key, required this.message, this.isTyping = false});
 
   @override
   Widget build(BuildContext context) {
@@ -87,16 +80,21 @@ class ChatBubbleAI extends StatelessWidget {
           const CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: 16,
-            backgroundImage:
-                AssetImage('assets/images/mahiru_avatar.png'), // Placeholder
-            child: Icon(Icons.face_3,
-                color: Colors.pinkAccent, size: 20), // Fallback
+            backgroundImage: AssetImage(
+              'assets/images/mahiru_avatar.png',
+            ), // Placeholder
+            child: Icon(
+              Icons.face_3,
+              color: Colors.pinkAccent,
+              size: 20,
+            ), // Fallback
           ),
           const SizedBox(width: 8),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 4),
             constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7),
+              maxWidth: MediaQuery.of(context).size.width * 0.7,
+            ),
             decoration: BoxDecoration(
               color: Colors.grey[900]!.withOpacity(0.8),
               borderRadius: const BorderRadius.only(
@@ -109,9 +107,13 @@ class ChatBubbleAI extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: isTyping
-                ? const Text("Mahiru is thinking...",
+                ? const Text(
+                    "Mahiru is thinking...",
                     style: TextStyle(
-                        color: Colors.white54, fontStyle: FontStyle.italic))
+                      color: Colors.white54,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  )
                 : Text(
                     message,
                     style: const TextStyle(

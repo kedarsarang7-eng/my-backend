@@ -62,7 +62,8 @@ class AvatarPreviewWidget extends StatelessWidget {
           // EXCEPT if it's the base skin, maybe show something?
           if (assetPath.contains('skin')) {
             return const Center(
-                child: Icon(Icons.person, size: 48, color: Colors.grey));
+              child: Icon(Icons.person, size: 48, color: Colors.grey),
+            );
           }
           return const SizedBox.shrink();
         },

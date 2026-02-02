@@ -38,9 +38,7 @@ class ScanImageService {
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
         ),
-        IOSUiSettings(
-          title: 'Crop Bill',
-        ),
+        IOSUiSettings(title: 'Crop Bill'),
         WebUiSettings(
           context: context,
           presentStyle: WebPresentStyle.dialog,

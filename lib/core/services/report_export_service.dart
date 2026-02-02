@@ -13,10 +13,7 @@ import 'package:drift/drift.dart';
 import '../database/app_database.dart';
 
 /// Report Export Format
-enum ExportFormat {
-  csv,
-  json,
-}
+enum ExportFormat { csv, json }
 
 /// Export Result
 class ExportResult {
@@ -41,10 +38,7 @@ class ExportResult {
   }
 
   factory ExportResult.failure(String error) {
-    return ExportResult._(
-      success: false,
-      error: error,
-    );
+    return ExportResult._(success: false, error: error);
   }
 }
 
@@ -60,9 +54,7 @@ class ExportResult {
 class ReportExportService {
   final AppDatabase _database;
 
-  ReportExportService({
-    required AppDatabase database,
-  }) : _database = database;
+  ReportExportService({required AppDatabase database}) : _database = database;
 
   /// Export GST Summary Report
   Future<ExportResult> exportGstSummary({
@@ -75,13 +67,14 @@ class ReportExportService {
       final toDateEnd = toDate.add(const Duration(days: 1));
 
       // Query bills for the period
-      final bills = await (_database.select(_database.bills)
-            ..where((t) => t.userId.equals(userId))
-            ..where((t) => t.billDate.isBiggerOrEqualValue(fromDate))
-            ..where((t) => t.billDate.isSmallerThanValue(toDateEnd))
-            ..where((t) => t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.billDate)]))
-          .get();
+      final bills =
+          await (_database.select(_database.bills)
+                ..where((t) => t.userId.equals(userId))
+                ..where((t) => t.billDate.isBiggerOrEqualValue(fromDate))
+                ..where((t) => t.billDate.isSmallerThanValue(toDateEnd))
+                ..where((t) => t.deletedAt.isNull())
+                ..orderBy([(t) => OrderingTerm.asc(t.billDate)]))
+              .get();
 
       // Calculate GST summary
       double totalTaxableValue = 0;
@@ -109,7 +102,7 @@ class ReportExportService {
         ['CESS', totalCess.toStringAsFixed(2)],
         [
           'Total Tax',
-          (totalCgst + totalSgst + totalIgst + totalCess).toStringAsFixed(2)
+          (totalCgst + totalSgst + totalIgst + totalCess).toStringAsFixed(2),
         ],
         [''],
         ['Total Invoices', bills.length.toString()],
@@ -139,13 +132,14 @@ class ReportExportService {
     try {
       final toDateEnd = toDate.add(const Duration(days: 1));
 
-      final bills = await (_database.select(_database.bills)
-            ..where((t) => t.userId.equals(userId))
-            ..where((t) => t.billDate.isBiggerOrEqualValue(fromDate))
-            ..where((t) => t.billDate.isSmallerThanValue(toDateEnd))
-            ..where((t) => t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.billDate)]))
-          .get();
+      final bills =
+          await (_database.select(_database.bills)
+                ..where((t) => t.userId.equals(userId))
+                ..where((t) => t.billDate.isBiggerOrEqualValue(fromDate))
+                ..where((t) => t.billDate.isSmallerThanValue(toDateEnd))
+                ..where((t) => t.deletedAt.isNull())
+                ..orderBy([(t) => OrderingTerm.asc(t.billDate)]))
+              .get();
 
       final data = <List<dynamic>>[
         ['Sales Register'],
@@ -160,7 +154,7 @@ class ReportExportService {
           'Total',
           'Paid',
           'Balance',
-          'Status'
+          'Status',
         ],
       ];
 
@@ -193,7 +187,7 @@ class ReportExportService {
         totalSales.toStringAsFixed(2),
         totalPaid.toStringAsFixed(2),
         (totalSales - totalPaid).toStringAsFixed(2),
-        ''
+        '',
       ]);
 
       final filePath = await _saveReport(
@@ -222,31 +216,33 @@ class ReportExportService {
       final toDateEnd = toDate.add(const Duration(days: 1));
 
       // Get customer
-      final customer = await (_database.select(_database.customers)
-            ..where((t) => t.id.equals(customerId)))
-          .getSingleOrNull();
+      final customer = await (_database.select(
+        _database.customers,
+      )..where((t) => t.id.equals(customerId))).getSingleOrNull();
 
       if (customer == null) {
         return ExportResult.failure('Customer not found');
       }
 
       // Get bills
-      final bills = await (_database.select(_database.bills)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.billDate.isBiggerOrEqualValue(fromDate))
-            ..where((t) => t.billDate.isSmallerThanValue(toDateEnd))
-            ..where((t) => t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.billDate)]))
-          .get();
+      final bills =
+          await (_database.select(_database.bills)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.billDate.isBiggerOrEqualValue(fromDate))
+                ..where((t) => t.billDate.isSmallerThanValue(toDateEnd))
+                ..where((t) => t.deletedAt.isNull())
+                ..orderBy([(t) => OrderingTerm.asc(t.billDate)]))
+              .get();
 
       // Get payments
-      final payments = await (_database.select(_database.payments)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.paymentDate.isBiggerOrEqualValue(fromDate))
-            ..where((t) => t.paymentDate.isSmallerThanValue(toDateEnd))
-            ..where((t) => t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.paymentDate)]))
-          .get();
+      final payments =
+          await (_database.select(_database.payments)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.paymentDate.isBiggerOrEqualValue(fromDate))
+                ..where((t) => t.paymentDate.isSmallerThanValue(toDateEnd))
+                ..where((t) => t.deletedAt.isNull())
+                ..orderBy([(t) => OrderingTerm.asc(t.paymentDate)]))
+              .get();
 
       final data = <List<dynamic>>[
         ['Customer Ledger'],
@@ -282,7 +278,8 @@ class ReportExportService {
       }
 
       entries.sort(
-          (a, b) => (a['date'] as DateTime).compareTo(b['date'] as DateTime));
+        (a, b) => (a['date'] as DateTime).compareTo(b['date'] as DateTime),
+      );
 
       for (final entry in entries) {
         runningBalance +=
@@ -308,7 +305,7 @@ class ReportExportService {
         'Closing Balance',
         '',
         '',
-        runningBalance.toStringAsFixed(2)
+        runningBalance.toStringAsFixed(2),
       ]);
 
       final filePath = await _saveReport(
@@ -342,9 +339,11 @@ class ReportExportService {
     if (format == ExportFormat.csv) {
       // Simple CSV conversion without external package
       final csvContent = data
-          .map((row) => row
-              .map((cell) => '"${cell.toString().replaceAll('"', '""')}"')
-              .join(','))
+          .map(
+            (row) => row
+                .map((cell) => '"${cell.toString().replaceAll('"', '""')}"')
+                .join(','),
+          )
           .join('\n');
       await file.writeAsString(csvContent);
     } else {

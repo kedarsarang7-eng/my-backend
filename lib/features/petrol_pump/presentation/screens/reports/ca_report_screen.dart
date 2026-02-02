@@ -49,12 +49,13 @@ class _CaReportScreenState extends State<CaReportScreen>
       final db = sl<AppDatabase>();
 
       // Get credit bills for date range
-      final bills = await (db.select(db.bills)
-            ..where((b) => b.paymentMode.equals('CREDIT'))
-            ..where((b) => b.billDate.isBiggerOrEqualValue(_startDate))
-            ..where((b) => b.billDate.isSmallerOrEqualValue(_endDate))
-            ..orderBy([(b) => OrderingTerm.desc(b.billDate)]))
-          .get();
+      final bills =
+          await (db.select(db.bills)
+                ..where((b) => b.paymentMode.equals('CREDIT'))
+                ..where((b) => b.billDate.isBiggerOrEqualValue(_startDate))
+                ..where((b) => b.billDate.isSmallerOrEqualValue(_endDate))
+                ..orderBy([(b) => OrderingTerm.desc(b.billDate)]))
+              .get();
 
       // Calculate totals
       double creditSales = 0;
@@ -63,31 +64,35 @@ class _CaReportScreenState extends State<CaReportScreen>
       }
 
       // Get customers with credit balance
-      final customers = await (db.select(db.customers)
-            ..where((c) => c.totalDues.isBiggerThanValue(0))
-            ..orderBy([(c) => OrderingTerm.desc(c.totalDues)]))
-          .get();
+      final customers =
+          await (db.select(db.customers)
+                ..where((c) => c.totalDues.isBiggerThanValue(0))
+                ..orderBy([(c) => OrderingTerm.desc(c.totalDues)]))
+              .get();
 
       double outstanding = 0;
       final accounts = <CustomerAccount>[];
       for (final customer in customers) {
         outstanding += customer.totalDues;
-        accounts.add(CustomerAccount(
-          customerId: customer.id,
-          customerName: customer.name,
-          phone: customer.phone,
-          creditLimit: customer.creditLimit,
-          currentBalance: customer.totalDues,
-          lastTransactionDate: customer.lastTransactionDate,
-        ));
+        accounts.add(
+          CustomerAccount(
+            customerId: customer.id,
+            customerName: customer.name,
+            phone: customer.phone,
+            creditLimit: customer.creditLimit,
+            currentBalance: customer.totalDues,
+            lastTransactionDate: customer.lastTransactionDate,
+          ),
+        );
       }
 
       // Get payment collections for date range
-      final payments = await (db.select(db.payments)
-            ..where((p) => p.paymentDate.isBiggerOrEqualValue(_startDate))
-            ..where((p) => p.paymentDate.isSmallerOrEqualValue(_endDate))
-            ..orderBy([(p) => OrderingTerm.desc(p.paymentDate)]))
-          .get();
+      final payments =
+          await (db.select(db.payments)
+                ..where((p) => p.paymentDate.isBiggerOrEqualValue(_startDate))
+                ..where((p) => p.paymentDate.isSmallerOrEqualValue(_endDate))
+                ..orderBy([(p) => OrderingTerm.desc(p.paymentDate)]))
+              .get();
 
       double collections = 0;
       for (final payment in payments) {
@@ -97,24 +102,28 @@ class _CaReportScreenState extends State<CaReportScreen>
       // Build transaction list
       final txns = <CreditTransaction>[];
       for (final bill in bills) {
-        txns.add(CreditTransaction(
-          date: bill.billDate,
-          type: 'CREDIT_SALE',
-          description: 'Bill #${bill.id}',
-          amount: bill.grandTotal,
-          customerId: bill.customerId,
-          customerName: bill.customerName,
-        ));
+        txns.add(
+          CreditTransaction(
+            date: bill.billDate,
+            type: 'CREDIT_SALE',
+            description: 'Bill #${bill.id}',
+            amount: bill.grandTotal,
+            customerId: bill.customerId,
+            customerName: bill.customerName,
+          ),
+        );
       }
       for (final payment in payments) {
-        txns.add(CreditTransaction(
-          date: payment.paymentDate,
-          type: 'COLLECTION',
-          description: payment.paymentMode,
-          amount: -payment.amount,
-          customerId: payment.customerId,
-          customerName: null,
-        ));
+        txns.add(
+          CreditTransaction(
+            date: payment.paymentDate,
+            type: 'COLLECTION',
+            description: payment.paymentMode,
+            amount: -payment.amount,
+            customerId: payment.customerId,
+            customerName: null,
+          ),
+        );
       }
       txns.sort((a, b) => b.date.compareTo(a.date));
 
@@ -130,9 +139,9 @@ class _CaReportScreenState extends State<CaReportScreen>
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading CA report: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading CA report: $e')));
       }
     }
   }
@@ -166,10 +175,7 @@ class _CaReportScreenState extends State<CaReportScreen>
             onPressed: _selectDateRange,
             tooltip: 'Select Date Range',
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -186,8 +192,10 @@ class _CaReportScreenState extends State<CaReportScreen>
               children: [
                 // Date Range Header
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -267,17 +275,22 @@ class _CaReportScreenState extends State<CaReportScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Period Summary',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Period Summary',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   const Divider(),
                   _buildSummaryRow('Opening Outstanding', '₹--', Colors.grey),
-                  _buildSummaryRow('Credit Sales',
-                      '+₹${_totalCreditSales.toStringAsFixed(0)}', Colors.blue),
                   _buildSummaryRow(
-                      'Collections',
-                      '-₹${_totalCollections.toStringAsFixed(0)}',
-                      Colors.green),
+                    'Credit Sales',
+                    '+₹${_totalCreditSales.toStringAsFixed(0)}',
+                    Colors.blue,
+                  ),
+                  _buildSummaryRow(
+                    'Collections',
+                    '-₹${_totalCollections.toStringAsFixed(0)}',
+                    Colors.green,
+                  ),
                   const Divider(),
                   _buildSummaryRow(
                     'Closing Outstanding',
@@ -294,7 +307,11 @@ class _CaReportScreenState extends State<CaReportScreen>
   }
 
   Widget _buildMetricCard(
-      String label, String value, IconData icon, Color color) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -303,11 +320,18 @@ class _CaReportScreenState extends State<CaReportScreen>
           children: [
             Icon(icon, color: color, size: 28),
             const SizedBox(height: 8),
-            Text(value,
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-            Text(label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
           ],
         ),
       ),
@@ -321,8 +345,10 @@ class _CaReportScreenState extends State<CaReportScreen>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label),
-          Text(value,
-              style: TextStyle(fontWeight: FontWeight.w500, color: color)),
+          Text(
+            value,
+            style: TextStyle(fontWeight: FontWeight.w500, color: color),
+          ),
         ],
       ),
     );
@@ -345,8 +371,8 @@ class _CaReportScreenState extends State<CaReportScreen>
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor:
-                  (isCredit ? Colors.red : Colors.green).withOpacity(0.1),
+              backgroundColor: (isCredit ? Colors.red : Colors.green)
+                  .withOpacity(0.1),
               child: Icon(
                 isCredit ? Icons.arrow_upward : Icons.arrow_downward,
                 color: isCredit ? Colors.red : Colors.green,
@@ -357,10 +383,14 @@ class _CaReportScreenState extends State<CaReportScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (txn.customerName != null)
-                  Text(txn.customerName!,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                Text(dateFormat.format(txn.date),
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                  Text(
+                    txn.customerName!,
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  ),
+                Text(
+                  dateFormat.format(txn.date),
+                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                ),
               ],
             ),
             trailing: Text(
@@ -404,13 +434,18 @@ class _CaReportScreenState extends State<CaReportScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(account.customerName,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            account.customerName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           if (account.phone != null)
-                            Text(account.phone!,
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey[600])),
+                            Text(
+                              account.phone!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -429,7 +464,9 @@ class _CaReportScreenState extends State<CaReportScreen>
                           Text(
                             'Limit: ₹${account.creditLimit.toStringAsFixed(0)}',
                             style: TextStyle(
-                                fontSize: 11, color: Colors.grey[600]),
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
                           ),
                       ],
                     ),
@@ -444,8 +481,8 @@ class _CaReportScreenState extends State<CaReportScreen>
                       utilizationPercent > 80
                           ? Colors.red
                           : utilizationPercent > 50
-                              ? Colors.orange
-                              : Colors.green,
+                          ? Colors.orange
+                          : Colors.green,
                     ),
                   ),
                   const SizedBox(height: 4),

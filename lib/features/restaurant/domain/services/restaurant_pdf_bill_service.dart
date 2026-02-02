@@ -39,10 +39,7 @@ class RestaurantPdfBillService {
               // Header - Restaurant Name
               pw.Text(
                 restaurantName.toUpperCase(),
-                style: pw.TextStyle(
-                  font: fontBold,
-                  fontSize: 16,
-                ),
+                style: pw.TextStyle(font: fontBold, fontSize: 16),
               ),
               pw.SizedBox(height: 4),
 
@@ -158,44 +155,46 @@ class RestaurantPdfBillService {
               pw.Divider(thickness: 0.5),
 
               // Items
-              ...order.items.map((item) => pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric(vertical: 2),
-                    child: pw.Row(
-                      children: [
-                        pw.Expanded(
-                          flex: 4,
-                          child: pw.Text(
-                            item.itemName,
-                            style: pw.TextStyle(font: font, fontSize: 8),
-                          ),
+              ...order.items.map(
+                (item) => pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(vertical: 2),
+                  child: pw.Row(
+                    children: [
+                      pw.Expanded(
+                        flex: 4,
+                        child: pw.Text(
+                          item.itemName,
+                          style: pw.TextStyle(font: font, fontSize: 8),
                         ),
-                        pw.SizedBox(
-                          width: 25,
-                          child: pw.Text(
-                            item.quantity.toString(),
-                            style: pw.TextStyle(font: font, fontSize: 8),
-                            textAlign: pw.TextAlign.center,
-                          ),
+                      ),
+                      pw.SizedBox(
+                        width: 25,
+                        child: pw.Text(
+                          item.quantity.toString(),
+                          style: pw.TextStyle(font: font, fontSize: 8),
+                          textAlign: pw.TextAlign.center,
                         ),
-                        pw.SizedBox(
-                          width: 35,
-                          child: pw.Text(
-                            item.unitPrice.toStringAsFixed(0),
-                            style: pw.TextStyle(font: font, fontSize: 8),
-                            textAlign: pw.TextAlign.right,
-                          ),
+                      ),
+                      pw.SizedBox(
+                        width: 35,
+                        child: pw.Text(
+                          item.unitPrice.toStringAsFixed(0),
+                          style: pw.TextStyle(font: font, fontSize: 8),
+                          textAlign: pw.TextAlign.right,
                         ),
-                        pw.SizedBox(
-                          width: 40,
-                          child: pw.Text(
-                            item.totalPrice.toStringAsFixed(0),
-                            style: pw.TextStyle(font: font, fontSize: 8),
-                            textAlign: pw.TextAlign.right,
-                          ),
+                      ),
+                      pw.SizedBox(
+                        width: 40,
+                        child: pw.Text(
+                          item.totalPrice.toStringAsFixed(0),
+                          style: pw.TextStyle(font: font, fontSize: 8),
+                          textAlign: pw.TextAlign.right,
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               pw.SizedBox(height: 4),
               pw.Divider(thickness: 0.5),
@@ -204,18 +203,8 @@ class RestaurantPdfBillService {
               _buildTotalRow('Subtotal', bill.subtotal, font),
 
               // Taxes
-              if (bill.cgst > 0)
-                _buildTotalRow(
-                  'CGST',
-                  bill.cgst,
-                  font,
-                ),
-              if (bill.sgst > 0)
-                _buildTotalRow(
-                  'SGST',
-                  bill.sgst,
-                  font,
-                ),
+              if (bill.cgst > 0) _buildTotalRow('CGST', bill.cgst, font),
+              if (bill.sgst > 0) _buildTotalRow('SGST', bill.sgst, font),
 
               // Discounts
               if (bill.discountAmount > 0)

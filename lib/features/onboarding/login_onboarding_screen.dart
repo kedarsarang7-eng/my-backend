@@ -134,13 +134,13 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen>
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.0, 0.05),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.0, 0.05),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                  ),
               child: child,
             ),
           );
@@ -154,91 +154,94 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          gradient: FuturisticColors.lightBackgroundGradient,
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Column(
-              children: [
-                // Top bar with skip button
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Page indicators
-                      Row(
-                        children: List.generate(3, (index) {
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.only(right: 8),
-                            width: _currentPage == index ? 28 : 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: _currentPage == index
-                                  ? FuturisticColors.primary
-                                  : FuturisticColors.primary.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          );
-                        }),
-                      ),
-                      // Skip button
-                      if (_currentPage < 2)
-                        TextButton(
-                          onPressed: _skipOnboarding,
-                          child: Text(
-                            'Skip',
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: FuturisticColors.textMuted,
-                              fontWeight: FontWeight.w500,
-                            ),
+      decoration: BoxDecoration(
+        gradient: FuturisticColors.lightBackgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Top bar with skip button
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Page indicators
+                    Row(
+                      children: List.generate(3, (index) {
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.only(right: 8),
+                          width: _currentPage == index ? 28 : 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: _currentPage == index
+                                ? FuturisticColors.primary
+                                : FuturisticColors.primary.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        );
+                      }),
+                    ),
+                    // Skip button
+                    if (_currentPage < 2)
+                      TextButton(
+                        onPressed: _skipOnboarding,
+                        child: Text(
+                          'Skip',
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: FuturisticColors.textMuted,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
+              ),
 
-                // Page content
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() => _currentPage = index);
-                      HapticFeedback.selectionClick();
-                      // Restart animations
-                      _fadeController.reset();
-                      _slideController.reset();
-                      _fadeController.forward();
-                      _slideController.forward();
-                    },
-                    children: [
-                      _WelcomeScreen(
-                        fadeController: _fadeController,
-                        slideController: _slideController,
-                        onNext: _nextPage,
-                      ),
-                      _FeaturesScreen(
-                        fadeController: _fadeController,
-                        slideController: _slideController,
-                        onNext: _nextPage,
-                      ),
-                      _GetStartedScreen(
-                        fadeController: _fadeController,
-                        slideController: _slideController,
-                        onComplete: _completeOnboarding,
-                        isNavigating: _isNavigating,
-                      ),
-                    ],
-                  ),
+              // Page content
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() => _currentPage = index);
+                    HapticFeedback.selectionClick();
+                    // Restart animations
+                    _fadeController.reset();
+                    _slideController.reset();
+                    _fadeController.forward();
+                    _slideController.forward();
+                  },
+                  children: [
+                    _WelcomeScreen(
+                      fadeController: _fadeController,
+                      slideController: _slideController,
+                      onNext: _nextPage,
+                    ),
+                    _FeaturesScreen(
+                      fadeController: _fadeController,
+                      slideController: _slideController,
+                      onNext: _nextPage,
+                    ),
+                    _GetStartedScreen(
+                      fadeController: _fadeController,
+                      slideController: _slideController,
+                      onComplete: _completeOnboarding,
+                      isNavigating: _isNavigating,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -259,13 +262,10 @@ class _WelcomeScreen extends StatelessWidget {
     return FadeTransition(
       opacity: fadeController,
       child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.1),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(
-          parent: slideController,
-          curve: Curves.easeOut,
-        )),
+        position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: slideController, curve: Curves.easeOut),
+            ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
@@ -281,7 +281,7 @@ class _WelcomeScreen extends StatelessWidget {
                     end: Alignment.bottomRight,
                     colors: [
                       FuturisticColors.primary,
-                      FuturisticColors.secondary
+                      FuturisticColors.secondary,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(30),
@@ -366,13 +366,10 @@ class _FeaturesScreen extends StatelessWidget {
     return FadeTransition(
       opacity: fadeController,
       child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.1),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(
-          parent: slideController,
-          curve: Curves.easeOut,
-        )),
+        position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: slideController, curve: Curves.easeOut),
+            ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
@@ -474,11 +471,7 @@ class _FeatureCard extends StatelessWidget {
               color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 28,
-            ),
+            child: Icon(icon, color: color, size: 28),
           ),
 
           const SizedBox(width: 16),
@@ -530,13 +523,10 @@ class _GetStartedScreen extends StatelessWidget {
     return FadeTransition(
       opacity: fadeController,
       child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.1),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(
-          parent: slideController,
-          curve: Curves.easeOut,
-        )),
+        position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: slideController, curve: Curves.easeOut),
+            ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(

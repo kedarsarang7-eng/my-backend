@@ -87,12 +87,14 @@ class CreditNoteService {
         final originalItem = bill.items.firstWhere(
           (item) => item.productId == input.productId,
           orElse: () => throw Exception(
-              'Item not found in original bill: ${input.productId}'),
+            'Item not found in original bill: ${input.productId}',
+          ),
         );
 
         if (input.returnQuantity > originalItem.quantity) {
           throw Exception(
-              'Return quantity exceeds original: ${originalItem.productName}');
+            'Return quantity exceeds original: ${originalItem.productName}',
+          );
         }
 
         // Calculate taxable value for returned items
@@ -100,7 +102,7 @@ class CreditNoteService {
         final baseAmount = originalItem.unitPrice * input.returnQuantity;
         final discountRatio = originalItem.qty > 0
             ? originalItem.discount /
-                (originalItem.unitPrice * originalItem.qty)
+                  (originalItem.unitPrice * originalItem.qty)
             : 0;
         final returnTaxableValue = baseAmount * (1 - discountRatio);
 
@@ -118,24 +120,26 @@ class CreditNoteService {
           sgst = returnTaxableValue * (gstRate / 2) / 100;
         }
 
-        validatedItems.add(CreditNoteItem(
-          id: const Uuid().v4(),
-          productId: input.productId,
-          productName: originalItem.productName,
-          hsnCode: originalItem.hsn.isNotEmpty ? originalItem.hsn : null,
-          originalQuantity: originalItem.quantity,
-          returnedQuantity: input.returnQuantity,
-          unitPrice: originalItem.unitPrice,
-          discountPercent: discountRatio * 100,
-          gstRate: gstRate,
-          taxableValue: returnTaxableValue,
-          cgstAmount: cgst,
-          sgstAmount: sgst,
-          igstAmount: igst,
-          totalAmount: returnTaxableValue + cgst + sgst + igst,
-          unit: originalItem.unit,
-          stockReturned: false,
-        ));
+        validatedItems.add(
+          CreditNoteItem(
+            id: const Uuid().v4(),
+            productId: input.productId,
+            productName: originalItem.productName,
+            hsnCode: originalItem.hsn.isNotEmpty ? originalItem.hsn : null,
+            originalQuantity: originalItem.quantity,
+            returnedQuantity: input.returnQuantity,
+            unitPrice: originalItem.unitPrice,
+            discountPercent: discountRatio * 100,
+            gstRate: gstRate,
+            taxableValue: returnTaxableValue,
+            cgstAmount: cgst,
+            sgstAmount: sgst,
+            igstAmount: igst,
+            totalAmount: returnTaxableValue + cgst + sgst + igst,
+            unit: originalItem.unit,
+            stockReturned: false,
+          ),
+        );
 
         totalTaxableValue += returnTaxableValue;
         totalCgst += cgst;
@@ -147,8 +151,10 @@ class CreditNoteService {
       final creditGrandTotal = totalTaxableValue + totalGst;
 
       // 3. Determine credit note type
-      final isFullReturn = validatedItems.every(
-              (item) => item.returnedQuantity == item.originalQuantity) &&
+      final isFullReturn =
+          validatedItems.every(
+            (item) => item.returnedQuantity == item.originalQuantity,
+          ) &&
           validatedItems.length == bill.items.length;
 
       // 4. Calculate original bill GST totals from items
@@ -182,13 +188,16 @@ class CreditNoteService {
         originalBillNumber: bill.invoiceNumber,
         originalBillDate: bill.date,
         customerId: bill.customerId,
-        customerName:
-            bill.customerName.isEmpty ? 'Walk-in Customer' : bill.customerName,
+        customerName: bill.customerName.isEmpty
+            ? 'Walk-in Customer'
+            : bill.customerName,
         customerGstin: bill.customerGst.isNotEmpty ? bill.customerGst : null,
-        customerPhone:
-            bill.customerPhone.isNotEmpty ? bill.customerPhone : null,
-        customerAddress:
-            bill.customerAddress.isNotEmpty ? bill.customerAddress : null,
+        customerPhone: bill.customerPhone.isNotEmpty
+            ? bill.customerPhone
+            : null,
+        customerAddress: bill.customerAddress.isNotEmpty
+            ? bill.customerAddress
+            : null,
         type: isFullReturn
             ? CreditNoteType.fullReturn
             : CreditNoteType.partialReturn,
@@ -229,7 +238,8 @@ class CreditNoteService {
       await _adjustCustomerLedger(creditNote);
 
       debugPrint(
-          'CreditNoteService: Created credit note ${creditNote.creditNoteNumber}');
+        'CreditNoteService: Created credit note ${creditNote.creditNoteNumber}',
+      );
       return creditNote;
     } catch (e) {
       debugPrint('CreditNoteService: Error creating credit note: $e');
@@ -248,10 +258,12 @@ class CreditNoteService {
           userId: creditNote.userId,
         );
         debugPrint(
-            'CreditNoteService: Returned ${item.returnedQuantity} ${item.unit} of ${item.productName}');
+          'CreditNoteService: Returned ${item.returnedQuantity} ${item.unit} of ${item.productName}',
+        );
       } catch (e) {
         debugPrint(
-            'CreditNoteService: Failed to return stock for ${item.productName}: $e');
+          'CreditNoteService: Failed to return stock for ${item.productName}: $e',
+        );
       }
     }
 
@@ -267,7 +279,8 @@ class CreditNoteService {
       // For now, we mark it as adjusted
       await _repository.markLedgerAdjusted(creditNote.id);
       debugPrint(
-          'CreditNoteService: Adjusted ledger for customer ${creditNote.customerName}');
+        'CreditNoteService: Adjusted ledger for customer ${creditNote.customerName}',
+      );
     } catch (e) {
       debugPrint('CreditNoteService: Failed to adjust ledger: $e');
     }
@@ -360,7 +373,9 @@ class CreditNoteService {
 
   /// Adjust credit note against a new invoice
   Future<bool> adjustAgainstInvoice(
-      String creditNoteId, String newBillId) async {
+    String creditNoteId,
+    String newBillId,
+  ) async {
     try {
       final creditNote = await _repository.getCreditNoteById(creditNoteId);
       if (creditNote == null ||
@@ -373,8 +388,10 @@ class CreditNoteService {
       if (!billResult.isSuccess || billResult.data == null) return false;
       final Bill newBill = billResult.data!;
 
-      final adjustAmount =
-          creditNote.balanceAmount.clamp(0.0, newBill.grandTotal);
+      final adjustAmount = creditNote.balanceAmount.clamp(
+        0.0,
+        newBill.grandTotal,
+      );
 
       // Update credit note
       await _repository.adjustAgainstBill(
@@ -384,7 +401,8 @@ class CreditNoteService {
       );
 
       debugPrint(
-          'CreditNoteService: Adjusted ₹$adjustAmount against bill ${newBill.invoiceNumber}');
+        'CreditNoteService: Adjusted ₹$adjustAmount against bill ${newBill.invoiceNumber}',
+      );
       return true;
     } catch (e) {
       debugPrint('CreditNoteService: Error adjusting credit note: $e');
@@ -404,7 +422,7 @@ class CreditNoteService {
   /// Verify credit note ledger integrity
   /// Returns verification report with discrepancies
   Future<CreditNoteLedgerVerificationResult>
-      verifyCreditNoteLedgerIntegrity() async {
+  verifyCreditNoteLedgerIntegrity() async {
     final userId = sl<SessionManager>().ownerId;
     if (userId == null) {
       return CreditNoteLedgerVerificationResult(
@@ -439,8 +457,9 @@ class CreditNoteService {
         if (creditNote.originalBillId.isEmpty) {
           issues.add('Missing original bill reference');
         } else {
-          final billResult =
-              await _billsRepository.getById(creditNote.originalBillId);
+          final billResult = await _billsRepository.getById(
+            creditNote.originalBillId,
+          );
           if (!billResult.isSuccess || billResult.data == null) {
             issues.add('Original bill not found: ${creditNote.originalBillId}');
           }
@@ -454,15 +473,18 @@ class CreditNoteService {
         // 4. Verify GST reversal amount matches credit note total
         final gstReversal = creditNote.gstReversal;
         if (gstReversal != null) {
-          final expectedGst = creditNote.totalCgst +
+          final expectedGst =
+              creditNote.totalCgst +
               creditNote.totalSgst +
               creditNote.totalIgst;
-          final reversedGst = gstReversal.reversedCgst +
+          final reversedGst =
+              gstReversal.reversedCgst +
               gstReversal.reversedSgst +
               gstReversal.reversedIgst;
           if ((expectedGst - reversedGst).abs() > 0.01) {
             issues.add(
-                'GST reversal mismatch: expected $expectedGst, got $reversedGst');
+              'GST reversal mismatch: expected $expectedGst, got $reversedGst',
+            );
           }
         }
 
@@ -472,15 +494,17 @@ class CreditNoteService {
         }
 
         if (issues.isNotEmpty) {
-          discrepancies.add(CreditNoteDiscrepancy(
-            creditNoteId: creditNote.id,
-            creditNoteNumber: creditNote.creditNoteNumber,
-            originalBillId: creditNote.originalBillId,
-            originalBillNumber: creditNote.originalBillNumber,
-            grandTotal: creditNote.grandTotal,
-            issues: issues,
-            checkedAt: DateTime.now(),
-          ));
+          discrepancies.add(
+            CreditNoteDiscrepancy(
+              creditNoteId: creditNote.id,
+              creditNoteNumber: creditNote.creditNoteNumber,
+              originalBillId: creditNote.originalBillId,
+              originalBillNumber: creditNote.originalBillNumber,
+              grandTotal: creditNote.grandTotal,
+              issues: issues,
+              checkedAt: DateTime.now(),
+            ),
+          );
         }
       }
     } catch (e) {
@@ -523,12 +547,12 @@ class CreditNoteLedgerVerificationResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'status': status,
-        'checkedCount': checkedCount,
-        'discrepancies': discrepancies.map((d) => d.toJson()).toList(),
-        'timestamp': timestamp.toIso8601String(),
-        if (errorMessage != null) 'errorMessage': errorMessage,
-      };
+    'status': status,
+    'checkedCount': checkedCount,
+    'discrepancies': discrepancies.map((d) => d.toJson()).toList(),
+    'timestamp': timestamp.toIso8601String(),
+    if (errorMessage != null) 'errorMessage': errorMessage,
+  };
 }
 
 /// Credit note discrepancy record
@@ -552,14 +576,14 @@ class CreditNoteDiscrepancy {
   });
 
   Map<String, dynamic> toJson() => {
-        'creditNoteId': creditNoteId,
-        'creditNoteNumber': creditNoteNumber,
-        'originalBillId': originalBillId,
-        'originalBillNumber': originalBillNumber,
-        'grandTotal': grandTotal,
-        'issues': issues,
-        'checkedAt': checkedAt.toIso8601String(),
-      };
+    'creditNoteId': creditNoteId,
+    'creditNoteNumber': creditNoteNumber,
+    'originalBillId': originalBillId,
+    'originalBillNumber': originalBillNumber,
+    'grandTotal': grandTotal,
+    'issues': issues,
+    'checkedAt': checkedAt.toIso8601String(),
+  };
 }
 
 /// Input for creating credit note items
@@ -567,8 +591,5 @@ class CreditNoteItemInput {
   final String productId;
   final double returnQuantity;
 
-  CreditNoteItemInput({
-    required this.productId,
-    required this.returnQuantity,
-  });
+  CreditNoteItemInput({required this.productId, required this.returnQuantity});
 }

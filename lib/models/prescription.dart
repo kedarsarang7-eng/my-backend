@@ -48,7 +48,8 @@ class Prescription {
       patientId: map['patientId'] ?? '',
       doctorId: map['doctorId'] ?? '',
       date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
-      medicines: (map['medicines'] as List<dynamic>?)
+      medicines:
+          (map['medicines'] as List<dynamic>?)
               ?.map((e) => MedicineItem.fromMap(e))
               .toList() ??
           [],
@@ -105,20 +106,20 @@ class MedicineItem {
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'dosage': dosage,
-        'timing': timing,
-        'duration': duration,
-        'type': type,
-        'instructions': instructions,
-      };
+    'name': name,
+    'dosage': dosage,
+    'timing': timing,
+    'duration': duration,
+    'type': type,
+    'instructions': instructions,
+  };
 
   factory MedicineItem.fromMap(Map<String, dynamic> map) => MedicineItem(
-        name: map['name'] ?? '',
-        dosage: map['dosage'] ?? '',
-        timing: map['timing'] ?? '',
-        duration: map['duration'] ?? '',
-        type: map['type'] ?? 'Tablet',
-        instructions: map['instructions'] ?? '',
-      );
+    name: map['name'] ?? '',
+    dosage: map['dosage'] ?? '',
+    timing: map['timing'] ?? '',
+    duration: map['duration'] ?? '',
+    type: map['type'] ?? 'Tablet',
+    instructions: map['instructions'] ?? '',
+  );
 }

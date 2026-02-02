@@ -100,8 +100,10 @@ class QueryExecutor {
         lines.add('${i + 1}. ${row['customer_name']}');
       } else {
         // Generic formatting
-        final first3 =
-            row.entries.take(3).map((e) => _formatValue(e.value)).join(', ');
+        final first3 = row.entries
+            .take(3)
+            .map((e) => _formatValue(e.value))
+            .join(', ');
         lines.add('${i + 1}. $first3');
       }
     }
@@ -115,10 +117,12 @@ class QueryExecutor {
 
   String _formatNumber(dynamic value) {
     if (value == null) return '0';
-    final numValue =
-        (value is num) ? value : double.tryParse(value.toString()) ?? 0;
-    return numValue
-        .toStringAsFixed(numValue.truncateToDouble() == numValue ? 0 : 2);
+    final numValue = (value is num)
+        ? value
+        : double.tryParse(value.toString()) ?? 0;
+    return numValue.toStringAsFixed(
+      numValue.truncateToDouble() == numValue ? 0 : 2,
+    );
   }
 
   String _formatKey(String key) {
@@ -126,7 +130,8 @@ class QueryExecutor {
         .replaceAll('_', ' ')
         .split(' ')
         .map(
-            (w) => w.isNotEmpty ? '${w[0].toUpperCase()}${w.substring(1)}' : '')
+          (w) => w.isNotEmpty ? '${w[0].toUpperCase()}${w.substring(1)}' : '',
+        )
         .join(' ');
   }
 

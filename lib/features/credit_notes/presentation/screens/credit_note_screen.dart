@@ -103,10 +103,12 @@ class _CreateCreditNoteScreenState
       final returnItems = <CreditNoteItemInput>[];
       for (final item in widget.bill.items) {
         if (_selectedItems.contains(item.productId)) {
-          returnItems.add(CreditNoteItemInput(
-            productId: item.productId,
-            returnQuantity: _returnQuantities[item.productId] ?? 0,
-          ));
+          returnItems.add(
+            CreditNoteItemInput(
+              productId: item.productId,
+              returnQuantity: _returnQuantities[item.productId] ?? 0,
+            ),
+          );
         }
       }
 
@@ -120,8 +122,9 @@ class _CreateCreditNoteScreenState
       if (creditNote != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Credit Note ${creditNote.creditNoteNumber} created!'),
+            content: Text(
+              'Credit Note ${creditNote.creditNoteNumber} created!',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -174,8 +177,10 @@ class _CreateCreditNoteScreenState
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.receipt_long,
-                            color: isDark ? Colors.white70 : Colors.grey[700]),
+                        Icon(
+                          Icons.receipt_long,
+                          color: isDark ? Colors.white70 : Colors.grey[700],
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           'Original Invoice',
@@ -189,14 +194,21 @@ class _CreateCreditNoteScreenState
                     ),
                     const SizedBox(height: 12),
                     _buildInfoRow(
-                        'Invoice #', widget.bill.invoiceNumber, isDark),
+                      'Invoice #',
+                      widget.bill.invoiceNumber,
+                      isDark,
+                    ),
                     _buildInfoRow(
-                        'Date',
-                        DateFormat('dd MMM yyyy').format(widget.bill.date),
-                        isDark),
+                      'Date',
+                      DateFormat('dd MMM yyyy').format(widget.bill.date),
+                      isDark,
+                    ),
                     _buildInfoRow('Customer', widget.bill.customerName, isDark),
-                    _buildInfoRow('Total Amount',
-                        currencyFormat.format(widget.bill.grandTotal), isDark),
+                    _buildInfoRow(
+                      'Total Amount',
+                      currencyFormat.format(widget.bill.grandTotal),
+                      isDark,
+                    ),
                   ],
                 ),
               ),
@@ -215,8 +227,9 @@ class _CreateCreditNoteScreenState
             ),
             const SizedBox(height: 8),
 
-            ...widget.bill.items
-                .map((item) => _buildItemCard(item, isDark, currencyFormat)),
+            ...widget.bill.items.map(
+              (item) => _buildItemCard(item, isDark, currencyFormat),
+            ),
 
             const SizedBox(height: 16),
 
@@ -378,9 +391,7 @@ class _CreateCreditNoteScreenState
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: isDark ? Colors.white60 : Colors.grey[600],
-            ),
+            style: TextStyle(color: isDark ? Colors.white60 : Colors.grey[600]),
           ),
           Text(
             value,
@@ -395,7 +406,10 @@ class _CreateCreditNoteScreenState
   }
 
   Widget _buildItemCard(
-      BillItem item, bool isDark, NumberFormat currencyFormat) {
+    BillItem item,
+    bool isDark,
+    NumberFormat currencyFormat,
+  ) {
     final isSelected = _selectedItems.contains(item.productId);
     final returnQty = _returnQuantities[item.productId] ?? 0;
 
@@ -471,20 +485,23 @@ class _CreateCreditNoteScreenState
                     iconSize: 20,
                     onPressed: returnQty > 1
                         ? () => setState(() {
-                              _returnQuantities[item.productId] = returnQty - 1;
-                            })
+                            _returnQuantities[item.productId] = returnQty - 1;
+                          })
                         : null,
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white10 : Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       returnQty.toStringAsFixed(
-                          returnQty == returnQty.roundToDouble() ? 0 : 2),
+                        returnQty == returnQty.roundToDouble() ? 0 : 2,
+                      ),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: isDark ? Colors.white : Colors.black87,
@@ -496,8 +513,8 @@ class _CreateCreditNoteScreenState
                     iconSize: 20,
                     onPressed: returnQty < item.qty
                         ? () => setState(() {
-                              _returnQuantities[item.productId] = returnQty + 1;
-                            })
+                            _returnQuantities[item.productId] = returnQty + 1;
+                          })
                         : null,
                   ),
                   Text(
@@ -569,8 +586,8 @@ class _CreditNotesListScreenState extends ConsumerState<CreditNotesListScreen> {
             // Showing a tooltip or snackbar that they need to go to Bills
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content:
-                      Text('Please go to Invoices to create a Credit Note')),
+                content: Text('Please go to Invoices to create a Credit Note'),
+              ),
             );
           },
         ),
@@ -578,140 +595,135 @@ class _CreditNotesListScreenState extends ConsumerState<CreditNotesListScreen> {
       child: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                  color: FuturisticColors.premiumBlue))
+                color: FuturisticColors.premiumBlue,
+              ),
+            )
           : _creditNotes.isEmpty
-              ? EmptyStateWidget(
-                  icon: Icons.receipt_long_outlined,
-                  title: 'No Credit Notes',
-                  description:
-                      'Credit notes created from invoices will appear here.',
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadCreditNotes,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    itemCount: _creditNotes.length,
-                    itemBuilder: (context, index) {
-                      final cn = _creditNotes[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: GlassCard(
-                          borderRadius: 16,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+          ? EmptyStateWidget(
+              icon: Icons.receipt_long_outlined,
+              title: 'No Credit Notes',
+              description:
+                  'Credit notes created from invoices will appear here.',
+            )
+          : RefreshIndicator(
+              onRefresh: _loadCreditNotes,
+              child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 24),
+                itemCount: _creditNotes.length,
+                itemBuilder: (context, index) {
+                  final cn = _creditNotes[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: GlassCard(
+                      borderRadius: 16,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: FuturisticColors.premiumBlue
-                                                .withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Icon(
-                                            Icons.description,
-                                            color: FuturisticColors.premiumBlue,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              cn.creditNoteNumber,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            Text(
-                                              DateFormat('dd MMM yyyy')
-                                                  .format(cn.date),
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: FuturisticColors
-                                                    .textSecondary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: FuturisticColors.premiumBlue
+                                            .withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.description,
+                                        color: FuturisticColors.premiumBlue,
+                                        size: 20,
+                                      ),
                                     ),
-                                    _buildStatusChip(cn.status),
-                                  ],
-                                ),
-                                const Divider(
-                                    height: 24, color: Colors.white10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
+                                    const SizedBox(width: 12),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Customer',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color:
-                                                FuturisticColors.textSecondary,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          cn.customerName,
+                                          cn.creditNoteNumber,
                                           style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white70,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
                                         Text(
-                                          'Amount',
+                                          DateFormat(
+                                            'dd MMM yyyy',
+                                          ).format(cn.date),
                                           style: TextStyle(
-                                            fontSize: 11,
+                                            fontSize: 12,
                                             color:
                                                 FuturisticColors.textSecondary,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          currencyFormat.format(cn.grandTotal),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: FuturisticColors.success,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
+                                _buildStatusChip(cn.status),
                               ],
                             ),
-                          ),
+                            const Divider(height: 24, color: Colors.white10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Customer',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: FuturisticColors.textSecondary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      cn.customerName,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Amount',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: FuturisticColors.textSecondary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      currencyFormat.format(cn.grandTotal),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: FuturisticColors.success,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
     );
   }
 

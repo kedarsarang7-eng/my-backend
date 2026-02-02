@@ -25,8 +25,11 @@ class PeriodLockReminderService {
   }) async {
     final currentDate = now ?? DateTime.now();
     final currentDay = currentDate.day;
-    final daysInMonth =
-        DateTime(currentDate.year, currentDate.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      currentDate.year,
+      currentDate.month + 1,
+      0,
+    ).day;
     final daysRemaining = daysInMonth - currentDay;
 
     // Check if we're approaching month-end (last 5 days)
@@ -40,11 +43,15 @@ class PeriodLockReminderService {
     // Calculate previous month
     final previousMonth = currentDate.month == 1
         ? DateTime(currentDate.year - 1, 12, 31)
-        : DateTime(currentDate.year, currentDate.month - 1,
-            DateTime(currentDate.year, currentDate.month, 0).day);
+        : DateTime(
+            currentDate.year,
+            currentDate.month - 1,
+            DateTime(currentDate.year, currentDate.month, 0).day,
+          );
 
     // Check if previous month is locked
-    final isPreviousMonthLocked = lockDate != null &&
+    final isPreviousMonthLocked =
+        lockDate != null &&
         (lockDate.isAfter(previousMonth) ||
             lockDate.isAtSameMomentAs(previousMonth));
 
@@ -85,17 +92,20 @@ class PeriodLockReminderService {
 
   /// Check if reminder should be shown to user
   /// Returns true if user hasn't dismissed today's reminder
-  bool shouldShowReminder({
-    required DateTime? lastDismissedAt,
-    DateTime? now,
-  }) {
+  bool shouldShowReminder({required DateTime? lastDismissedAt, DateTime? now}) {
     if (lastDismissedAt == null) return true;
 
     final currentDate = now ?? DateTime.now();
-    final today =
-        DateTime(currentDate.year, currentDate.month, currentDate.day);
+    final today = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day,
+    );
     final dismissedDay = DateTime(
-        lastDismissedAt.year, lastDismissedAt.month, lastDismissedAt.day);
+      lastDismissedAt.year,
+      lastDismissedAt.month,
+      lastDismissedAt.day,
+    );
 
     // Show reminder once per day
     return today.isAfter(dismissedDay);
@@ -131,7 +141,7 @@ class PeriodLockReminderService {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     return months[month - 1];
   }
@@ -147,26 +157,33 @@ class PeriodLockReminderService {
     final unclosed = <UnclosedPeriod>[];
 
     // Start from business start month
-    var checkDate =
-        DateTime(businessStartDate.year, businessStartDate.month, 1);
+    var checkDate = DateTime(
+      businessStartDate.year,
+      businessStartDate.month,
+      1,
+    );
 
     // Check each month until previous month
-    while (
-        checkDate.isBefore(DateTime(currentDate.year, currentDate.month, 1))) {
+    while (checkDate.isBefore(
+      DateTime(currentDate.year, currentDate.month, 1),
+    )) {
       final monthEnd = DateTime(checkDate.year, checkDate.month + 1, 0);
 
       // Check if this month is locked
-      final isLocked = lockDate != null &&
+      final isLocked =
+          lockDate != null &&
           (lockDate.isAfter(monthEnd) || lockDate.isAtSameMomentAs(monthEnd));
 
       if (!isLocked) {
-        unclosed.add(UnclosedPeriod(
-          month: checkDate.month,
-          year: checkDate.year,
-          monthName: _getMonthName(checkDate.month),
-          startDate: checkDate,
-          endDate: monthEnd,
-        ));
+        unclosed.add(
+          UnclosedPeriod(
+            month: checkDate.month,
+            year: checkDate.year,
+            monthName: _getMonthName(checkDate.month),
+            startDate: checkDate,
+            endDate: monthEnd,
+          ),
+        );
       }
 
       // Move to next month
@@ -204,15 +221,15 @@ class PeriodLockReminder {
   });
 
   Map<String, dynamic> toJson() => {
-        'userId': userId,
-        'reminderType': reminderType.name,
-        'month': month,
-        'year': year,
-        'daysRemaining': daysRemaining,
-        'message': message,
-        'priority': priority.name,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'userId': userId,
+    'reminderType': reminderType.name,
+    'month': month,
+    'year': year,
+    'daysRemaining': daysRemaining,
+    'message': message,
+    'priority': priority.name,
+    'createdAt': createdAt.toIso8601String(),
+  };
 }
 
 /// Unclosed period information
@@ -232,12 +249,12 @@ class UnclosedPeriod {
   });
 
   Map<String, dynamic> toJson() => {
-        'month': month,
-        'year': year,
-        'monthName': monthName,
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
-      };
+    'month': month,
+    'year': year,
+    'monthName': monthName,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+  };
 }
 
 /// Types of period reminders
@@ -248,8 +265,4 @@ enum PeriodReminderType {
 }
 
 /// Reminder priority levels
-enum ReminderPriority {
-  low,
-  medium,
-  high,
-}
+enum ReminderPriority { low, medium, high }

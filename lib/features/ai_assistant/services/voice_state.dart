@@ -3,5 +3,5 @@ enum VoiceState {
   listening, // Microphone is ON
   processing, // Sending/Receiving from Backend
   speaking, // AI Voice is playing
-  error // Something went wrong
+  error, // Something went wrong
 }

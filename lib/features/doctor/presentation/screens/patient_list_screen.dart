@@ -88,20 +88,25 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                 final filtered = _searchQuery.isEmpty
                     ? patients
                     : patients
-                        .where((p) =>
-                            p.name
-                                .toLowerCase()
-                                .contains(_searchQuery.toLowerCase()) ||
-                            (p.phone?.contains(_searchQuery) ?? false))
-                        .toList();
+                          .where(
+                            (p) =>
+                                p.name.toLowerCase().contains(
+                                  _searchQuery.toLowerCase(),
+                                ) ||
+                                (p.phone?.contains(_searchQuery) ?? false),
+                          )
+                          .toList();
 
                 if (filtered.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.person_off_outlined,
-                            size: 64, color: Colors.grey),
+                        const Icon(
+                          Icons.person_off_outlined,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty
@@ -120,24 +125,33 @@ class _PatientListScreenState extends ConsumerState<PatientListScreen> {
                     final patient = filtered[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: ModernCard(
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor:
-                                FuturisticColors.accent1.withOpacity(0.2),
+                            backgroundColor: FuturisticColors.accent1
+                                .withOpacity(0.2),
                             child: Text(patient.name[0].toUpperCase()),
                           ),
-                          title: Text(patient.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                          title: Text(
+                            patient.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                           subtitle: Text(
-                              '${patient.phone} • ${patient.age} yrs • ${patient.gender}',
-                              style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7))),
-                          trailing: const Icon(Icons.chevron_right,
-                              color: Colors.white70),
+                            '${patient.phone} • ${patient.age} yrs • ${patient.gender}',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white70,
+                          ),
                           onTap: () {
                             // View Details
                           },

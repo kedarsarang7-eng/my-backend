@@ -47,8 +47,9 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
   }
 
   Future<void> _loadData() async {
-    final categoriesResult =
-        await _menuRepo.getCategoriesByVendor(widget.vendorId);
+    final categoriesResult = await _menuRepo.getCategoriesByVendor(
+      widget.vendorId,
+    );
     final menuResult = await _menuRepo.getAvailableItems(widget.vendorId);
 
     setState(() {
@@ -109,25 +110,21 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                   ),
                 ),
                 // Categories
-                SliverToBoxAdapter(
-                  child: _buildCategoryChips(),
-                ),
+                SliverToBoxAdapter(child: _buildCategoryChips()),
                 // Popular section
                 if (_selectedCategoryId == null)
-                  SliverToBoxAdapter(
-                    child: _buildPopularSection(),
-                  ),
+                  SliverToBoxAdapter(child: _buildPopularSection()),
                 // Menu items grid
                 SliverPadding(
                   padding: const EdgeInsets.all(16),
                   sliver: SliverGrid(
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.75,
-                    ),
+                          maxCrossAxisExtent: 200,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.75,
+                        ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) =>
                           _buildMenuItemCard(_filteredItems[index]),
@@ -168,15 +165,17 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               onSelected: (_) => setState(() => _selectedCategoryId = null),
             ),
             const SizedBox(width: 8),
-            ..._categories.map((cat) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
-                    label: Text(cat.name),
-                    selected: _selectedCategoryId == cat.id,
-                    onSelected: (_) =>
-                        setState(() => _selectedCategoryId = cat.id),
-                  ),
-                )),
+            ..._categories.map(
+              (cat) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: ChoiceChip(
+                  label: Text(cat.name),
+                  selected: _selectedCategoryId == cat.id,
+                  onSelected: (_) =>
+                      setState(() => _selectedCategoryId = cat.id),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -196,10 +195,7 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
             children: [
               const Icon(Icons.local_fire_department, color: Colors.orange),
               const SizedBox(width: 8),
-              Text(
-                'Popular',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text('Popular', style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
         ),
@@ -238,7 +234,7 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                     ? Image.network(
                         item.imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _buildImagePlaceholder(),
+                        errorBuilder: (_, _, _) => _buildImagePlaceholder(),
                       )
                     : _buildImagePlaceholder(),
                 // Dietary badges
@@ -254,8 +250,11 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Icon(Icons.eco,
-                              size: 16, color: FuturisticColors.success),
+                          child: const Icon(
+                            Icons.eco,
+                            size: 16,
+                            color: FuturisticColors.success,
+                          ),
                         ),
                       if (item.isSpicy)
                         Container(
@@ -265,8 +264,10 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child:
-                              const Text('🌶️', style: TextStyle(fontSize: 12)),
+                          child: const Text(
+                            '🌶️',
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
                     ],
                   ),
@@ -305,7 +306,9 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                               onTap: () => _addToCart(item.id),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 4),
+                                  horizontal: 12,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.primary,
                                   borderRadius: BorderRadius.circular(8),
@@ -334,8 +337,9 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   child: Text('$quantity'),
                                 ),
                                 InkWell(
@@ -343,12 +347,16 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(4),
                                     ),
-                                    child: const Icon(Icons.add,
-                                        size: 16, color: Colors.white),
+                                    child: const Icon(
+                                      Icons.add,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -424,8 +432,9 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
                 child: ListView(
                   controller: scrollController,
                   children: _cart.entries.map((entry) {
-                    final item =
-                        _menuItems.firstWhere((i) => i.id == entry.key);
+                    final item = _menuItems.firstWhere(
+                      (i) => i.id == entry.key,
+                    );
                     return ListTile(
                       title: Text(item.name),
                       subtitle: Text('₹${item.price} × ${entry.value}'),
@@ -442,16 +451,13 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Total',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+                  Text('Total', style: Theme.of(context).textTheme.titleLarge),
                   Text(
                     '₹${_cartTotal.toStringAsFixed(0)}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -493,8 +499,9 @@ class _CustomerMenuScreenState extends State<CustomerMenuScreen> {
     final result = await _orderRepo.createOrder(
       vendorId: widget.vendorId,
       customerId: widget.customerId,
-      orderType:
-          widget.tableNumber != null ? OrderType.dineIn : OrderType.takeaway,
+      orderType: widget.tableNumber != null
+          ? OrderType.dineIn
+          : OrderType.takeaway,
       items: orderItems,
       tableId: widget.tableId,
       tableNumber: widget.tableNumber,

@@ -28,7 +28,9 @@ class EInvoiceRepository {
       final id = const Uuid().v4();
       final now = DateTime.now();
 
-      await _db.into(_db.eInvoices).insert(
+      await _db
+          .into(_db.eInvoices)
+          .insert(
             EInvoicesCompanion.insert(
               id: id,
               userId: userId,
@@ -38,9 +40,9 @@ class EInvoiceRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.eInvoices)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.eInvoices,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Failed to create e-invoice');
@@ -63,18 +65,19 @@ class EInvoiceRepository {
     String? signedQrCode,
   }) async {
     try {
-      await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id)))
-          .write(EInvoicesCompanion(
-        irn: Value(irn),
-        ackNumber: Value(ackNumber),
-        ackDate: Value(ackDate),
-        qrCode: Value(qrCode),
-        signedInvoice: Value(signedInvoice),
-        signedQrCode: Value(signedQrCode),
-        status: const Value('GENERATED'),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id))).write(
+        EInvoicesCompanion(
+          irn: Value(irn),
+          ackNumber: Value(ackNumber),
+          ackDate: Value(ackDate),
+          qrCode: Value(qrCode),
+          signedInvoice: Value(signedInvoice),
+          signedQrCode: Value(signedQrCode),
+          status: const Value('GENERATED'),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       return getEInvoiceById(id);
     } catch (e) {
@@ -89,18 +92,19 @@ class EInvoiceRepository {
   }) async {
     try {
       // First get current retry count
-      final current = await (_db.select(_db.eInvoices)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final current = await (_db.select(
+        _db.eInvoices,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
       final currentRetries = current?.retryCount ?? 0;
 
-      await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id)))
-          .write(EInvoicesCompanion(
-        status: const Value('FAILED'),
-        lastError: Value(error),
-        retryCount: Value(currentRetries + 1),
-        updatedAt: Value(DateTime.now()),
-      ));
+      await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id))).write(
+        EInvoicesCompanion(
+          status: const Value('FAILED'),
+          lastError: Value(error),
+          retryCount: Value(currentRetries + 1),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
 
       return RepositoryResult.success(null);
     } catch (e) {
@@ -114,14 +118,15 @@ class EInvoiceRepository {
     required String reason,
   }) async {
     try {
-      await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id)))
-          .write(EInvoicesCompanion(
-        status: const Value('CANCELLED'),
-        cancelReason: Value(reason),
-        cancelledAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id))).write(
+        EInvoicesCompanion(
+          status: const Value('CANCELLED'),
+          cancelReason: Value(reason),
+          cancelledAt: Value(DateTime.now()),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       return RepositoryResult.success(null);
     } catch (e) {
@@ -132,9 +137,9 @@ class EInvoiceRepository {
   /// Get e-invoice by ID
   Future<RepositoryResult<EInvoiceModel>> getEInvoiceById(String id) async {
     try {
-      final entity = await (_db.select(_db.eInvoices)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.eInvoices,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('e-Invoice not found');
@@ -148,11 +153,12 @@ class EInvoiceRepository {
 
   /// Get e-invoice by bill ID
   Future<RepositoryResult<EInvoiceModel?>> getEInvoiceByBillId(
-      String billId) async {
+    String billId,
+  ) async {
     try {
-      final entity = await (_db.select(_db.eInvoices)
-            ..where((t) => t.billId.equals(billId)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.eInvoices,
+      )..where((t) => t.billId.equals(billId))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.success(null);
@@ -199,17 +205,23 @@ class EInvoiceRepository {
 
   /// Get pending e-invoices (for retry queue)
   Future<RepositoryResult<List<EInvoiceModel>>> getPendingEInvoices(
-      String userId) async {
+    String userId,
+  ) async {
     try {
-      final entities = await (_db.select(_db.eInvoices)
-            ..where((t) =>
-                t.userId.equals(userId) & t.status.isIn(['PENDING', 'FAILED']))
-            ..where((t) => t.retryCount.isSmallerThanValue(3))
-            ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
-          .get();
+      final entities =
+          await (_db.select(_db.eInvoices)
+                ..where(
+                  (t) =>
+                      t.userId.equals(userId) &
+                      t.status.isIn(['PENDING', 'FAILED']),
+                )
+                ..where((t) => t.retryCount.isSmallerThanValue(3))
+                ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
+              .get();
 
       return RepositoryResult.success(
-          entities.map((e) => EInvoiceModelX.fromEntity(e)).toList());
+        entities.map((e) => EInvoiceModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching pending e-invoices: $e');
     }
@@ -236,7 +248,9 @@ class EInvoiceRepository {
       final id = const Uuid().v4();
       final now = DateTime.now();
 
-      await _db.into(_db.eWayBills).insert(
+      await _db
+          .into(_db.eWayBills)
+          .insert(
             EWayBillsCompanion.insert(
               id: id,
               userId: userId,
@@ -255,9 +269,9 @@ class EInvoiceRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.eWayBills)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.eWayBills,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('Failed to create e-way bill');
@@ -277,15 +291,16 @@ class EInvoiceRepository {
     required DateTime validUntil,
   }) async {
     try {
-      await (_db.update(_db.eWayBills)..where((t) => t.id.equals(id)))
-          .write(EWayBillsCompanion(
-        ewbNumber: Value(ewbNumber),
-        ewbDate: Value(ewbDate),
-        validUntil: Value(validUntil),
-        status: const Value('GENERATED'),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(_db.eWayBills)..where((t) => t.id.equals(id))).write(
+        EWayBillsCompanion(
+          ewbNumber: Value(ewbNumber),
+          ewbDate: Value(ewbDate),
+          validUntil: Value(validUntil),
+          status: const Value('GENERATED'),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       return getEWayBillById(id);
     } catch (e) {
@@ -296,9 +311,9 @@ class EInvoiceRepository {
   /// Get e-way bill by ID
   Future<RepositoryResult<EWayBillModel>> getEWayBillById(String id) async {
     try {
-      final entity = await (_db.select(_db.eWayBills)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.eWayBills,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entity == null) {
         return RepositoryResult.failure('e-Way Bill not found');
@@ -326,7 +341,8 @@ class EInvoiceRepository {
 
       final entities = await query.get();
       return RepositoryResult.success(
-          entities.map((e) => EWayBillModelX.fromEntity(e)).toList());
+        entities.map((e) => EWayBillModelX.fromEntity(e)).toList(),
+      );
     } catch (e) {
       return RepositoryResult.failure('Error fetching e-way bills: $e');
     }
@@ -338,29 +354,31 @@ class EInvoiceRepository {
 
   /// Get unsynced e-invoices
   Future<List<EInvoiceModel>> getUnsyncedEInvoices(String userId) async {
-    final entities = await (_db.select(_db.eInvoices)
-          ..where((t) => t.userId.equals(userId) & t.isSynced.equals(false)))
-        .get();
+    final entities = await (_db.select(
+      _db.eInvoices,
+    )..where((t) => t.userId.equals(userId) & t.isSynced.equals(false))).get();
     return entities.map((e) => EInvoiceModelX.fromEntity(e)).toList();
   }
 
   /// Mark e-invoice as synced
   Future<void> markEInvoiceSynced(String id) async {
-    await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id)))
-        .write(const EInvoicesCompanion(isSynced: Value(true)));
+    await (_db.update(_db.eInvoices)..where((t) => t.id.equals(id))).write(
+      const EInvoicesCompanion(isSynced: Value(true)),
+    );
   }
 
   /// Get unsynced e-way bills
   Future<List<EWayBillModel>> getUnsyncedEWayBills(String userId) async {
-    final entities = await (_db.select(_db.eWayBills)
-          ..where((t) => t.userId.equals(userId) & t.isSynced.equals(false)))
-        .get();
+    final entities = await (_db.select(
+      _db.eWayBills,
+    )..where((t) => t.userId.equals(userId) & t.isSynced.equals(false))).get();
     return entities.map((e) => EWayBillModelX.fromEntity(e)).toList();
   }
 
   /// Mark e-way bill as synced
   Future<void> markEWayBillSynced(String id) async {
-    await (_db.update(_db.eWayBills)..where((t) => t.id.equals(id)))
-        .write(const EWayBillsCompanion(isSynced: Value(true)));
+    await (_db.update(_db.eWayBills)..where((t) => t.id.equals(id))).write(
+      const EWayBillsCompanion(isSynced: Value(true)),
+    );
   }
 }

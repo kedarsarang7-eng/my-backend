@@ -49,18 +49,18 @@ class BankAccount {
   });
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'accountName': accountName,
-        'bankName': bankName,
-        'accountNumber': accountNumber,
-        'ifsc': ifsc,
-        'openingBalance': openingBalance,
-        'currentBalance': currentBalance,
-        'isPrimary': isPrimary,
-        'isActive': isActive,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'accountName': accountName,
+    'bankName': bankName,
+    'accountNumber': accountNumber,
+    'ifsc': ifsc,
+    'openingBalance': openingBalance,
+    'currentBalance': currentBalance,
+    'isPrimary': isPrimary,
+    'isActive': isActive,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 /// Bank Transaction Model for UI
@@ -142,7 +142,9 @@ class BankRepository {
         updatedAt: now,
       );
 
-      await database.into(database.bankAccounts).insert(
+      await database
+          .into(database.bankAccounts)
+          .insert(
             BankAccountsCompanion.insert(
               id: id,
               userId: userId,
@@ -172,12 +174,13 @@ class BankRepository {
   }
 
   /// Get all bank accounts
-  Future<RepositoryResult<List<BankAccount>>> getAccounts(
-      {required String userId}) async {
+  Future<RepositoryResult<List<BankAccount>>> getAccounts({
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<List<BankAccount>>(() async {
-      final results = await (database.select(database.bankAccounts)
-            ..where((t) => t.userId.equals(userId) & t.isActive.equals(true)))
-          .get();
+      final results = await (database.select(
+        database.bankAccounts,
+      )..where((t) => t.userId.equals(userId) & t.isActive.equals(true))).get();
 
       return results.map(_entityToAccount).toList();
     }, 'getAccounts');
@@ -193,10 +196,9 @@ class BankRepository {
 
   /// Watch a single bank account
   Stream<BankAccount> watchAccount(String id) {
-    return (database.select(database.bankAccounts)
-          ..where((t) => t.id.equals(id)))
-        .watchSingle()
-        .map(_entityToAccount);
+    return (database.select(
+      database.bankAccounts,
+    )..where((t) => t.id.equals(id))).watchSingle().map(_entityToAccount);
   }
 
   /// Watch transactions for an account
@@ -209,8 +211,9 @@ class BankRepository {
   }
 
   /// Get total balance across all accounts
-  Future<RepositoryResult<double>> getTotalBalance(
-      {required String userId}) async {
+  Future<RepositoryResult<double>> getTotalBalance({
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<double>(() async {
       final query = database.select(database.bankAccounts)
         ..where((t) => t.userId.equals(userId) & t.isActive.equals(true));
@@ -242,9 +245,9 @@ class BankRepository {
       // Start database transaction
       await database.transaction(() async {
         // 1. Get current account
-        final account = await (database.select(database.bankAccounts)
-              ..where((t) => t.id.equals(accountId)))
-            .getSingleOrNull();
+        final account = await (database.select(
+          database.bankAccounts,
+        )..where((t) => t.id.equals(accountId))).getSingleOrNull();
 
         if (account == null) throw Exception('Account not found');
 
@@ -254,16 +257,20 @@ class BankRepository {
             : account.currentBalance - amount;
 
         // 3. Update account balance
-        await (database.update(database.bankAccounts)
-              ..where((t) => t.id.equals(accountId)))
-            .write(BankAccountsCompanion(
-          currentBalance: Value(newBalance),
-          updatedAt: Value(now),
-          isSynced: const Value(false),
-        ));
+        await (database.update(
+          database.bankAccounts,
+        )..where((t) => t.id.equals(accountId))).write(
+          BankAccountsCompanion(
+            currentBalance: Value(newBalance),
+            updatedAt: Value(now),
+            isSynced: const Value(false),
+          ),
+        );
 
         // 4. Insert transaction record
-        await database.into(database.bankTransactions).insert(
+        await database
+            .into(database.bankTransactions)
+            .insert(
               BankTransactionsCompanion.insert(
                 id: id,
                 userId: userId,
@@ -286,7 +293,7 @@ class BankRepository {
           documentId: accountId,
           payload: {
             'currentBalance': newBalance,
-            'updatedAt': now.toIso8601String()
+            'updatedAt': now.toIso8601String(),
           },
         );
         await syncManager.enqueue(accountUpdate);
@@ -320,17 +327,17 @@ class BankRepository {
   // ============================================
 
   BankAccount _entityToAccount(BankAccountEntity e) => BankAccount(
-        id: e.id,
-        userId: e.userId,
-        accountName: e.accountName,
-        bankName: e.bankName,
-        accountNumber: e.accountNumber,
-        openingBalance: e.openingBalance,
-        currentBalance: e.currentBalance,
-        isPrimary: e.isPrimary,
-        isActive: e.isActive,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-      );
+    id: e.id,
+    userId: e.userId,
+    accountName: e.accountName,
+    bankName: e.bankName,
+    accountNumber: e.accountNumber,
+    openingBalance: e.openingBalance,
+    currentBalance: e.currentBalance,
+    isPrimary: e.isPrimary,
+    isActive: e.isActive,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+  );
 }

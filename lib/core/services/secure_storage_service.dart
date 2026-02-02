@@ -7,15 +7,13 @@ class SecureStorageService {
   final FlutterSecureStorage _storage;
 
   SecureStorageService()
-      : _storage = const FlutterSecureStorage(
-          aOptions: AndroidOptions(
-            encryptedSharedPreferences: true,
-            // resetOnError: true, // Risky, but prevents crash on key corruption
-          ),
-          iOptions: IOSOptions(
-            accessibility: KeychainAccessibility.first_unlock,
-          ),
-        );
+    : _storage = const FlutterSecureStorage(
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: true,
+          // resetOnError: true, // Risky, but prevents crash on key corruption
+        ),
+        iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+      );
 
   // Keys
   static const String _kPinHash = 'user_pin_hash';

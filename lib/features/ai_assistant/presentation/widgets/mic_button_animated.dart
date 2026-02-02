@@ -46,7 +46,7 @@ class MicButtonAnimated extends StatelessWidget {
                   color: glowColor.withOpacity(0.2),
                   blurRadius: 10,
                   spreadRadius: 2,
-                )
+                ),
               ],
             ),
             child: Icon(

@@ -81,13 +81,20 @@ class _CreateServiceJobScreenState extends State<CreateServiceJobScreen> {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _buildSection('Customer', Icons.person, [
-                    _buildField(_customerNameController, 'Name*', Icons.person,
-                        validator: (v) =>
-                            v?.isEmpty ?? true ? 'Required' : null),
-                    _buildField(_customerPhoneController, 'Phone*', Icons.phone,
-                        keyboardType: TextInputType.phone,
-                        validator: (v) =>
-                            (v?.length ?? 0) < 10 ? 'Invalid' : null),
+                    _buildField(
+                      _customerNameController,
+                      'Name*',
+                      Icons.person,
+                      validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                    ),
+                    _buildField(
+                      _customerPhoneController,
+                      'Phone*',
+                      Icons.phone,
+                      keyboardType: TextInputType.phone,
+                      validator: (v) =>
+                          (v?.length ?? 0) < 10 ? 'Invalid' : null,
+                    ),
                   ]),
                   const SizedBox(height: 16),
                   _buildSection('Device', Icons.devices, [
@@ -98,89 +105,123 @@ class _CreateServiceJobScreenState extends State<CreateServiceJobScreen> {
                         border: OutlineInputBorder(),
                       ),
                       items: DeviceType.values
-                          .map((t) => DropdownMenuItem(
-                              value: t, child: Text(t.displayName)))
+                          .map(
+                            (t) => DropdownMenuItem(
+                              value: t,
+                              child: Text(t.displayName),
+                            ),
+                          )
                           .toList(),
                       onChanged: (v) => setState(() => _deviceType = v!),
                     ),
                     const SizedBox(height: 12),
-                    Row(children: [
-                      Expanded(
+                    Row(
+                      children: [
+                        Expanded(
                           child: _buildField(
-                              _brandController, 'Brand*', Icons.business,
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null)),
-                      const SizedBox(width: 12),
-                      Expanded(
+                            _brandController,
+                            'Brand*',
+                            Icons.business,
+                            validator: (v) =>
+                                v?.isEmpty ?? true ? 'Required' : null,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
                           child: _buildField(
-                              _modelController, 'Model*', Icons.phone_android,
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null)),
-                    ]),
+                            _modelController,
+                            'Model*',
+                            Icons.phone_android,
+                            validator: (v) =>
+                                v?.isEmpty ?? true ? 'Required' : null,
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 12),
                     _buildField(_imeiController, 'IMEI/Serial', Icons.qr_code),
                   ]),
                   const SizedBox(height: 16),
                   _buildSection('Problem', Icons.warning_amber, [
                     _buildField(
-                        _problemController, 'Description*', Icons.description,
-                        maxLines: 3,
-                        validator: (v) =>
-                            v?.isEmpty ?? true ? 'Required' : null),
+                      _problemController,
+                      'Description*',
+                      Icons.description,
+                      maxLines: 3,
+                      validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                    ),
                     const SizedBox(height: 12),
-                    const Text('Symptoms:',
-                        style: TextStyle(fontWeight: FontWeight.w500)),
+                    const Text(
+                      'Symptoms:',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: _commonSymptoms
-                          .map((s) => FilterChip(
-                                label: Text(s),
-                                selected: _selectedSymptoms.contains(s),
-                                onSelected: (sel) => setState(() {
-                                  sel
-                                      ? _selectedSymptoms.add(s)
-                                      : _selectedSymptoms.remove(s);
-                                }),
-                              ))
+                          .map(
+                            (s) => FilterChip(
+                              label: Text(s),
+                              selected: _selectedSymptoms.contains(s),
+                              onSelected: (sel) => setState(() {
+                                sel
+                                    ? _selectedSymptoms.add(s)
+                                    : _selectedSymptoms.remove(s);
+                              }),
+                            ),
+                          )
                           .toList(),
                     ),
                   ]),
                   const SizedBox(height: 16),
-                  Row(children: [
-                    Expanded(
+                  Row(
+                    children: [
+                      Expanded(
                         child: DropdownButtonFormField<ServicePriority>(
-                      value: _priority,
-                      decoration: const InputDecoration(
-                          labelText: 'Priority', border: OutlineInputBorder()),
-                      items: ServicePriority.values
-                          .map((p) => DropdownMenuItem(
-                              value: p, child: Text(p.displayName)))
-                          .toList(),
-                      onChanged: (v) => setState(() => _priority = v!),
-                    )),
-                    const SizedBox(width: 12),
-                    Expanded(
-                        child: InkWell(
-                      onTap: _pickDate,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                            labelText: 'Expected Delivery',
-                            border: OutlineInputBorder()),
-                        child: Text(_expectedDelivery != null
-                            ? '${_expectedDelivery!.day}/${_expectedDelivery!.month}'
-                            : 'Select'),
+                          value: _priority,
+                          decoration: const InputDecoration(
+                            labelText: 'Priority',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: ServicePriority.values
+                              .map(
+                                (p) => DropdownMenuItem(
+                                  value: p,
+                                  child: Text(p.displayName),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (v) => setState(() => _priority = v!),
+                        ),
                       ),
-                    )),
-                  ]),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: InkWell(
+                          onTap: _pickDate,
+                          child: InputDecorator(
+                            decoration: const InputDecoration(
+                              labelText: 'Expected Delivery',
+                              border: OutlineInputBorder(),
+                            ),
+                            child: Text(
+                              _expectedDelivery != null
+                                  ? '${_expectedDelivery!.day}/${_expectedDelivery!.month}'
+                                  : 'Select',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: _isLoading ? null : _saveJob,
                     icon: const Icon(Icons.save),
                     label: const Text('Create Job'),
                     style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50)),
+                      minimumSize: const Size.fromHeight(50),
+                    ),
                   ),
                 ],
               ),
@@ -192,15 +233,20 @@ class _CreateServiceJobScreenState extends State<CreateServiceJobScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Icon(icon, size: 20, color: Theme.of(context).primaryColor),
-          const SizedBox(width: 8),
-          Text(title,
+        Row(
+          children: [
+            Icon(icon, size: 20, color: Theme.of(context).primaryColor),
+            const SizedBox(width: 8),
+            Text(
+              title,
               style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor)),
-        ]),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
         ...children,
       ],
@@ -218,9 +264,10 @@ class _CreateServiceJobScreenState extends State<CreateServiceJobScreen> {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(icon),
-          border: const OutlineInputBorder()),
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: const OutlineInputBorder(),
+      ),
       keyboardType: keyboardType,
       maxLines: maxLines,
       validator: validator,
@@ -229,10 +276,11 @@ class _CreateServiceJobScreenState extends State<CreateServiceJobScreen> {
 
   Future<void> _pickDate() async {
     final date = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now().add(const Duration(days: 3)),
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(const Duration(days: 90)));
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 3)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
+    );
     if (date != null) setState(() => _expectedDelivery = date);
   }
 
@@ -258,14 +306,19 @@ class _CreateServiceJobScreenState extends State<CreateServiceJobScreen> {
         expectedDelivery: _expectedDelivery,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Job created'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Job created'),
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

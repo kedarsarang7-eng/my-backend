@@ -52,7 +52,7 @@ void main() {
             prescriptionId: 'p1',
             medicineName: 'Med 1',
             dosage: '1-0-1',
-          )
+          ),
         ],
       );
 

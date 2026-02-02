@@ -133,10 +133,7 @@ class ImmutabilityCheckResult {
   });
 
   factory ImmutabilityCheckResult.allowed(BillState state) {
-    return ImmutabilityCheckResult(
-      isAllowed: true,
-      billState: state,
-    );
+    return ImmutabilityCheckResult(isAllowed: true, billState: state);
   }
 
   factory ImmutabilityCheckResult.denied({

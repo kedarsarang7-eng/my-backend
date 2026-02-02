@@ -51,14 +51,14 @@ class ScannedItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        name,
-        quantity,
-        price,
-        amount,
-        unit,
-        confidence,
-        rawLine,
-      ];
+    name,
+    quantity,
+    price,
+    amount,
+    unit,
+    confidence,
+    rawLine,
+  ];
 
   ScannedItem copyWith({
     String? name,
@@ -81,20 +81,20 @@ class ScannedItem extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'qty': quantity,
-        'price': price,
-        'amount': amount,
-        'unit': unit,
-        'confidence': confidence,
-      };
+    'name': name,
+    'qty': quantity,
+    'price': price,
+    'amount': amount,
+    'unit': unit,
+    'confidence': confidence,
+  };
 
   factory ScannedItem.fromJson(Map<String, dynamic> json) => ScannedItem(
-        name: json['name']?.toString() ?? 'Unknown',
-        quantity: (json['qty'] ?? 1).toDouble(),
-        price: (json['price'] ?? 0).toDouble(),
-        amount: (json['amount'] ?? 0).toDouble(),
-        unit: json['unit']?.toString() ?? 'pc',
-        confidence: (json['confidence'] ?? 0).toDouble(),
-      );
+    name: json['name']?.toString() ?? 'Unknown',
+    quantity: (json['qty'] ?? 1).toDouble(),
+    price: (json['price'] ?? 0).toDouble(),
+    amount: (json['amount'] ?? 0).toDouble(),
+    unit: json['unit']?.toString() ?? 'pc',
+    confidence: (json['confidence'] ?? 0).toDouble(),
+  );
 }

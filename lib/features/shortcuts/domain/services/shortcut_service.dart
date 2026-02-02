@@ -9,7 +9,7 @@ class ShortcutService {
   final ShortcutsRepository _repository;
 
   ShortcutService({ShortcutsRepository? repository})
-      : _repository = repository ?? ShortcutsRepository();
+    : _repository = repository ?? ShortcutsRepository();
 
   /// Initialize system definitions if needed
   Future<void> initializeSystem(String userId) async {
@@ -37,9 +37,10 @@ class ShortcutService {
 
   /// Filter logic to be used by Provider
   List<UserShortcutConfig> filterShortcuts(
-      List<UserShortcutConfig> allShortcuts,
-      UserRole role,
-      BusinessType businessType) {
+    List<UserShortcutConfig> allShortcuts,
+    UserRole role,
+    BusinessType businessType,
+  ) {
     return allShortcuts.where((config) {
       final def = config.definition;
 
@@ -64,7 +65,9 @@ class ShortcutService {
   }
 
   Future<void> updateShortcutOrder(
-      String userId, List<String> shortcutIds) async {
+    String userId,
+    List<String> shortcutIds,
+  ) async {
     await _repository.updateOrder(userId, shortcutIds);
   }
 
@@ -73,7 +76,10 @@ class ShortcutService {
   }
 
   Future<void> toggleShortcut(
-      String userId, String shortcutId, bool isEnabled) async {
+    String userId,
+    String shortcutId,
+    bool isEnabled,
+  ) async {
     await _repository.toggleShortcut(userId, shortcutId, isEnabled);
   }
 }

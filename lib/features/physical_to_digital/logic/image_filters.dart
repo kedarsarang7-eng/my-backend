@@ -6,13 +6,7 @@
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 
-enum ImageFilter {
-  reality,
-  digitalClean,
-  ultraBW,
-  receiptBoost,
-  sharpPro,
-}
+enum ImageFilter { reality, digitalClean, ultraBW, receiptBoost, sharpPro }
 
 class ImageFilters {
   /// Apply filter to image bytes
@@ -57,24 +51,13 @@ class ImageFilters {
   /// Digital Clean: Slightly enhanced contrast, clean white background
   static img.Image _applyDigitalClean(img.Image src) {
     // Increase contrast and brightness
-    var result = img.adjustColor(
-      src,
-      contrast: 1.2,
-      brightness: 1.05,
-    );
+    var result = img.adjustColor(src, contrast: 1.2, brightness: 1.05);
 
     // Slight sharpening
-    result = img.convolution(result, filter: [
-      0,
-      -0.5,
-      0,
-      -0.5,
-      3,
-      -0.5,
-      0,
-      -0.5,
-      0,
-    ]);
+    result = img.convolution(
+      result,
+      filter: [0, -0.5, 0, -0.5, 3, -0.5, 0, -0.5, 0],
+    );
 
     return result;
   }
@@ -107,27 +90,13 @@ class ImageFilters {
   /// Receipt Boost: Optimized for thermal paper receipts
   static img.Image _applyReceiptBoost(img.Image src) {
     // Increase contrast significantly
-    var result = img.adjustColor(
-      src,
-      contrast: 1.4,
-      brightness: 1.1,
-    );
+    var result = img.adjustColor(src, contrast: 1.4, brightness: 1.1);
 
     // Convert to grayscale for better text readability
     result = img.grayscale(result);
 
     // Sharpen
-    result = img.convolution(result, filter: [
-      0,
-      -1,
-      0,
-      -1,
-      5,
-      -1,
-      0,
-      -1,
-      0,
-    ]);
+    result = img.convolution(result, filter: [0, -1, 0, -1, 5, -1, 0, -1, 0]);
 
     return result;
   }
@@ -135,17 +104,10 @@ class ImageFilters {
   /// Sharp Pro: Maximum sharpness with balanced colors
   static img.Image _applySharpPro(img.Image src) {
     // Strong sharpening
-    var result = img.convolution(src, filter: [
-      -1,
-      -1,
-      -1,
-      -1,
-      9,
-      -1,
-      -1,
-      -1,
-      -1,
-    ]);
+    var result = img.convolution(
+      src,
+      filter: [-1, -1, -1, -1, 9, -1, -1, -1, -1],
+    );
 
     // Slight contrast boost
     result = img.adjustColor(result, contrast: 1.15);

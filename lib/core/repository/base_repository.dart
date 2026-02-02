@@ -122,7 +122,8 @@ abstract class BaseRepository<T extends BaseEntity> {
       );
       await syncManager.enqueue(syncItem);
       debugPrint(
-          'BaseRepository: Enqueued sync operation ${syncItem.operationId} with deviceId: $deviceId');
+        'BaseRepository: Enqueued sync operation ${syncItem.operationId} with deviceId: $deviceId',
+      );
 
       return RepositoryResult.success(entity);
     } catch (e) {
@@ -283,9 +284,11 @@ abstract class BaseRepository<T extends BaseEntity> {
 
       debugPrint('AUDIT: $action on $tableName/$recordId');
       debugPrint(
-          '  OLD: ${oldJson?.substring(0, (oldJson.length < 100 ? oldJson.length : 100))}...');
+        '  OLD: ${oldJson?.substring(0, (oldJson.length < 100 ? oldJson.length : 100))}...',
+      );
       debugPrint(
-          '  NEW: ${newJson?.substring(0, (newJson.length < 100 ? newJson.length : 100))}...');
+        '  NEW: ${newJson?.substring(0, (newJson.length < 100 ? newJson.length : 100))}...',
+      );
 
       // Note: The actual database insert is handled by concrete repositories
       // that have access to AppDatabase. They should call:
@@ -326,9 +329,7 @@ class ValidationResult {
   final bool isValid;
   final List<String> errors;
 
-  ValidationResult.valid()
-      : isValid = true,
-        errors = [];
+  ValidationResult.valid() : isValid = true, errors = [];
   ValidationResult.invalid(this.errors) : isValid = false;
 
   @override

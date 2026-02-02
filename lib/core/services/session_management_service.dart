@@ -58,18 +58,18 @@ class UserSession {
   }
 
   Map<String, dynamic> toFirestore() => {
-        'userId': userId,
-        'businessId': businessId,
-        'deviceId': deviceId,
-        'deviceName': deviceName,
-        'platform': platform,
-        'loginAt': Timestamp.fromDate(loginAt),
-        'lastActiveAt': Timestamp.fromDate(lastActiveAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'isActive': isActive,
-        'loginLocation': loginLocation,
-        'forceLogout': forceLogout,
-      };
+    'userId': userId,
+    'businessId': businessId,
+    'deviceId': deviceId,
+    'deviceName': deviceName,
+    'platform': platform,
+    'loginAt': Timestamp.fromDate(loginAt),
+    'lastActiveAt': Timestamp.fromDate(lastActiveAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'isActive': isActive,
+    'loginLocation': loginLocation,
+    'forceLogout': forceLogout,
+  };
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
   bool get shouldLogout => forceLogout || isExpired || !isActive;
@@ -111,8 +111,8 @@ class SessionManagementService {
   SessionManagementService({
     FirebaseFirestore? firestore,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auditRepository = auditRepository;
 
   /// Stream of force logout events
   Stream<bool> get forceLogoutStream => _forceLogoutController.stream;
@@ -213,9 +213,9 @@ class SessionManagementService {
           .collection('user_sessions')
           .doc(_currentSession!.id)
           .update({
-        'isActive': false,
-        'lastActiveAt': Timestamp.fromDate(DateTime.now()),
-      });
+            'isActive': false,
+            'lastActiveAt': Timestamp.fromDate(DateTime.now()),
+          });
 
       // Audit log
       await _auditRepository.logAction(
@@ -227,7 +227,8 @@ class SessionManagementService {
       );
 
       debugPrint(
-          'SessionManagementService: Ended session ${_currentSession!.id}');
+        'SessionManagementService: Ended session ${_currentSession!.id}',
+      );
       _currentSession = null;
     } catch (e) {
       debugPrint('SessionManagementService: Error ending session: $e');
@@ -254,7 +255,8 @@ class SessionManagementService {
     );
 
     debugPrint(
-        'SessionManagementService: Force logged out session $targetSessionId');
+      'SessionManagementService: Force logged out session $targetSessionId',
+    );
   }
 
   /// Get active sessions for a business
@@ -295,13 +297,13 @@ class SessionManagementService {
     await _firestore
         .collection('user_sessions')
         .doc(_currentSession!.id)
-        .update({
-      'lastActiveAt': Timestamp.fromDate(DateTime.now()),
-    });
+        .update({'lastActiveAt': Timestamp.fromDate(DateTime.now())});
   }
 
   Future<void> _terminateOtherSessions(
-      String userId, String currentDeviceId) async {
+    String userId,
+    String currentDeviceId,
+  ) async {
     final query = await _firestore
         .collection('user_sessions')
         .where('userId', isEqualTo: userId)
@@ -310,20 +312,15 @@ class SessionManagementService {
 
     for (final doc in query.docs) {
       if (doc.data()['deviceId'] != currentDeviceId) {
-        await doc.reference.update({
-          'isActive': false,
-          'forceLogout': true,
-        });
+        await doc.reference.update({'isActive': false, 'forceLogout': true});
       }
     }
   }
 
   void _startForceLogoutListener(String sessionId) {
-    _firestore
-        .collection('user_sessions')
-        .doc(sessionId)
-        .snapshots()
-        .listen((snapshot) {
+    _firestore.collection('user_sessions').doc(sessionId).snapshots().listen((
+      snapshot,
+    ) {
       if (snapshot.exists) {
         final data = snapshot.data()!;
         if (data['forceLogout'] == true) {

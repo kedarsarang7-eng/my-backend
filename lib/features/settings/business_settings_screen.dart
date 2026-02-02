@@ -112,8 +112,9 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
 
       // Update locale provider
       try {
-        final langConfig = LanguageConfig.all
-            .firstWhere((l) => l.language == _selectedLanguage);
+        final langConfig = LanguageConfig.all.firstWhere(
+          (l) => l.language == _selectedLanguage,
+        );
         ref
             .read(localeStateProvider.notifier)
             .setLocale(Locale(langConfig.code));
@@ -171,8 +172,9 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: Text(
           'Business Settings',
@@ -198,21 +200,30 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
 
                   // Business Type Section
                   _buildSectionTitle(
-                      'Business Type', Icons.store_rounded, isDark),
+                    'Business Type',
+                    Icons.store_rounded,
+                    isDark,
+                  ),
                   const SizedBox(height: 12),
                   _buildBusinessTypeSelector(isDark),
                   const SizedBox(height: 24),
 
                   // Language Section
                   _buildSectionTitle(
-                      'App Language', Icons.language_rounded, isDark),
+                    'App Language',
+                    Icons.language_rounded,
+                    isDark,
+                  ),
                   const SizedBox(height: 12),
                   _buildLanguageSelector(isDark),
                   const SizedBox(height: 24),
 
                   // Bill Preview
                   _buildSectionTitle(
-                      'Bill Preview', Icons.receipt_long_rounded, isDark),
+                    'Bill Preview',
+                    Icons.receipt_long_rounded,
+                    isDark,
+                  ),
                   const SizedBox(height: 12),
                   _buildBillPreview(isDark),
                   const SizedBox(height: 100), // Space for FAB
@@ -226,8 +237,9 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
 
   Widget _buildCurrentBusinessCard(bool isDark) {
     final config = BusinessTypeConfig.getConfig(_selectedBusinessType);
-    final langConfig =
-        LanguageConfig.all.firstWhere((l) => l.language == _selectedLanguage);
+    final langConfig = LanguageConfig.all.firstWhere(
+      (l) => l.language == _selectedLanguage,
+    );
 
     return Container(
       width: double.infinity,
@@ -236,10 +248,7 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            config.primaryColor,
-            config.primaryColor.withOpacity(0.8),
-          ],
+          colors: [config.primaryColor, config.primaryColor.withOpacity(0.8)],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
@@ -261,10 +270,7 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  config.emoji,
-                  style: const TextStyle(fontSize: 32),
-                ),
+                child: Text(config.emoji, style: const TextStyle(fontSize: 32)),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -302,10 +308,7 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  langConfig.flag,
-                  style: const TextStyle(fontSize: 18),
-                ),
+                Text(langConfig.flag, style: const TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Text(
                   langConfig.nativeName,
@@ -419,7 +422,8 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: const Text(
-                                      'Business Type is locked due to existing data.'),
+                                    'Business Type is locked due to existing data.',
+                                  ),
                                   backgroundColor: Colors.red.shade800,
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -430,8 +434,9 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
                         top: index == 0
                             ? const Radius.circular(16)
                             : Radius.zero,
-                        bottom:
-                            isLast ? const Radius.circular(16) : Radius.zero,
+                        bottom: isLast
+                            ? const Radius.circular(16)
+                            : Radius.zero,
                       ),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
@@ -485,8 +490,8 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
                                         color: isSelected
                                             ? config.primaryColor
                                             : (isDark
-                                                ? Colors.white
-                                                : Colors.black87),
+                                                  ? Colors.white
+                                                  : Colors.black87),
                                       ),
                                     ),
                                     const SizedBox(height: 2),
@@ -503,8 +508,11 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
 
                               // Selection indicator
                               if (_isLocked && isSelected)
-                                const Icon(Icons.lock,
-                                    size: 20, color: Colors.grey)
+                                const Icon(
+                                  Icons.lock,
+                                  size: 20,
+                                  color: Colors.grey,
+                                )
                               else
                                 AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
@@ -580,8 +588,8 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
                 color: isSelected
                     ? const Color(0xFF1E3A8A)
                     : (isDark
-                        ? Colors.white.withOpacity(0.05)
-                        : Colors.grey.shade100),
+                          ? Colors.white.withOpacity(0.05)
+                          : Colors.grey.shade100),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isSelected
@@ -593,17 +601,15 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    lang.flag,
-                    style: const TextStyle(fontSize: 20),
-                  ),
+                  Text(lang.flag, style: const TextStyle(fontSize: 20)),
                   const SizedBox(width: 8),
                   Text(
                     lang.nativeName,
                     style: GoogleFonts.outfit(
                       fontSize: 14,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w500,
                       color: isSelected
                           ? Colors.white
                           : (isDark ? Colors.white : Colors.black87),
@@ -634,9 +640,7 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: config.primaryColor.withOpacity(0.3),
-        ),
+        border: Border.all(color: config.primaryColor.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -671,8 +675,10 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
             runSpacing: 8,
             children: config.billColumns.map((col) {
               return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: config.secondaryColor,
                   borderRadius: BorderRadius.circular(20),
@@ -704,8 +710,11 @@ class _BusinessSettingsScreenState extends ConsumerState<BusinessSettingsScreen>
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline,
-                    color: Colors.amber.shade700, size: 20),
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.amber.shade700,
+                  size: 20,
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(

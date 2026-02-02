@@ -47,8 +47,9 @@ class _PatientAppointmentsScreenState
           ),
           Expanded(
             child: StreamBuilder<List<AppointmentModel>>(
-              stream: sl<AppointmentRepository>()
-                  .watchAppointmentsForPatient(patientId),
+              stream: sl<AppointmentRepository>().watchAppointmentsForPatient(
+                patientId,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -56,8 +57,11 @@ class _PatientAppointmentsScreenState
 
                 if (snapshot.hasError) {
                   return Center(
-                      child: Text('Error: ${snapshot.error}',
-                          style: const TextStyle(color: Colors.red)));
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
                 }
 
                 final appointments = snapshot.data ?? [];
@@ -67,11 +71,16 @@ class _PatientAppointmentsScreenState
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.event_busy,
-                            size: 64, color: Colors.white.withOpacity(0.3)),
+                        Icon(
+                          Icons.event_busy,
+                          size: 64,
+                          color: Colors.white.withOpacity(0.3),
+                        ),
                         const SizedBox(height: 16),
-                        const Text('No upcoming appointments',
-                            style: TextStyle(color: Colors.grey)),
+                        const Text(
+                          'No upcoming appointments',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
@@ -80,7 +89,7 @@ class _PatientAppointmentsScreenState
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: appointments.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final appt = appointments[index];
                     return _buildAppointmentCard(appt);
@@ -112,16 +121,22 @@ class _PatientAppointmentsScreenState
             ),
             child: Column(
               children: [
-                Text(DateFormat('MMM').format(appt.scheduledTime).toUpperCase(),
-                    style: TextStyle(
-                        color: FuturisticColors.primary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold)),
-                Text(DateFormat('dd').format(appt.scheduledTime),
-                    style: TextStyle(
-                        color: FuturisticColors.primary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)),
+                Text(
+                  DateFormat('MMM').format(appt.scheduledTime).toUpperCase(),
+                  style: TextStyle(
+                    color: FuturisticColors.primary,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  DateFormat('dd').format(appt.scheduledTime),
+                  style: TextStyle(
+                    color: FuturisticColors.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
@@ -131,15 +146,19 @@ class _PatientAppointmentsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    appt.purpose?.isNotEmpty == true
-                        ? appt.purpose!
-                        : 'General Checkup',
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                  appt.purpose?.isNotEmpty == true
+                      ? appt.purpose!
+                      : 'General Checkup',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Text(
-                    'Dr. ID: ${appt.doctorId.substring(0, 5)}... • ${DateFormat('hh:mm a').format(appt.scheduledTime)}',
-                    style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  'Dr. ID: ${appt.doctorId.substring(0, 5)}... • ${DateFormat('hh:mm a').format(appt.scheduledTime)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -149,9 +168,13 @@ class _PatientAppointmentsScreenState
               color: _getStatusColor(appt.status).withOpacity(0.2),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(appt.status.name,
-                style: TextStyle(
-                    color: _getStatusColor(appt.status), fontSize: 10)),
+            child: Text(
+              appt.status.name,
+              style: TextStyle(
+                color: _getStatusColor(appt.status),
+                fontSize: 10,
+              ),
+            ),
           ),
         ],
       ),

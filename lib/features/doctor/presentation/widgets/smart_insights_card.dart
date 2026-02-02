@@ -30,13 +30,22 @@ class SmartInsightsCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           _buildInsightRow(
-              Icons.timer, 'Avg. Time', insights['avgTime'] ?? '--'),
+            Icons.timer,
+            'Avg. Time',
+            insights['avgTime'] ?? '--',
+          ),
           Divider(color: FuturisticColors.divider),
           _buildInsightRow(
-              Icons.trending_up, 'Workload', insights['workload'] ?? '--'),
+            Icons.trending_up,
+            'Workload',
+            insights['workload'] ?? '--',
+          ),
           Divider(color: FuturisticColors.divider),
           _buildInsightRow(
-              Icons.medical_services, 'Common', insights['common'] ?? '--'),
+            Icons.medical_services,
+            'Common',
+            insights['common'] ?? '--',
+          ),
         ],
       ),
     );
@@ -56,13 +65,18 @@ class SmartInsightsCard extends StatelessWidget {
             child: Icon(icon, size: 20, color: FuturisticColors.textSecondary),
           ),
           const SizedBox(width: 12),
-          Text(label,
-              style: GoogleFonts.inter(color: FuturisticColors.textSecondary)),
+          Text(
+            label,
+            style: GoogleFonts.inter(color: FuturisticColors.textSecondary),
+          ),
           const Spacer(),
-          Text(value,
-              style: GoogleFonts.inter(
-                  fontWeight: FontWeight.bold,
-                  color: FuturisticColors.textPrimary)),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.bold,
+              color: FuturisticColors.textPrimary,
+            ),
+          ),
         ],
       ),
     );

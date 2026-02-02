@@ -69,8 +69,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               decoration: BoxDecoration(
                 color: FuturisticColors.surface.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(16),
-                border:
-                    Border.all(color: FuturisticColors.border.withOpacity(0.1)),
+                border: Border.all(
+                  color: FuturisticColors.border.withOpacity(0.1),
+                ),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
@@ -80,16 +81,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _buildDesktopNavTile(0, "My Profile", Icons.person_outline),
                     if (sessionService.getUserRole() != 'customer')
                       _buildDesktopNavTile(
-                          1, "Business & Reports", Icons.storefront_outlined),
+                        1,
+                        "Business & Reports",
+                        Icons.storefront_outlined,
+                      ),
                     _buildDesktopNavTile(
-                        2, "Security & Access", Icons.lock_outline),
+                      2,
+                      "Security & Access",
+                      Icons.lock_outline,
+                    ),
                     _buildDesktopNavTile(
-                        3, "Appearance & Language", Icons.palette_outlined),
+                      3,
+                      "Appearance & Language",
+                      Icons.palette_outlined,
+                    ),
                     _buildDesktopNavTile(
-                        4, "Backup & Sync", Icons.cloud_sync_outlined),
+                      4,
+                      "Backup & Sync",
+                      Icons.cloud_sync_outlined,
+                    ),
                     const Divider(height: 32, color: Colors.white10),
-                    _buildDesktopNavTile(99, "Logout", Icons.logout,
-                        isDestructive: true),
+                    _buildDesktopNavTile(
+                      99,
+                      "Logout",
+                      Icons.logout,
+                      isDestructive: true,
+                    ),
                   ],
                 ),
               ),
@@ -102,7 +119,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   color: FuturisticColors.surface.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: FuturisticColors.border.withOpacity(0.05)),
+                    color: FuturisticColors.border.withOpacity(0.05),
+                  ),
                 ),
                 padding: const EdgeInsets.all(32),
                 child: Column(
@@ -132,7 +150,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: _buildDesktopCategoryContent(
-                            _selectedCategoryIndex),
+                          _selectedCategoryIndex,
+                        ),
                       ),
                     ),
                   ],
@@ -145,14 +164,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildDesktopNavTile(int index, String title, IconData icon,
-      {bool isDestructive = false}) {
+  Widget _buildDesktopNavTile(
+    int index,
+    String title,
+    IconData icon, {
+    bool isDestructive = false,
+  }) {
     final isSelected = _selectedCategoryIndex == index;
     final color = isDestructive
         ? FuturisticColors.error
         : (isSelected
-            ? FuturisticColors.primary
-            : FuturisticColors.textSecondary);
+              ? FuturisticColors.primary
+              : FuturisticColors.textSecondary);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -225,160 +248,177 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 800),
-      child: Builder(builder: (context) {
-        switch (index) {
-          case 0:
-            return _buildProfileSection(context, settings, l10n, isDark);
-          case 1:
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildSettingsCard([
-                  _buildSettingsTile(
-                    icon: Icons.storefront_rounded,
-                    title: "Business Profile",
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/vendor_profile'),
-                    isDark: isDark,
-                    color: Colors.orange,
-                  ),
-                  _buildSettingsTile(
-                    icon: Icons.receipt_long,
-                    title: "GST Settings",
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const gst.GstSettingsScreen()),
-                    ),
-                    isDark: isDark,
-                    color: Colors.teal,
-                  ),
-                ], isDark),
-                const SizedBox(height: 24),
-                _buildSectionHeader('REPORTS & LOGS', isDark),
-                _buildSettingsCard([
-                  _buildSettingsTile(
-                    icon: Icons.summarize,
-                    title: "GST Reports",
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const gst.GstReportsScreen()),
-                    ),
-                    isDark: isDark,
-                    color: Colors.blue,
-                  ),
-                  _buildSettingsTile(
-                    icon: Icons.account_balance,
-                    title: "Financial Reports",
-                    subtitle: "Trial Balance, P&L, Balance Sheet",
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const acc.AccountingReportsScreen()),
-                    ),
-                    isDark: isDark,
-                    color: Colors.indigo,
-                  ),
-                ], isDark),
-              ],
-            );
-          case 2:
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildFastLoginSection(context, isDark, palette),
-                const SizedBox(height: 24),
-                _buildSettingsCard([
-                  if (sessionService.getUserRole() == 'owner') ...[
+      child: Builder(
+        builder: (context) {
+          switch (index) {
+            case 0:
+              return _buildProfileSection(context, settings, l10n, isDark);
+            case 1:
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildSettingsCard([
                     _buildSettingsTile(
-                      icon: Icons.qr_code_2_rounded,
-                      title: "My QR Code",
+                      icon: Icons.storefront_rounded,
+                      title: "Business Profile",
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/vendor_profile'),
+                      isDark: isDark,
+                      color: Colors.orange,
+                    ),
+                    _buildSettingsTile(
+                      icon: Icons.receipt_long,
+                      title: "GST Settings",
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const qrd.QrDisplayScreen()),
+                          builder: (_) => const gst.GstSettingsScreen(),
+                        ),
                       ),
                       isDark: isDark,
+                      color: Colors.teal,
                     ),
-                  ],
-                  _buildSettingsTile(
-                    icon: Icons.lock_outline_rounded,
-                    title: l10n.resetPassword,
-                    onTap: () => _showResetPasswordDialog(context, l10n),
-                    isDark: isDark,
+                  ], isDark),
+                  const SizedBox(height: 24),
+                  _buildSectionHeader('REPORTS & LOGS', isDark),
+                  _buildSettingsCard([
+                    _buildSettingsTile(
+                      icon: Icons.summarize,
+                      title: "GST Reports",
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const gst.GstReportsScreen(),
+                        ),
+                      ),
+                      isDark: isDark,
+                      color: Colors.blue,
+                    ),
+                    _buildSettingsTile(
+                      icon: Icons.account_balance,
+                      title: "Financial Reports",
+                      subtitle: "Trial Balance, P&L, Balance Sheet",
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const acc.AccountingReportsScreen(),
+                        ),
+                      ),
+                      isDark: isDark,
+                      color: Colors.indigo,
+                    ),
+                  ], isDark),
+                ],
+              );
+            case 2:
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildFastLoginSection(context, isDark, palette),
+                  const SizedBox(height: 24),
+                  _buildSettingsCard([
+                    if (sessionService.getUserRole() == 'owner') ...[
+                      _buildSettingsTile(
+                        icon: Icons.qr_code_2_rounded,
+                        title: "My QR Code",
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const qrd.QrDisplayScreen(),
+                          ),
+                        ),
+                        isDark: isDark,
+                      ),
+                    ],
+                    _buildSettingsTile(
+                      icon: Icons.lock_outline_rounded,
+                      title: l10n.resetPassword,
+                      onTap: () => _showResetPasswordDialog(context, l10n),
+                      isDark: isDark,
+                    ),
+                  ], isDark),
+                ],
+              );
+            case 3:
+              return _buildSettingsCard([
+                _buildSettingsTile(
+                  icon: Icons.language_rounded,
+                  title: l10n.language,
+                  trailing: Text(
+                    _getLanguageName(localeState.locale.languageCode),
+                    style: TextStyle(
+                      color: isDark ? Colors.white70 : Colors.black54,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ], isDark)
-              ],
-            );
-          case 3:
-            return _buildSettingsCard([
-              _buildSettingsTile(
-                icon: Icons.language_rounded,
-                title: l10n.language,
-                trailing: Text(
-                  _getLanguageName(localeState.locale.languageCode),
-                  style: TextStyle(
-                    color: isDark ? Colors.white70 : Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  onTap: () =>
+                      _showLanguageSelector(context, localeState, l10n),
+                  isDark: isDark,
                 ),
-                onTap: () => _showLanguageSelector(context, localeState, l10n),
-                isDark: isDark,
-              ),
-              _buildSettingsTile(
-                icon: Icons.dark_mode_outlined,
-                title: l10n.darkMode,
-                trailing: Switch(
-                  value: theme.isDark,
-                  onChanged: (val) {
-                    ref.read(themeStateProvider.notifier).toggleTheme();
+                _buildSettingsTile(
+                  icon: Icons.dark_mode_outlined,
+                  title: l10n.darkMode,
+                  trailing: Switch(
+                    value: theme.isDark,
+                    onChanged: (val) {
+                      ref.read(themeStateProvider.notifier).toggleTheme();
+                    },
+                    activeColor: palette.leafGreen,
+                  ),
+                  onTap: null,
+                  isDark: isDark,
+                ),
+              ], isDark);
+            case 4:
+              return _buildSettingsCard([
+                _buildSettingsTile(
+                  icon: Icons.cloud_done_outlined,
+                  title: "Cloud Sync",
+                  trailing: const Icon(
+                    Icons.sync,
+                    size: 20,
+                    color: Colors.blue,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/cloud_sync_settings',
+                      arguments: sessionService.getUserId(),
+                    );
                   },
-                  activeColor: palette.leafGreen,
+                  isDark: isDark,
                 ),
-                onTap: null,
-                isDark: isDark,
-              ),
-            ], isDark);
-          case 4:
-            return _buildSettingsCard([
-              _buildSettingsTile(
-                icon: Icons.cloud_done_outlined,
-                title: "Cloud Sync",
-                trailing: const Icon(Icons.sync, size: 20, color: Colors.blue),
-                onTap: () {
-                  Navigator.pushNamed(context, '/cloud_sync_settings',
-                      arguments: sessionService.getUserId());
-                },
-                isDark: isDark,
-              ),
-              _buildSettingsTile(
-                icon: Icons.add_to_drive,
-                title: GoogleDriveService().isConnected
-                    ? "Google Drive Connected"
-                    : "Connect Google Drive",
-                subtitle: GoogleDriveService().isConnected
-                    ? "Tap to manage"
-                    : "Free backup to your Drive",
-                trailing: GoogleDriveService().isConnected
-                    ? const Icon(Icons.check_circle,
-                        color: Colors.green, size: 20)
-                    : const Icon(Icons.chevron_right_rounded),
-                onTap: () => _showDriveOptions(context, isDark),
-                isDark: isDark,
-                color: Colors.green,
-              ),
-              _buildSettingsTile(
-                icon: Icons.backup_outlined,
-                title: "Local Backup",
-                onTap: () => _performLocalBackup(context),
-                isDark: isDark,
-              ),
-            ], isDark);
-          default:
-            return const SizedBox();
-        }
-      }),
+                _buildSettingsTile(
+                  icon: Icons.add_to_drive,
+                  title: GoogleDriveService().isConnected
+                      ? "Google Drive Connected"
+                      : "Connect Google Drive",
+                  subtitle: GoogleDriveService().isConnected
+                      ? "Tap to manage"
+                      : "Free backup to your Drive",
+                  trailing: GoogleDriveService().isConnected
+                      ? const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 20,
+                        )
+                      : const Icon(Icons.chevron_right_rounded),
+                  onTap: () => _showDriveOptions(context, isDark),
+                  isDark: isDark,
+                  color: Colors.green,
+                ),
+                _buildSettingsTile(
+                  icon: Icons.backup_outlined,
+                  title: "Local Backup",
+                  onTap: () => _performLocalBackup(context),
+                  isDark: isDark,
+                ),
+              ], isDark);
+            default:
+              return const SizedBox();
+          }
+        },
+      ),
     );
   }
 
@@ -442,7 +482,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const gst.GstSettingsScreen()),
+                        builder: (_) => const gst.GstSettingsScreen(),
+                      ),
                     ),
                     isDark: isDark,
                     color: Colors.teal,
@@ -474,7 +515,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const gst.GstReportsScreen()),
+                        builder: (_) => const gst.GstReportsScreen(),
+                      ),
                     ),
                     isDark: isDark,
                     color: Colors.blue,
@@ -486,7 +528,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const acc.AccountingReportsScreen()),
+                        builder: (_) => const acc.AccountingReportsScreen(),
+                      ),
                     ),
                     isDark: isDark,
                     color: Colors.indigo,
@@ -504,7 +547,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const qrd.QrDisplayScreen()),
+                        builder: (_) => const qrd.QrDisplayScreen(),
+                      ),
                     ),
                     isDark: isDark,
                   ),
@@ -515,7 +559,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const CustomerAppEntryQrScreen()),
+                        builder: (_) => const CustomerAppEntryQrScreen(),
+                      ),
                     ),
                     isDark: isDark,
                     color: Colors.green,
@@ -610,18 +655,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text(val
+                                content: Text(
+                                  val
                                       ? "Switched to Owner View" // Logic was inverted in logging, fixed now
-                                      : "Switched to Customer View")),
+                                      : "Switched to Customer View",
+                                ),
+                              ),
                             );
                           }
 
                           // Safe rebuild wait
                           await Future.delayed(
-                              const Duration(milliseconds: 300));
+                            const Duration(milliseconds: 300),
+                          );
                         } catch (e) {
                           _showErrorDialog(
-                              context, l10n.permissionError, e.toString());
+                            context,
+                            l10n.permissionError,
+                            e.toString(),
+                          );
                         }
                       },
                       activeColor: palette.leafGreen,
@@ -642,11 +694,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _buildSettingsTile(
                   icon: Icons.cloud_done_outlined,
                   title: "Cloud Sync",
-                  trailing:
-                      const Icon(Icons.sync, size: 20, color: Colors.blue),
+                  trailing: const Icon(
+                    Icons.sync,
+                    size: 20,
+                    color: Colors.blue,
+                  ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/cloud_sync_settings',
-                        arguments: sessionService.getUserId());
+                    Navigator.pushNamed(
+                      context,
+                      '/cloud_sync_settings',
+                      arguments: sessionService.getUserId(),
+                    );
                   },
                   isDark: isDark,
                 ),
@@ -659,8 +717,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ? "Tap to manage"
                       : "Free backup to your Drive",
                   trailing: GoogleDriveService().isConnected
-                      ? const Icon(Icons.check_circle,
-                          color: Colors.green, size: 20)
+                      ? const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 20,
+                        )
                       : const Icon(Icons.chevron_right_rounded),
                   onTap: () => _showDriveOptions(context, isDark),
                   isDark: isDark,
@@ -682,7 +743,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildProfileSection(
-      BuildContext context, SettingsState settings, var l10n, bool isDark) {
+    BuildContext context,
+    SettingsState settings,
+    var l10n,
+    bool isDark,
+  ) {
     return ModernCard(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -698,7 +763,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   image: settings.profileImageUrl != null
                       ? DecorationImage(
                           image: NetworkImage(settings.profileImageUrl!),
-                          fit: BoxFit.cover)
+                          fit: BoxFit.cover,
+                        )
                       : null,
                 ),
                 child: settings.profileImageUrl == null
@@ -717,8 +783,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: const Icon(Icons.camera_alt,
-                        size: 14, color: Colors.white),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 14,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -773,13 +842,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => const AvatarEditorScreen()),
+                      builder: (_) => const AvatarEditorScreen(),
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.face,
-                          size: 16, color: FuturisticColors.secondary),
+                      Icon(
+                        Icons.face,
+                        size: 16,
+                        color: FuturisticColors.secondary,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         'Customize Avatar',
@@ -818,9 +891,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildSettingsCard(List<Widget> children, bool isDark) {
     return ModernCard(
       padding: EdgeInsets.zero,
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
@@ -862,14 +933,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             )
           : null,
-      trailing: trailing ??
-          Icon(Icons.chevron_right_rounded,
-              color: isDark ? Colors.white24 : Colors.black26),
+      trailing:
+          trailing ??
+          Icon(
+            Icons.chevron_right_rounded,
+            color: isDark ? Colors.white24 : Colors.black26,
+          ),
     );
   }
 
   Widget _buildFastLoginSection(
-      BuildContext context, bool isDark, AppColorPalette palette) {
+    BuildContext context,
+    bool isDark,
+    AppColorPalette palette,
+  ) {
     return ModernCard(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -889,17 +966,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Quick Access",
-                      style: AppTypography.headlineSmall.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: isDark
-                              ? FuturisticColors.darkTextPrimary
-                              : FuturisticColors.textPrimary)),
-                  Text("Enable biometric or PIN login",
-                      style: AppTypography.bodySmall.copyWith(
-                          color: isDark
-                              ? FuturisticColors.darkTextSecondary
-                              : FuturisticColors.textSecondary)),
+                  Text(
+                    "Quick Access",
+                    style: AppTypography.headlineSmall.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? FuturisticColors.darkTextPrimary
+                          : FuturisticColors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    "Enable biometric or PIN login",
+                    style: AppTypography.bodySmall.copyWith(
+                      color: isDark
+                          ? FuturisticColors.darkTextSecondary
+                          : FuturisticColors.textSecondary,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -919,15 +1002,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       await bioService.enableBiometrics();
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Biometric Login Enabled!")));
+                          const SnackBar(
+                            content: Text("Biometric Login Enabled!"),
+                          ),
+                        );
                       }
                     } else {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    "Biometric not available on this device")));
+                          const SnackBar(
+                            content: Text(
+                              "Biometric not available on this device",
+                            ),
+                          ),
+                        );
                       }
                     }
                   },
@@ -941,18 +1029,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   isDark: isDark,
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => PinSetupScreen(
-                                  onSuccess: () {
-                                    if (mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  "PIN Set Successfully!")));
-                                    }
-                                  },
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PinSetupScreen(
+                          onSuccess: () {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("PIN Set Successfully!"),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -980,23 +1071,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               : FuturisticColors.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: isDark
-                  ? FuturisticColors.glassBorderDark
-                  : FuturisticColors.glassBorder),
+            color: isDark
+                ? FuturisticColors.glassBorderDark
+                : FuturisticColors.glassBorder,
+          ),
         ),
         child: Column(
           children: [
-            Icon(icon,
-                color: isDark
-                    ? FuturisticColors.darkTextPrimary
-                    : FuturisticColors.textPrimary),
+            Icon(
+              icon,
+              color: isDark
+                  ? FuturisticColors.darkTextPrimary
+                  : FuturisticColors.textPrimary,
+            ),
             const SizedBox(height: 4),
-            Text(label,
-                style: AppTypography.labelMedium.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? FuturisticColors.darkTextSecondary
-                        : FuturisticColors.textSecondary)),
+            Text(
+              label,
+              style: AppTypography.labelMedium.copyWith(
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? FuturisticColors.darkTextSecondary
+                    : FuturisticColors.textSecondary,
+              ),
+            ),
           ],
         ),
       ),
@@ -1033,7 +1130,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _showLanguageSelector(
-      BuildContext context, LocaleState localeState, AppLocalizations l10n) {
+    BuildContext context,
+    LocaleState localeState,
+    AppLocalizations l10n,
+  ) {
     final languages = [
       {'code': 'en', 'name': 'English'},
       {'code': 'hi', 'name': 'Hindi (हिंदी)'},
@@ -1059,10 +1159,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(l10n.language,
-                    style: AppTypography.headlineSmall.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: FuturisticColors.textPrimary)),
+                Text(
+                  l10n.language,
+                  style: AppTypography.headlineSmall.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: FuturisticColors.textPrimary,
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Flexible(
                   child: ListView.builder(
@@ -1071,14 +1174,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     itemBuilder: (context, index) {
                       final lang = languages[index];
                       return ListTile(
-                        title: Text(lang['name']!,
-                            style: AppTypography.bodyLarge
-                                .copyWith(color: FuturisticColors.textPrimary)),
+                        title: Text(
+                          lang['name']!,
+                          style: AppTypography.bodyLarge.copyWith(
+                            color: FuturisticColors.textPrimary,
+                          ),
+                        ),
                         trailing:
                             localeState.locale.languageCode == lang['code']
-                                ? const Icon(Icons.check_circle,
-                                    color: FuturisticColors.success)
-                                : null,
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: FuturisticColors.success,
+                              )
+                            : null,
                         onTap: () {
                           Navigator.pop(context);
                           // Delay to allow modal to close before rebuilding app with new locale
@@ -1109,22 +1217,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Wrap(
             children: [
               ListTile(
-                leading:
-                    Icon(Icons.photo_library, color: FuturisticColors.primary),
-                title: Text('Gallery',
-                    style: AppTypography.bodyLarge
-                        .copyWith(color: FuturisticColors.textPrimary)),
+                leading: Icon(
+                  Icons.photo_library,
+                  color: FuturisticColors.primary,
+                ),
+                title: Text(
+                  'Gallery',
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: FuturisticColors.textPrimary,
+                  ),
+                ),
                 onTap: () {
                   Navigator.pop(context); // Close sheet immediately
                   _handleImageUpload(context, ImageSource.gallery);
                 },
               ),
               ListTile(
-                leading:
-                    Icon(Icons.camera_alt, color: FuturisticColors.primary),
-                title: Text('Camera',
-                    style: AppTypography.bodyLarge
-                        .copyWith(color: FuturisticColors.textPrimary)),
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: FuturisticColors.primary,
+                ),
+                title: Text(
+                  'Camera',
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: FuturisticColors.textPrimary,
+                  ),
+                ),
                 onTap: () {
                   Navigator.pop(context); // Close sheet immediately
                   _handleImageUpload(context, ImageSource.camera);
@@ -1139,11 +1257,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // Legacy Image Upload Logic locally implemented to keep Notifier pure
   Future<void> _handleImageUpload(
-      BuildContext context, ImageSource source) async {
+    BuildContext context,
+    ImageSource source,
+  ) async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? image =
-          await picker.pickImage(source: source, imageQuality: 50);
+      final XFile? image = await picker.pickImage(
+        source: source,
+        imageQuality: 50,
+      );
       if (image == null) return;
 
       setState(() => _isUploadingImage = true);
@@ -1151,9 +1273,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception("User not authenticated");
 
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('profile_images/${user.uid}.jpg');
+      final storageRef = FirebaseStorage.instance.ref().child(
+        'profile_images/${user.uid}.jpg',
+      );
 
       // Universal upload (works on Web, Mobile, Desktop)
       final bytes = await image.readAsBytes();
@@ -1172,8 +1294,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text("Profile picture updated!"),
-              backgroundColor: Colors.green),
+            content: Text("Profile picture updated!"),
+            backgroundColor: Colors.green,
+          ),
         );
       }
     } catch (e) {
@@ -1181,8 +1304,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text("Upload failed: ${e.toString()}"),
-              backgroundColor: Colors.red),
+            content: Text("Upload failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -1191,7 +1315,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _editName(
-      BuildContext context, SettingsState settings, AppLocalizations l10n) {
+    BuildContext context,
+    SettingsState settings,
+    AppLocalizations l10n,
+  ) {
     final controller = TextEditingController(text: settings.userName);
     showDialog(
       context: context,
@@ -1203,7 +1330,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: Text(l10n.close)),
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.close),
+          ),
           ElevatedButton(
             onPressed: () {
               ref
@@ -1229,14 +1358,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         content: Text("A password reset link will be sent to $email"),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: Text(l10n.close)),
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.close),
+          ),
           ElevatedButton(
             onPressed: () async {
               await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Reset email sent!")));
+                  const SnackBar(content: Text("Reset email sent!")),
+                );
               }
             },
             child: const Text("Send"),
@@ -1247,7 +1379,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _confirmLogout(
-      BuildContext context, AppLocalizations l10n) async {
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -1255,8 +1389,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         content: Text(l10n.confirmLogout),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
@@ -1278,7 +1413,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         content: Text(message),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: const Text("OK")),
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
         ],
       ),
     );
@@ -1335,11 +1472,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   Navigator.pop(context);
                   final success = await driveService.connect();
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(success
-                          ? 'Google Drive connected!'
-                          : 'Failed to connect. Try again.'),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          success
+                              ? 'Google Drive connected!'
+                              : 'Failed to connect. Try again.',
+                        ),
+                      ),
+                    );
                     setState(() {});
                   }
                 },
@@ -1369,22 +1510,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     // Wire up Backup Now
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Starting manual backup...')),
+                        content: Text('Starting manual backup...'),
+                      ),
                     );
-                    SyncEngine.instance.triggerSync().then((_) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Backup completed successfully')),
-                        );
-                      }
-                    }).catchError((e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Backup failed: $e')),
-                        );
-                      }
-                    });
+                    SyncEngine.instance
+                        .triggerSync()
+                        .then((_) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Backup completed successfully'),
+                              ),
+                            );
+                          }
+                        })
+                        .catchError((e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Backup failed: $e')),
+                            );
+                          }
+                        });
                   }
                 },
                 isDark: isDark,
@@ -1429,16 +1575,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           color: isDark ? Colors.white54 : Colors.black54,
         ),
       ),
-      trailing: Icon(Icons.chevron_right,
-          color: isDark ? Colors.white24 : Colors.black26),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: isDark ? Colors.white24 : Colors.black26,
+      ),
     );
   }
 
   Future<void> _performLocalBackup(BuildContext context) async {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Creating backup...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Creating backup...')));
 
       // Get the app's data directory
       final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
@@ -1467,7 +1615,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Backup created: $backupFileName (${backupData.length} items)'),
+              'Backup created: $backupFileName (${backupData.length} items)',
+            ),
             backgroundColor: Colors.green,
             action: SnackBarAction(
               label: 'OK',

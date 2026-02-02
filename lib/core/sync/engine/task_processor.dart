@@ -9,12 +9,13 @@ class TaskProcessor {
   final FirebaseFirestore _firestore;
 
   TaskProcessor({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   Future<void> process(SyncQueueItem item) async {
     try {
       debugPrint(
-          'TaskProcessor: Processing ${item.operationId} (${item.operationType})');
+        'TaskProcessor: Processing ${item.operationId} (${item.operationType})',
+      );
 
       switch (item.operationType) {
         case SyncOperationType.create:
@@ -31,8 +32,9 @@ class TaskProcessor {
           // This sync engine focuses on Firestore document operations only
           // File upload operations should use the dedicated StorageService
           throw const SyncDataFailure(
-              message:
-                  "File upload operations should use StorageService directly");
+            message:
+                "File upload operations should use StorageService directly",
+          );
       }
     } on FirebaseException catch (e) {
       throw _mapFirebaseError(e);
@@ -108,8 +110,9 @@ class TaskProcessor {
 
         // CONFLICT!
         throw SyncConflictFailure(
-            message: "Server version $currentVersion >= Local $payloadVersion",
-            originalError: {'server': serverData, 'local': payloadMap});
+          message: "Server version $currentVersion >= Local $payloadVersion",
+          originalError: {'server': serverData, 'local': payloadMap},
+        );
       }
 
       final payload = Map<String, dynamic>.from(payloadMap);
@@ -156,14 +159,20 @@ class TaskProcessor {
       case 'deadline-exceeded':
       case 'network-request-failed':
         return SyncNetworkFailure(
-            message: e.message ?? 'Network Error', originalError: e);
+          message: e.message ?? 'Network Error',
+          originalError: e,
+        );
       case 'permission-denied':
       case 'unauthenticated':
         return SyncAuthFailure(
-            message: 'Auth Error: ${e.message}', originalError: e);
+          message: 'Auth Error: ${e.message}',
+          originalError: e,
+        );
       default:
         return SyncUnknownFailure(
-            message: 'Firestore Error: ${e.message}', originalError: e);
+          message: 'Firestore Error: ${e.message}',
+          originalError: e,
+        );
     }
   }
 }

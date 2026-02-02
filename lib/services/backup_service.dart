@@ -57,17 +57,17 @@ class RestoreResult {
       journalEntriesRestored;
 
   Map<String, dynamic> toMap() => {
-        'success': success,
-        'billsRestored': billsRestored,
-        'customersRestored': customersRestored,
-        'productsRestored': productsRestored,
-        'paymentsRestored': paymentsRestored,
-        'stockMovementsRestored': stockMovementsRestored,
-        'journalEntriesRestored': journalEntriesRestored,
-        'skippedDuplicates': skippedDuplicates,
-        'totalRestored': totalRestored,
-        'errors': errors,
-      };
+    'success': success,
+    'billsRestored': billsRestored,
+    'customersRestored': customersRestored,
+    'productsRestored': productsRestored,
+    'paymentsRestored': paymentsRestored,
+    'stockMovementsRestored': stockMovementsRestored,
+    'journalEntriesRestored': journalEntriesRestored,
+    'skippedDuplicates': skippedDuplicates,
+    'totalRestored': totalRestored,
+    'errors': errors,
+  };
 }
 
 /// Full backup data structure
@@ -103,29 +103,29 @@ class FullBackupData {
   });
 
   Map<String, dynamic> toMap() => {
-        'backupId': backupId,
-        'userId': userId,
-        'createdAt': createdAt.toIso8601String(),
-        'version': version,
-        'bills': bills,
-        'customers': customers,
-        'products': products,
-        'payments': payments,
-        'stockMovements': stockMovements,
-        'journalEntries': journalEntries,
-        'purchaseOrders': purchaseOrders,
-        'businessProfile': businessProfile,
-        'vendorProfile': vendorProfile,
-        'counts': {
-          'bills': bills.length,
-          'customers': customers.length,
-          'products': products.length,
-          'payments': payments.length,
-          'stockMovements': stockMovements.length,
-          'journalEntries': journalEntries.length,
-          'purchaseOrders': purchaseOrders.length,
-        },
-      };
+    'backupId': backupId,
+    'userId': userId,
+    'createdAt': createdAt.toIso8601String(),
+    'version': version,
+    'bills': bills,
+    'customers': customers,
+    'products': products,
+    'payments': payments,
+    'stockMovements': stockMovements,
+    'journalEntries': journalEntries,
+    'purchaseOrders': purchaseOrders,
+    'businessProfile': businessProfile,
+    'vendorProfile': vendorProfile,
+    'counts': {
+      'bills': bills.length,
+      'customers': customers.length,
+      'products': products.length,
+      'payments': payments.length,
+      'stockMovements': stockMovements.length,
+      'journalEntries': journalEntries.length,
+      'purchaseOrders': purchaseOrders.length,
+    },
+  };
 
   factory FullBackupData.fromMap(Map<String, dynamic> map) {
     return FullBackupData(
@@ -139,12 +139,15 @@ class FullBackupData {
       customers: List<Map<String, dynamic>>.from(map['customers'] ?? []),
       products: List<Map<String, dynamic>>.from(map['products'] ?? []),
       payments: List<Map<String, dynamic>>.from(map['payments'] ?? []),
-      stockMovements:
-          List<Map<String, dynamic>>.from(map['stockMovements'] ?? []),
-      journalEntries:
-          List<Map<String, dynamic>>.from(map['journalEntries'] ?? []),
-      purchaseOrders:
-          List<Map<String, dynamic>>.from(map['purchaseOrders'] ?? []),
+      stockMovements: List<Map<String, dynamic>>.from(
+        map['stockMovements'] ?? [],
+      ),
+      journalEntries: List<Map<String, dynamic>>.from(
+        map['journalEntries'] ?? [],
+      ),
+      purchaseOrders: List<Map<String, dynamic>>.from(
+        map['purchaseOrders'] ?? [],
+      ),
       businessProfile: Map<String, dynamic>.from(map['businessProfile'] ?? {}),
       vendorProfile: Map<String, dynamic>.from(map['vendorProfile'] ?? {}),
     );
@@ -171,11 +174,9 @@ class BackupService {
   /// Stream of backup/restore progress updates
   Stream<BackupProgress> get progressStream => _progressController.stream;
 
-  BackupService({
-    FirebaseFirestore? firestore,
-    AppDatabase? localDatabase,
-  })  : _db = firestore ?? FirebaseFirestore.instance,
-        _localDb = localDatabase;
+  BackupService({FirebaseFirestore? firestore, AppDatabase? localDatabase})
+    : _db = firestore ?? FirebaseFirestore.instance,
+      _localDb = localDatabase;
 
   /// Dispose resources
   void dispose() {
@@ -210,11 +211,13 @@ class BackupService {
 
     void updateProgress(String step) {
       completedSteps++;
-      _progressController.add(BackupProgress(
-        totalSteps: totalSteps,
-        completedSteps: completedSteps,
-        currentStep: step,
-      ));
+      _progressController.add(
+        BackupProgress(
+          totalSteps: totalSteps,
+          completedSteps: completedSteps,
+          currentStep: step,
+        ),
+      );
     }
 
     try {
@@ -223,16 +226,18 @@ class BackupService {
           .collection('bills')
           .where('ownerId', isEqualTo: userId)
           .get();
-      final bills =
-          billsSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final bills = billsSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching customers...');
       final customersSnap = await _db
           .collection('customers')
           .where('ownerId', isEqualTo: userId)
           .get();
-      final customers =
-          customersSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final customers = customersSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching products...');
       final productsSnap = await _db
@@ -240,16 +245,18 @@ class BackupService {
           .doc(userId)
           .collection('products')
           .get();
-      final products =
-          productsSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final products = productsSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching payments...');
       final paymentsSnap = await _db
           .collection('payments')
           .where('userId', isEqualTo: userId)
           .get();
-      final payments =
-          paymentsSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final payments = paymentsSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching stock movements...');
       final stockSnap = await _db
@@ -257,8 +264,9 @@ class BackupService {
           .doc(userId)
           .collection('stock_movements')
           .get();
-      final stockMovements =
-          stockSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final stockMovements = stockSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching journal entries...');
       final journalSnap = await _db
@@ -266,16 +274,18 @@ class BackupService {
           .doc(userId)
           .collection('journal_entries')
           .get();
-      final journalEntries =
-          journalSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final journalEntries = journalSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching purchase orders...');
       final purchaseSnap = await _db
           .collection('purchase_orders')
           .where('userId', isEqualTo: userId)
           .get();
-      final purchaseOrders =
-          purchaseSnap.docs.map((d) => {...d.data(), 'id': d.id}).toList();
+      final purchaseOrders = purchaseSnap.docs
+          .map((d) => {...d.data(), 'id': d.id})
+          .toList();
 
       updateProgress('Fetching business profile...');
       final businessDoc = await _db.collection('businesses').doc(userId).get();
@@ -284,8 +294,10 @@ class BackupService {
           : <String, dynamic>{};
 
       updateProgress('Fetching vendor profile...');
-      final vendorDoc =
-          await _db.collection('vendor_profiles').doc(userId).get();
+      final vendorDoc = await _db
+          .collection('vendor_profiles')
+          .doc(userId)
+          .get();
       final Map<String, dynamic> vendorProfile = vendorDoc.exists
           ? (vendorDoc.data() ?? <String, dynamic>{})
           : <String, dynamic>{};
@@ -328,8 +340,9 @@ class BackupService {
 
       debugPrint('[BACKUP] Full backup created: ${doc.id}');
       debugPrint(
-          '[BACKUP] Bills: ${bills.length}, Customers: ${customers.length}, '
-          'Products: ${products.length}, Payments: ${payments.length}');
+        '[BACKUP] Bills: ${bills.length}, Customers: ${customers.length}, '
+        'Products: ${products.length}, Payments: ${payments.length}',
+      );
 
       return doc.id;
     } catch (e) {
@@ -364,11 +377,13 @@ class BackupService {
 
     void updateProgress(String step) {
       completedSteps++;
-      _progressController.add(BackupProgress(
-        totalSteps: totalSteps,
-        completedSteps: completedSteps,
-        currentStep: step,
-      ));
+      _progressController.add(
+        BackupProgress(
+          totalSteps: totalSteps,
+          completedSteps: completedSteps,
+          currentStep: step,
+        ),
+      );
     }
 
     int billsRestored = 0;
@@ -442,9 +457,9 @@ class BackupService {
               .collection('products')
               .doc(id)
               .set({
-            ...product,
-            'restoredAt': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
+                ...product,
+                'restoredAt': FieldValue.serverTimestamp(),
+              }, SetOptions(merge: true));
           productsRestored++;
         } catch (e) {
           errors.add('Product restore error: $e');
@@ -521,9 +536,9 @@ class BackupService {
               .collection('stock_movements')
               .doc(id)
               .set({
-            ...movement,
-            'restoredAt': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
+                ...movement,
+                'restoredAt': FieldValue.serverTimestamp(),
+              }, SetOptions(merge: true));
           stockMovementsRestored++;
         } catch (e) {
           errors.add('Stock movement restore error: $e');
@@ -554,9 +569,9 @@ class BackupService {
               .collection('journal_entries')
               .doc(id)
               .set({
-            ...entry,
-            'restoredAt': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
+                ...entry,
+                'restoredAt': FieldValue.serverTimestamp(),
+              }, SetOptions(merge: true));
           journalEntriesRestored++;
         } catch (e) {
           errors.add('Journal entry restore error: $e');
@@ -566,29 +581,24 @@ class BackupService {
       // Restore profiles
       updateProgress('Restoring profiles...');
       if (backupData.businessProfile.isNotEmpty) {
-        await _db.collection('businesses').doc(userId).set(
-          {
-            ...backupData.businessProfile,
-            'restoredAt': FieldValue.serverTimestamp()
-          },
-          SetOptions(merge: true),
-        );
+        await _db.collection('businesses').doc(userId).set({
+          ...backupData.businessProfile,
+          'restoredAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
       }
       if (backupData.vendorProfile.isNotEmpty) {
-        await _db.collection('vendor_profiles').doc(userId).set(
-          {
-            ...backupData.vendorProfile,
-            'restoredAt': FieldValue.serverTimestamp()
-          },
-          SetOptions(merge: true),
-        );
+        await _db.collection('vendor_profiles').doc(userId).set({
+          ...backupData.vendorProfile,
+          'restoredAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
       }
 
       debugPrint(
-          '[RESTORE] Completed: Bills=$billsRestored, Customers=$customersRestored, '
-          'Products=$productsRestored, Payments=$paymentsRestored, '
-          'Stock=$stockMovementsRestored, Journal=$journalEntriesRestored, '
-          'Skipped=$skippedDuplicates');
+        '[RESTORE] Completed: Bills=$billsRestored, Customers=$customersRestored, '
+        'Products=$productsRestored, Payments=$paymentsRestored, '
+        'Stock=$stockMovementsRestored, Journal=$journalEntriesRestored, '
+        'Skipped=$skippedDuplicates',
+      );
 
       return RestoreResult(
         success: true,
@@ -643,8 +653,10 @@ class BackupService {
 
   /// Create a backup of the provided [data] tied to the current authenticated user.
   /// Returns the backup document ID.
-  Future<String> createBackup(Map<String, dynamic> data,
-      {String? description}) async {
+  Future<String> createBackup(
+    Map<String, dynamic> data, {
+    String? description,
+  }) async {
     final user = FirebaseAuth.instance.currentUser;
     final ownerId = user?.uid ?? 'anonymous';
     final doc = await _db.collection('backups').add({
@@ -669,12 +681,9 @@ class BackupService {
         .where('ownerId', isEqualTo: ownerId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => {
-                  ...d.data(),
-                  'id': d.id,
-                })
-            .toList());
+        .map(
+          (snap) => snap.docs.map((d) => {...d.data(), 'id': d.id}).toList(),
+        );
   }
 
   /// Delete a backup by [backupId].
@@ -706,11 +715,13 @@ class BackupService {
         }
 
         if (lastTime != null) {
-          final hoursSinceLastBackup =
-              DateTime.now().difference(lastTime).inHours;
+          final hoursSinceLastBackup = DateTime.now()
+              .difference(lastTime)
+              .inHours;
           if (hoursSinceLastBackup < 24) {
             debugPrint(
-                '[AUTO-BACKUP] Skipping - last backup $hoursSinceLastBackup hours ago');
+              '[AUTO-BACKUP] Skipping - last backup $hoursSinceLastBackup hours ago',
+            );
             return;
           }
         }
@@ -718,7 +729,8 @@ class BackupService {
 
       // Perform full backup
       await createFullBackup(
-          description: 'Auto Backup ${DateTime.now().toLocal()}');
+        description: 'Auto Backup ${DateTime.now().toLocal()}',
+      );
       debugPrint('[AUTO-BACKUP] Completed successfully');
     } catch (e) {
       debugPrint('[AUTO-BACKUP] Failed: $e');

@@ -188,24 +188,25 @@ class PetrolPumpBillingService {
       // Sync Queue: Bill
       print('DEBUG: Enqueuing Bill Sync');
       await _enqueueSync(
-          operationType: SyncOperationType.create,
-          targetCollection: 'bills',
-          documentId: billId,
-          payload: {
-            'id': billId,
-            'customerId': customerId,
-            'billDate': requestedDate.toIso8601String(),
-            'itemsJson': jsonEncode([item]),
-            'subtotal': subtotal,
-            'taxAmount': gstAmount,
-            'grandTotal': totalAmount,
-            'paymentMode': paymentType,
-            'businessType': 'petrolPump',
-            'status': paymentType == 'Credit' ? 'Unpaid' : 'Paid',
-            'paidAmount': paymentType == 'Credit' ? 0.0 : totalAmount,
-            'shiftId': activeShift.shiftId,
-            'userId': _ownerId,
-          });
+        operationType: SyncOperationType.create,
+        targetCollection: 'bills',
+        documentId: billId,
+        payload: {
+          'id': billId,
+          'customerId': customerId,
+          'billDate': requestedDate.toIso8601String(),
+          'itemsJson': jsonEncode([item]),
+          'subtotal': subtotal,
+          'taxAmount': gstAmount,
+          'grandTotal': totalAmount,
+          'paymentMode': paymentType,
+          'businessType': 'petrolPump',
+          'status': paymentType == 'Credit' ? 'Unpaid' : 'Paid',
+          'paidAmount': paymentType == 'Credit' ? 0.0 : totalAmount,
+          'shiftId': activeShift.shiftId,
+          'userId': _ownerId,
+        },
+      );
 
       // B. Deduct Tank Stock
       if (tankId != null) {
@@ -219,19 +220,20 @@ class PetrolPumpBillingService {
         );
 
         // Sync Queue: Tank Update
-        final updatedTank = await (_db.select(_db.tanks)
-              ..where((t) => t.tankId.equals(tankId)))
-            .getSingle();
+        final updatedTank = await (_db.select(
+          _db.tanks,
+        )..where((t) => t.tankId.equals(tankId))).getSingle();
 
         print('DEBUG: Enqueuing Tank Sync');
         await _enqueueSync(
-            operationType: SyncOperationType.update,
-            targetCollection: 'tanks',
-            documentId: tankId,
-            payload: {
-              'currentStock': updatedTank.currentStock,
-              'updatedAt': DateTime.now().toIso8601String(),
-            });
+          operationType: SyncOperationType.update,
+          targetCollection: 'tanks',
+          documentId: tankId,
+          payload: {
+            'currentStock': updatedTank.currentStock,
+            'updatedAt': DateTime.now().toIso8601String(),
+          },
+        );
 
         // AUDIT FIX: Log to StockMovements
         print('DEBUG: Logging Stock Movement');
@@ -260,23 +262,24 @@ class PetrolPumpBillingService {
 
         // Sync Queue: Stock Movement
         await _enqueueSync(
-            operationType: SyncOperationType.create,
-            targetCollection: 'stock_movements',
-            documentId: movementId,
-            payload: {
-              'id': movementId,
-              'userId': _ownerId,
-              'productId': fuelType.fuelId,
-              'type': 'OUT',
-              'reason': 'FUEL_SALE',
-              'quantity': litres,
-              'stockBefore': stockBefore,
-              'stockAfter': stockAfter,
-              'referenceId': billId,
-              'warehouseId': tankId,
-              'date': requestedDate.toIso8601String(),
-              'createdAt': now.toIso8601String(),
-            });
+          operationType: SyncOperationType.create,
+          targetCollection: 'stock_movements',
+          documentId: movementId,
+          payload: {
+            'id': movementId,
+            'userId': _ownerId,
+            'productId': fuelType.fuelId,
+            'type': 'OUT',
+            'reason': 'FUEL_SALE',
+            'quantity': litres,
+            'stockBefore': stockBefore,
+            'stockAfter': stockAfter,
+            'referenceId': billId,
+            'warehouseId': tankId,
+            'date': requestedDate.toIso8601String(),
+            'createdAt': now.toIso8601String(),
+          },
+        );
       }
 
       // C. Update Nozzle Reading
@@ -288,17 +291,18 @@ class PetrolPumpBillingService {
       );
 
       // Sync Queue: Nozzle Update
-      final updatedNozzle = await (_db.select(_db.nozzles)
-            ..where((t) => t.nozzleId.equals(nozzle.nozzleId)))
-          .getSingle();
+      final updatedNozzle = await (_db.select(
+        _db.nozzles,
+      )..where((t) => t.nozzleId.equals(nozzle.nozzleId))).getSingle();
       await _enqueueSync(
-          operationType: SyncOperationType.update,
-          targetCollection: 'nozzles',
-          documentId: nozzle.nozzleId,
-          payload: {
-            'closingReading': updatedNozzle.closingReading,
-            'updatedAt': DateTime.now().toIso8601String(),
-          });
+        operationType: SyncOperationType.update,
+        targetCollection: 'nozzles',
+        documentId: nozzle.nozzleId,
+        payload: {
+          'closingReading': updatedNozzle.closingReading,
+          'updatedAt': DateTime.now().toIso8601String(),
+        },
+      );
 
       // D. Posting to Ledger (Accounting)
       await _postAccountingEntry(
@@ -327,8 +331,9 @@ class PetrolPumpBillingService {
         subtotal: totalAmount - gstAmount,
         totalTax: gstAmount,
         paidAmount: paymentType == 'Credit' ? 0 : totalAmount,
-        onlinePaid:
-            (paymentType == 'UPI' || paymentType == 'Card') ? totalAmount : 0,
+        onlinePaid: (paymentType == 'UPI' || paymentType == 'Card')
+            ? totalAmount
+            : 0,
         cashPaid: paymentType == 'Cash' ? totalAmount : 0,
         businessType: 'petrolPump',
       );
@@ -358,8 +363,9 @@ class PetrolPumpBillingService {
     required String documentId,
     required Map<String, dynamic> payload,
   }) async {
-    final safeDocId =
-        documentId.length >= 4 ? documentId.substring(0, 4) : documentId;
+    final safeDocId = documentId.length >= 4
+        ? documentId.substring(0, 4)
+        : documentId;
     final opId = '${_generateId()}_$safeDocId';
 
     final syncItem = SyncQueueCompanion(
@@ -388,21 +394,22 @@ class PetrolPumpBillingService {
 
     // Check nozzle specific link first
     if (nozzle.linkedTankId != null && nozzle.linkedTankId!.isNotEmpty) {
-      final tank = await (_db.select(_db.tanks)
-            ..where((t) => t.tankId.equals(nozzle.linkedTankId!)))
-          .getSingleOrNull();
+      final tank = await (_db.select(
+        _db.tanks,
+      )..where((t) => t.tankId.equals(nozzle.linkedTankId!))).getSingleOrNull();
       if (tank != null) return TankInfo(tank.tankId, tank.currentStock);
     }
 
     // Check dispenser link
     // Requires querying Dispenser table
-    final dispenser = await (_db.select(_db.dispensers)
-          ..where((t) => t.id.equals(nozzle.dispenserId)))
-        .getSingleOrNull();
+    final dispenser = await (_db.select(
+      _db.dispensers,
+    )..where((t) => t.id.equals(nozzle.dispenserId))).getSingleOrNull();
     if (dispenser?.linkedTankId != null) {
-      final tank = await (_db.select(_db.tanks)
-            ..where((t) => t.tankId.equals(dispenser!.linkedTankId!)))
-          .getSingleOrNull();
+      final tank =
+          await (_db.select(_db.tanks)
+                ..where((t) => t.tankId.equals(dispenser!.linkedTankId!)))
+              .getSingleOrNull();
       if (tank != null) return TankInfo(tank.tankId, tank.currentStock);
     }
 
@@ -485,12 +492,15 @@ class PetrolPumpBillingService {
     );
   }
 
-  Future<void> _updateLedgerBalance(String accountName, double amount,
-      {required bool isDebit}) async {
+  Future<void> _updateLedgerBalance(
+    String accountName,
+    double amount, {
+    required bool isDebit,
+  }) async {
     // Find account by name
-    final account = await (_db.select(_db.ledgerAccounts)
-          ..where((t) => t.name.equals(accountName)))
-        .getSingleOrNull();
+    final account = await (_db.select(
+      _db.ledgerAccounts,
+    )..where((t) => t.name.equals(accountName))).getSingleOrNull();
 
     if (account != null) {
       // Determine effect on balance based on Account Group/Type
@@ -511,9 +521,9 @@ class PetrolPumpBillingService {
         change = isDebit ? -amount : amount;
       }
 
-      await (_db.update(_db.ledgerAccounts)
-            ..where((t) => t.id.equals(account.id)))
-          .write(
+      await (_db.update(
+        _db.ledgerAccounts,
+      )..where((t) => t.id.equals(account.id))).write(
         LedgerAccountsCompanion(
           currentBalance: Value(account.currentBalance + change),
           updatedAt: Value(DateTime.now()),
@@ -559,8 +569,11 @@ class BackdatedBillException implements Exception {
   final String message;
   final DateTime attemptedDate;
   final DateTime currentDate;
-  BackdatedBillException(this.message,
-      {required this.attemptedDate, required this.currentDate});
+  BackdatedBillException(
+    this.message, {
+    required this.attemptedDate,
+    required this.currentDate,
+  });
   @override
   String toString() => message;
 }
@@ -570,10 +583,12 @@ class InsufficientStockException implements Exception {
   final double requestedLitres;
   final double availableStock;
   final String tankId;
-  InsufficientStockException(this.message,
-      {required this.requestedLitres,
-      required this.availableStock,
-      required this.tankId});
+  InsufficientStockException(
+    this.message, {
+    required this.requestedLitres,
+    required this.availableStock,
+    required this.tankId,
+  });
   @override
   String toString() => message;
 }

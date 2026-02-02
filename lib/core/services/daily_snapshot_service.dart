@@ -76,8 +76,8 @@ class DailySnapshotService {
   DailySnapshotService({
     BillsRepository? billsRepo,
     ExpensesRepository? expensesRepo,
-  })  : _billsRepo = billsRepo ?? sl<BillsRepository>(),
-        _expensesRepo = expensesRepo ?? sl<ExpensesRepository>();
+  }) : _billsRepo = billsRepo ?? sl<BillsRepository>(),
+       _expensesRepo = expensesRepo ?? sl<ExpensesRepository>();
 
   /// Generate snapshot for a specific date
   ///
@@ -93,9 +93,11 @@ class DailySnapshotService {
 
     // Filter bills for the specific day using `date` field
     final todayBills = allBills
-        .where((b) =>
-            b.date.isAfter(startOfDay.subtract(const Duration(seconds: 1))) &&
-            b.date.isBefore(endOfDay))
+        .where(
+          (b) =>
+              b.date.isAfter(startOfDay.subtract(const Duration(seconds: 1))) &&
+              b.date.isBefore(endOfDay),
+        )
         .toList();
 
     // Calculate sales metrics
@@ -118,8 +120,9 @@ class DailySnapshotService {
       if (expensesResult.data != null) {
         for (final expense in expensesResult.data!) {
           // Filter by date
-          if (expense.date
-                  .isAfter(startOfDay.subtract(const Duration(seconds: 1))) &&
+          if (expense.date.isAfter(
+                startOfDay.subtract(const Duration(seconds: 1)),
+              ) &&
               expense.date.isBefore(endOfDay)) {
             totalExpenses += expense.amount;
           }
@@ -131,8 +134,9 @@ class DailySnapshotService {
 
     // Calculate derived metrics
     final netCashFlow = totalReceipts - totalExpenses;
-    final avgInvoiceValue =
-        todayBills.isEmpty ? 0.0 : totalSales / todayBills.length;
+    final avgInvoiceValue = todayBills.isEmpty
+        ? 0.0
+        : totalSales / todayBills.length;
 
     // Create snapshot
     final snapshot = DailySnapshot(
@@ -148,15 +152,11 @@ class DailySnapshotService {
     );
 
     // Dispatch event
-    EventDispatcher.instance.dispatch(
-      BusinessEvent.dailySnapshotGenerated,
-      {
-        'date': dateStr,
-        'totalSales': totalSales,
-        'totalReceipts': totalReceipts,
-      },
-      userId: userId,
-    );
+    EventDispatcher.instance.dispatch(BusinessEvent.dailySnapshotGenerated, {
+      'date': dateStr,
+      'totalSales': totalSales,
+      'totalReceipts': totalReceipts,
+    }, userId: userId);
 
     return snapshot;
   }
@@ -210,8 +210,8 @@ class DailySnapshotService {
       'salesChange': today.totalSales - yesterday.totalSales,
       'salesChangePercent': yesterday.totalSales > 0
           ? ((today.totalSales - yesterday.totalSales) /
-              yesterday.totalSales *
-              100)
+                yesterday.totalSales *
+                100)
           : 0.0,
       'receiptsChange': today.totalReceipts - yesterday.totalReceipts,
       'invoiceCountChange': today.invoiceCount - yesterday.invoiceCount,

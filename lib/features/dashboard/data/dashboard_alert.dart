@@ -16,16 +16,6 @@ class DashboardAlert {
   });
 }
 
-enum AlertType {
-  stock,
-  payment,
-  tax,
-  system,
-}
+enum AlertType { stock, payment, tax, system }
 
-enum AlertSeverity {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum AlertSeverity { low, medium, high, critical }

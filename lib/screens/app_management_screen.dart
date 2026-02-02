@@ -32,20 +32,23 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
     await Future.delayed(const Duration(seconds: 1));
     _showLoading(false);
     if (mounted) {
-      unawaited(showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Local Backup'),
-          content: const Text(
-              'Your data is automatically synced to the cloud safely.\n\nManual local backup (JSON/SQL) functionality is being upgraded to support the new database engine.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+      unawaited(
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Local Backup'),
+            content: const Text(
+              'Your data is automatically synced to the cloud safely.\n\nManual local backup (JSON/SQL) functionality is being upgraded to support the new database engine.',
             ),
-          ],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
     }
   }
 
@@ -58,12 +61,14 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
       await sl<SyncManager>().restoreFullData(userId);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Cloud Restore Completed")));
+          const SnackBar(content: Text("Cloud Restore Completed")),
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Restore Error: $e")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Restore Error: $e")));
       }
     } finally {
       _showLoading(false);
@@ -83,9 +88,15 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
 
       // Fetch Data
       final dataRes = await reportsRepo.getSalesReport(
-          userId: userId, start: start, end: end);
+        userId: userId,
+        start: start,
+        end: end,
+      );
       final summaryRes = await reportsRepo.getProfitLossSummary(
-          userId: userId, start: start, end: end);
+        userId: userId,
+        start: start,
+        end: end,
+      );
 
       if (!dataRes.success || !summaryRes.success) {
         throw Exception("Failed to fetch report data");
@@ -97,24 +108,28 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
       // Format for PDF
       final headers = ['Date', 'Bill #', 'Customer', 'Amount', 'Status'];
       final rows = data
-          .map((d) => [
-                d['bill_date'].toString().split(' ')[0],
-                d['bill_number'].toString(),
-                d['customer_name'].toString(),
-                d['total_amount'].toString(),
-                d['status'].toString()
-              ])
+          .map(
+            (d) => [
+              d['bill_date'].toString().split(' ')[0],
+              d['bill_number'].toString(),
+              d['customer_name'].toString(),
+              d['total_amount'].toString(),
+              d['status'].toString(),
+            ],
+          )
           .toList();
 
       await _exportReportToPdf(
-          title: 'Monthly Sales Report',
-          headers: headers,
-          data: rows,
-          summary: summary);
+        title: 'Monthly Sales Report',
+        headers: headers,
+        data: rows,
+        summary: summary,
+      );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error: $e")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error: $e")));
       }
     } finally {
       _showLoading(false);
@@ -143,11 +158,15 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
             headers: headers,
             data: data,
             headerStyle: pw.TextStyle(
-                fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.white,
+            ),
             headerDecoration: const pw.BoxDecoration(color: PdfColors.blueGrey),
             rowDecoration: const pw.BoxDecoration(
-                border:
-                    pw.Border(bottom: pw.BorderSide(color: PdfColors.grey300))),
+              border: pw.Border(
+                bottom: pw.BorderSide(color: PdfColors.grey300),
+              ),
+            ),
             cellAlignment: pw.Alignment.centerLeft,
           ),
         ],
@@ -155,14 +174,15 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
     );
 
     final dir = await getTemporaryDirectory();
-    final file =
-        File('${dir.path}/report_${DateTime.now().millisecondsSinceEpoch}.pdf');
+    final file = File(
+      '${dir.path}/report_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
     await file.writeAsBytes(await pdf.save());
 
     await Printing.sharePdf(
-        bytes: await pdf.save(),
-        filename:
-            'report_${title}_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      bytes: await pdf.save(),
+      filename: 'report_${title}_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
 
     return file;
   }
@@ -170,34 +190,51 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
   pw.Widget _buildPdfHeader(String title) {
     final dateStr = DateFormat('dd MMM yyyy').format(DateTime.now());
     return pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-        children: [
-          pw.Text(title,
-              style:
-                  pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-          pw.Text('Generated: $dateStr',
-              style: const pw.TextStyle(color: PdfColors.grey700)),
-        ]);
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        pw.Text(
+          title,
+          style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(
+          'Generated: $dateStr',
+          style: const pw.TextStyle(color: PdfColors.grey700),
+        ),
+      ],
+    );
   }
 
   pw.Widget _buildPdfSummary(Map<String, double> summary) {
     if (summary.isEmpty) return pw.Container();
     return pw.Container(
-        padding: const pw.EdgeInsets.all(10),
-        decoration:
-            pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey400)),
-        child: pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
-            children: summary.entries.map((e) {
-              return pw.Column(children: [
-                pw.Text(e.key.replaceAll('_', ' ').toUpperCase(),
-                    style: const pw.TextStyle(
-                        fontSize: 10, color: PdfColors.grey600)),
-                pw.Text('₹${e.value.toStringAsFixed(2)}',
-                    style: pw.TextStyle(
-                        fontSize: 14, fontWeight: pw.FontWeight.bold)),
-              ]);
-            }).toList()));
+      padding: const pw.EdgeInsets.all(10),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey400),
+      ),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+        children: summary.entries.map((e) {
+          return pw.Column(
+            children: [
+              pw.Text(
+                e.key.replaceAll('_', ' ').toUpperCase(),
+                style: const pw.TextStyle(
+                  fontSize: 10,
+                  color: PdfColors.grey600,
+                ),
+              ),
+              pw.Text(
+                '₹${e.value.toStringAsFixed(2)}',
+                style: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
   }
 
   @override
@@ -257,7 +294,7 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
             Container(
               color: Colors.black54,
               child: const Center(child: CircularProgressIndicator()),
-            )
+            ),
         ],
       ),
     );
@@ -266,9 +303,14 @@ class _AppManagementScreenState extends State<AppManagementScreen> {
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(title,
-          style: const TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.indigo)),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.indigo,
+        ),
+      ),
     );
   }
 }

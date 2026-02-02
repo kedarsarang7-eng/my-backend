@@ -42,18 +42,22 @@ class BuyFlowService {
   // --- STOCK ENTRIES (Atomic) ---
 
   Future<void> createStockEntry(
-      model.StockEntry entry, List<model.StockEntryItem> items) async {
+    model.StockEntry entry,
+    List<model.StockEntryItem> items,
+  ) async {
     // 1. Create Purchase Order in Repository
     // This handles local DB insert, stock update, and sync queueing
     final purchaseItems = items
-        .map((i) => PurchaseItem(
-              id: i.lineId,
-              productId: i.itemId,
-              productName: i.name,
-              quantity: i.quantity,
-              costPrice: i.rate,
-              totalAmount: i.total,
-            ))
+        .map(
+          (i) => PurchaseItem(
+            id: i.lineId,
+            productId: i.itemId,
+            productName: i.name,
+            quantity: i.quantity,
+            costPrice: i.rate,
+            totalAmount: i.total,
+          ),
+        )
         .toList();
 
     await _purchaseRepository.createPurchaseOrder(
@@ -80,15 +84,22 @@ class BuyFlowService {
 
   // --- STOCK REVERSAL ---
   Future<void> createStockReversal(
-      model.StockEntry entry, List<model.StockEntryItem> items) async {
+    model.StockEntry entry,
+    List<model.StockEntryItem> items,
+  ) async {
     // Similar to createStockEntry but with negative quantities or a 'Return' status
     // For now, let's just use a similar pattern or implement deletePurchaseOrder
     // Actually, StockReversal should probably be a separate concept in PurchaseRepository if critical.
   }
 
   // --- VENDOR PAYMENTS ---
-  Future<void> recordVendorPayment(String ownerId, String vendorId,
-      double amount, String mode, List<String> linkedEntries) async {
+  Future<void> recordVendorPayment(
+    String ownerId,
+    String vendorId,
+    double amount,
+    String mode,
+    List<String> linkedEntries,
+  ) async {
     // 1. Update Vendor Balance
     await _vendorsRepository.updateVendorAfterPurchase(
       vendorId: vendorId,

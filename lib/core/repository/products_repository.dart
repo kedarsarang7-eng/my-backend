@@ -21,10 +21,7 @@ import '../services/event_dispatcher.dart';
 
 import '../../models/reorder_prediction.dart';
 
-enum ProductType {
-  goods,
-  service,
-}
+enum ProductType { goods, service }
 
 /// Product entity
 class Product {
@@ -50,7 +47,7 @@ class Product {
   final DateTime updatedAt;
   final DateTime? deletedAt;
   final List<String>
-      altBarcodes; // For multiple barcodes pointing to same product
+  altBarcodes; // For multiple barcodes pointing to same product
 
   Product({
     required this.id,
@@ -157,29 +154,29 @@ class Product {
   }
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'name': name,
-        'sku': sku,
-        'barcode': barcode,
-        'category': category,
-        'unit': unit,
-        'sellingPrice': sellingPrice,
-        'costPrice': costPrice,
-        'taxRate': taxRate,
-        'stockQuantity': stockQuantity,
-        'lowStockThreshold': lowStockThreshold,
-        'size': size,
-        'color': color,
-        'brand': brand,
-        'hsnCode': hsnCode,
-        'isActive': isActive,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'altBarcodes': altBarcodes,
-        'drugSchedule': drugSchedule,
-        'groupId': groupId,
-        'variantAttributes': variantAttributes,
-      };
+    'id': id,
+    'name': name,
+    'sku': sku,
+    'barcode': barcode,
+    'category': category,
+    'unit': unit,
+    'sellingPrice': sellingPrice,
+    'costPrice': costPrice,
+    'taxRate': taxRate,
+    'stockQuantity': stockQuantity,
+    'lowStockThreshold': lowStockThreshold,
+    'size': size,
+    'color': color,
+    'brand': brand,
+    'hsnCode': hsnCode,
+    'isActive': isActive,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'altBarcodes': altBarcodes,
+    'drugSchedule': drugSchedule,
+    'groupId': groupId,
+    'variantAttributes': variantAttributes,
+  };
 }
 
 /// Products Repository
@@ -270,7 +267,9 @@ class ProductsRepository {
         updatedAt: now,
       );
 
-      await database.into(database.products).insert(
+      await database
+          .into(database.products)
+          .insert(
             ProductsCompanion.insert(
               id: id,
               userId: userId,
@@ -295,16 +294,20 @@ class ProductsRepository {
               altBarcodes: Value(altBarcodes?.join(',') ?? ''),
               drugSchedule: Value(drugSchedule),
               groupId: Value(groupId),
-              variantAttributes: Value(variantAttributes != null
-                  ? jsonEncode(variantAttributes)
-                  : null),
+              variantAttributes: Value(
+                variantAttributes != null
+                    ? jsonEncode(variantAttributes)
+                    : null,
+              ),
             ),
           );
 
       // PHASE 3: INSERT BATCHES (Pharmacy)
       if (initialBatches != null) {
         for (final batch in initialBatches) {
-          await database.into(database.productBatches).insert(
+          await database
+              .into(database.productBatches)
+              .insert(
                 ProductBatchesCompanion.insert(
                   id: const Uuid().v4(),
                   productId: id,
@@ -315,7 +318,8 @@ class ProductsRepository {
                   openingQuantity: Value((batch['quantity'] as num).toDouble()),
                   mrp: Value((batch['mrp'] as num? ?? sellingPrice).toDouble()),
                   purchaseRate: Value(
-                      (batch['purchaseRate'] as num? ?? costPrice).toDouble()),
+                    (batch['purchaseRate'] as num? ?? costPrice).toDouble(),
+                  ),
                   status: const Value('ACTIVE'),
                   isSynced: const Value(false),
                   createdAt: now,
@@ -328,7 +332,9 @@ class ProductsRepository {
       // PHASE 3: INSERT IMEIS (Electronics)
       if (initialImeis != null) {
         for (final imei in initialImeis) {
-          await database.into(database.iMEISerials).insert(
+          await database
+              .into(database.iMEISerials)
+              .insert(
                 IMEISerialsCompanion.insert(
                   id: const Uuid().v4(),
                   productId: id,
@@ -348,7 +354,9 @@ class ProductsRepository {
       // GOLDEN RULE: Create Movement for Opening Stock
       if (stockQuantity > 0) {
         final movementId = const Uuid().v4();
-        await database.into(database.stockMovements).insert(
+        await database
+            .into(database.stockMovements)
+            .insert(
               StockMovementEntity(
                 id: movementId,
                 userId: userId,
@@ -383,13 +391,15 @@ class ProductsRepository {
           'createdAt': now.toIso8601String(),
           'createdBy': 'SYSTEM',
         };
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.create,
-          targetCollection: 'stock_movements',
-          documentId: movementId,
-          payload: movementPayload,
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.create,
+            targetCollection: 'stock_movements',
+            documentId: movementId,
+            payload: movementPayload,
+          ),
+        );
       }
 
       // Queue for sync
@@ -409,9 +419,10 @@ class ProductsRepository {
   /// Get product by ID
   Future<RepositoryResult<Product?>> getById(String id) async {
     return await errorHandler.runSafe<Product?>(() async {
-      final result = await (database.select(database.products)
-            ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final result =
+          await (database.select(database.products)
+                ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
+              .getSingleOrNull();
 
       if (result == null) return null;
       return _entityToProduct(result);
@@ -419,13 +430,15 @@ class ProductsRepository {
   }
 
   /// Get all products for user
-  Future<RepositoryResult<List<Product>>> getAll(
-      {required String userId}) async {
+  Future<RepositoryResult<List<Product>>> getAll({
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<List<Product>>(() async {
-      final results = await (database.select(database.products)
-            ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.asc(t.name)]))
-          .get();
+      final results =
+          await (database.select(database.products)
+                ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
+                ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+              .get();
 
       return results.map(_entityToProduct).toList();
     }, 'getAll');
@@ -447,56 +460,64 @@ class ProductsRepository {
           ..orderBy([(t) => OrderingTerm.asc(t.category)]))
         .watch()
         .map((rows) {
-      final categories = rows
-          .map((row) => row.category)
-          .where((c) => c != null && c.isNotEmpty)
-          .cast<String>()
-          .toSet()
-          .toList();
-      categories.sort();
-      return categories;
-    });
+          final categories = rows
+              .map((row) => row.category)
+              .where((c) => c != null && c.isNotEmpty)
+              .cast<String>()
+              .toSet()
+              .toList();
+          categories.sort();
+          return categories;
+        });
   }
 
   /// Update product
-  Future<RepositoryResult<Product>> updateProduct(Product product,
-      {required String userId}) async {
+  Future<RepositoryResult<Product>> updateProduct(
+    Product product, {
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<Product>(() async {
       // 1. Fetch OLD product to detect stock changes
-      final oldProductEntity = await (database.select(database.products)
-            ..where((t) => t.id.equals(product.id)))
-          .getSingleOrNull();
+      final oldProductEntity = await (database.select(
+        database.products,
+      )..where((t) => t.id.equals(product.id))).getSingleOrNull();
 
-      final updated =
-          product.copyWith(updatedAt: DateTime.now(), isSynced: false);
+      final updated = product.copyWith(
+        updatedAt: DateTime.now(),
+        isSynced: false,
+      );
 
-      await (database.update(database.products)
-            ..where((t) => t.id.equals(product.id)))
-          .write(ProductsCompanion(
-        name: Value(updated.name),
-        sku: Value(updated.sku),
-        barcode: Value(updated.barcode),
-        category: Value(updated.category),
-        unit: Value(updated.unit),
-        sellingPrice: Value(updated.sellingPrice),
-        costPrice: Value(updated.costPrice),
-        taxRate: Value(updated.taxRate),
-        stockQuantity: Value(updated.stockQuantity),
-        lowStockThreshold: Value(updated.lowStockThreshold),
-        size: Value(updated.size),
-        color: Value(updated.color),
-        brand: Value(updated.brand),
-        hsnCode: Value(updated.hsnCode),
-        isActive: Value(updated.isActive),
-        isSynced: const Value(false),
-        updatedAt: Value(updated.updatedAt),
-        altBarcodes: Value(updated.altBarcodes.join(',')),
-        drugSchedule: Value(updated.drugSchedule),
-        groupId: Value(updated.groupId),
-        variantAttributes: Value(updated.variantAttributes != null
-            ? jsonEncode(updated.variantAttributes)
-            : null),
-      ));
+      await (database.update(
+        database.products,
+      )..where((t) => t.id.equals(product.id))).write(
+        ProductsCompanion(
+          name: Value(updated.name),
+          sku: Value(updated.sku),
+          barcode: Value(updated.barcode),
+          category: Value(updated.category),
+          unit: Value(updated.unit),
+          sellingPrice: Value(updated.sellingPrice),
+          costPrice: Value(updated.costPrice),
+          taxRate: Value(updated.taxRate),
+          stockQuantity: Value(updated.stockQuantity),
+          lowStockThreshold: Value(updated.lowStockThreshold),
+          size: Value(updated.size),
+          color: Value(updated.color),
+          brand: Value(updated.brand),
+          hsnCode: Value(updated.hsnCode),
+          isActive: Value(updated.isActive),
+          isSynced: const Value(false),
+          updatedAt: Value(updated.updatedAt),
+          altBarcodes: Value(updated.altBarcodes.join(',')),
+          drugSchedule: Value(updated.drugSchedule),
+          groupId: Value(updated.groupId),
+          variantAttributes: Value(
+            updated.variantAttributes != null
+                ? jsonEncode(updated.variantAttributes)
+                : null,
+          ),
+        ),
+      );
 
       // GOLDEN RULE: Create Movement if Stock Changed manually
       if (oldProductEntity != null &&
@@ -508,7 +529,9 @@ class ProductsRepository {
         final now = DateTime.now();
         final movementId = const Uuid().v4();
 
-        await database.into(database.stockMovements).insert(
+        await database
+            .into(database.stockMovements)
+            .insert(
               StockMovementEntity(
                 id: movementId,
                 userId: userId,
@@ -543,13 +566,15 @@ class ProductsRepository {
           'createdAt': now.toIso8601String(),
           'createdBy': 'USER',
         };
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.create,
-          targetCollection: 'stock_movements',
-          documentId: movementId,
-          payload: movementPayload,
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.create,
+            targetCollection: 'stock_movements',
+            documentId: movementId,
+            payload: movementPayload,
+          ),
+        );
 
         // EVENT: Stock Changed
         eventDispatcher.stockChanged(
@@ -587,14 +612,19 @@ class ProductsRepository {
   }
 
   /// Delete product (soft delete)
-  Future<RepositoryResult<bool>> deleteProduct(String id,
-      {required String userId}) async {
+  Future<RepositoryResult<bool>> deleteProduct(
+    String id, {
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<bool>(() async {
-      await (database.update(database.products)..where((t) => t.id.equals(id)))
-          .write(ProductsCompanion(
-        deletedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.products,
+      )..where((t) => t.id.equals(id))).write(
+        ProductsCompanion(
+          deletedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       // Queue for sync
       final item = SyncQueueItem.create(
@@ -621,9 +651,9 @@ class ProductsRepository {
     required String userId,
   }) async {
     return await errorHandler.runSafe<Product>(() async {
-      final current = await (database.select(database.products)
-            ..where((t) => t.id.equals(productId)))
-          .getSingleOrNull();
+      final current = await (database.select(
+        database.products,
+      )..where((t) => t.id.equals(productId))).getSingleOrNull();
 
       if (current == null) {
         throw Exception('Product not found');
@@ -634,13 +664,15 @@ class ProductsRepository {
         throw Exception('Insufficient stock');
       }
 
-      await (database.update(database.products)
-            ..where((t) => t.id.equals(productId)))
-          .write(ProductsCompanion(
-        stockQuantity: Value(newStock),
-        isSynced: const Value(false),
-        updatedAt: Value(DateTime.now()),
-      ));
+      await (database.update(
+        database.products,
+      )..where((t) => t.id.equals(productId))).write(
+        ProductsCompanion(
+          stockQuantity: Value(newStock),
+          isSynced: const Value(false),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
 
       // Queue for sync
       final item = SyncQueueItem.create(
@@ -680,12 +712,13 @@ class ProductsRepository {
   }
 
   /// Get low stock products
-  Future<RepositoryResult<List<Product>>> getLowStockProducts(
-      {required String userId}) async {
+  Future<RepositoryResult<List<Product>>> getLowStockProducts({
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<List<Product>>(() async {
-      final results = await (database.select(database.products)
-            ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull()))
-          .get();
+      final results = await (database.select(
+        database.products,
+      )..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())).get();
 
       return results
           .where((p) => p.stockQuantity <= p.lowStockThreshold)
@@ -719,8 +752,10 @@ class ProductsRepository {
 
       // 2. Get sales history for last 30 days
       final cutoff = DateTime.now().subtract(const Duration(days: 30));
-      final salesHistory =
-          await database.getProductSalesHistory(userId, cutoff);
+      final salesHistory = await database.getProductSalesHistory(
+        userId,
+        cutoff,
+      );
 
       final predictions = <ReorderPrediction>[];
 
@@ -744,13 +779,16 @@ class ProductsRepository {
 
         // Suggest if running out in 2 weeks or less
         if (daysUntilEmpty <= 14) {
-          predictions.add(ReorderPrediction(
-            product: product,
-            dailyVelocity: dailyVelocity,
-            daysUntilEmpty: daysUntilEmpty,
-            estimatedStockoutDate:
-                DateTime.now().add(Duration(days: daysUntilEmpty)),
-          ));
+          predictions.add(
+            ReorderPrediction(
+              product: product,
+              dailyVelocity: dailyVelocity,
+              daysUntilEmpty: daysUntilEmpty,
+              estimatedStockoutDate: DateTime.now().add(
+                Duration(days: daysUntilEmpty),
+              ),
+            ),
+          );
         }
       }
 
@@ -762,20 +800,24 @@ class ProductsRepository {
   }
 
   /// Search products
-  Future<RepositoryResult<List<Product>>> search(String query,
-      {required String userId}) async {
+  Future<RepositoryResult<List<Product>>> search(
+    String query, {
+    required String userId,
+  }) async {
     return await errorHandler.runSafe<List<Product>>(() async {
-      final results = await (database.select(database.products)
-            ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull()))
-          .get();
+      final results = await (database.select(
+        database.products,
+      )..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())).get();
 
       final lowerQuery = query.toLowerCase();
       return results
-          .where((p) =>
-              p.name.toLowerCase().contains(lowerQuery) ||
-              (p.sku?.toLowerCase().contains(lowerQuery) ?? false) ||
-              (p.barcode?.contains(query) ?? false) ||
-              (p.altBarcodes?.contains(query) ?? false))
+          .where(
+            (p) =>
+                p.name.toLowerCase().contains(lowerQuery) ||
+                (p.sku?.toLowerCase().contains(lowerQuery) ?? false) ||
+                (p.barcode?.contains(query) ?? false) ||
+                (p.altBarcodes?.contains(query) ?? false),
+          )
           .map(_entityToProduct)
           .toList();
     }, 'search');
@@ -787,7 +829,8 @@ class ProductsRepository {
 
   /// Get stock status summary (In, Low, Out)
   Future<RepositoryResult<Map<String, dynamic>>> getStockStatusSummary(
-      String userId) async {
+    String userId,
+  ) async {
     return await errorHandler.runSafe<Map<String, dynamic>>(() async {
       final allProducts = (await getAll(userId: userId)).data ?? [];
 
@@ -825,7 +868,8 @@ class ProductsRepository {
 
   // / Get sales performance (Top Selling & Slow Moving)
   Future<RepositoryResult<Map<String, dynamic>>> getSalesPerformance(
-      String userId) async {
+    String userId,
+  ) async {
     return await errorHandler.runSafe<Map<String, dynamic>>(() async {
       // 1. Get Sales History (30 days)
       final cutoff = DateTime.now().subtract(const Duration(days: 30));
@@ -862,23 +906,27 @@ class ProductsRepository {
       final slowMoving = allProducts
           .where((p) => !salesMap.containsKey(p.id) && p.stockQuantity > 0)
           .take(20)
-          .map((p) => {
-                'id': p.id,
-                'name': p.name,
-                'category': p.category ?? 'General',
-                'sold_qty': 0,
-                'revenue': 0.0,
-                'margin': 0.0,
-                'trend': 'down',
-              })
+          .map(
+            (p) => {
+              'id': p.id,
+              'name': p.name,
+              'category': p.category ?? 'General',
+              'sold_qty': 0,
+              'revenue': 0.0,
+              'margin': 0.0,
+              'trend': 'down',
+            },
+          )
           .toList();
 
       // 5. High Margin (Sorted by margin %)
-      final highMargin = [...topSelling, ...slowMoving]
-          .where((i) => (i['revenue'] as double) > 0)
-          .toList()
-        ..sort(
-            (a, b) => (b['margin'] as double).compareTo(a['margin'] as double));
+      final highMargin =
+          [
+            ...topSelling,
+            ...slowMoving,
+          ].where((i) => (i['revenue'] as double) > 0).toList()..sort(
+            (a, b) => (b['margin'] as double).compareTo(a['margin'] as double),
+          );
 
       return {
         'top_selling': topSelling,
@@ -894,11 +942,13 @@ class ProductsRepository {
 
   /// Get batches for a product
   Future<RepositoryResult<List<ProductBatchEntity>>> getBatchesForProduct(
-      String productId) async {
+    String productId,
+  ) async {
     return await errorHandler.runSafe<List<ProductBatchEntity>>(() async {
       return await (database.select(database.productBatches)
-            ..where((t) =>
-                t.productId.equals(productId) & t.status.equals('ACTIVE'))
+            ..where(
+              (t) => t.productId.equals(productId) & t.status.equals('ACTIVE'),
+            )
             ..orderBy([(t) => OrderingTerm.asc(t.expiryDate)]))
           .get();
     }, 'getBatchesForProduct');
@@ -906,7 +956,8 @@ class ProductsRepository {
 
   /// Get all active batches
   Future<RepositoryResult<List<ProductBatchEntity>>> getAllBatches(
-      String userId) async {
+    String userId,
+  ) async {
     return await errorHandler.runSafe<List<ProductBatchEntity>>(() async {
       return await (database.select(database.productBatches)
             ..where((t) => t.userId.equals(userId) & t.status.equals('ACTIVE'))
@@ -917,45 +968,49 @@ class ProductsRepository {
 
   /// Get damage logs
   Future<RepositoryResult<List<StockMovementEntity>>> getDamageLogs(
-      String userId) async {
+    String userId,
+  ) async {
     return await errorHandler.runSafe<List<StockMovementEntity>>(() async {
       return await (database.select(database.stockMovements)
-            ..where((t) =>
-                t.userId.equals(userId) &
-                t.type.equals('OUT') &
-                t.reason.isIn(['DAMAGE', 'EXPIRED', 'THEFT', 'LOST']))
+            ..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.type.equals('OUT') &
+                  t.reason.isIn(['DAMAGE', 'EXPIRED', 'THEFT', 'LOST']),
+            )
             ..orderBy([(t) => OrderingTerm.desc(t.date)]))
           .get();
     }, 'getDamageLogs');
   }
 
   Product _entityToProduct(ProductEntity e) => Product(
-        id: e.id,
-        userId: e.userId,
-        name: e.name,
-        sku: e.sku,
-        barcode: e.barcode,
-        category: e.category,
-        unit: e.unit,
-        sellingPrice: e.sellingPrice,
-        costPrice: e.costPrice,
-        taxRate: e.taxRate,
-        stockQuantity: e.stockQuantity,
-        lowStockThreshold: e.lowStockThreshold,
-        size: e.size,
-        color: e.color,
-        brand: e.brand,
-        hsnCode: e.hsnCode,
-        isActive: e.isActive,
-        isSynced: e.isSynced,
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-        deletedAt: e.deletedAt,
-        altBarcodes:
-            e.altBarcodes?.split(',').where((s) => s.isNotEmpty).toList() ?? [],
-        drugSchedule: e.drugSchedule,
-        groupId: e.groupId,
-        variantAttributes:
-            DataGuard.safeJsonMap(e.variantAttributes).cast<String, String>(),
-      );
+    id: e.id,
+    userId: e.userId,
+    name: e.name,
+    sku: e.sku,
+    barcode: e.barcode,
+    category: e.category,
+    unit: e.unit,
+    sellingPrice: e.sellingPrice,
+    costPrice: e.costPrice,
+    taxRate: e.taxRate,
+    stockQuantity: e.stockQuantity,
+    lowStockThreshold: e.lowStockThreshold,
+    size: e.size,
+    color: e.color,
+    brand: e.brand,
+    hsnCode: e.hsnCode,
+    isActive: e.isActive,
+    isSynced: e.isSynced,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+    deletedAt: e.deletedAt,
+    altBarcodes:
+        e.altBarcodes?.split(',').where((s) => s.isNotEmpty).toList() ?? [],
+    drugSchedule: e.drugSchedule,
+    groupId: e.groupId,
+    variantAttributes: DataGuard.safeJsonMap(
+      e.variantAttributes,
+    ).cast<String, String>(),
+  );
 }

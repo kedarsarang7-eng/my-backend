@@ -39,7 +39,8 @@ class EmailRepository {
       final callable = _functions.httpsCallable('sendInvoiceEmail');
 
       final subject = 'Invoice #${bill.invoiceNumber} from $businessName';
-      final body = '''
+      final body =
+          '''
 Hello ${bill.customerName},
 
 Please find attached the invoice #${bill.invoiceNumber} for your recent purchase at $businessName.
@@ -72,7 +73,8 @@ $businessName
       }
 
       debugPrint(
-          '[EmailRepository] Email sent successfully. ID: ${result.data['messageId']}');
+        '[EmailRepository] Email sent successfully. ID: ${result.data['messageId']}',
+      );
     } catch (e) {
       debugPrint('[EmailRepository] Failed to send email: $e');
       rethrow;

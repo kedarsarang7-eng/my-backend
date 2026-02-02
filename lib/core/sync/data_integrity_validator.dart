@@ -24,10 +24,8 @@ class ValidationResult {
 
   factory ValidationResult.valid() => const ValidationResult(isValid: true);
 
-  factory ValidationResult.invalid(List<String> errors) => ValidationResult(
-        isValid: false,
-        errors: errors,
-      );
+  factory ValidationResult.invalid(List<String> errors) =>
+      ValidationResult(isValid: false, errors: errors);
 }
 
 /// Data integrity validator for sync operations
@@ -83,13 +81,7 @@ class DataIntegrityValidator {
   List<String> _getRequiredFields(String collection) {
     switch (collection) {
       case 'bills':
-        return [
-          'id',
-          'invoiceNumber',
-          'customerId',
-          'billDate',
-          'grandTotal',
-        ];
+        return ['id', 'invoiceNumber', 'customerId', 'billDate', 'grandTotal'];
       case 'customers':
         return ['id', 'name'];
       case 'products':
@@ -113,13 +105,14 @@ class DataIntegrityValidator {
       'amount',
       'quantity',
       'price',
-      'paidAmount'
+      'paidAmount',
     ];
     for (final field in numericFields) {
       if (data.containsKey(field) && data[field] != null) {
         if (data[field] is! num) {
           errors.add(
-              'Field $field must be numeric, got ${data[field].runtimeType}');
+            'Field $field must be numeric, got ${data[field].runtimeType}',
+          );
         } else if ((data[field] as num).isNaN ||
             (data[field] as num).isInfinite) {
           errors.add('Field $field has invalid numeric value');
@@ -133,7 +126,7 @@ class DataIntegrityValidator {
       'paymentDate',
       'dueDate',
       'createdAt',
-      'updatedAt'
+      'updatedAt',
     ];
     for (final field in dateFields) {
       if (data.containsKey(field) && data[field] != null) {
@@ -161,8 +154,9 @@ class DataIntegrityValidator {
       // Paid amount cannot exceed total
       final paidAmount = data['paidAmount'] as num?;
       if (paidAmount != null && grandTotal is num && paidAmount > grandTotal) {
-        warnings
-            .add('paidAmount exceeds grandTotal - may indicate overpayment');
+        warnings.add(
+          'paidAmount exceeds grandTotal - may indicate overpayment',
+        );
       }
 
       // Due date should not be before bill date
@@ -197,16 +191,14 @@ class DataIntegrityValidator {
   }
 
   /// Validate data size limits
-  void _validateSizeLimits(
-    Map<String, dynamic> data,
-    List<String> errors,
-  ) {
+  void _validateSizeLimits(Map<String, dynamic> data, List<String> errors) {
     // Firestore document size limit is 1MB
     final jsonSize = utf8.encode(jsonEncode(data)).length;
     if (jsonSize > 900 * 1024) {
       // 900KB warning threshold
       errors.add(
-          'Document size (${jsonSize ~/ 1024}KB) approaching Firestore limit');
+        'Document size (${jsonSize ~/ 1024}KB) approaching Firestore limit',
+      );
     }
 
     // Check individual string field lengths

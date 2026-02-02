@@ -28,9 +28,7 @@ class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: FuturisticColors.background,
-      body: SafeArea(
-        child: _screens[_currentIndex],
-      ),
+      body: SafeArea(child: _screens[_currentIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: FuturisticColors.surface,
@@ -45,12 +43,17 @@ class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen> {
           onTap: (index) => setState(() => _currentIndex = index),
           items: const [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded), label: 'Home'),
+              icon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history_edu_rounded), label: 'Records'),
+              icon: Icon(Icons.history_edu_rounded),
+              label: 'Records',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month_rounded),
-                label: 'Appointments'),
+              icon: Icon(Icons.calendar_month_rounded),
+              label: 'Appointments',
+            ),
           ],
         ),
       ),
@@ -85,10 +88,9 @@ class _PatientHomeTabState extends State<_PatientHomeTab> {
 
       if (result.isSuccess && result.data != null) {
         final now = DateTime.now();
-        final futureVisits = result.data!
-            .where((v) => v.visitDate.isAfter(now))
-            .toList()
-          ..sort((a, b) => a.visitDate.compareTo(b.visitDate));
+        final futureVisits =
+            result.data!.where((v) => v.visitDate.isAfter(now)).toList()
+              ..sort((a, b) => a.visitDate.compareTo(b.visitDate));
 
         if (mounted) {
           setState(() {
@@ -118,54 +120,64 @@ class _PatientHomeTabState extends State<_PatientHomeTab> {
                 radius: 24,
                 backgroundColor: FuturisticColors.primary,
                 child: Text(
-                    user.displayName?.isNotEmpty == true
-                        ? user.displayName![0]
-                        : 'P',
-                    style: const TextStyle(color: Colors.white)),
+                  user.displayName?.isNotEmpty == true
+                      ? user.displayName![0]
+                      : 'P',
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('Hello,', style: TextStyle(color: Colors.grey)),
-                  Text(user.displayName ?? 'Patient',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    user.displayName ?? 'Patient',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
               const Spacer(),
               IconButton(
-                  icon:
-                      const Icon(Icons.notifications_none, color: Colors.white),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('No new notifications')),
-                    );
-                  }),
+                icon: const Icon(Icons.notifications_none, color: Colors.white),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No new notifications')),
+                  );
+                },
+              ),
             ],
           ),
 
           const SizedBox(height: 32),
 
           // Next Appointment Card
-          const Text('Next Appointment',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
+          const Text(
+            'Next Appointment',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 12),
           _buildAppointmentCard(),
 
           const SizedBox(height: 32),
 
           // Quick Actions
-          const Text('Quick Actions',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
+          const Text(
+            'Quick Actions',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,8 +193,9 @@ class _PatientHomeTabState extends State<_PatientHomeTab> {
                     ),
                     actions: [
                       TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'))
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Close'),
+                      ),
                     ],
                   ),
                 );
@@ -227,8 +240,10 @@ class _PatientHomeTabState extends State<_PatientHomeTab> {
           border: Border.all(color: Colors.white10),
         ),
         child: const Center(
-          child: Text('No upcoming appointments',
-              style: TextStyle(color: Colors.grey)),
+          child: Text(
+            'No upcoming appointments',
+            style: TextStyle(color: Colors.grey),
+          ),
         ),
       );
     }
@@ -241,9 +256,10 @@ class _PatientHomeTabState extends State<_PatientHomeTab> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: FuturisticColors.primary.withOpacity(0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5)),
+            color: FuturisticColors.primary.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
       child: Column(
@@ -254,15 +270,20 @@ class _PatientHomeTabState extends State<_PatientHomeTab> {
               const Icon(Icons.calendar_today, color: Colors.white, size: 16),
               const SizedBox(width: 8),
               Text(
-                  // Simple date format
-                  "${_nextVisit!.visitDate.day}/${_nextVisit!.visitDate.month} at ${_nextVisit!.visitDate.hour}:${_nextVisit!.visitDate.minute.toString().padLeft(2, '0')}",
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+                // Simple date format
+                "${_nextVisit!.visitDate.day}/${_nextVisit!.visitDate.month} at ${_nextVisit!.visitDate.hour}:${_nextVisit!.visitDate.minute.toString().padLeft(2, '0')}",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
-          const Text('Medical Checkup', // Or fetch type if available
-              style: TextStyle(color: Colors.white, fontSize: 18)),
+          const Text(
+            'Medical Checkup', // Or fetch type if available
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
           const SizedBox(height: 4),
           const Text('City Clinic', style: TextStyle(color: Colors.white70)),
         ],

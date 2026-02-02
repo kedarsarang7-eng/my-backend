@@ -210,8 +210,8 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
                 color: isActive
                     ? null
                     : (isDark
-                        ? Colors.white.withOpacity(0.1)
-                        : Colors.black.withOpacity(0.08)),
+                          ? Colors.white.withOpacity(0.1)
+                          : Colors.black.withOpacity(0.08)),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -333,7 +333,7 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
       Colors.teal,
       Colors.orange,
       Colors.deepOrange,
-      Colors.red
+      Colors.red,
     ];
 
     return Column(
@@ -358,20 +358,24 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   gradient: isSelected
-                      ? LinearGradient(colors: [
-                          colors[index],
-                          colors[index].withOpacity(0.8)
-                        ])
+                      ? LinearGradient(
+                          colors: [
+                            colors[index],
+                            colors[index].withOpacity(0.8),
+                          ],
+                        )
                       : null,
                   color: isSelected
                       ? null
                       : (isDark
-                          ? Colors.white.withOpacity(0.08)
-                          : Colors.white),
+                            ? Colors.white.withOpacity(0.08)
+                            : Colors.white),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
@@ -385,8 +389,9 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
                     color: isSelected
                         ? Colors.white
                         : (isDark ? Colors.white70 : Colors.black87),
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                 ),
               ),
@@ -500,16 +505,25 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
             ),
             child: Column(
               children: [
-                _buildCalcRow('New Device Price',
-                    '₹${_newDevicePriceController.text}', isDark),
-                _buildCalcRow('Exchange Value',
-                    '- ₹${_oldDeviceValueController.text}', isDark,
-                    isGreen: true),
+                _buildCalcRow(
+                  'New Device Price',
+                  '₹${_newDevicePriceController.text}',
+                  isDark,
+                ),
+                _buildCalcRow(
+                  'Exchange Value',
+                  '- ₹${_oldDeviceValueController.text}',
+                  isDark,
+                  isGreen: true,
+                ),
                 if ((double.tryParse(_additionalDiscountController.text) ?? 0) >
                     0)
-                  _buildCalcRow('Additional Discount',
-                      '- ₹${_additionalDiscountController.text}', isDark,
-                      isGreen: true),
+                  _buildCalcRow(
+                    'Additional Discount',
+                    '- ₹${_additionalDiscountController.text}',
+                    isDark,
+                    isGreen: true,
+                  ),
                 const Divider(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -595,8 +609,12 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
     );
   }
 
-  Widget _buildCalcRow(String label, String value, bool isDark,
-      {bool isGreen = false}) {
+  Widget _buildCalcRow(
+    String label,
+    String value,
+    bool isDark, {
+    bool isGreen = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -604,9 +622,7 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black54,
-            ),
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
           ),
           Text(
             value,
@@ -633,9 +649,7 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [color, color.withOpacity(0.7)],
-            ),
+            gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
             borderRadius: BorderRadius.circular(14),
           ),
           child: Icon(icon, color: Colors.white, size: 24),
@@ -921,9 +935,7 @@ class _CreateExchangeScreenState extends State<CreateExchangeScreen> {
         content: Text(message),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

@@ -42,9 +42,9 @@ class _SafePrescriptionListScreenState
           icon: Icons.note_add,
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const AddPrescriptionScreen()));
+              context,
+              MaterialPageRoute(builder: (_) => const AddPrescriptionScreen()),
+            );
           },
         ),
       ],
@@ -81,8 +81,11 @@ class _SafePrescriptionListScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.description_outlined,
-              size: 64, color: Colors.white.withOpacity(0.5)),
+          Icon(
+            Icons.description_outlined,
+            size: 64,
+            color: Colors.white.withOpacity(0.5),
+          ),
           const SizedBox(height: 16),
           Text(
             'No prescriptions found',
@@ -107,30 +110,41 @@ class _SafePrescriptionListScreenState
                 color: FuturisticColors.primary.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.medical_services,
-                  color: FuturisticColors.primary),
+              child: const Icon(
+                Icons.medical_services,
+                color: FuturisticColors.primary,
+              ),
             ),
-            title: Text(patientName,
-                style: GoogleFonts.inter(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            title: Text(
+              patientName,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 4),
-                Text(DateFormat('MMM dd, yyyy • HH:mm').format(p.date),
-                    style:
-                        TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                Text(
+                  DateFormat('MMM dd, yyyy • HH:mm').format(p.date),
+                  style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                ),
                 const SizedBox(height: 4),
-                Text('${p.items.length} Medicines',
-                    style: const TextStyle(color: Colors.white70)),
+                Text(
+                  '${p.items.length} Medicines',
+                  style: const TextStyle(color: Colors.white70),
+                ),
               ],
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon:
-                      const Icon(Icons.receipt_long, color: Colors.greenAccent),
+                  icon: const Icon(
+                    Icons.receipt_long,
+                    color: Colors.greenAccent,
+                  ),
                   tooltip: 'Create Bill',
                   onPressed: () => _billPrescription(p, snapshot.data),
                 ),
@@ -151,17 +165,19 @@ class _SafePrescriptionListScreenState
         final productResult = await _productsRepo.getById(item.productId!);
         final product = productResult.data;
         if (product != null) {
-          billItems.add(BillItem(
-            productId: product.id,
-            productName: product
-                .name, // Use current name or prescription name? Using product name.
-            qty: 1, // Default qty, maybe parse 'Dosage' later?
-            price: product.sellingPrice,
-            unit: product.unit,
-            gstRate: product.taxRate,
-            cgst: product.sellingPrice * (product.taxRate / 200),
-            sgst: product.sellingPrice * (product.taxRate / 200),
-          ));
+          billItems.add(
+            BillItem(
+              productId: product.id,
+              productName: product
+                  .name, // Use current name or prescription name? Using product name.
+              qty: 1, // Default qty, maybe parse 'Dosage' later?
+              price: product.sellingPrice,
+              unit: product.unit,
+              gstRate: product.taxRate,
+              cgst: product.sellingPrice * (product.taxRate / 200),
+              sgst: product.sellingPrice * (product.taxRate / 200),
+            ),
+          );
         }
       }
     }
@@ -170,7 +186,8 @@ class _SafePrescriptionListScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('No billed items found (products may be deleted)')),
+            content: Text('No billed items found (products may be deleted)'),
+          ),
         );
       }
       return;

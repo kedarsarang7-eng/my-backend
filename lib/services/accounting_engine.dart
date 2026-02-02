@@ -37,8 +37,11 @@ class AccountingEngine {
     }
 
     // 3. GENERATE LEDGER ENTRIES (Double Entry Logic)
-    final entries =
-        await _generateLedgerEntries(transaction, items, businessId);
+    final entries = await _generateLedgerEntries(
+      transaction,
+      items,
+      businessId,
+    );
 
     // Check Equality (Debit = Credit)
     double totalDebit = entries.fold(0, (acc, e) => acc + e.debit);
@@ -47,7 +50,8 @@ class AccountingEngine {
     // Allow small floating point diff
     if ((totalDebit - totalCredit).abs() > 0.01) {
       throw Exception(
-          'Accounting Imbalance! Debit: $totalDebit, Credit: $totalCredit');
+        'Accounting Imbalance! Debit: $totalDebit, Credit: $totalCredit',
+      );
     }
 
     // 4. Save Ledger Entries
@@ -156,13 +160,21 @@ class AccountingEngine {
     if (txn.type == TransactionType.sale) {
       // 1. Credit Sales Account (Income)
       String salesLedgerId = await _getOrcreateLedgerId(
-          businessId, 'Sales Account', LedgerGroup.income, LedgerType.sales);
+        businessId,
+        'Sales Account',
+        LedgerGroup.income,
+        LedgerType.sales,
+      );
       entries.add(createEntry(salesLedgerId, 0, txn.subTotal));
 
       // 2. Credit Output GST (Liability)
       if (txn.taxAmount > 0) {
         String taxLedgerId = await _getOrcreateLedgerId(
-            businessId, 'Output GST', LedgerGroup.liabilities, LedgerType.tax);
+          businessId,
+          'Output GST',
+          LedgerGroup.liabilities,
+          LedgerType.tax,
+        );
         entries.add(createEntry(taxLedgerId, 0, txn.taxAmount));
       }
 
@@ -170,7 +182,11 @@ class AccountingEngine {
       if (txn.paymentStatus == PaymentStatus.paid) {
         // Cash Sale
         String cashLedgerId = await _getOrcreateLedgerId(
-            businessId, 'Cash Account', LedgerGroup.assets, LedgerType.cash);
+          businessId,
+          'Cash Account',
+          LedgerGroup.assets,
+          LedgerType.cash,
+        );
         entries.add(createEntry(cashLedgerId, txn.totalAmount, 0));
       } else {
         // Credit Sale (Sundry Debtor)
@@ -184,65 +200,93 @@ class AccountingEngine {
         }
       }
     }
-
     // B. PURCHASE SCENARIO
     else if (txn.type == TransactionType.purchase) {
       // 1. Debit Purchase Account (Expense/Asset kind of)
-      String purchaseLedgerId = await _getOrcreateLedgerId(businessId,
-          'Purchase Account', LedgerGroup.expenses, LedgerType.purchase);
-      entries.add(createEntry(
-          purchaseLedgerId, txn.subTotal, 0)); // Purchases are Debited
+      String purchaseLedgerId = await _getOrcreateLedgerId(
+        businessId,
+        'Purchase Account',
+        LedgerGroup.expenses,
+        LedgerType.purchase,
+      );
+      entries.add(
+        createEntry(purchaseLedgerId, txn.subTotal, 0),
+      ); // Purchases are Debited
 
       // 2. Debit Input GST (Asset - reduces tax liability)
       if (txn.taxAmount > 0) {
         String inputTaxId = await _getOrcreateLedgerId(
-            businessId, 'Input GST', LedgerGroup.assets, LedgerType.tax);
+          businessId,
+          'Input GST',
+          LedgerGroup.assets,
+          LedgerType.tax,
+        );
         entries.add(createEntry(inputTaxId, txn.taxAmount, 0));
       }
 
       // 3. Credit Party OR Cash
       if (txn.paymentStatus == PaymentStatus.paid) {
         String cashLedgerId = await _getOrcreateLedgerId(
-            businessId, 'Cash Account', LedgerGroup.assets, LedgerType.cash);
-        entries.add(createEntry(
-            cashLedgerId, 0, txn.totalAmount)); // Cash goes OUT (Credit)
+          businessId,
+          'Cash Account',
+          LedgerGroup.assets,
+          LedgerType.cash,
+        );
+        entries.add(
+          createEntry(cashLedgerId, 0, txn.totalAmount),
+        ); // Cash goes OUT (Credit)
       } else {
         if (txn.partyId != null) {
           String creditorLedgerId = txn.partyId!;
-          entries.add(createEntry(
-              creditorLedgerId, 0, txn.totalAmount)); // We owe money (Credit)
+          entries.add(
+            createEntry(creditorLedgerId, 0, txn.totalAmount),
+          ); // We owe money (Credit)
         }
       }
     }
-
     // C. SALE RETURN (Credit Note)
     else if (txn.type == TransactionType.saleReturn) {
-      String salesReturnId = await _getOrcreateLedgerId(businessId,
-          'Sales Return Account', LedgerGroup.income, LedgerType.sales);
+      String salesReturnId = await _getOrcreateLedgerId(
+        businessId,
+        'Sales Return Account',
+        LedgerGroup.income,
+        LedgerType.sales,
+      );
       entries.add(
-          createEntry(salesReturnId, txn.subTotal, 0)); // Debit reduces Income
+        createEntry(salesReturnId, txn.subTotal, 0),
+      ); // Debit reduces Income
 
       if (txn.taxAmount > 0) {
         String taxLedgerId = await _getOrcreateLedgerId(
-            businessId, 'Output GST', LedgerGroup.liabilities, LedgerType.tax);
-        entries.add(createEntry(
-            taxLedgerId, txn.taxAmount, 0)); // Debit reduces Liability
+          businessId,
+          'Output GST',
+          LedgerGroup.liabilities,
+          LedgerType.tax,
+        );
+        entries.add(
+          createEntry(taxLedgerId, txn.taxAmount, 0),
+        ); // Debit reduces Liability
       }
 
       if (txn.paymentStatus == PaymentStatus.paid) {
         String cashLedgerId = await _getOrcreateLedgerId(
-            businessId, 'Cash Account', LedgerGroup.assets, LedgerType.cash);
-        entries.add(createEntry(
-            cashLedgerId, 0, txn.totalAmount)); // Credit reduces Asset
+          businessId,
+          'Cash Account',
+          LedgerGroup.assets,
+          LedgerType.cash,
+        );
+        entries.add(
+          createEntry(cashLedgerId, 0, txn.totalAmount),
+        ); // Credit reduces Asset
       } else {
         if (txn.partyId != null) {
           String debtorLedgerId = txn.partyId!;
-          entries.add(createEntry(debtorLedgerId, 0,
-              txn.totalAmount)); // Credit reduces Asset (Debtor)
+          entries.add(
+            createEntry(debtorLedgerId, 0, txn.totalAmount),
+          ); // Credit reduces Asset (Debtor)
         }
       }
     }
-
     // D. PAYMENT RECEIVED (Receipt) - Customer pays us
     else if (txn.type == TransactionType.paymentIn) {
       // 1. Debit Cash/Bank (Money comes IN)
@@ -262,7 +306,11 @@ class AccountingEngine {
       }
 
       String cashBankId = await _getOrcreateLedgerId(
-          businessId, targetLedgerName, LedgerGroup.assets, targetType);
+        businessId,
+        targetLedgerName,
+        LedgerGroup.assets,
+        targetType,
+      );
 
       entries.add(createEntry(cashBankId, txn.totalAmount, 0));
 
@@ -271,7 +319,6 @@ class AccountingEngine {
         entries.add(createEntry(txn.partyId!, 0, txn.totalAmount));
       }
     }
-
     // E. PAYMENT MADE (Payment) - We pay Supplier
     else if (txn.type == TransactionType.paymentOut) {
       // 1. Debit Supplier (Liability reduces)
@@ -291,7 +338,11 @@ class AccountingEngine {
       }
 
       String cashBankId = await _getOrcreateLedgerId(
-          businessId, targetLedgerName, LedgerGroup.assets, targetType);
+        businessId,
+        targetLedgerName,
+        LedgerGroup.assets,
+        targetType,
+      );
 
       entries.add(createEntry(cashBankId, 0, txn.totalAmount));
     }
@@ -300,8 +351,10 @@ class AccountingEngine {
   }
 
   /// Adapter: Post a Bill as a Transaction
-  Future<void> postBill(dynamic bill,
-      {TransactionType type = TransactionType.sale}) async {
+  Future<void> postBill(
+    dynamic bill, {
+    TransactionType type = TransactionType.sale,
+  }) async {
     // Note: 'bill' is dynamic to avoid circular import or need explicit Bill import if not available
     // In real implementation, import Bill model.
     // Assuming Bill has: id, ownerId, date, invoiceNumber, grandTotal, totalTax, items, etc.
@@ -323,20 +376,22 @@ class AccountingEngine {
 
     List<TransactionItem> txnItems = [];
     for (var item in bill.items) {
-      txnItems.add(TransactionItem(
-        txnItemId: item.id.isEmpty
-            ? DateTime.now().microsecondsSinceEpoch.toString()
-            : item.id,
-        txnId: bill.id,
-        itemId: item.vegId, // Product ID
-        itemName: item.itemName,
-        qty: item.qty.toDouble(),
-        rate: item.price.toDouble(),
-        costPrice: 0, // In prod, fetch from Stock Ledger
-        gstAmount: 0, // Calculate from rate % if needed
-        gstRate: 0,
-        netAmount: item.total.toDouble(),
-      ));
+      txnItems.add(
+        TransactionItem(
+          txnItemId: item.id.isEmpty
+              ? DateTime.now().microsecondsSinceEpoch.toString()
+              : item.id,
+          txnId: bill.id,
+          itemId: item.vegId, // Product ID
+          itemName: item.itemName,
+          qty: item.qty.toDouble(),
+          rate: item.price.toDouble(),
+          costPrice: 0, // In prod, fetch from Stock Ledger
+          gstAmount: 0, // Calculate from rate % if needed
+          gstRate: 0,
+          netAmount: item.total.toDouble(),
+        ),
+      );
     }
 
     await postTransaction(
@@ -381,16 +436,16 @@ class AccountingEngine {
     );
 
     // Payments have no items
-    await postTransaction(
-      transaction: txn,
-      items: [],
-      businessId: businessId,
-    );
+    await postTransaction(transaction: txn, items: [], businessId: businessId);
   }
 
   /// Helper to get or create a ledger on the fly (MVP only)
-  Future<String> _getOrcreateLedgerId(String businessId, String name,
-      LedgerGroup group, LedgerType type) async {
+  Future<String> _getOrcreateLedgerId(
+    String businessId,
+    String name,
+    LedgerGroup group,
+    LedgerType type,
+  ) async {
     // In real app, query by name/type. For MVP, we hash name or use standard IDs.
     String id = '${businessId}_${name.replaceAll(' ', '_').toLowerCase()}';
 
@@ -642,9 +697,9 @@ class AccountingEngine {
         .collection('sales')
         .doc(bill.id)
         .update({
-      'status': 'CANCELLED',
-      'serverUpdatedAt': FieldValue.serverTimestamp(),
-    });
+          'status': 'CANCELLED',
+          'serverUpdatedAt': FieldValue.serverTimestamp(),
+        });
   }
 
   /// Check if a transaction can be modified (not in a locked period).
@@ -834,8 +889,9 @@ class AccountingEngine {
 
     // Entry 1: DR Advance Account (Asset - we have right to receive goods/refund)
     final advanceEntryId = '${advanceId}_ADVANCE';
-    final advanceAccountName =
-        isSupplier ? 'Advance to Suppliers' : 'Advance from Customers';
+    final advanceAccountName = isSupplier
+        ? 'Advance to Suppliers'
+        : 'Advance from Customers';
     batch.set(entriesRef.doc(advanceEntryId), {
       'entryId': advanceEntryId,
       'txnId': advanceId,
@@ -851,7 +907,8 @@ class AccountingEngine {
 
     // Entry 2: CR Cash/Bank (Asset - money went out)
     final cashEntryId = '${advanceId}_CASH';
-    final cashAccountName = paymentMode.toLowerCase().contains('bank') ||
+    final cashAccountName =
+        paymentMode.toLowerCase().contains('bank') ||
             paymentMode.toLowerCase().contains('upi') ||
             paymentMode.toLowerCase().contains('online')
         ? 'Bank Account'

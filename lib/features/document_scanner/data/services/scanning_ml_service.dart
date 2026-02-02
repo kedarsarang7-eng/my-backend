@@ -28,8 +28,11 @@ class ScanningMlService {
         // Sort by area size?
         if (objects.length == 1) return objects.first;
 
-        objects.sort((a, b) => (b.boundingBox.width * b.boundingBox.height)
-            .compareTo(a.boundingBox.width * a.boundingBox.height));
+        objects.sort(
+          (a, b) => (b.boundingBox.width * b.boundingBox.height).compareTo(
+            a.boundingBox.width * a.boundingBox.height,
+          ),
+        );
         return objects.first;
       }
     } catch (e) {

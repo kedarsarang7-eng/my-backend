@@ -14,13 +14,15 @@ class AppointmentRepository {
   AppointmentRepository({
     required AppDatabase db,
     required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  }) : _db = db,
+       _syncManager = syncManager;
 
   /// Create Appointment
   Future<void> createAppointment(AppointmentModel appointment) async {
     try {
-      await _db.into(_db.appointments).insert(
+      await _db
+          .into(_db.appointments)
+          .insert(
             AppointmentsCompanion.insert(
               id: appointment.id,
               doctorId: appointment.doctorId,
@@ -34,18 +36,23 @@ class AppointmentRepository {
             ),
           );
 
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId:
-            'SYSTEM', // Should be doctor/vendor ID ideally but we use SYSTEM or from session
-        operationType: SyncOperationType.create,
-        targetCollection: 'appointments',
-        documentId: appointment.id,
-        payload: appointment.toMap(),
-        priority: 1,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId:
+              'SYSTEM', // Should be doctor/vendor ID ideally but we use SYSTEM or from session
+          operationType: SyncOperationType.create,
+          targetCollection: 'appointments',
+          documentId: appointment.id,
+          payload: appointment.toMap(),
+          priority: 1,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to create appointment');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to create appointment',
+      );
       rethrow;
     }
   }
@@ -53,56 +60,73 @@ class AppointmentRepository {
   /// Update Appointment
   Future<void> updateAppointment(AppointmentModel appointment) async {
     try {
-      await (_db.update(_db.appointments)
-            ..where((t) => t.id.equals(appointment.id)))
-          .write(AppointmentsCompanion(
-        scheduledTime: Value(appointment.scheduledTime),
-        status: Value(appointment.status.name),
-        purpose: Value(appointment.purpose),
-        notes: Value(appointment.notes),
-        updatedAt: Value(DateTime.now()),
-      ));
+      await (_db.update(
+        _db.appointments,
+      )..where((t) => t.id.equals(appointment.id))).write(
+        AppointmentsCompanion(
+          scheduledTime: Value(appointment.scheduledTime),
+          status: Value(appointment.status.name),
+          purpose: Value(appointment.purpose),
+          notes: Value(appointment.notes),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
 
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: 'SYSTEM',
-        operationType: SyncOperationType.update,
-        targetCollection: 'appointments',
-        documentId: appointment.id,
-        payload: appointment.toMap(),
-        priority: 1,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: 'SYSTEM',
+          operationType: SyncOperationType.update,
+          targetCollection: 'appointments',
+          documentId: appointment.id,
+          payload: appointment.toMap(),
+          priority: 1,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to update appointment');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to update appointment',
+      );
       rethrow;
     }
   }
 
   /// Get Appointments for Doctor (by Date Range)
   Future<List<AppointmentModel>> getAppointmentsForDoctor(
-      String doctorId, DateTime start, DateTime end) async {
-    final rows = await (_db.select(_db.appointments)
-          ..where((t) =>
-              t.doctorId.equals(doctorId) &
-              t.scheduledTime.isBiggerOrEqualValue(start) &
-              t.scheduledTime.isSmallerOrEqualValue(end))
-          ..orderBy([(t) => OrderingTerm.asc(t.scheduledTime)]))
-        .get();
+    String doctorId,
+    DateTime start,
+    DateTime end,
+  ) async {
+    final rows =
+        await (_db.select(_db.appointments)
+              ..where(
+                (t) =>
+                    t.doctorId.equals(doctorId) &
+                    t.scheduledTime.isBiggerOrEqualValue(start) &
+                    t.scheduledTime.isSmallerOrEqualValue(end),
+              )
+              ..orderBy([(t) => OrderingTerm.asc(t.scheduledTime)]))
+            .get();
     return rows.map((row) => _mapToModel(row)).toList();
   }
 
   /// Watch Appointments for Doctor (Reactive)
   Stream<List<AppointmentModel>> watchAppointmentsForDoctor(
-      String doctorId, DateTime date) {
+    String doctorId,
+    DateTime date,
+  ) {
     // Filter for the specific day
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     return (_db.select(_db.appointments)
-          ..where((t) =>
-              t.doctorId.equals(doctorId) &
-              t.scheduledTime.isBiggerOrEqualValue(startOfDay) &
-              t.scheduledTime.isSmallerThanValue(endOfDay))
+          ..where(
+            (t) =>
+                t.doctorId.equals(doctorId) &
+                t.scheduledTime.isBiggerOrEqualValue(startOfDay) &
+                t.scheduledTime.isSmallerThanValue(endOfDay),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.scheduledTime)]))
         .watch()
         .map((rows) => rows.map((row) => _mapToModel(row)).toList());

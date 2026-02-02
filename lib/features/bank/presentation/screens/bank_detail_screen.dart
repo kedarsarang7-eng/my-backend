@@ -32,14 +32,17 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded,
-              color: isDark ? Colors.white : Colors.black),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: isDark ? Colors.white : Colors.black,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         titleTextStyle: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold),
+          color: isDark ? Colors.white : Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: Stack(
         children: [
@@ -53,7 +56,7 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
                     ? [
                         const Color(0xFF0F2027),
                         const Color(0xFF203A43),
-                        const Color(0xFF2C5364)
+                        const Color(0xFF2C5364),
                       ]
                     : [const Color(0xFFDAE2F8), const Color(0xFFD6A4A4)],
               ),
@@ -62,194 +65,221 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
 
           SafeArea(
             child: StreamBuilder<repo.BankAccount>(
-                stream:
-                    sl<repo.BankRepository>().watchAccount(widget.account.id),
-                initialData: widget.account,
-                builder: (context, accountSnapshot) {
-                  final account = accountSnapshot.data ?? widget.account;
+              stream: sl<repo.BankRepository>().watchAccount(widget.account.id),
+              initialData: widget.account,
+              builder: (context, accountSnapshot) {
+                final account = accountSnapshot.data ?? widget.account;
 
-                  return Column(
-                    children: [
-                      // Header Card
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        child: GlassContainer(
-                          borderRadius: 20,
-                          opacity: isDark ? 0.2 : 0.6,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                Text("Current Balance",
-                                    style: TextStyle(
-                                        color: isDark
-                                            ? Colors.white70
-                                            : Colors.black54)),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "₹ ${account.currentBalance.toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          isDark ? Colors.white : Colors.black),
+                return Column(
+                  children: [
+                    // Header Card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      child: GlassContainer(
+                        borderRadius: 20,
+                        opacity: isDark ? 0.2 : 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Current Balance",
+                                style: TextStyle(
+                                  color: isDark
+                                      ? Colors.white70
+                                      : Colors.black54,
                                 ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: _buildActionButton(
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "₹ ${account.currentBalance.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildActionButton(
+                                      context,
+                                      "Deposit",
+                                      Icons.arrow_downward_rounded,
+                                      Colors.green,
+                                      isDark,
+                                      () => _showTransactionDialog(
                                         context,
-                                        "Deposit",
-                                        Icons.arrow_downward_rounded,
-                                        Colors.green,
+                                        'CREDIT',
                                         isDark,
-                                        () => _showTransactionDialog(
-                                            context, 'CREDIT', isDark, account),
+                                        account,
                                       ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: _buildActionButton(
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _buildActionButton(
+                                      context,
+                                      "Withdraw",
+                                      Icons.arrow_upward_rounded,
+                                      Colors.redAccent,
+                                      isDark,
+                                      () => _showTransactionDialog(
                                         context,
-                                        "Withdraw",
-                                        Icons.arrow_upward_rounded,
-                                        Colors.redAccent,
+                                        'DEBIT',
                                         isDark,
-                                        () => _showTransactionDialog(
-                                            context, 'DEBIT', isDark, account),
+                                        account,
                                       ),
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                    ),
 
-                      // Transactions List
-                      Expanded(
-                        child: StreamBuilder<List<repo.BankTransaction>>(
-                          stream: sl<repo.BankRepository>()
-                              .watchTransactions(account.id),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
+                    // Transactions List
+                    Expanded(
+                      child: StreamBuilder<List<repo.BankTransaction>>(
+                        stream: sl<repo.BankRepository>().watchTransactions(
+                          account.id,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
 
-                            final txns = snapshot.data ?? [];
+                          final txns = snapshot.data ?? [];
 
-                            if (txns.isEmpty) {
-                              return Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.receipt_long_rounded,
-                                        size: 60,
-                                        color: isDark
-                                            ? Colors.white24
-                                            : Colors.grey.shade400),
-                                    const SizedBox(height: 10),
-                                    Text("No transactions yet",
-                                        style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white60
-                                                : Colors.grey)),
-                                  ],
-                                ),
-                              );
-                            }
-
-                            return ListView.builder(
-                              padding: const EdgeInsets.all(16),
-                              itemCount: txns.length,
-                              itemBuilder: (context, index) {
-                                final txn = txns[index];
-                                final isCredit = txn.type == 'CREDIT';
-                                return Container(
-                                  margin: const EdgeInsets.only(bottom: 12),
-                                  child: GlassCard(
-                                    borderRadius: 16,
-                                    padding: const EdgeInsets.all(16),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: isCredit
-                                                ? Colors.green.withOpacity(0.1)
-                                                : Colors.red.withOpacity(0.1),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            isCredit
-                                                ? Icons.arrow_downward
-                                                : Icons.arrow_upward,
-                                            color: isCredit
-                                                ? Colors.green
-                                                : Colors.red,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                txn.description ?? '',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: isDark
-                                                        ? Colors.white
-                                                        : Colors.black87),
-                                              ),
-                                              Text(
-                                                DateFormat(
-                                                        'MMM dd, yyyy • hh:mm a')
-                                                    .format(txn.date),
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: isDark
-                                                        ? Colors.white54
-                                                        : Colors.grey),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Text(
-                                          "${isCredit ? '+' : '-'} ₹${txn.amount.toStringAsFixed(0)}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: isCredit
-                                                  ? Colors.green
-                                                  : Colors.red),
-                                        ),
-                                      ],
+                          if (txns.isEmpty) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.receipt_long_rounded,
+                                    size: 60,
+                                    color: isDark
+                                        ? Colors.white24
+                                        : Colors.grey.shade400,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "No transactions yet",
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.white60
+                                          : Colors.grey,
                                     ),
                                   ),
-                                );
-                              },
+                                ],
+                              ),
                             );
-                          },
-                        ),
+                          }
+
+                          return ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: txns.length,
+                            itemBuilder: (context, index) {
+                              final txn = txns[index];
+                              final isCredit = txn.type == 'CREDIT';
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: GlassCard(
+                                  borderRadius: 16,
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: isCredit
+                                              ? Colors.green.withOpacity(0.1)
+                                              : Colors.red.withOpacity(0.1),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          isCredit
+                                              ? Icons.arrow_downward
+                                              : Icons.arrow_upward,
+                                          color: isCredit
+                                              ? Colors.green
+                                              : Colors.red,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              txn.description ?? '',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : Colors.black87,
+                                              ),
+                                            ),
+                                            Text(
+                                              DateFormat(
+                                                'MMM dd, yyyy • hh:mm a',
+                                              ).format(txn.date),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: isDark
+                                                    ? Colors.white54
+                                                    : Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        "${isCredit ? '+' : '-'} ₹${txn.amount.toStringAsFixed(0)}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: isCredit
+                                              ? Colors.green
+                                              : Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
-                    ],
-                  );
-                }),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButton(BuildContext context, String label, IconData icon,
-      Color color, bool isDark, VoidCallback onTap) {
+  Widget _buildActionButton(
+    BuildContext context,
+    String label,
+    IconData icon,
+    Color color,
+    bool isDark,
+    VoidCallback onTap,
+  ) {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
@@ -258,8 +288,9 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
         elevation: 0,
         padding: const EdgeInsets.symmetric(vertical: 12),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: color.withOpacity(0.5))),
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: color.withOpacity(0.5)),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -272,8 +303,12 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
     );
   }
 
-  void _showTransactionDialog(BuildContext context, String type, bool isDark,
-      repo.BankAccount account) {
+  void _showTransactionDialog(
+    BuildContext context,
+    String type,
+    bool isDark,
+    repo.BankAccount account,
+  ) {
     final TextEditingController amountCtrl = TextEditingController();
     final TextEditingController descCtrl = TextEditingController();
     final isCredit = type == 'CREDIT';
@@ -283,8 +318,10 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-          title: Text(isCredit ? "Deposit Money" : "Withdraw Money",
-              style: TextStyle(color: isDark ? Colors.white : Colors.black)),
+          title: Text(
+            isCredit ? "Deposit Money" : "Withdraw Money",
+            style: TextStyle(color: isDark ? Colors.white : Colors.black),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -294,16 +331,20 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
                 style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 decoration: InputDecoration(
                   labelText: "Amount",
-                  labelStyle:
-                      TextStyle(color: isDark ? Colors.white70 : Colors.grey),
+                  labelStyle: TextStyle(
+                    color: isDark ? Colors.white70 : Colors.grey,
+                  ),
                   prefixText: "₹ ",
                   enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color:
-                              isDark ? Colors.white24 : Colors.grey.shade300)),
+                    borderSide: BorderSide(
+                      color: isDark ? Colors.white24 : Colors.grey.shade300,
+                    ),
+                  ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: isCredit ? Colors.green : Colors.redAccent)),
+                    borderSide: BorderSide(
+                      color: isCredit ? Colors.green : Colors.redAccent,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -312,15 +353,19 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
                 style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 decoration: InputDecoration(
                   labelText: "Description / Note",
-                  labelStyle:
-                      TextStyle(color: isDark ? Colors.white70 : Colors.grey),
+                  labelStyle: TextStyle(
+                    color: isDark ? Colors.white70 : Colors.grey,
+                  ),
                   enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color:
-                              isDark ? Colors.white24 : Colors.grey.shade300)),
+                    borderSide: BorderSide(
+                      color: isDark ? Colors.white24 : Colors.grey.shade300,
+                    ),
+                  ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: isCredit ? Colors.green : Colors.redAccent)),
+                    borderSide: BorderSide(
+                      color: isCredit ? Colors.green : Colors.redAccent,
+                    ),
+                  ),
                 ),
               ),
             ],

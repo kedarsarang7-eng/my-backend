@@ -61,7 +61,7 @@ class AmountToWords {
       'Sixteen',
       'Seventeen',
       'Eighteen',
-      'Nineteen'
+      'Nineteen',
     ];
     const tens = [
       '',
@@ -73,7 +73,7 @@ class AmountToWords {
       'Sixty',
       'Seventy',
       'Eighty',
-      'Ninety'
+      'Ninety',
     ];
 
     if (number < 20) {
@@ -134,7 +134,7 @@ class AmountToWords {
       'सोलह',
       'सत्रह',
       'अठारह',
-      'उन्नीस'
+      'उन्नीस',
     ];
     const tens = [
       '',
@@ -146,7 +146,7 @@ class AmountToWords {
       'साठ',
       'सत्तर',
       'अस्सी',
-      'नब्बे'
+      'नब्बे',
     ];
     // Special numbers 21-99 in Hindi have unique names for some combinations
     const tensOnesHindi = <int, String>{
@@ -314,7 +314,7 @@ class AmountToWords {
       'सोळा',
       'सतरा',
       'अठरा',
-      'एकोणीस'
+      'एकोणीस',
     ];
     const tens = [
       '',
@@ -326,7 +326,7 @@ class AmountToWords {
       'साठ',
       'सत्तर',
       'ऐंशी',
-      'नव्वद'
+      'नव्वद',
     ];
     // Special Marathi numbers
     const tensOnesMarathi = <int, String>{

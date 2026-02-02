@@ -137,10 +137,12 @@ class DesktopContentContainer extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: actions!
-                  .map((action) => Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: action,
-                      ))
+                  .map(
+                    (action) => Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: action,
+                    ),
+                  )
                   .toList(),
             ),
           ],
@@ -192,12 +194,14 @@ class _DesktopActionButtonState extends State<DesktopActionButton> {
           decoration: BoxDecoration(
             color: widget.isPrimary && !isDisabled
                 ? buttonColor.withOpacity(_isHovered ? 1.0 : 0.9)
-                : buttonColor
-                    .withOpacity(isDisabled ? 0.05 : (_isHovered ? 0.15 : 0.1)),
+                : buttonColor.withOpacity(
+                    isDisabled ? 0.05 : (_isHovered ? 0.15 : 0.1),
+                  ),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: buttonColor.withOpacity(
-                  isDisabled ? 0.1 : (widget.isPrimary ? 0.5 : 0.3)),
+                isDisabled ? 0.1 : (widget.isPrimary ? 0.5 : 0.3),
+              ),
               width: 1,
             ),
             boxShadow: widget.isPrimary && _isHovered && !isDisabled

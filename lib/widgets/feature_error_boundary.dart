@@ -97,10 +97,7 @@ class _FeatureErrorBoundaryState extends State<FeatureErrorBoundary> {
     }
 
     // Use ErrorWidget.builder pattern for this subtree
-    return _ErrorCatcher(
-      onError: _handleError,
-      child: widget.child,
-    );
+    return _ErrorCatcher(onError: _handleError, child: widget.child);
   }
 
   Widget _buildErrorUI(BuildContext context) {
@@ -170,8 +167,10 @@ class _FeatureErrorBoundaryState extends State<FeatureErrorBoundary> {
                   : const Icon(Icons.refresh_rounded),
               label: Text(_isRecovering ? 'Recovering...' : 'Try Again'),
               style: FilledButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 14,
+                ),
               ),
             ),
 
@@ -219,10 +218,7 @@ class _ErrorCatcher extends StatefulWidget {
   final Widget child;
   final void Function(Object error, StackTrace stackTrace) onError;
 
-  const _ErrorCatcher({
-    required this.child,
-    required this.onError,
-  });
+  const _ErrorCatcher({required this.child, required this.onError});
 
   @override
   State<_ErrorCatcher> createState() => _ErrorCatcherState();
@@ -248,10 +244,6 @@ class _ErrorCatcherState extends State<_ErrorCatcher> {
 /// Extension to wrap any widget in a FeatureErrorBoundary
 extension WidgetErrorBoundaryExtension on Widget {
   Widget withErrorBoundary(AppScreen screen, {VoidCallback? onRetry}) {
-    return FeatureErrorBoundary(
-      screen: screen,
-      onRetry: onRetry,
-      child: this,
-    );
+    return FeatureErrorBoundary(screen: screen, onRetry: onRetry, child: this);
   }
 }

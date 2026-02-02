@@ -63,82 +63,90 @@ class DailySummaryCard extends StatelessWidget {
                   ],
                 )
               : briefingText != null
-                  ? Text(
-                      briefingText!,
-                      style: GoogleFonts.inter(
-                        color: isDark ? Colors.white70 : Colors.black87,
-                        fontSize: 14,
-                        height: 1.5,
-                      ),
-                    )
-                  : hasActivity
-                      ? RichText(
-                          text: TextSpan(
-                            style: GoogleFonts.inter(
-                              color: isDark ? Colors.white70 : Colors.black87,
-                              fontSize: 14,
-                              height: 1.5,
-                            ),
-                            children: [
-                              const TextSpan(text: "Today you made "),
-                              TextSpan(
-                                text: "₹${sales.toStringAsFixed(0)} sales",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: FuturisticColors.success),
-                              ),
-                              const TextSpan(text: ", spent "),
-                              TextSpan(
-                                text: "₹${spend.toStringAsFixed(0)}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: FuturisticColors.error),
-                              ),
-                              const TextSpan(text: ", and have "),
-                              TextSpan(
-                                text: "₹${pending.toStringAsFixed(0)} pending",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange),
-                              ),
-                              const TextSpan(text: " from customers."),
-                            ],
-                          ),
-                        )
-                      : Text(
-                          "No activity today. Add a sale or purchase to get AI insights.",
-                          style: GoogleFonts.inter(
-                            color: isDark ? Colors.white54 : Colors.grey,
-                            fontSize: 14,
-                          ),
+              ? Text(
+                  briefingText!,
+                  style: GoogleFonts.inter(
+                    color: isDark ? Colors.white70 : Colors.black87,
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
+                )
+              : hasActivity
+              ? RichText(
+                  text: TextSpan(
+                    style: GoogleFonts.inter(
+                      color: isDark ? Colors.white70 : Colors.black87,
+                      fontSize: 14,
+                      height: 1.5,
+                    ),
+                    children: [
+                      const TextSpan(text: "Today you made "),
+                      TextSpan(
+                        text: "₹${sales.toStringAsFixed(0)} sales",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: FuturisticColors.success,
                         ),
+                      ),
+                      const TextSpan(text: ", spent "),
+                      TextSpan(
+                        text: "₹${spend.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: FuturisticColors.error,
+                        ),
+                      ),
+                      const TextSpan(text: ", and have "),
+                      TextSpan(
+                        text: "₹${pending.toStringAsFixed(0)} pending",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      const TextSpan(text: " from customers."),
+                    ],
+                  ),
+                )
+              : Text(
+                  "No activity today. Add a sale or purchase to get AI insights.",
+                  style: GoogleFonts.inter(
+                    color: isDark ? Colors.white54 : Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
           const SizedBox(height: 12),
           isLoading
-              ? Row(children: const [
-                  SkeletonLoader(height: 20, width: 80, borderRadius: 20),
-                  SizedBox(width: 8),
-                  SkeletonLoader(height: 20, width: 80, borderRadius: 20),
-                ])
+              ? Row(
+                  children: const [
+                    SkeletonLoader(height: 20, width: 80, borderRadius: 20),
+                    SizedBox(width: 8),
+                    SkeletonLoader(height: 20, width: 80, borderRadius: 20),
+                  ],
+                )
               : Row(
                   children: [
                     if (sales > 5000)
                       _buildMiniChip(
-                          "High Sales 🚀",
-                          FuturisticColors.success.withOpacity(0.1),
-                          FuturisticColors.success),
+                        "High Sales 🚀",
+                        FuturisticColors.success.withOpacity(0.1),
+                        FuturisticColors.success,
+                      ),
                     if (sales > 5000) const SizedBox(width: 8),
                     if (lowStock > 0)
                       _buildMiniChip(
-                          "Low Stock ($lowStock) ⚠️",
-                          FuturisticColors.warning.withOpacity(0.1),
-                          FuturisticColors.warning)
+                        "Low Stock ($lowStock) ⚠️",
+                        FuturisticColors.warning.withOpacity(0.1),
+                        FuturisticColors.warning,
+                      )
                     else
                       _buildMiniChip(
-                          "Stock OK ✅",
-                          FuturisticColors.accent3.withOpacity(0.1),
-                          FuturisticColors.accent3),
+                        "Stock OK ✅",
+                        FuturisticColors.accent3.withOpacity(0.1),
+                        FuturisticColors.accent3,
+                      ),
                   ],
-                )
+                ),
         ],
       ),
     );

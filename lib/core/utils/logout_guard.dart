@@ -34,7 +34,9 @@ class LogoutGuard {
               Text(
                 "Pending Changes: ${status.pendingWritesCount}",
                 style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.red),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
               ),
             ],
           ),
@@ -47,8 +49,9 @@ class LogoutGuard {
               onPressed: () {
                 SyncManager.instance.forceSyncAll();
                 Navigator.pop(context, false);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Syncing now... Please wait")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Syncing now... Please wait")),
+                );
               },
               icon: const Icon(Icons.sync),
               label: const Text("Sync Now"),
@@ -59,8 +62,10 @@ class LogoutGuard {
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true), // FORCE LOGOUT
-              child: const Text("Force Logout (Lose Data)",
-                  style: TextStyle(color: Colors.grey)),
+              child: const Text(
+                "Force Logout (Lose Data)",
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
           ],
         ),
@@ -75,8 +80,9 @@ class LogoutGuard {
 
     if (context.mounted) {
       // Navigate to unified auth
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/unified_auth', (route) => false);
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/unified_auth', (route) => false);
     }
   }
 }

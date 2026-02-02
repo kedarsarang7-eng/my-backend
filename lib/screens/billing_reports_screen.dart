@@ -64,8 +64,9 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
     _filteredBills = _allBills.where((bill) {
       // Date Range
       final date = bill.date;
-      final afterStart =
-          date.isAfter(_startDate.subtract(const Duration(days: 1)));
+      final afterStart = date.isAfter(
+        _startDate.subtract(const Duration(days: 1)),
+      );
       final beforeEnd = date.isBefore(_endDate.add(const Duration(days: 1)));
       if (!afterStart || !beforeEnd) return false;
 
@@ -94,16 +95,17 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
   Future<void> _selectDateRange() async {
     final theme = ref.read(themeStateProvider);
     final picked = await showDateRangePicker(
-        context: context,
-        firstDate: DateTime(2020),
-        lastDate: DateTime.now().add(const Duration(days: 1)),
-        initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
-        builder: (context, child) {
-          return Theme(
-            data: theme.isDark ? ThemeData.dark() : ThemeData.light(),
-            child: child!,
-          );
-        });
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+      initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
+      builder: (context, child) {
+        return Theme(
+          data: theme.isDark ? ThemeData.dark() : ThemeData.light(),
+          child: child!,
+        );
+      },
+    );
 
     if (picked != null) {
       setState(() {
@@ -122,16 +124,21 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Turnover Analysis',
-            style: AppTypography.headlineMedium
-                .copyWith(color: isDark ? Colors.white : Colors.black87)),
+        title: Text(
+          'Turnover Analysis',
+          style: AppTypography.headlineMedium.copyWith(
+            color: isDark ? Colors.white : Colors.black87,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
         actions: [
           IconButton(
-            icon: Icon(Icons.picture_as_pdf_outlined,
-                color: FuturisticColors.primary),
+            icon: Icon(
+              Icons.picture_as_pdf_outlined,
+              color: FuturisticColors.primary,
+            ),
             onPressed: _generatePdf,
           ),
           IconButton(
@@ -145,7 +152,8 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (_) => const AdvancedBillCreationScreen()),
+              builder: (_) => const AdvancedBillCreationScreen(),
+            ),
           ).then((_) => _fetchBills());
         },
         backgroundColor: FuturisticColors.primary,
@@ -174,11 +182,13 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color:
-                                    isDark ? Colors.white24 : Colors.black12),
+                              color: isDark ? Colors.white24 : Colors.black12,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -186,24 +196,29 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.calendar_today,
-                                      size: 18,
-                                      color: isDark
-                                          ? Colors.white70
-                                          : Colors.black54),
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 18,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     '${DateFormat('dd MMM').format(_startDate)} - ${DateFormat('dd MMM').format(_endDate)}',
                                     style: TextStyle(
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black87,
-                                        fontWeight: FontWeight.w500),
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black87,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ],
                               ),
-                              Icon(Icons.arrow_drop_down,
-                                  color: isDark ? Colors.white70 : Colors.grey),
+                              Icon(
+                                Icons.arrow_drop_down,
+                                color: isDark ? Colors.white70 : Colors.grey,
+                              ),
                             ],
                           ),
                         ),
@@ -234,20 +249,18 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _filteredBills.isEmpty
-                        ? EmptyStateWidget(
-                            icon: Icons.notes_rounded,
-                            title: "No revenue records",
-                            description:
-                                "Try adjusting your filters or date range",
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: _filteredBills.length,
-                            itemBuilder: (context, index) {
-                              return _buildBillCard(
-                                  _filteredBills[index], isDark);
-                            },
-                          ),
+                    ? EmptyStateWidget(
+                        icon: Icons.notes_rounded,
+                        title: "No revenue records",
+                        description: "Try adjusting your filters or date range",
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: _filteredBills.length,
+                        itemBuilder: (context, index) {
+                          return _buildBillCard(_filteredBills[index], isDark);
+                        },
+                      ),
               ),
 
               // Total Summary Sticky Footer
@@ -257,13 +270,19 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Total Revenue (${_filteredBills.length})',
-                        style: TextStyle(
-                            color: isDark ? Colors.white70 : Colors.black54)),
-                    Text('₹${_calculateTotal()}',
-                        style: AppTypography.headlineSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black87)),
+                    Text(
+                      'Total Revenue (${_filteredBills.length})',
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      '₹${_calculateTotal()}',
+                      style: AppTypography.headlineSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -339,14 +358,16 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
                   Text(
                     bill.customerName.isEmpty ? 'Unknown' : bill.customerName,
                     style: AppTypography.bodyLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87),
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '#${bill.invoiceNumber} • ${DateFormat('dd MMM, hh:mm a').format(bill.date)}',
-                    style: AppTypography.bodySmall
-                        .copyWith(color: isDark ? Colors.white54 : Colors.grey),
+                    style: AppTypography.bodySmall.copyWith(
+                      color: isDark ? Colors.white54 : Colors.grey,
+                    ),
                   ),
                 ],
               ),
@@ -357,24 +378,29 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
                 Text(
                   '₹${bill.grandTotal.toStringAsFixed(0)}',
                   style: AppTypography.headlineSmall.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: isDark ? Colors.white : Colors.black87),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                      bill.paymentType.isEmpty ? 'Unknown' : bill.paymentType,
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: statusColor)),
+                    bill.paymentType.isEmpty ? 'Unknown' : bill.paymentType,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: statusColor,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -393,14 +419,18 @@ class _BillingReportsScreenState extends ConsumerState<BillingReportsScreen> {
     final pdfService = PdfService();
     // Generate basic report PDF
     final data = _filteredBills
-        .map((b) => {
-              'label': '#${b.invoiceNumber} ${b.customerName}',
-              'value': b.grandTotal,
-            })
+        .map(
+          (b) => {
+            'label': '#${b.invoiceNumber} ${b.customerName}',
+            'value': b.grandTotal,
+          },
+        )
         .toList();
 
     final bytes = await pdfService.generateReportPdf(
-        "Turnover Analysis", data.cast<Map<String, dynamic>>());
+      "Turnover Analysis",
+      data.cast<Map<String, dynamic>>(),
+    );
     await Printing.layoutPdf(onLayout: (_) async => bytes);
   }
 }

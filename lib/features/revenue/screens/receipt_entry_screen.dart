@@ -50,7 +50,7 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
     'UPI',
     'Bank Transfer',
     'Cheque',
-    'Card'
+    'Card',
   ];
 
   @override
@@ -78,8 +78,9 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
   Future<void> _loadCustomerDetails() async {
     if (_selectedCustomerId == null) return;
 
-    final result =
-        await sl<CustomersRepository>().getById(_selectedCustomerId!);
+    final result = await sl<CustomersRepository>().getById(
+      _selectedCustomerId!,
+    );
     final customer = result.data;
 
     if (customer != null && mounted) {
@@ -257,8 +258,11 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
                       ),
                     ),
                   ),
-                  const Icon(Icons.arrow_forward_ios_rounded,
-                      size: 16, color: Colors.grey),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                    color: Colors.grey,
+                  ),
                 ],
               ),
             ),
@@ -278,8 +282,11 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.receipt_long,
-                      color: Colors.orange, size: 20),
+                  const Icon(
+                    Icons.receipt_long,
+                    color: Colors.orange,
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     'Link to Bill (Optional)',
@@ -332,7 +339,9 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.orange.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(8),
@@ -358,8 +367,10 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
                     )
                   : Row(
                       children: [
-                        const Icon(Icons.add_circle_outline,
-                            color: Colors.grey),
+                        const Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.grey,
+                        ),
                         const SizedBox(width: 12),
                         const Text(
                           'Select a pending bill to link',
@@ -467,7 +478,10 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
                 spacing: 8,
                 children: [
                   _buildQuickAmountChip(
-                      'Full', _selectedBillRemaining!, isDark),
+                    'Full',
+                    _selectedBillRemaining!,
+                    isDark,
+                  ),
                   if (_selectedBillRemaining! > 100)
                     _buildQuickAmountChip('₹100', 100, isDark),
                   if (_selectedBillRemaining! > 500)
@@ -522,7 +536,8 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
                 decoration: InputDecoration(
                   labelText: 'Cheque Number',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
@@ -534,7 +549,8 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
                 decoration: InputDecoration(
                   labelText: 'UPI Transaction ID',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
@@ -583,8 +599,9 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
             decoration: InputDecoration(
               labelText: 'Notes (optional)',
               hintText: 'Add any reference or notes',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ],
@@ -596,13 +613,15 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
     return SizedBox(
       height: 56,
       child: ElevatedButton(
-        onPressed:
-            _selectedCustomerId != null && !_isSaving ? _saveReceipt : null,
+        onPressed: _selectedCustomerId != null && !_isSaving
+            ? _saveReceipt
+            : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           foregroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           elevation: 4,
         ),
         child: _isSaving
@@ -628,8 +647,9 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
       onPressed: () {
         _amountController.text = amount.toStringAsFixed(0);
       },
-      backgroundColor:
-          isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.2),
+      backgroundColor: isDark
+          ? Colors.white.withOpacity(0.1)
+          : Colors.grey.withOpacity(0.2),
     );
   }
 
@@ -686,9 +706,9 @@ class _ReceiptEntryScreenState extends ConsumerState<ReceiptEntryScreen> {
   Future<void> _saveReceipt() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCustomerId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a customer')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a customer')));
       return;
     }
 
@@ -790,11 +810,16 @@ class _CustomerSelectionSheet extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.people_outline,
-                            size: 64, color: Colors.grey),
+                        const Icon(
+                          Icons.people_outline,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
                         const SizedBox(height: 16),
-                        const Text('No customers yet',
-                            style: TextStyle(color: Colors.grey)),
+                        const Text(
+                          'No customers yet',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
@@ -812,23 +837,29 @@ class _CustomerSelectionSheet extends StatelessWidget {
                         child: Text(
                           (customer.name)[0].toUpperCase(),
                           style: const TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       title: Text(
                         customer.name,
                         style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87),
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                       ),
                       subtitle: Text(
                         customer.phone ?? '',
                         style: TextStyle(
-                            color: isDark ? Colors.white54 : Colors.black45),
+                          color: isDark ? Colors.white54 : Colors.black45,
+                        ),
                       ),
                       trailing: totalDue > 0
                           ? Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.red.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
@@ -836,8 +867,9 @@ class _CustomerSelectionSheet extends StatelessWidget {
                               child: Text(
                                 '₹${totalDue.toStringAsFixed(0)}',
                                 style: const TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             )
                           : null,
@@ -900,8 +932,10 @@ class _BillSelectionSheet extends StatelessWidget {
           ),
           Expanded(
             child: StreamBuilder<List<Bill>>(
-              stream: sl<BillsRepository>()
-                  .watchAll(userId: ownerId, customerId: customerId),
+              stream: sl<BillsRepository>().watchAll(
+                userId: ownerId,
+                customerId: customerId,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -918,11 +952,16 @@ class _BillSelectionSheet extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.check_circle,
-                            size: 64, color: Colors.green),
+                        const Icon(
+                          Icons.check_circle,
+                          size: 64,
+                          color: Colors.green,
+                        ),
                         const SizedBox(height: 16),
-                        const Text('No pending bills!',
-                            style: TextStyle(color: Colors.grey)),
+                        const Text(
+                          'No pending bills!',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
@@ -954,7 +993,8 @@ class _BillSelectionSheet extends StatelessWidget {
                       subtitle: Text(
                         DateFormat('dd MMM yyyy').format(bill.date),
                         style: TextStyle(
-                            color: isDark ? Colors.white54 : Colors.black45),
+                          color: isDark ? Colors.white54 : Colors.black45,
+                        ),
                       ),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

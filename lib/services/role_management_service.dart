@@ -221,8 +221,9 @@ class BusinessUser {
       'isActive': isActive,
       'createdAt': Timestamp.fromDate(createdAt),
       'createdBy': createdBy,
-      'lastLoginAt':
-          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+      'lastLoginAt': lastLoginAt != null
+          ? Timestamp.fromDate(lastLoginAt!)
+          : null,
     };
   }
 
@@ -244,7 +245,7 @@ class RoleManagementService {
   final FirebaseFirestore _firestore;
 
   RoleManagementService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Add a user to a business with a specific role.
   Future<BusinessUser> addUserToBusiness({
@@ -311,10 +312,10 @@ class RoleManagementService {
         .collection('business_users')
         .doc('${businessId}_$userId')
         .update({
-      'role': newRole.name,
-      'updatedAt': FieldValue.serverTimestamp(),
-      'updatedBy': updatedBy,
-    });
+          'role': newRole.name,
+          'updatedAt': FieldValue.serverTimestamp(),
+          'updatedBy': updatedBy,
+        });
   }
 
   /// Get all users for a business.

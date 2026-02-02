@@ -351,8 +351,8 @@ class Customers extends Table {
   // Enforce unique phone per vendor (userId) to prevent duplicates
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {phone, userId},
-      ];
+    {phone, userId},
+  ];
 }
 
 /// Products/Inventory
@@ -445,8 +445,9 @@ class PaymentTransactions extends Table {
   // UPI Transaction Details
   TextColumn get transactionRef => text()(); // Unique TR generated for QR
   RealColumn get amount => real()();
-  TextColumn get status => text()
-      .withDefault(const Constant('PENDING'))(); // PENDING, SUCCESS, FAILED
+  TextColumn get status => text().withDefault(
+    const Constant('PENDING'),
+  )(); // PENDING, SUCCESS, FAILED
   TextColumn get paymentMode => text().withDefault(const Constant('UPI_QR'))();
 
   // Security & Fraud Defense (Layer 1, 2, 5, 7)
@@ -805,7 +806,8 @@ class PurchaseOrders extends Table {
   RealColumn get totalAmount => real()();
   RealColumn get paidAmount => real().withDefault(const Constant(0.0))();
   TextColumn get status => text().withDefault(
-      const Constant('COMPLETED'))(); // PENDING, COMPLETED, CANCELLED
+    const Constant('COMPLETED'),
+  )(); // PENDING, COMPLETED, CANCELLED
   TextColumn get paymentMode => text().nullable()();
   TextColumn get notes => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
@@ -1116,8 +1118,8 @@ class ProductBatches extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {productId, batchNumber}, // Unique batch number per product
-      ];
+    {productId, batchNumber}, // Unique batch number per product
+  ];
 }
 
 /// Lock Override Logs - Verifiable Audit Trail for Admin Actions
@@ -1184,7 +1186,8 @@ class CustomerItemRequests extends Table {
   TextColumn get customerId => text()();
   TextColumn get vendorId => text()();
   TextColumn get status => text().withDefault(
-      const Constant('pending'))(); // pending, approved, rejected, billed
+    const Constant('pending'),
+  )(); // pending, approved, rejected, billed
   TextColumn get itemsJson =>
       text()(); // List of products with qty, status, notes
   TextColumn get note => text().nullable()();
@@ -1254,9 +1257,9 @@ class CustomerProfiles extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {shopId, customerId}, // One profile per customer per shop
-        {qrHash}, // QR hash must be globally unique
-      ];
+    {shopId, customerId}, // One profile per customer per shop
+    {qrHash}, // QR hash must be globally unique
+  ];
 }
 
 /// ShopLinks - Customer ↔ Shop Associations
@@ -1314,8 +1317,8 @@ class ShopLinks extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {customerId, shopId}, // One link per customer per shop
-      ];
+    {customerId, shopId}, // One link per customer per shop
+  ];
 }
 
 /// Customer Ledger
@@ -1889,8 +1892,9 @@ class StaffAttendance extends Table {
   TextColumn get staffId => text()(); // References StaffMembers
   DateTimeColumn get date => dateTime()(); // YYYY-MM-DD normalized
   TextColumn get status => text()(); // PRESENT, ABSENT, HALF_DAY, LEAVE
-  TextColumn get method => text()
-      .withDefault(const Constant('MANUAL'))(); // NEW: MANUAL, PIN, BIOMETRIC
+  TextColumn get method => text().withDefault(
+    const Constant('MANUAL'),
+  )(); // NEW: MANUAL, PIN, BIOMETRIC
   DateTimeColumn get checkIn => dateTime().nullable()();
   DateTimeColumn get checkOut => dateTime().nullable()();
   DateTimeColumn get checkInTime => dateTime().nullable()();
@@ -1911,8 +1915,8 @@ class StaffAttendance extends Table {
   // Ensure one record per staff per day
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {staffId, date},
-      ];
+    {staffId, date},
+  ];
 }
 
 /// Salary Records - Monthly payroll records
@@ -1980,8 +1984,8 @@ class SalaryRecords extends Table {
   // One salary record per staff per month
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {staffId, month, year},
-      ];
+    {staffId, month, year},
+  ];
 }
 
 /// Staff Nozzle Assignment - Operations
@@ -2025,8 +2029,8 @@ class StaffSalesDetails extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {shiftId, staffId, fuelTypeId},
-      ];
+    {shiftId, staffId, fuelTypeId},
+  ];
 }
 
 /// Staff Cash Settlement - Accountability
@@ -2044,8 +2048,9 @@ class StaffCashSettlements extends Table {
   // Breakdown of digital payments collected by this staff (if any)
   TextColumn get digitalCollectionsJson => text().nullable()();
 
-  TextColumn get status => text()
-      .withDefault(const Constant('PENDING'))(); // PENDING, VERIFIED, DISPUTED
+  TextColumn get status => text().withDefault(
+    const Constant('PENDING'),
+  )(); // PENDING, VERIFIED, DISPUTED
   TextColumn get verifiedBy => text().nullable()();
   DateTimeColumn get settledAt => dateTime()();
 
@@ -2057,8 +2062,8 @@ class StaffCashSettlements extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {shiftId, staffId},
-      ];
+    {shiftId, staffId},
+  ];
 }
 
 /// AI Customer Recommendation Signals
@@ -2191,8 +2196,8 @@ class RestaurantTables extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {vendorId, tableNumber},
-      ];
+    {vendorId, tableNumber},
+  ];
 }
 
 /// Restaurant QR Codes - QR codes for restaurant/tables
@@ -2314,8 +2319,8 @@ class RestaurantBills extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {orderId}, // One bill per order
-      ];
+    {orderId}, // One bill per order
+  ];
 }
 
 // ============================================================================
@@ -2418,8 +2423,8 @@ class IMEISerials extends Table {
   // Ensure IMEI/Serial is unique per user
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {userId, imeiOrSerial},
-      ];
+    {userId, imeiOrSerial},
+  ];
 }
 
 /// Service Jobs - Repair/Service job cards for electronics
@@ -2523,8 +2528,9 @@ class ServiceJobs extends Table {
   DateTimeColumn get lastNotificationAt => dateTime().nullable()();
 
   // Priority
-  TextColumn get priority => text()
-      .withDefault(const Constant('NORMAL'))(); // LOW, NORMAL, HIGH, URGENT
+  TextColumn get priority => text().withDefault(
+    const Constant('NORMAL'),
+  )(); // LOW, NORMAL, HIGH, URGENT
 
   // Internal notes
   TextColumn get internalNotes => text().nullable()();
@@ -2549,8 +2555,8 @@ class ServiceJobs extends Table {
   // Unique job number per user
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {userId, jobNumber},
-      ];
+    {userId, jobNumber},
+  ];
 }
 
 /// Service Job Parts - Parts used in a service job
@@ -2631,8 +2637,8 @@ class ProductVariants extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {userId, sku},
-      ];
+    {userId, sku},
+  ];
 }
 
 /// Exchanges - Handle device exchange with price difference
@@ -2679,8 +2685,9 @@ class Exchanges extends Table {
   TextColumn get billId => text().nullable()(); // Link to Bills
 
   // Status
-  TextColumn get status => text()
-      .withDefault(const Constant('DRAFT'))(); // DRAFT, COMPLETED, CANCELLED
+  TextColumn get status => text().withDefault(
+    const Constant('DRAFT'),
+  )(); // DRAFT, COMPLETED, CANCELLED
 
   // Timestamps
   DateTimeColumn get exchangeDate => dateTime()();
@@ -3115,12 +3122,12 @@ class UserShortcuts extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {
-          userId,
-          shortcutId,
-          deviceId
-        }, // One config per shortcut per user per device
-      ];
+    {
+      userId,
+      shortcutId,
+      deviceId,
+    }, // One config per shortcut per user per device
+  ];
 }
 
 // ============================================================================
@@ -3158,8 +3165,8 @@ class BillOfMaterials extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {finishedGoodId, rawMaterialId},
-      ];
+    {finishedGoodId, rawMaterialId},
+  ];
 }
 
 /// Production Entries - Journal for Manufacturing
@@ -3273,8 +3280,8 @@ class PatientDoctorLinks extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {patientId, doctorId}
-      ];
+    {patientId, doctorId},
+  ];
 }
 
 /// Appointments - Scheduling
@@ -3285,7 +3292,8 @@ class Appointments extends Table {
   TextColumn get patientId => text()(); // FK manually managed
   DateTimeColumn get scheduledTime => dateTime()();
   TextColumn get status => text().withDefault(
-      const Constant('SCHEDULED'))(); // SCHEDULED, COMPLETED, CANCELLED
+    const Constant('SCHEDULED'),
+  )(); // SCHEDULED, COMPLETED, CANCELLED
   TextColumn get purpose => text().nullable()(); // Consultation, Follow-up
   TextColumn get notes => text().nullable()();
 
@@ -3615,7 +3623,8 @@ class LicenseCache extends Table {
 
   // License configuration
   TextColumn get licenseType => text().withDefault(
-      const Constant('standard'))(); // trial, standard, pro, enterprise
+    const Constant('standard'),
+  )(); // trial, standard, pro, enterprise
 
   // Module access (JSON array of module codes)
   TextColumn get enabledModulesJson =>
@@ -3711,7 +3720,8 @@ class Licenses extends Table {
 
   // License configuration
   TextColumn get licenseType => text().withDefault(
-      const Constant('standard'))(); // trial, standard, pro, enterprise
+    const Constant('standard'),
+  )(); // trial, standard, pro, enterprise
   IntColumn get maxDevices => integer().withDefault(const Constant(1))();
 
   // Module access (JSON array of enabled module codes)
@@ -3785,7 +3795,9 @@ class LicenseModules extends Table {
 /// Tracks all devices associated with each license
 @TableIndex(name: 'idx_bound_devices_license', columns: {#licenseId})
 @TableIndex(
-    name: 'idx_bound_devices_fingerprint', columns: {#deviceFingerprint})
+  name: 'idx_bound_devices_fingerprint',
+  columns: {#deviceFingerprint},
+)
 @DataClassName('BoundDeviceEntity')
 class BoundDevices extends Table {
   TextColumn get id => text()();
@@ -3824,8 +3836,8 @@ class BoundDevices extends Table {
 
   @override
   List<Set<Column>>? get uniqueKeys => [
-        {licenseId, deviceFingerprint}, // One entry per device per license
-      ];
+    {licenseId, deviceFingerprint}, // One entry per device per license
+  ];
 }
 
 /// Activation Logs - Complete audit trail for license activations
@@ -3903,7 +3915,9 @@ class AdminAuditLogs extends Table {
 /// License Customers - Business/customer profiles for licensing
 /// Separate from app customers - these are license owners
 @TableIndex(
-    name: 'idx_license_customers_business_type', columns: {#businessType})
+  name: 'idx_license_customers_business_type',
+  columns: {#businessType},
+)
 @TableIndex(name: 'idx_license_customers_phone', columns: {#ownerPhone})
 @DataClassName('LicenseCustomerEntity')
 class LicenseCustomers extends Table {
@@ -3994,7 +4008,9 @@ class BusinessTypeConfigs extends Table {
 /// Block licenses, devices, or IPs for security
 @TableIndex(name: 'idx_license_blacklist_license', columns: {#licenseId})
 @TableIndex(
-    name: 'idx_license_blacklist_fingerprint', columns: {#deviceFingerprint})
+  name: 'idx_license_blacklist_fingerprint',
+  columns: {#deviceFingerprint},
+)
 @TableIndex(name: 'idx_license_blacklist_ip', columns: {#ipAddress})
 @DataClassName('LicenseBlacklistEntity')
 class LicenseBlacklist extends Table {
@@ -4009,8 +4025,9 @@ class LicenseBlacklist extends Table {
 
   // Reason
   TextColumn get reason => text()();
-  TextColumn get severity => text()
-      .withDefault(const Constant('high'))(); // low, medium, high, critical
+  TextColumn get severity => text().withDefault(
+    const Constant('high'),
+  )(); // low, medium, high, critical
 
   // Validity
   DateTimeColumn get validFrom => dateTime()();

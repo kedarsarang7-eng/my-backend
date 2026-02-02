@@ -17,15 +17,11 @@ class DeliveryChallanListScreen extends StatelessWidget {
     final userId = session.ownerId;
 
     if (userId == null) {
-      return const Scaffold(
-        body: Center(child: Text('User not logged in')),
-      );
+      return const Scaffold(body: Center(child: Text('User not logged in')));
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Delivery Challans'),
-      ),
+      appBar: AppBar(title: const Text('Delivery Challans')),
       body: StreamBuilder<List<DeliveryChallan>>(
         stream: sl<DeliveryChallanRepository>().watchAll(userId),
         builder: (context, snapshot) {
@@ -44,8 +40,11 @@ class DeliveryChallanListScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.local_shipping_outlined,
-                      size: 64, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.local_shipping_outlined,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'No Delivery Challans created yet',
@@ -71,7 +70,8 @@ class DeliveryChallanListScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (_) => const CreateDeliveryChallanScreen()),
+              builder: (_) => const CreateDeliveryChallanScreen(),
+            ),
           );
         },
         label: const Text('Create Challan'),
@@ -127,8 +127,10 @@ class _DeliveryChallanCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -159,8 +161,11 @@ class _DeliveryChallanCard extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                Icon(Icons.calendar_today,
-                    size: 16, color: Colors.grey.shade600),
+                Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: Colors.grey.shade600,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   dateFormat.format(challan.challanDate),
@@ -197,7 +202,7 @@ class _DeliveryChallanCard extends StatelessWidget {
                 'Transport: ${challan.transportMode} • ${challan.vehicleNumber ?? ""}',
                 style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
               ),
-            ]
+            ],
           ],
         ),
       ),
@@ -210,7 +215,8 @@ class _DeliveryChallanCard extends StatelessWidget {
       builder: (ctx) => AlertDialog(
         title: const Text('Convert to Invoice?'),
         content: const Text(
-            'This will create a Tax Invoice from this Challan and mark it as Converted. Tracking of goods will move to the Invoice.'),
+          'This will create a Tax Invoice from this Challan and mark it as Converted. Tracking of goods will move to the Invoice.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -241,8 +247,10 @@ class _DeliveryChallanCard extends StatelessWidget {
         if (bill != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content:
-                    Text('Invoice ${bill.invoiceNumber} created successfully')),
+              content: Text(
+                'Invoice ${bill.invoiceNumber} created successfully',
+              ),
+            ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

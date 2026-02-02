@@ -26,7 +26,9 @@ class VisitsRepository {
     return await errorHandler.runSafe<Visit>(() async {
       final now = DateTime.now();
 
-      await database.into(database.visits).insert(
+      await database
+          .into(database.visits)
+          .insert(
             VisitsCompanion.insert(
               id: visit.id,
               userId: visit.doctorId,
@@ -64,18 +66,20 @@ class VisitsRepository {
       final now = DateTime.now();
       final updated = visit.copyWith(updatedAt: now);
 
-      await (database.update(database.visits)
-            ..where((t) => t.id.equals(visit.id)))
-          .write(VisitsCompanion(
-        status: Value(updated.status),
-        symptoms: Value(updated.symptoms.join(',')),
-        diagnosis: Value(updated.diagnosis),
-        notes: Value(updated.notes),
-        billId: Value(updated.billId),
-        prescriptionId: Value(updated.prescriptionId),
-        isSynced: const Value(false),
-        updatedAt: Value(now),
-      ));
+      await (database.update(
+        database.visits,
+      )..where((t) => t.id.equals(visit.id))).write(
+        VisitsCompanion(
+          status: Value(updated.status),
+          symptoms: Value(updated.symptoms.join(',')),
+          diagnosis: Value(updated.diagnosis),
+          notes: Value(updated.notes),
+          billId: Value(updated.billId),
+          prescriptionId: Value(updated.prescriptionId),
+          isSynced: const Value(false),
+          updatedAt: Value(now),
+        ),
+      );
 
       // Sync
       final item = SyncQueueItem.create(
@@ -93,9 +97,10 @@ class VisitsRepository {
 
   Future<RepositoryResult<Visit?>> getVisitById(String id) async {
     return await errorHandler.runSafe<Visit?>(() async {
-      final entity = await (database.select(database.visits)
-            ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final entity =
+          await (database.select(database.visits)
+                ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
+              .getSingleOrNull();
 
       if (entity == null) return null;
       return _entityToModel(entity);
@@ -103,31 +108,40 @@ class VisitsRepository {
   }
 
   Future<RepositoryResult<List<Visit>>> getDailyVisits(
-      String userId, DateTime date) async {
+    String userId,
+    DateTime date,
+  ) async {
     return await errorHandler.runSafe<List<Visit>>(() async {
       // Filter by start/end of day
       final start = DateTime(date.year, date.month, date.day);
       final end = start.add(const Duration(days: 1));
 
-      final entities = await (database.select(database.visits)
-            ..where((t) =>
-                t.userId.equals(userId) &
-                t.deletedAt.isNull() &
-                t.visitDate.isBetween(Variable(start), Variable(end)))
-            ..orderBy([(t) => OrderingTerm.asc(t.visitDate)]))
-          .get();
+      final entities =
+          await (database.select(database.visits)
+                ..where(
+                  (t) =>
+                      t.userId.equals(userId) &
+                      t.deletedAt.isNull() &
+                      t.visitDate.isBetween(Variable(start), Variable(end)),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.visitDate)]))
+              .get();
 
       return entities.map(_entityToModel).toList();
     }, 'getDailyVisits');
   }
 
   Future<RepositoryResult<List<Visit>>> getVisitsForPatient(
-      String patientId) async {
+    String patientId,
+  ) async {
     return await errorHandler.runSafe<List<Visit>>(() async {
-      final entities = await (database.select(database.visits)
-            ..where((t) => t.patientId.equals(patientId) & t.deletedAt.isNull())
-            ..orderBy([(t) => OrderingTerm.desc(t.visitDate)]))
-          .get();
+      final entities =
+          await (database.select(database.visits)
+                ..where(
+                  (t) => t.patientId.equals(patientId) & t.deletedAt.isNull(),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.visitDate)]))
+              .get();
 
       return entities.map(_entityToModel).toList();
     }, 'getVisitsForPatient');

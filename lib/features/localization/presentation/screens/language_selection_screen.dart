@@ -72,13 +72,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.05, 0),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.05, 0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                  ),
               child: child,
             ),
           );
@@ -170,11 +170,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                   child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 2.2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
+                          crossAxisCount: 2,
+                          childAspectRatio: 2.2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                        ),
                     itemCount: locales.length,
                     itemBuilder: (context, index) {
                       final locale = locales[index];
@@ -193,16 +193,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
               // Confirmation message
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.info_outline_rounded,
                       size: 16,
-                      color:
-                          isDark ? Colors.grey.shade500 : Colors.grey.shade500,
+                      color: isDark
+                          ? Colors.grey.shade500
+                          : Colors.grey.shade500,
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -228,8 +231,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                     width: double.infinity,
                     height: 56,
                     child: ElevatedButton(
-                      onPressed:
-                          _selectedLocaleCode != null ? _onConfirm : null,
+                      onPressed: _selectedLocaleCode != null
+                          ? _onConfirm
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF3B82F6),
                         foregroundColor: Colors.white,
@@ -303,10 +307,7 @@ class _LanguageCard extends StatelessWidget {
           child: Row(
             children: [
               // Flag
-              Text(
-                locale.flag,
-                style: const TextStyle(fontSize: 26),
-              ),
+              Text(locale.flag, style: const TextStyle(fontSize: 26)),
               const SizedBox(width: 12),
 
               // Language name in native script
@@ -320,8 +321,9 @@ class _LanguageCard extends StatelessWidget {
                         ? const Color(0xFF3B82F6)
                         : (isDark ? Colors.white : const Color(0xFF1E293B)),
                   ),
-                  textDirection:
-                      locale.isRtl ? TextDirection.rtl : TextDirection.ltr,
+                  textDirection: locale.isRtl
+                      ? TextDirection.rtl
+                      : TextDirection.ltr,
                 ),
               ),
 
@@ -334,11 +336,7 @@ class _LanguageCard extends StatelessWidget {
                     color: Color(0xFF3B82F6),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
                 ),
             ],
           ),

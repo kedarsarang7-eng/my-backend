@@ -37,9 +37,7 @@ class KeyboardHelpOverlay extends ConsumerWidget {
                 ref.read(keyboardStateProvider.notifier).hideHelpOverlay(),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(
-                color: Colors.black.withOpacity(0.7),
-              ),
+              child: Container(color: Colors.black.withOpacity(0.7)),
             ),
           ),
 
@@ -52,7 +50,8 @@ class KeyboardHelpOverlay extends ConsumerWidget {
                 color: const Color(0xFF1E293B),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: FuturisticColors.primary.withOpacity(0.3)),
+                  color: FuturisticColors.primary.withOpacity(0.3),
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: FuturisticColors.primary.withOpacity(0.2),
@@ -214,10 +213,7 @@ class KeyboardHelpOverlay extends ConsumerWidget {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: Container(
-            height: 1,
-            color: Colors.white.withOpacity(0.1),
-          ),
+          child: Container(height: 1, color: Colors.white.withOpacity(0.1)),
         ),
       ],
     );
@@ -284,10 +280,7 @@ class KeyboardHelpOverlay extends ConsumerWidget {
         const SizedBox(height: 4),
         Text(
           action,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 10,
-          ),
+          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 10),
         ),
       ],
     );
@@ -317,8 +310,11 @@ class KeyboardHelpOverlay extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.info_outline,
-              color: Colors.white.withOpacity(0.4), size: 16),
+          Icon(
+            Icons.info_outline,
+            color: Colors.white.withOpacity(0.4),
+            size: 16,
+          ),
           const SizedBox(width: 8),
           Text(
             'Shortcuts respect your user role permissions',

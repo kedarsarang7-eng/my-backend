@@ -34,13 +34,19 @@ class TallyXmlService {
 
   /// Generate Tally XML for a given date range
   Future<File?> generateExportXml(
-      DateTime from, DateTime to, String userId) async {
+    DateTime from,
+    DateTime to,
+    String userId,
+  ) async {
     try {
       final billsResult = await _billsRepository.getAll(userId: userId);
       final bills = billsResult.data ?? [];
 
       final paymentsResult = await _paymentRepository.getAllPayments(
-          userId: userId, fromDate: from, toDate: to);
+        userId: userId,
+        fromDate: from,
+        toDate: to,
+      );
       // Unwrap payments
       final payments = paymentsResult.data ?? [];
 
@@ -77,8 +83,9 @@ class TallyXmlService {
 
       // Filter purchases by date range
       final filteredPurchases = purchases.where((p) {
-        return p.purchaseDate
-                .isAfter(from.subtract(const Duration(seconds: 1))) &&
+        return p.purchaseDate.isAfter(
+              from.subtract(const Duration(seconds: 1)),
+            ) &&
             p.purchaseDate.isBefore(to.add(const Duration(days: 1)));
       }).toList();
 
@@ -99,7 +106,8 @@ class TallyXmlService {
       buffer.writeln('    <REPORTNAME>Vouchers</REPORTNAME>');
       buffer.writeln('    <STATICVARIABLES>');
       buffer.writeln(
-          '     <SVCURRENTCOMPANY>${_escapeXml(shopName)}</SVCURRENTCOMPANY>');
+        '     <SVCURRENTCOMPANY>${_escapeXml(shopName)}</SVCURRENTCOMPANY>',
+      );
       buffer.writeln('    </STATICVARIABLES>');
       buffer.writeln('   </REQUESTDESC>');
       buffer.writeln('   <REQUESTDATA>');
@@ -117,8 +125,13 @@ class TallyXmlService {
 
       // Purchase Vouchers
       for (var purchase in filteredPurchases) {
-        buffer.write(_buildPurchaseVoucher(
-            purchase, vendorMap[purchase.vendorId], userStateCode));
+        buffer.write(
+          _buildPurchaseVoucher(
+            purchase,
+            vendorMap[purchase.vendorId],
+            userStateCode,
+          ),
+        );
       }
 
       buffer.writeln('   </REQUESTDATA>');
@@ -142,13 +155,15 @@ class TallyXmlService {
   String _buildSalesVoucher(Bill bill, dynamic gstInvoice) {
     final sb = StringBuffer();
     final dateStr = DateFormat('yyyyMMdd').format(bill.date);
-    final validName =
-        _escapeXml(bill.customerName.isEmpty ? 'Cash' : bill.customerName);
+    final validName = _escapeXml(
+      bill.customerName.isEmpty ? 'Cash' : bill.customerName,
+    );
     // Ensure name doesn't contain invalid Tally chars
 
     sb.writeln('    <TALLYMESSAGE xmlns:UDF="TallyUDF">');
     sb.writeln(
-        '     <VOUCHER VCHTYPE="Sales" ACTION="Create" OBJVIEW="Accounting Voucher View">');
+      '     <VOUCHER VCHTYPE="Sales" ACTION="Create" OBJVIEW="Accounting Voucher View">',
+    );
     sb.writeln('      <DATE>$dateStr</DATE>');
     sb.writeln('      <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>');
     sb.writeln('      <VOUCHERNUMBER>${bill.invoiceNumber}</VOUCHERNUMBER>');
@@ -159,7 +174,8 @@ class TallyXmlService {
     sb.writeln('       <LEDGERNAME>$validName</LEDGERNAME>');
     sb.writeln('       <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>'); // Debit
     sb.writeln(
-        '       <AMOUNT>-${bill.grandTotal.abs()}</AMOUNT>'); // Party Debit should be Grand Total
+      '       <AMOUNT>-${bill.grandTotal.abs()}</AMOUNT>',
+    ); // Party Debit should be Grand Total
     sb.writeln('      </LEDGERENTRIES.LIST>');
 
     // Ledger Entry: Sales Account (Credit)
@@ -216,7 +232,9 @@ class TallyXmlService {
   }
 
   String _buildReceiptVoucher(
-      PaymentEntity payment, Map<String, String> customerMap) {
+    PaymentEntity payment,
+    Map<String, String> customerMap,
+  ) {
     if (payment.amount <= 0) return '';
 
     final sb = StringBuffer();
@@ -231,13 +249,16 @@ class TallyXmlService {
 
     sb.writeln('    <TALLYMESSAGE xmlns:UDF="TallyUDF">');
     sb.writeln(
-        '     <VOUCHER VCHTYPE="Receipt" ACTION="Create" OBJVIEW="Accounting Voucher View">');
+      '     <VOUCHER VCHTYPE="Receipt" ACTION="Create" OBJVIEW="Accounting Voucher View">',
+    );
     sb.writeln('      <DATE>$dateStr</DATE>');
     sb.writeln('      <VOUCHERTYPENAME>Receipt</VOUCHERTYPENAME>');
     sb.writeln(
-        '      <VOUCHERNUMBER>${payment.referenceNumber ?? "REC-${payment.paymentDate.millisecondsSinceEpoch}"}</VOUCHERNUMBER>');
+      '      <VOUCHERNUMBER>${payment.referenceNumber ?? "REC-${payment.paymentDate.millisecondsSinceEpoch}"}</VOUCHERNUMBER>',
+    );
     sb.writeln(
-        '      <PARTYLEDGERNAME>Cash</PARTYLEDGERNAME>'); // Receiving into Cash usually
+      '      <PARTYLEDGERNAME>Cash</PARTYLEDGERNAME>',
+    ); // Receiving into Cash usually
 
     // Credit Party (Giver)
     // Ledger: Customer Name
@@ -261,19 +282,24 @@ class TallyXmlService {
   }
 
   String _buildPurchaseVoucher(
-      PurchaseOrder purchase, Vendor? vendor, String? userStateCode) {
+    PurchaseOrder purchase,
+    Vendor? vendor,
+    String? userStateCode,
+  ) {
     final sb = StringBuffer();
     final dateStr = DateFormat('yyyyMMdd').format(purchase.purchaseDate);
-    final partyName =
-        _escapeXml(vendor?.name ?? purchase.vendorName ?? 'Cash Purchase');
+    final partyName = _escapeXml(
+      vendor?.name ?? purchase.vendorName ?? 'Cash Purchase',
+    );
     final invoiceNo =
         purchase.invoiceNumber != null && purchase.invoiceNumber!.isNotEmpty
-            ? purchase.invoiceNumber
-            : purchase.id.substring(0, 8); // Fallback
+        ? purchase.invoiceNumber
+        : purchase.id.substring(0, 8); // Fallback
 
     sb.writeln('    <TALLYMESSAGE xmlns:UDF="TallyUDF">');
     sb.writeln(
-        '     <VOUCHER VCHTYPE="Purchase" ACTION="Create" OBJVIEW="Accounting Voucher View">');
+      '     <VOUCHER VCHTYPE="Purchase" ACTION="Create" OBJVIEW="Accounting Voucher View">',
+    );
     sb.writeln('      <DATE>$dateStr</DATE>');
     sb.writeln('      <VOUCHERTYPENAME>Purchase</VOUCHERTYPENAME>');
     sb.writeln('      <VOUCHERNUMBER>$invoiceNo</VOUCHERNUMBER>');
@@ -419,8 +445,10 @@ class TallyXmlService {
       }
 
       // 5. Validate voucher amounts balance (debit = credit)
-      final voucherPattern =
-          RegExp(r'<VOUCHER[^>]*>(.*?)</VOUCHER>', dotAll: true);
+      final voucherPattern = RegExp(
+        r'<VOUCHER[^>]*>(.*?)</VOUCHER>',
+        dotAll: true,
+      );
       final amountPattern = RegExp(r'<AMOUNT>(-?[\d.]+)</AMOUNT>');
 
       int voucherIndex = 0;
@@ -437,7 +465,8 @@ class TallyXmlService {
         // Tally expects balanced vouchers (sum of amounts should be close to 0)
         if (total.abs() > 0.01) {
           errors.add(
-              'Voucher #$voucherIndex has unbalanced amounts (diff: ${total.toStringAsFixed(2)})');
+            'Voucher #$voucherIndex has unbalanced amounts (diff: ${total.toStringAsFixed(2)})',
+          );
         }
       }
 

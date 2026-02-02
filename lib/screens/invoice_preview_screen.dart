@@ -215,24 +215,36 @@ class _InvoicePreviewScreenState extends State<InvoicePreviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('ग्राहकाचे नाव',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(widget.invoice.customerName,
-                  style: const TextStyle(fontSize: 16, color: Colors.black87)),
+              const Text(
+                'ग्राहकाचे नाव',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                widget.invoice.customerName,
+                style: const TextStyle(fontSize: 16, color: Colors.black87),
+              ),
               const SizedBox(height: 8),
-              const Text('बिल क्रमांक',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(widget.invoice.invoiceNumber,
-                  style: const TextStyle(fontSize: 16, color: Colors.blue)),
+              const Text(
+                'बिल क्रमांक',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                widget.invoice.invoiceNumber,
+                style: const TextStyle(fontSize: 16, color: Colors.blue),
+              ),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text('तारीख',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(widget.invoice.formattedDate,
-                  style: const TextStyle(fontSize: 16, color: Colors.blue)),
+              const Text(
+                'तारीख',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                widget.invoice.formattedDate,
+                style: const TextStyle(fontSize: 16, color: Colors.blue),
+              ),
             ],
           ),
         ],
@@ -319,26 +331,11 @@ class _InvoicePreviewScreenState extends State<InvoicePreviewScreen> {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              Expanded(
-                flex: 3,
-                child: _buildHeaderText('मालाचा विवरण'),
-              ),
-              Expanded(
-                flex: 1,
-                child: _buildHeaderText('मन'),
-              ),
-              Expanded(
-                flex: 2,
-                child: _buildHeaderText('किलो'),
-              ),
-              Expanded(
-                flex: 2,
-                child: _buildHeaderText('भाव'),
-              ),
-              Expanded(
-                flex: 2,
-                child: _buildHeaderText('एकूण'),
-              ),
+              Expanded(flex: 3, child: _buildHeaderText('मालाचा विवरण')),
+              Expanded(flex: 1, child: _buildHeaderText('मन')),
+              Expanded(flex: 2, child: _buildHeaderText('किलो')),
+              Expanded(flex: 2, child: _buildHeaderText('भाव')),
+              Expanded(flex: 2, child: _buildHeaderText('एकूण')),
             ],
           ),
         ),
@@ -467,7 +464,9 @@ class _InvoicePreviewScreenState extends State<InvoicePreviewScreen> {
           const SizedBox(height: 12),
           if (widget.invoice.charges.okshanKharcha > 0)
             _buildChargeRow(
-                'ऑक्शन / अड्डा खर्च', widget.invoice.charges.okshanKharcha),
+              'ऑक्शन / अड्डा खर्च',
+              widget.invoice.charges.okshanKharcha,
+            ),
           if (widget.invoice.charges.nagarpalika > 0)
             _buildChargeRow('नगरपालिका', widget.invoice.charges.nagarpalika),
           if (widget.invoice.charges.commission > 0)
@@ -524,19 +523,18 @@ class _InvoicePreviewScreenState extends State<InvoicePreviewScreen> {
             color: Colors.white,
             margin: const EdgeInsets.symmetric(vertical: 8),
           ),
-          _buildTotalRow(
-            'अंतिम एकूण',
-            finalTotal,
-            isBold: true,
-            isLarge: true,
-          ),
+          _buildTotalRow('अंतिम एकूण', finalTotal, isBold: true, isLarge: true),
         ],
       ),
     );
   }
 
-  Widget _buildTotalRow(String label, double amount,
-      {bool isBold = false, bool isLarge = false}) {
+  Widget _buildTotalRow(
+    String label,
+    double amount, {
+    bool isBold = false,
+    bool isLarge = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

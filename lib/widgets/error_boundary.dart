@@ -91,8 +91,11 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                   color: Colors.red.shade50,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.healing_rounded,
-                    size: 64, color: Colors.red.shade400),
+                child: Icon(
+                  Icons.healing_rounded,
+                  size: 64,
+                  color: Colors.red.shade400,
+                ),
               ),
               const SizedBox(height: 24),
               const Text(
@@ -128,10 +131,14 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white))
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(Icons.refresh_rounded),
                   label: Text(
-                      _isRecovering ? 'Recovering...' : 'Reload This Screen'),
+                    _isRecovering ? 'Recovering...' : 'Reload This Screen',
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -143,7 +150,8 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                   Clipboard.setData(ClipboardData(text: errorText));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('Error details copied to clipboard')),
+                      content: Text('Error details copied to clipboard'),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.copy, size: 16),
@@ -173,8 +181,11 @@ class MainErrorFallback extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline_rounded,
-                  size: 64, color: Colors.amber.shade700),
+              Icon(
+                Icons.error_outline_rounded,
+                size: 64,
+                color: Colors.amber.shade700,
+              ),
               const SizedBox(height: 24),
               const Text(
                 'Application Error',
@@ -199,8 +210,10 @@ class MainErrorFallback extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: SelectableText(
                     details.exceptionAsString(),
-                    style:
-                        const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),

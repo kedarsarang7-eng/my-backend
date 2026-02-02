@@ -43,7 +43,7 @@ class OwnerPinService {
       EnhancedPinLockoutService();
 
   OwnerPinService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Hash a PIN using SHA-256
   ///
@@ -127,8 +127,9 @@ class OwnerPinService {
     );
 
     if (lockoutStatus.isLocked) {
-      throw PinLockoutException(lockoutStatus.message ??
-          'Too many failed attempts. Try again later.');
+      throw PinLockoutException(
+        lockoutStatus.message ?? 'Too many failed attempts. Try again later.',
+      );
     }
 
     // Show soft warning if approaching lockout
@@ -157,7 +158,9 @@ class OwnerPinService {
       _failedAttempts.remove(businessId);
       _lockoutUntil.remove(businessId);
       await _enhancedLockout.recordSuccess(
-          businessId: businessId, deviceId: deviceId);
+        businessId: businessId,
+        deviceId: deviceId,
+      );
       return true;
     } else {
       // Record failed attempt in enhanced service (persisted)
@@ -176,7 +179,8 @@ class OwnerPinService {
       // Throw if now locked
       if (newStatus.isLocked) {
         throw PinLockoutException(
-            newStatus.message ?? 'Too many failed attempts. Account locked.');
+          newStatus.message ?? 'Too many failed attempts. Account locked.',
+        );
       }
 
       return false;
@@ -189,8 +193,10 @@ class OwnerPinService {
   }
 
   /// Get current lockout status for UI
-  Future<LockoutCheckResult> getLockoutStatus(String businessId,
-      {String? deviceId}) async {
+  Future<LockoutCheckResult> getLockoutStatus(
+    String businessId, {
+    String? deviceId,
+  }) async {
     return await _enhancedLockout.checkLockoutStatus(
       businessId: businessId,
       deviceId: deviceId,

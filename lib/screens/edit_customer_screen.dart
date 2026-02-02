@@ -8,10 +8,7 @@ import '../providers/app_state_providers.dart';
 class EditCustomerScreen extends ConsumerStatefulWidget {
   final Customer customer;
 
-  const EditCustomerScreen({
-    super.key,
-    required this.customer,
-  });
+  const EditCustomerScreen({super.key, required this.customer});
 
   @override
   ConsumerState<EditCustomerScreen> createState() => _EditCustomerScreenState();
@@ -165,12 +162,14 @@ class _EditCustomerScreenState extends ConsumerState<EditCustomerScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                  color: isDark ? Colors.white10 : Colors.grey.shade200),
+                color: isDark ? Colors.white10 : Colors.grey.shade200,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                  color: isDark ? Colors.white10 : Colors.grey.shade200),
+                color: isDark ? Colors.white10 : Colors.grey.shade200,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
@@ -202,8 +201,10 @@ class _EditCustomerScreenState extends ConsumerState<EditCustomerScreen> {
         gstin: _gstinCtrl.text.trim(),
       );
 
-      final result = await sl<CustomersRepository>()
-          .updateCustomer(updated, userId: userId);
+      final result = await sl<CustomersRepository>().updateCustomer(
+        updated,
+        userId: userId,
+      );
 
       if (result.isSuccess && mounted) {
         Navigator.pop(context, result.data);

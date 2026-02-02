@@ -16,9 +16,9 @@ class PaymentOrchestrator {
     PaymentRepository? paymentRepo,
     AccountingService? accountingService,
     PartyLedgerService? partyLedgerService,
-  })  : _paymentRepo = paymentRepo ?? sl<PaymentRepository>(),
-        _accountingService = accountingService ?? sl<AccountingService>(),
-        _partyLedgerService = partyLedgerService ?? sl<PartyLedgerService>();
+  }) : _paymentRepo = paymentRepo ?? sl<PaymentRepository>(),
+       _accountingService = accountingService ?? sl<AccountingService>(),
+       _partyLedgerService = partyLedgerService ?? sl<PartyLedgerService>();
 
   /// Record a received payment (Customer -> Shop)
   Future<String> recordReceivedPayment({

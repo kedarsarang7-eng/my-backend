@@ -22,7 +22,7 @@ class EInvoiceService {
   final AuditService? _auditService;
 
   EInvoiceService(this._repository, {AuditService? auditService})
-      : _auditService = auditService;
+    : _auditService = auditService;
 
   /// Check if e-Invoice is properly configured
   static Future<bool> isConfigured() async {
@@ -122,7 +122,8 @@ class EInvoiceService {
     if (!result.isSuccess) return;
 
     debugPrint(
-        'EInvoiceService: Processing ${result.data!.length} pending invoices');
+      'EInvoiceService: Processing ${result.data!.length} pending invoices',
+    );
 
     for (final eInvoice in result.data!) {
       if (eInvoice.retryCount >= 3) {
@@ -141,7 +142,9 @@ class EInvoiceService {
   ///
   /// SECURITY: No mock fallback - real IRN required for legal validity
   Future<void> _tryGenerateIRN(
-      String eInvoiceId, Map<String, dynamic> data) async {
+    String eInvoiceId,
+    Map<String, dynamic> data,
+  ) async {
     try {
       // Create NIC IRP service instance
       final nicIrpService = await NicIrpService.create();

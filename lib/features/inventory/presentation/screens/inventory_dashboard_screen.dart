@@ -130,144 +130,168 @@ class _InventoryDashboardScreenState
 
   Widget _buildDesktopProductTable(String mode) {
     return StreamBuilder<List<Product>>(
-        stream: sl<ProductsRepository>().watchAll(
-          userId: sl<SessionManager>().ownerId ?? '',
-        ),
-        builder: (context, snap) {
-          if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          var products = snap.data ?? [];
+      stream: sl<ProductsRepository>().watchAll(
+        userId: sl<SessionManager>().ownerId ?? '',
+      ),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        var products = snap.data ?? [];
 
-          // Filter Logic
-          if (mode == "Reorder") {
-            products = products.where((p) => p.isLowStock).toList();
-          } else if (mode == "DeadStock") {
-            // Simple dead stock logic: created long ago? or handled by tab logic?
-            // For now, re-using DeadStockTab logic might be complex as it's a separate widget.
-            // We will just show all for testing if DeadStock logic isn't easily accessible
-            // But actually DeadStockTab has its own logic.
-            // For simplicity in this refactor step, we'll placeholder DeadStock or replicate basic logic.
-            // Let's assume Dead Stock = no sales (would require sales data).
-            // Since DeadStockTab existing widget does something specific, let's look at it.
-            // For now, allow "All" and "Reorder" to work perfectly.
-          }
+        // Filter Logic
+        if (mode == "Reorder") {
+          products = products.where((p) => p.isLowStock).toList();
+        } else if (mode == "DeadStock") {
+          // Simple dead stock logic: created long ago? or handled by tab logic?
+          // For now, re-using DeadStockTab logic might be complex as it's a separate widget.
+          // We will just show all for testing if DeadStock logic isn't easily accessible
+          // But actually DeadStockTab has its own logic.
+          // For simplicity in this refactor step, we'll placeholder DeadStock or replicate basic logic.
+          // Let's assume Dead Stock = no sales (would require sales data).
+          // Since DeadStockTab existing widget does something specific, let's look at it.
+          // For now, allow "All" and "Reorder" to work perfectly.
+        }
 
-          // Search Filter
-          if (_searchQuery.isNotEmpty) {
-            products = products
-                .where((p) =>
+        // Search Filter
+        if (_searchQuery.isNotEmpty) {
+          products = products
+              .where(
+                (p) =>
                     p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                    (p.sku
-                            ?.toLowerCase()
-                            .contains(_searchQuery.toLowerCase()) ??
-                        false))
-                .toList();
-          }
+                    (p.sku?.toLowerCase().contains(
+                          _searchQuery.toLowerCase(),
+                        ) ??
+                        false),
+              )
+              .toList();
+        }
 
-          return Column(
-            children: [
-              if (mode == "All")
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _searchCtrl,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Search by Name or SKU...",
-                            prefixIcon: const Icon(Icons.search,
-                                color: FuturisticColors.textSecondary),
-                            filled: true,
-                            fillColor: FuturisticColors.surface,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8)),
+        return Column(
+          children: [
+            if (mode == "All")
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchCtrl,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Search by Name or SKU...",
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: FuturisticColors.textSecondary,
+                          ),
+                          filled: true,
+                          fillColor: FuturisticColors.surface,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              Expanded(
-                child: EnterpriseTable<Product>(
-                  columns: [
-                    EnterpriseTableColumn(
-                      title: "Product Name",
-                      valueBuilder: (p) => p.name,
-                      widgetBuilder: (p) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(p.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          if (p.sku != null)
-                            Text(p.sku!,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: FuturisticColors.textSecondary)),
-                        ],
-                      ),
-                    ),
-                    EnterpriseTableColumn(
-                      title: "Category",
-                      valueBuilder: (p) => p.category ?? "General",
-                    ),
-                    EnterpriseTableColumn(
-                      title: "Stock",
-                      isNumeric: true,
-                      valueBuilder: (p) => p.stockQuantity,
-                      widgetBuilder: (p) => Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("${p.stockQuantity} ${p.unit}"),
-                          if (p.isLowStock)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Icon(Icons.warning,
-                                  color: FuturisticColors.error, size: 16),
-                            )
-                        ],
-                      ),
-                    ),
-                    EnterpriseTableColumn(
-                      title: "Cost",
-                      isNumeric: true,
-                      valueBuilder: (p) => p.costPrice,
-                      widgetBuilder: (p) => Text("₹${p.costPrice}"),
-                    ),
-                    EnterpriseTableColumn(
-                      title: "Price",
-                      isNumeric: true,
-                      valueBuilder: (p) => p.sellingPrice,
-                      widgetBuilder: (p) => Text("₹${p.sellingPrice}",
-                          style: const TextStyle(
-                              color: FuturisticColors.success,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                  data: products,
-                  actionsBuilder: (p) => [
-                    IconButton(
-                      icon: const Icon(Icons.edit,
-                          color: FuturisticColors.primary, size: 20),
-                      onPressed: () =>
-                          _showAddEditProductDialog(context, product: p),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete,
-                          color: FuturisticColors.error, size: 20),
-                      onPressed: () => _confirmDelete(p),
                     ),
                   ],
                 ),
               ),
-            ],
-          );
-        });
+            Expanded(
+              child: EnterpriseTable<Product>(
+                columns: [
+                  EnterpriseTableColumn(
+                    title: "Product Name",
+                    valueBuilder: (p) => p.name,
+                    widgetBuilder: (p) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          p.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        if (p.sku != null)
+                          Text(
+                            p.sku!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: FuturisticColors.textSecondary,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  EnterpriseTableColumn(
+                    title: "Category",
+                    valueBuilder: (p) => p.category ?? "General",
+                  ),
+                  EnterpriseTableColumn(
+                    title: "Stock",
+                    isNumeric: true,
+                    valueBuilder: (p) => p.stockQuantity,
+                    widgetBuilder: (p) => Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("${p.stockQuantity} ${p.unit}"),
+                        if (p.isLowStock)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Icon(
+                              Icons.warning,
+                              color: FuturisticColors.error,
+                              size: 16,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  EnterpriseTableColumn(
+                    title: "Cost",
+                    isNumeric: true,
+                    valueBuilder: (p) => p.costPrice,
+                    widgetBuilder: (p) => Text("₹${p.costPrice}"),
+                  ),
+                  EnterpriseTableColumn(
+                    title: "Price",
+                    isNumeric: true,
+                    valueBuilder: (p) => p.sellingPrice,
+                    widgetBuilder: (p) => Text(
+                      "₹${p.sellingPrice}",
+                      style: const TextStyle(
+                        color: FuturisticColors.success,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+                data: products,
+                actionsBuilder: (p) => [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit,
+                      color: FuturisticColors.primary,
+                      size: 20,
+                    ),
+                    onPressed: () =>
+                        _showAddEditProductDialog(context, product: p),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                      color: FuturisticColors.error,
+                      size: 20,
+                    ),
+                    onPressed: () => _confirmDelete(p),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildMobileLayout() {
@@ -282,8 +306,9 @@ class _InventoryDashboardScreenState
             : FuturisticColors.background,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor:
-              isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+          backgroundColor: isDark
+              ? FuturisticColors.darkSurface
+              : FuturisticColors.surface,
           title: Row(
             children: [
               Container(
@@ -293,8 +318,11 @@ class _InventoryDashboardScreenState
                   borderRadius: BorderRadius.circular(AppBorderRadius.md),
                   boxShadow: AppShadows.glowShadow(FuturisticColors.secondary),
                 ),
-                child: const Icon(Icons.inventory_2,
-                    color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.inventory_2,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: AppSpacing.md),
               Text(
@@ -316,11 +344,14 @@ class _InventoryDashboardScreenState
                 color: FuturisticColors.primary.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(AppBorderRadius.md),
                 border: Border.all(
-                    color: FuturisticColors.primary.withOpacity(0.3)),
+                  color: FuturisticColors.primary.withOpacity(0.3),
+                ),
               ),
               child: IconButton(
-                icon:
-                    Icon(Icons.file_download, color: FuturisticColors.primary),
+                icon: Icon(
+                  Icons.file_download,
+                  color: FuturisticColors.primary,
+                ),
                 onPressed: _exportInventory,
               ),
             ),
@@ -331,8 +362,9 @@ class _InventoryDashboardScreenState
                 ? FuturisticColors.darkTextSecondary
                 : FuturisticColors.textSecondary,
             indicatorColor: FuturisticColors.primary,
-            labelStyle:
-                AppTypography.labelMedium.copyWith(fontWeight: FontWeight.w600),
+            labelStyle: AppTypography.labelMedium.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
             tabs: const [
               Tab(text: 'All Items'),
               Tab(text: 'Reorder'),
@@ -370,23 +402,28 @@ class _InventoryDashboardScreenState
 
                 // Calculate Stats
                 final totalItems = allProducts.length;
-                final lowStockCount =
-                    allProducts.where((p) => p.isLowStock).length;
+                final lowStockCount = allProducts
+                    .where((p) => p.isLowStock)
+                    .length;
                 final totalValue = allProducts.fold(
-                    0.0, (sum, p) => sum + (p.stockQuantity * p.costPrice));
+                  0.0,
+                  (sum, p) => sum + (p.stockQuantity * p.costPrice),
+                );
 
                 // Filter for List
                 var visibleProducts = allProducts;
                 if (_searchQuery.isNotEmpty) {
                   visibleProducts = allProducts
-                      .where((p) =>
-                          p.name
-                              .toLowerCase()
-                              .contains(_searchQuery.toLowerCase()) ||
-                          (p.sku
-                                  ?.toLowerCase()
-                                  .contains(_searchQuery.toLowerCase()) ??
-                              false))
+                      .where(
+                        (p) =>
+                            p.name.toLowerCase().contains(
+                              _searchQuery.toLowerCase(),
+                            ) ||
+                            (p.sku?.toLowerCase().contains(
+                                  _searchQuery.toLowerCase(),
+                                ) ??
+                                false),
+                      )
                       .toList();
                 }
 
@@ -402,15 +439,17 @@ class _InventoryDashboardScreenState
                             child: TextField(
                               controller: _searchCtrl,
                               style: TextStyle(
-                                  color:
-                                      isDark ? Colors.white : Colors.black87),
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
                               decoration: InputDecoration(
                                 hintText: 'Search products...',
                                 hintStyle: TextStyle(
-                                    color:
-                                        isDark ? Colors.white24 : Colors.grey),
-                                prefixIcon: const Icon(Icons.search,
-                                    color: Colors.blueAccent),
+                                  color: isDark ? Colors.white24 : Colors.grey,
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.search,
+                                  color: Colors.blueAccent,
+                                ),
                                 filled: true,
                                 fillColor: isDark
                                     ? Colors.white.withOpacity(0.05)
@@ -424,15 +463,16 @@ class _InventoryDashboardScreenState
                           ),
                           const SizedBox(width: 12),
                           IconButton(
-                            icon: Icon(Icons.qr_code_scanner,
-                                color:
-                                    isDark ? Colors.white70 : Colors.black54),
+                            icon: Icon(
+                              Icons.qr_code_scanner,
+                              color: isDark ? Colors.white70 : Colors.black54,
+                            ),
                             onPressed: () async {
                               final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) =>
-                                        const BarcodeScannerScreen()),
+                                  builder: (_) => const BarcodeScannerScreen(),
+                                ),
                               );
                               if (result != null) {
                                 _searchCtrl.text = result;
@@ -445,7 +485,11 @@ class _InventoryDashboardScreenState
 
                     // Stats Bar
                     _buildStatsBar(
-                        isDark, totalItems, lowStockCount, totalValue),
+                      isDark,
+                      totalItems,
+                      lowStockCount,
+                      totalValue,
+                    ),
 
                     // Product List
                     Expanded(
@@ -454,12 +498,18 @@ class _InventoryDashboardScreenState
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.inventory_2_outlined,
-                                      size: 64, color: Colors.grey.shade300),
+                                  Icon(
+                                    Icons.inventory_2_outlined,
+                                    size: 64,
+                                    color: Colors.grey.shade300,
+                                  ),
                                   const SizedBox(height: 16),
-                                  Text('No products found',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade500)),
+                                  Text(
+                                    'No products found',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade500,
+                                    ),
+                                  ),
                                 ],
                               ),
                             )
@@ -493,28 +543,40 @@ class _InventoryDashboardScreenState
       margin: const EdgeInsets.all(AppSpacing.md),
       child: GlassContainer(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md, vertical: AppSpacing.md),
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
+        ),
         borderRadius: AppBorderRadius.xl,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _statsItem('Items', '$items', FuturisticColors.primary, isDark),
             Container(
-                width: 1,
-                height: 40,
-                color: isDark
-                    ? FuturisticColors.darkDivider
-                    : FuturisticColors.divider),
+              width: 1,
+              height: 40,
+              color: isDark
+                  ? FuturisticColors.darkDivider
+                  : FuturisticColors.divider,
+            ),
             _statsItem(
-                'Low Stock', '$lowStock', FuturisticColors.warning, isDark),
+              'Low Stock',
+              '$lowStock',
+              FuturisticColors.warning,
+              isDark,
+            ),
             Container(
-                width: 1,
-                height: 40,
-                color: isDark
-                    ? FuturisticColors.darkDivider
-                    : FuturisticColors.divider),
-            _statsItem('Value', '₹${val.toStringAsFixed(0)}',
-                FuturisticColors.success, isDark),
+              width: 1,
+              height: 40,
+              color: isDark
+                  ? FuturisticColors.darkDivider
+                  : FuturisticColors.divider,
+            ),
+            _statsItem(
+              'Value',
+              '₹${val.toStringAsFixed(0)}',
+              FuturisticColors.success,
+              isDark,
+            ),
           ],
         ),
       ),
@@ -548,8 +610,9 @@ class _InventoryDashboardScreenState
     final isLowStock = p.stockQuantity <= (p.lowStockThreshold);
 
     return ModernCard(
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       borderGradient: isLowStock ? AppGradients.accentGradient : null,
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -580,7 +643,9 @@ class _InventoryDashboardScreenState
                   Container(
                     margin: const EdgeInsets.only(top: AppSpacing.sm),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.xs,
+                    ),
                     decoration: BoxDecoration(
                       gradient: AppGradients.accentGradient,
                       borderRadius: BorderRadius.circular(AppBorderRadius.xxl),
@@ -600,8 +665,10 @@ class _InventoryDashboardScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon:
-                    Icon(Icons.edit_outlined, color: FuturisticColors.primary),
+                icon: Icon(
+                  Icons.edit_outlined,
+                  color: FuturisticColors.primary,
+                ),
                 onPressed: () => _showAddEditProductDialog(context, product: p),
               ),
               IconButton(
@@ -632,12 +699,14 @@ class _InventoryDashboardScreenState
         content: Text('Are you sure you want to delete ${p.name}?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(
-                backgroundColor: FuturisticColors.error),
+              backgroundColor: FuturisticColors.error,
+            ),
             child: const Text('Delete', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -678,30 +747,34 @@ class _InventoryDashboardScreenState
       // 2. Build CSV
       final buffer = StringBuffer();
       buffer.writeln(
-          'Name,SKU,Category,Stock,Unit,Cost Price,Selling Price,Value');
+        'Name,SKU,Category,Stock,Unit,Cost Price,Selling Price,Value',
+      );
 
       for (final p in products) {
         final value = p.stockQuantity * p.costPrice;
         buffer.writeln(
-            '"${p.name}","${p.sku ?? ''}","${p.category ?? ''}",${p.stockQuantity},"${p.unit}",${p.costPrice},${p.sellingPrice},${value.toStringAsFixed(2)}');
+          '"${p.name}","${p.sku ?? ''}","${p.category ?? ''}",${p.stockQuantity},"${p.unit}",${p.costPrice},${p.sellingPrice},${value.toStringAsFixed(2)}',
+        );
       }
 
       // 3. Save File
       final directory = await getTemporaryDirectory();
       final file = File(
-          '${directory.path}/inventory_report_${DateTime.now().millisecondsSinceEpoch}.csv');
+        '${directory.path}/inventory_report_${DateTime.now().millisecondsSinceEpoch}.csv',
+      );
       await file.writeAsString(buffer.toString());
 
       // 4. Share
       if (mounted) {
-        await Share.shareXFiles([XFile(file.path)],
-            text: 'Here is my Inventory Report');
+        await Share.shareXFiles([
+          XFile(file.path),
+        ], text: 'Here is my Inventory Report');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Export failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Export failed: $e')));
       }
     }
   }

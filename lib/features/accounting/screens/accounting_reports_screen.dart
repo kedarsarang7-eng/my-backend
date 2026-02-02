@@ -105,8 +105,9 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
             decoration: BoxDecoration(
               color: FuturisticColors.surface.withOpacity(0.5),
               borderRadius: BorderRadius.circular(8),
-              border:
-                  Border.all(color: FuturisticColors.border.withOpacity(0.3)),
+              border: Border.all(
+                color: FuturisticColors.border.withOpacity(0.3),
+              ),
             ),
             child: TabBar(
               controller: _tabController,
@@ -116,8 +117,10 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
               ),
               labelColor: Colors.white,
               unselectedLabelColor: FuturisticColors.textSecondary,
-              labelStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
               tabs: const [
                 Tab(text: 'Trial Balance'),
                 Tab(text: 'Profit & Loss'),
@@ -132,7 +135,9 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
             child: _isLoading
                 ? Center(
                     child: CircularProgressIndicator(
-                        color: FuturisticColors.premiumBlue))
+                      color: FuturisticColors.premiumBlue,
+                    ),
+                  )
                 : TabBarView(
                     controller: _tabController,
                     children: [
@@ -163,25 +168,31 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
                 EnterpriseTableColumn(
                   title: "Ledger Account",
                   valueBuilder: (item) => item.ledgerName,
-                  widgetBuilder: (item) => Text(item.ledgerName,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white)),
+                  widgetBuilder: (item) => Text(
+                    item.ledgerName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 EnterpriseTableColumn(
                   title: "Debit",
                   isNumeric: true,
                   valueBuilder: (item) => item.debit,
-                  widgetBuilder: (item) => Text(_formatCurrency(item.debit),
-                      style:
-                          const TextStyle(color: FuturisticColors.textPrimary)),
+                  widgetBuilder: (item) => Text(
+                    _formatCurrency(item.debit),
+                    style: const TextStyle(color: FuturisticColors.textPrimary),
+                  ),
                 ),
                 EnterpriseTableColumn(
                   title: "Credit",
                   isNumeric: true,
                   valueBuilder: (item) => item.credit,
-                  widgetBuilder: (item) => Text(_formatCurrency(item.credit),
-                      style:
-                          const TextStyle(color: FuturisticColors.textPrimary)),
+                  widgetBuilder: (item) => Text(
+                    _formatCurrency(item.credit),
+                    style: const TextStyle(color: FuturisticColors.textPrimary),
+                  ),
                 ),
               ],
               data: _trialBalance!.items,
@@ -207,18 +218,22 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader('Profit & Loss',
-              '${_formatDate(_startDate)} to ${_formatDate(_endDate)}'),
+          _buildHeader(
+            'Profit & Loss',
+            '${_formatDate(_startDate)} to ${_formatDate(_endDate)}',
+          ),
           const SizedBox(height: 16),
           _buildSectionTitle('Income'),
-          ..._profitLoss!.incomeItems.map((item) =>
-              _buildRow(item.ledgerName, item.amount, isIncome: true)),
+          ..._profitLoss!.incomeItems.map(
+            (item) => _buildRow(item.ledgerName, item.amount, isIncome: true),
+          ),
           const Divider(),
           _buildRow('Total Income', _profitLoss!.totalIncome, isBold: true),
           const SizedBox(height: 24),
           _buildSectionTitle('Expenses'),
-          ..._profitLoss!.expenseItems.map((item) =>
-              _buildRow(item.ledgerName, item.amount, isIncome: false)),
+          ..._profitLoss!.expenseItems.map(
+            (item) => _buildRow(item.ledgerName, item.amount, isIncome: false),
+          ),
           const Divider(),
           _buildRow('Total Expenses', _profitLoss!.totalExpenses, isBold: true),
           const SizedBox(height: 24),
@@ -234,7 +249,9 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
                   Text(
                     _profitLoss!.isProfitable ? 'NET PROFIT' : 'NET LOSS',
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     _formatCurrency(_profitLoss!.netProfit.abs()),
@@ -266,21 +283,27 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
           _buildHeader('Balance Sheet', 'As of ${_formatDate(_endDate)}'),
           const SizedBox(height: 16),
           _buildSectionTitle('Assets'),
-          ..._balanceSheet!.assetItems
-              .map((item) => _buildRow(item.ledgerName, item.amount)),
+          ..._balanceSheet!.assetItems.map(
+            (item) => _buildRow(item.ledgerName, item.amount),
+          ),
           const Divider(),
           _buildRow('Total Assets', _balanceSheet!.totalAssets, isBold: true),
           const SizedBox(height: 24),
           _buildSectionTitle('Liabilities'),
-          ..._balanceSheet!.liabilityItems
-              .map((item) => _buildRow(item.ledgerName, item.amount)),
+          ..._balanceSheet!.liabilityItems.map(
+            (item) => _buildRow(item.ledgerName, item.amount),
+          ),
           const Divider(),
-          _buildRow('Total Liabilities', _balanceSheet!.totalLiabilities,
-              isBold: true),
+          _buildRow(
+            'Total Liabilities',
+            _balanceSheet!.totalLiabilities,
+            isBold: true,
+          ),
           const SizedBox(height: 24),
           _buildSectionTitle('Equity'),
-          ..._balanceSheet!.equityItems
-              .map((item) => _buildRow(item.ledgerName, item.amount)),
+          ..._balanceSheet!.equityItems.map(
+            (item) => _buildRow(item.ledgerName, item.amount),
+          ),
           const Divider(),
           _buildRow('Total Equity', _balanceSheet!.totalEquity, isBold: true),
           const SizedBox(height: 24),
@@ -302,10 +325,13 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
                       children: [
                         Icon(Icons.check_circle, color: Colors.green),
                         SizedBox(width: 8),
-                        Text("Balanced",
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold)),
+                        Text(
+                          "Balanced",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     )
                   else
@@ -314,12 +340,14 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
                         const Icon(Icons.error, color: Colors.red),
                         const SizedBox(width: 8),
                         Text(
-                            "Diff: ${_formatCurrency(_balanceSheet!.totalAssets - _balanceSheet!.liabilitiesAndEquity)}",
-                            style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold)),
+                          "Diff: ${_formatCurrency(_balanceSheet!.totalAssets - _balanceSheet!.liabilitiesAndEquity)}",
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
-                    )
+                    ),
                 ],
               ),
             ),
@@ -333,8 +361,10 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
         Text(subtitle, style: TextStyle(color: Colors.grey[600])),
       ],
     );
@@ -343,24 +373,34 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0, top: 4.0),
-      child: Text(title.toUpperCase(),
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[700],
-              letterSpacing: 1.1)),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[700],
+          letterSpacing: 1.1,
+        ),
+      ),
     );
   }
 
-  Widget _buildRow(String label, double amount,
-      {bool isBold = false, bool? isIncome}) {
+  Widget _buildRow(
+    String label,
+    double amount, {
+    bool isBold = false,
+    bool? isIncome,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
           Text(
             _formatCurrency(amount),
             style: TextStyle(
@@ -375,8 +415,12 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
     );
   }
 
-  Widget _buildTotalRow(String label, double debit, double credit,
-      {required bool isBalanced}) {
+  Widget _buildTotalRow(
+    String label,
+    double debit,
+    double credit, {
+    required bool isBalanced,
+  }) {
     return Card(
       color: isBalanced ? Colors.green.shade50 : Colors.red.shade50,
       child: Padding(
@@ -384,14 +428,23 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
         child: Row(
           children: [
             Expanded(
-                child: Text(label,
-                    style: const TextStyle(fontWeight: FontWeight.bold))),
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
             Expanded(
-                child: Text(_formatCurrency(debit),
-                    style: const TextStyle(fontWeight: FontWeight.bold))),
+              child: Text(
+                _formatCurrency(debit),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
             Expanded(
-                child: Text(_formatCurrency(credit),
-                    style: const TextStyle(fontWeight: FontWeight.bold))),
+              child: Text(
+                _formatCurrency(credit),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
       ),
@@ -434,7 +487,8 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-                'Prevent editing of financial records on or before a specific date.'),
+              'Prevent editing of financial records on or before a specific date.',
+            ),
             const SizedBox(height: 16),
             if (currentLock != null)
               Container(
@@ -452,16 +506,19 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
                       child: Text(
                         'Currently locked up to: ${_formatDate(currentLock)}',
                         style: TextStyle(
-                            color: Colors.amber.shade900,
-                            fontWeight: FontWeight.bold),
+                          color: Colors.amber.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
               )
             else
-              const Text('Books are currently unlocked.',
-                  style: TextStyle(fontStyle: FontStyle.italic)),
+              const Text(
+                'Books are currently unlocked.',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
             const SizedBox(height: 16),
             const Text('Select new lock date:'),
           ],
@@ -487,8 +544,8 @@ class _AccountingReportsScreenState extends State<AccountingReportsScreen>
                 if (context.mounted) Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      content:
-                          Text('Books locked up to ${_formatDate(picked)}')),
+                    content: Text('Books locked up to ${_formatDate(picked)}'),
+                  ),
                 );
               }
             },

@@ -60,9 +60,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
 
           final order = snapshot.data;
           if (order == null) {
-            return const Center(
-              child: Text('Order not found'),
-            );
+            return const Center(child: Text('Order not found'));
           }
 
           return _buildOrderTrackingContent(order);
@@ -104,10 +102,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: statusInfo.color.withValues(alpha: 0.2),
-                        border: Border.all(
-                          color: statusInfo.color,
-                          width: 3,
-                        ),
+                        border: Border.all(color: statusInfo.color, width: 3),
                       ),
                       child: Icon(
                         statusInfo.icon,
@@ -122,16 +117,14 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
               Text(
                 statusInfo.title,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: statusInfo.color,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: statusInfo.color,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 statusInfo.subtitle,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
+                style: TextStyle(color: Theme.of(context).colorScheme.outline),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -165,8 +158,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
                     Text(
                       'Order Details',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     if (order.tableNumber != null)
                       Chip(
@@ -182,9 +175,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
                     itemBuilder: (context, index) {
                       final item = order.items[index];
                       return ListTile(
-                        leading: CircleAvatar(
-                          child: Text('${item.quantity}'),
-                        ),
+                        leading: CircleAvatar(child: Text('${item.quantity}')),
                         title: Text(item.itemName),
                         trailing: Text(
                           '₹${item.totalPrice.toStringAsFixed(0)}',
@@ -206,9 +197,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
                     Text(
                       '₹${order.grandTotal.toStringAsFixed(0)}',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ],
                 ),
@@ -272,9 +263,11 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
                           ),
                         ),
                         icon: const Icon(Icons.star),
-                        label: Text(order.reviewRating != null
-                            ? 'EDIT REVIEW'
-                            : 'RATE & REVIEW'),
+                        label: Text(
+                          order.reviewRating != null
+                              ? 'EDIT REVIEW'
+                              : 'RATE & REVIEW',
+                        ),
                       ),
                     ),
                   ),
@@ -329,8 +322,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
           return Expanded(
             child: Container(
               height: 3,
-              color:
-                  isCompleted ? FuturisticColors.success : Colors.grey.shade300,
+              color: isCompleted
+                  ? FuturisticColors.success
+                  : Colors.grey.shade300,
             ),
           );
         }

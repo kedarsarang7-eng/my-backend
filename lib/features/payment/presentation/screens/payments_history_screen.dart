@@ -42,27 +42,35 @@ class PaymentsHistoryScreen extends StatelessWidget {
         final now = DateTime.now();
 
         final todayPayments = payments
-            .where((p) =>
-                p.paymentDate.day == now.day &&
-                p.paymentDate.month == now.month &&
-                p.paymentDate.year == now.year)
+            .where(
+              (p) =>
+                  p.paymentDate.day == now.day &&
+                  p.paymentDate.month == now.month &&
+                  p.paymentDate.year == now.year,
+            )
             .fold<double>(0, (sum, p) => sum + p.amount);
 
         final monthPayments = payments
-            .where((p) =>
-                p.paymentDate.month == now.month &&
-                p.paymentDate.year == now.year)
+            .where(
+              (p) =>
+                  p.paymentDate.month == now.month &&
+                  p.paymentDate.year == now.year,
+            )
             .fold<double>(0, (sum, p) => sum + p.amount);
 
-        final totalPayments =
-            payments.fold<double>(0, (sum, p) => sum + p.amount);
+        final totalPayments = payments.fold<double>(
+          0,
+          (sum, p) => sum + p.amount,
+        );
 
         // Count by payment mode
-        final cashPayments =
-            payments.where((p) => p.paymentMode.toLowerCase() == 'cash').length;
+        final cashPayments = payments
+            .where((p) => p.paymentMode.toLowerCase() == 'cash')
+            .length;
 
-        final onlinePayments =
-            payments.where((p) => p.paymentMode.toLowerCase() != 'cash').length;
+        final onlinePayments = payments
+            .where((p) => p.paymentMode.toLowerCase() != 'cash')
+            .length;
 
         return DesktopContentContainer(
           title: 'Payments History',
@@ -145,7 +153,9 @@ class PaymentsHistoryScreen extends StatelessWidget {
                       // Table Header
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 16),
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
@@ -183,58 +193,59 @@ class PaymentsHistoryScreen extends StatelessWidget {
                                 ),
                               )
                             : payments.isEmpty
-                                ? const CompactEmptyState(
-                                    icon: Icons.payment_outlined,
-                                    message: 'No payments recorded yet',
-                                  )
-                                : EnterpriseTable<PaymentEntity>(
-                                    data: payments,
-                                    columns: [
-                                      EnterpriseTableColumn<PaymentEntity>(
-                                        title: 'Date',
-                                        valueBuilder: (p) => p.paymentDate,
-                                        widgetBuilder: (p) => Text(
-                                          DateFormat('MMM dd, yyyy')
-                                              .format(p.paymentDate),
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
+                            ? const CompactEmptyState(
+                                icon: Icons.payment_outlined,
+                                message: 'No payments recorded yet',
+                              )
+                            : EnterpriseTable<PaymentEntity>(
+                                data: payments,
+                                columns: [
+                                  EnterpriseTableColumn<PaymentEntity>(
+                                    title: 'Date',
+                                    valueBuilder: (p) => p.paymentDate,
+                                    widgetBuilder: (p) => Text(
+                                      DateFormat(
+                                        'MMM dd, yyyy',
+                                      ).format(p.paymentDate),
+                                      style: const TextStyle(
+                                        color: Colors.white,
                                       ),
-                                      EnterpriseTableColumn<PaymentEntity>(
-                                        title: 'Reference',
-                                        valueBuilder: (p) =>
-                                            p.referenceNumber ?? '',
-                                        widgetBuilder: (p) => Text(
-                                          p.referenceNumber ?? 'N/A',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      EnterpriseTableColumn<PaymentEntity>(
-                                        title: 'Mode',
-                                        valueBuilder: (p) => p.paymentMode,
-                                        widgetBuilder: (p) =>
-                                            _buildPaymentModeBadge(
-                                                p.paymentMode),
-                                      ),
-                                      EnterpriseTableColumn<PaymentEntity>(
-                                        title: 'Amount',
-                                        valueBuilder: (p) => p.amount,
-                                        isNumeric: true,
-                                        widgetBuilder: (p) => Text(
-                                          '₹${p.amount.toStringAsFixed(2)}',
-                                          style: const TextStyle(
-                                            color: FuturisticColors.success,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    onRowTap: (payment) =>
-                                        _showPaymentDetails(context, payment),
+                                    ),
                                   ),
+                                  EnterpriseTableColumn<PaymentEntity>(
+                                    title: 'Reference',
+                                    valueBuilder: (p) =>
+                                        p.referenceNumber ?? '',
+                                    widgetBuilder: (p) => Text(
+                                      p.referenceNumber ?? 'N/A',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  EnterpriseTableColumn<PaymentEntity>(
+                                    title: 'Mode',
+                                    valueBuilder: (p) => p.paymentMode,
+                                    widgetBuilder: (p) =>
+                                        _buildPaymentModeBadge(p.paymentMode),
+                                  ),
+                                  EnterpriseTableColumn<PaymentEntity>(
+                                    title: 'Amount',
+                                    valueBuilder: (p) => p.amount,
+                                    isNumeric: true,
+                                    widgetBuilder: (p) => Text(
+                                      '₹${p.amount.toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        color: FuturisticColors.success,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                onRowTap: (payment) =>
+                                    _showPaymentDetails(context, payment),
+                              ),
                       ),
                     ],
                   ),
@@ -258,9 +269,7 @@ class PaymentsHistoryScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-        ),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -339,8 +348,10 @@ class PaymentsHistoryScreen extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Filtering from ${DateFormat('dd MMM').format(picked.start)} to ${DateFormat('dd MMM').format(picked.end)}')),
+            content: Text(
+              'Filtering from ${DateFormat('dd MMM').format(picked.start)} to ${DateFormat('dd MMM').format(picked.end)}',
+            ),
+          ),
         );
         // In a real app, apply this filter to the stream or state
       }
@@ -399,8 +410,10 @@ class PaymentsHistoryScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close,
-                        color: FuturisticColors.textSecondary),
+                    icon: Icon(
+                      Icons.close,
+                      color: FuturisticColors.textSecondary,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -409,10 +422,14 @@ class PaymentsHistoryScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Details
-              _buildDetailRow('Date',
-                  DateFormat('MMM dd, yyyy').format(payment.paymentDate)),
               _buildDetailRow(
-                  'Amount', '₹${payment.amount.toStringAsFixed(2)}'),
+                'Date',
+                DateFormat('MMM dd, yyyy').format(payment.paymentDate),
+              ),
+              _buildDetailRow(
+                'Amount',
+                '₹${payment.amount.toStringAsFixed(2)}',
+              ),
               _buildDetailRow('Payment Mode', payment.paymentMode),
               if (payment.notes != null && payment.notes!.isNotEmpty)
                 _buildDetailRow('Notes', payment.notes!),

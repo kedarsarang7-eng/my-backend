@@ -47,16 +47,12 @@ class ComputeService {
   // ============================================================================
 
   /// Generate sales report data in background
-  static Future<ReportData> generateSalesReport(
-    ReportParams params,
-  ) async {
+  static Future<ReportData> generateSalesReport(ReportParams params) async {
     return compute(_generateSalesReportIsolate, params);
   }
 
   /// Generate GST report data in background
-  static Future<GstReportData> generateGstReport(
-    GstReportParams params,
-  ) async {
+  static Future<GstReportData> generateGstReport(GstReportParams params) async {
     return compute(_generateGstReportIsolate, params);
   }
 
@@ -108,7 +104,8 @@ class ComputeService {
 // ============================================================================
 
 StockSummary _calculateStockSummaryIsolate(
-    List<Map<String, dynamic>> products) {
+  List<Map<String, dynamic>> products,
+) {
   double totalValue = 0;
   int totalItems = 0;
   int lowStockCount = 0;
@@ -146,14 +143,17 @@ List<LowStockAlert> _calculateLowStockIsolate(LowStockParams params) {
         (product['minStock'] as num?)?.toDouble() ?? params.defaultMinStock;
 
     if (quantity <= minStock) {
-      alerts.add(LowStockAlert(
-        productId: product['id'] as String? ?? '',
-        productName: product['name'] as String? ?? 'Unknown',
-        currentStock: quantity,
-        minStock: minStock,
-        severity:
-            quantity <= 0 ? AlertSeverity.critical : AlertSeverity.warning,
-      ));
+      alerts.add(
+        LowStockAlert(
+          productId: product['id'] as String? ?? '',
+          productName: product['name'] as String? ?? 'Unknown',
+          currentStock: quantity,
+          minStock: minStock,
+          severity: quantity <= 0
+              ? AlertSeverity.critical
+              : AlertSeverity.warning,
+        ),
+      );
     }
   }
 
@@ -253,11 +253,13 @@ List<SearchResult> _searchTextIsolate(SearchParams params) {
       final startsWithMatch = textLower.startsWith(queryLower);
       final score = exactMatch ? 1.0 : (startsWithMatch ? 0.8 : 0.5);
 
-      results.add(SearchResult(
-        itemId: item.id,
-        matchedText: item.searchableText,
-        relevanceScore: score,
-      ));
+      results.add(
+        SearchResult(
+          itemId: item.id,
+          matchedText: item.searchableText,
+          relevanceScore: score,
+        ),
+      );
     }
   }
 
@@ -289,10 +291,7 @@ class LowStockParams {
   final List<Map<String, dynamic>> products;
   final double defaultMinStock;
 
-  const LowStockParams({
-    required this.products,
-    this.defaultMinStock = 5,
-  });
+  const LowStockParams({required this.products, this.defaultMinStock = 5});
 }
 
 enum AlertSeverity { low, warning, critical }
@@ -392,10 +391,7 @@ class SearchableItem {
   final String id;
   final String searchableText;
 
-  const SearchableItem({
-    required this.id,
-    required this.searchableText,
-  });
+  const SearchableItem({required this.id, required this.searchableText});
 }
 
 class SearchResult {

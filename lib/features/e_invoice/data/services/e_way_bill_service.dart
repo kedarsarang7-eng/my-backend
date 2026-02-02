@@ -84,7 +84,8 @@ class EWayBillService {
       );
 
       debugPrint(
-          'EWayBillService: EWB generated: $ewbNumber (valid until $validUntil)');
+        'EWayBillService: EWB generated: $ewbNumber (valid until $validUntil)',
+      );
     } catch (e) {
       debugPrint('EWayBillService: Failed to generate EWB: $e');
     }

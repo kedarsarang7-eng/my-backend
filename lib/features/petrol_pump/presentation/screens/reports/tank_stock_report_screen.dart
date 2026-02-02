@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../../../core/di/service_locator.dart';
 import '../../../models/tank.dart';
 import '../../../services/tank_service.dart';
@@ -28,8 +28,10 @@ class TankStockReportScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
               final tank = tanks[index];
-              final percentage =
-                  (tank.currentStock / tank.capacity).clamp(0.0, 1.0);
+              final percentage = (tank.currentStock / tank.capacity).clamp(
+                0.0,
+                1.0,
+              );
 
               return Card(
                 child: Padding(
@@ -40,20 +42,30 @@ class TankStockReportScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(tank.tankName,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                          Text(
+                            tank.tankName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Text(tank.fuelTypeName ?? 'Fuel',
-                                style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold)),
-                          )
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              tank.fuelTypeName ?? 'Fuel',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -68,9 +80,11 @@ class TankStockReportScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              '${tank.currentStock.toStringAsFixed(1)} L Available'),
+                            '${tank.currentStock.toStringAsFixed(1)} L Available',
+                          ),
                           Text(
-                              '${(percentage * 100).toStringAsFixed(1)}% Full'),
+                            '${(percentage * 100).toStringAsFixed(1)}% Full',
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -78,16 +92,24 @@ class TankStockReportScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _detailItem('Capacity',
-                              '${tank.capacity.toStringAsFixed(0)} L'),
-                          _detailItem('Opening Stock',
-                              '${tank.openingStock.toStringAsFixed(1)} L'),
-                          _detailItem('Purchases',
-                              '+${tank.purchaseQuantity.toStringAsFixed(1)} L'),
-                          _detailItem('Sold',
-                              '-${tank.salesDeduction.toStringAsFixed(1)} L'),
+                          _detailItem(
+                            'Capacity',
+                            '${tank.capacity.toStringAsFixed(0)} L',
+                          ),
+                          _detailItem(
+                            'Opening Stock',
+                            '${tank.openingStock.toStringAsFixed(1)} L',
+                          ),
+                          _detailItem(
+                            'Purchases',
+                            '+${tank.purchaseQuantity.toStringAsFixed(1)} L',
+                          ),
+                          _detailItem(
+                            'Sold',
+                            '-${tank.salesDeduction.toStringAsFixed(1)} L',
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

@@ -63,12 +63,14 @@ void main() {
     await patientRepo.createPatient(patient);
 
     // Create Doctor Profile (Vendor)
-    await doctorRepo.saveProfile(DoctorProfileModel(
-      id: const Uuid().v4(),
-      vendorId: doctorId,
-      specialization: 'General',
-      createdAt: DateTime.now(),
-    ));
+    await doctorRepo.saveProfile(
+      DoctorProfileModel(
+        id: const Uuid().v4(),
+        vendorId: doctorId,
+        specialization: 'General',
+        createdAt: DateTime.now(),
+      ),
+    );
 
     // 2. Generate QR Token
     final token = await patientService.generateQrToken(patientId);
@@ -83,9 +85,9 @@ void main() {
     await patientService.linkPatientToDoctor(patientId, doctorId);
 
     // 5. Verify Link
-    await (db.select(db.patientDoctorLinks)
-          ..where((t) =>
-              t.patientId.equals(patientId) & t.doctorId.equals(doctorId)))
+    await (db.select(db.patientDoctorLinks)..where(
+          (t) => t.patientId.equals(patientId) & t.doctorId.equals(doctorId),
+        ))
         .get(); // Actually doctorId in link is doctorProfileId, but we used vendorId in logic above.
 
     // Note: PatientServiceImpl.linkPatientToDoctor calls:

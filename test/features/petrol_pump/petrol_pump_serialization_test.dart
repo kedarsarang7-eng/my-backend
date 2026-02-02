@@ -13,9 +13,7 @@ void main() {
         fuelName: 'Petrol',
         currentRatePerLitre: 100.0,
         ownerId: 'owner_1',
-        rateHistory: [
-          RateHistoryEntry(date: DateTime(2023, 1, 1), rate: 90.0),
-        ],
+        rateHistory: [RateHistoryEntry(date: DateTime(2023, 1, 1), rate: 90.0)],
       );
 
       final map = fuel.toMap();

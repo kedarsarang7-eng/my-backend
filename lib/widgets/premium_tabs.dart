@@ -53,7 +53,8 @@ class PremiumBottomNav extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final bgColor = backgroundColor ??
+    final bgColor =
+        backgroundColor ??
         (isDark ? const Color(0xFF0D1117) : theme.colorScheme.surface);
 
     final active = activeColor ?? theme.colorScheme.primary;
@@ -140,10 +141,7 @@ class _PremiumNavTabState extends State<_PremiumNavTab>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: kTabAnimDuration,
-    );
+    _controller = AnimationController(vsync: this, duration: kTabAnimDuration);
     if (widget.isActive) _controller.value = 1.0;
   }
 
@@ -208,8 +206,9 @@ class _PremiumNavTabState extends State<_PremiumNavTab>
                     widget.item.label,
                     style: TextStyle(
                       fontSize: kPremiumLabelSize,
-                      fontWeight:
-                          widget.isActive ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: widget.isActive
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                       color: color,
                       height: 1.2,
                     ),
@@ -266,10 +265,7 @@ class PremiumTabBar extends StatelessWidget implements PreferredSizeWidget {
         labelPadding: const EdgeInsets.symmetric(horizontal: 12),
         labelColor: active,
         unselectedLabelColor: inactive,
-        labelStyle: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
+        labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         unselectedLabelStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
@@ -418,8 +414,9 @@ class PremiumSegmentedControl<T extends Object> extends StatelessWidget {
                     segment.label,
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                       color: isSelected
                           ? Colors.white
                           : (isDark ? Colors.white70 : Colors.black54),
@@ -440,11 +437,7 @@ class PremiumSegment<T> {
   final String label;
   final IconData? icon;
 
-  const PremiumSegment({
-    required this.value,
-    required this.label,
-    this.icon,
-  });
+  const PremiumSegment({required this.value, required this.label, this.icon});
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -501,8 +494,8 @@ class _PremiumActionChipState extends State<PremiumActionChip> {
             color: widget.isActive
                 ? active.withOpacity(0.15)
                 : (isDark
-                    ? Colors.white.withOpacity(0.08)
-                    : Colors.black.withOpacity(0.05)),
+                      ? Colors.white.withOpacity(0.08)
+                      : Colors.black.withOpacity(0.05)),
             border: Border.all(
               color: widget.isActive ? active : Colors.transparent,
               width: 1,
@@ -525,8 +518,9 @@ class _PremiumActionChipState extends State<PremiumActionChip> {
                 widget.label,
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight:
-                      widget.isActive ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: widget.isActive
+                      ? FontWeight.w600
+                      : FontWeight.w400,
                   color: widget.isActive
                       ? active
                       : (isDark ? Colors.white70 : Colors.black54),

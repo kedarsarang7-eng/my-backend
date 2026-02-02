@@ -81,18 +81,18 @@ class _CustomerAppViewModernState extends State<CustomerAppViewModern>
                       const SizedBox(height: AppSpacing.md),
                       Text(
                         widget.isOwnerMode ? 'Customer Account' : 'My Account',
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         widget.phoneNumber,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Colors.white70,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
                       ),
                     ],
                   ),
@@ -137,14 +137,8 @@ class _CustomerAppViewModernState extends State<CustomerAppViewModern>
                     fontSize: 14,
                   ),
                   tabs: const [
-                    Tab(
-                      icon: Icon(Icons.receipt, size: 24),
-                      text: 'Bills',
-                    ),
-                    Tab(
-                      icon: Icon(Icons.info, size: 24),
-                      text: 'Info',
-                    ),
+                    Tab(icon: Icon(Icons.receipt, size: 24), text: 'Bills'),
+                    Tab(icon: Icon(Icons.info, size: 24), text: 'Info'),
                   ],
                 ),
               ),
@@ -155,10 +149,7 @@ class _CustomerAppViewModernState extends State<CustomerAppViewModern>
           SliverFillRemaining(
             child: TabBarView(
               controller: _tabController,
-              children: [
-                _buildBillsTab(context),
-                _buildInfoTab(context),
-              ],
+              children: [_buildBillsTab(context), _buildInfoTab(context)],
             ),
           ),
         ],
@@ -193,9 +184,9 @@ class _CustomerAppViewModernState extends State<CustomerAppViewModern>
         children: [
           Text(
             'Account Information',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: AppSpacing.lg),
           ModernCard(
@@ -228,9 +219,9 @@ class _CustomerAppViewModernState extends State<CustomerAppViewModern>
           const SizedBox(height: AppSpacing.lg),
           Text(
             'Actions',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: AppSpacing.md),
           ModernCard(

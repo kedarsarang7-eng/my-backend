@@ -4,8 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:dukanx/generated/app_localizations.dart';
 
 void main() {
-  testWidgets('Localization returns Hindi translation',
-      (WidgetTester tester) async {
+  testWidgets('Localization returns Hindi translation', (
+    WidgetTester tester,
+  ) async {
     final widget = MaterialApp(
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -15,10 +16,12 @@ void main() {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('hi'),
-      home: Builder(builder: (context) {
-        // Ensure that owner_login key exists in your arb file
-        return Text(AppLocalizations.of(context)!.owner_login);
-      }),
+      home: Builder(
+        builder: (context) {
+          // Ensure that owner_login key exists in your arb file
+          return Text(AppLocalizations.of(context)!.owner_login);
+        },
+      ),
     );
 
     await tester.pumpWidget(widget);

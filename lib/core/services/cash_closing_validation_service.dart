@@ -39,10 +39,7 @@ class CashClosingValidation {
   }
 
   factory CashClosingValidation.error(String message) {
-    return CashClosingValidation._(
-      isValid: false,
-      message: message,
-    );
+    return CashClosingValidation._(isValid: false, message: message);
   }
 }
 
@@ -63,8 +60,8 @@ class CashClosingValidationService {
     required AppDatabase database,
     FirebaseFirestore? firestore,
     this.graceDays = 1,
-  })  : _database = database,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+  }) : _database = database,
+       _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Validate if billing is allowed based on cash closing status
   Future<CashClosingValidation> validateForBilling({
@@ -85,12 +82,13 @@ class CashClosingValidationService {
       final previousDay = DateTime(today.year, today.month, today.day - 1);
 
       // Query local database for closing
-      final localClosing = await (_database.select(_database.cashClosings)
-            ..where((t) => t.businessId.equals(businessId))
-            ..where((t) => t.closingDate.isBiggerOrEqualValue(previousDay))
-            ..where((t) => t.closingDate.isSmallerThanValue(today))
-            ..limit(1))
-          .getSingleOrNull();
+      final localClosing =
+          await (_database.select(_database.cashClosings)
+                ..where((t) => t.businessId.equals(businessId))
+                ..where((t) => t.closingDate.isBiggerOrEqualValue(previousDay))
+                ..where((t) => t.closingDate.isSmallerThanValue(today))
+                ..limit(1))
+              .getSingleOrNull();
 
       if (localClosing != null &&
           (localClosing.status == 'MATCHED' ||
@@ -103,8 +101,10 @@ class CashClosingValidationService {
         final firestoreClosing = await _firestore
             .collection('cash_closings')
             .where('businessId', isEqualTo: businessId)
-            .where('closingDate',
-                isGreaterThanOrEqualTo: Timestamp.fromDate(previousDay))
+            .where(
+              'closingDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(previousDay),
+            )
             .where('closingDate', isLessThan: Timestamp.fromDate(today))
             .limit(1)
             .get();
@@ -142,12 +142,13 @@ class CashClosingValidationService {
       final checkDate = DateTime(today.year, today.month, today.day - i);
       final nextDay = checkDate.add(const Duration(days: 1));
 
-      final closing = await (_database.select(_database.cashClosings)
-            ..where((t) => t.businessId.equals(businessId))
-            ..where((t) => t.closingDate.isBiggerOrEqualValue(checkDate))
-            ..where((t) => t.closingDate.isSmallerThanValue(nextDay))
-            ..limit(1))
-          .getSingleOrNull();
+      final closing =
+          await (_database.select(_database.cashClosings)
+                ..where((t) => t.businessId.equals(businessId))
+                ..where((t) => t.closingDate.isBiggerOrEqualValue(checkDate))
+                ..where((t) => t.closingDate.isSmallerThanValue(nextDay))
+                ..limit(1))
+              .getSingleOrNull();
 
       if (closing == null ||
           (closing.status != 'MATCHED' &&

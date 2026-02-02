@@ -19,55 +19,63 @@ void main() {
   Widget createTestedWidget(BusinessType currentType, BusinessGuard guard) {
     return ProviderScope(
       overrides: [
-        businessTypeProvider
-            .overrideWith(() => MockBusinessTypeNotifier(currentType)),
+        businessTypeProvider.overrideWith(
+          () => MockBusinessTypeNotifier(currentType),
+        ),
       ],
-      child: MaterialApp(
-        home: Scaffold(body: guard),
-      ),
+      child: MaterialApp(home: Scaffold(body: guard)),
     );
   }
 
-  testWidgets('BusinessGuard shows child when type matches',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(createTestedWidget(
-      BusinessType.clinic,
-      BusinessGuard(
-        allowedTypes: const [BusinessType.clinic],
-        child: const Text('Authorized Content'),
+  testWidgets('BusinessGuard shows child when type matches', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      createTestedWidget(
+        BusinessType.clinic,
+        BusinessGuard(
+          allowedTypes: const [BusinessType.clinic],
+          child: const Text('Authorized Content'),
+        ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Authorized Content'), findsOneWidget);
     expect(find.byType(SizedBox), findsNothing);
   });
 
-  testWidgets('BusinessGuard hides child when type mismatch',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(createTestedWidget(
-      BusinessType.grocery,
-      BusinessGuard(
-        allowedTypes: const [BusinessType.clinic],
-        child: const Text('Authorized Content'),
+  testWidgets('BusinessGuard hides child when type mismatch', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      createTestedWidget(
+        BusinessType.grocery,
+        BusinessGuard(
+          allowedTypes: const [BusinessType.clinic],
+          child: const Text('Authorized Content'),
+        ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Authorized Content'), findsNothing);
     expect(find.byType(SizedBox), findsOneWidget);
   });
 
-  testWidgets('BusinessGuard shows denial message when provided',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(createTestedWidget(
-      BusinessType.grocery,
-      BusinessGuard(
-        allowedTypes: const [BusinessType.clinic],
-        denialMessage: 'Access Denied',
-        child: const Text('Authorized Content'),
+  testWidgets('BusinessGuard shows denial message when provided', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      createTestedWidget(
+        BusinessType.grocery,
+        BusinessGuard(
+          allowedTypes: const [BusinessType.clinic],
+          denialMessage: 'Access Denied',
+          child: const Text('Authorized Content'),
+        ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Authorized Content'), findsNothing);

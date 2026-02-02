@@ -110,84 +110,84 @@ class _CustomerAppEntryQrScreenState
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _deepLink == null
-                  ? const Center(child: Text("Error generating QR"))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 20),
+              ? const Center(child: Text("Error generating QR"))
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
 
-                        // QR Card
-                        Center(
-                          child: Container(
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                )
-                              ],
+                    // QR Card
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                QrImageView(
-                                  data: _deepLink!,
-                                  version: QrVersions.auto,
-                                  size: 250,
-                                  backgroundColor: Colors.white,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  settings.userName ?? "My Shop",
-                                  style: AppTypography.headlineSmall.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Text(
-                                  "Customer Access",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            QrImageView(
+                              data: _deepLink!,
+                              version: QrVersions.auto,
+                              size: 250,
+                              backgroundColor: Colors.white,
                             ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 40),
-
-                        // Action Buttons
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: EnterpriseButton(
-                            label: "Share QR Code",
-                            icon: Icons.share,
-                            onPressed: _shareQr,
-                            width: double.infinity,
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: Text(
-                            "Customers scanning this QR will get the Customer-Only version of the app linked to your shop.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: isDark ? Colors.white60 : Colors.black54,
-                              fontSize: 13,
+                            const SizedBox(height: 16),
+                            Text(
+                              settings.userName ?? "My Shop",
+                              style: AppTypography.headlineSmall.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
+                            const Text(
+                              "Customer Access",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
+
+                    const SizedBox(height: 40),
+
+                    // Action Buttons
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: EnterpriseButton(
+                        label: "Share QR Code",
+                        icon: Icons.share,
+                        onPressed: _shareQr,
+                        width: double.infinity,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Text(
+                        "Customers scanning this QR will get the Customer-Only version of the app linked to your shop.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: isDark ? Colors.white60 : Colors.black54,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

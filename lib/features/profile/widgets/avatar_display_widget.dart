@@ -55,10 +55,7 @@ class AvatarDisplayWidget extends StatelessWidget {
       image = Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.blue.withOpacity(0.3),
-            width: 2,
-          ),
+          border: Border.all(color: Colors.blue.withOpacity(0.3), width: 2),
         ),
         child: ClipOval(child: image),
       );
@@ -67,10 +64,7 @@ class AvatarDisplayWidget extends StatelessWidget {
     }
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: image,
-      );
+      return GestureDetector(onTap: onTap, child: image);
     }
 
     return image;

@@ -59,12 +59,14 @@ class TransactionManager {
       );
 
       // Log for monitoring (fire-and-forget)
-      unawaited(ErrorHandler.handle(
-        e,
-        stackTrace: stack,
-        userMessage: description,
-        showUI: false,
-      ));
+      unawaited(
+        ErrorHandler.handle(
+          e,
+          stackTrace: stack,
+          userMessage: description,
+          showUI: false,
+        ),
+      );
 
       return Result.failure(error);
     }
@@ -125,7 +127,9 @@ class TransactionManager {
 
   /// Internal stock update helper
   static Future<void> _updateStock(
-      AppDatabase db, InventoryUpdate update) async {
+    AppDatabase db,
+    InventoryUpdate update,
+  ) async {
     // Get current product
     final product = await db.getProductById(update.productId);
     if (product == null) {
@@ -136,15 +140,19 @@ class TransactionManager {
     final newQuantity = product.stockQuantity + update.quantityChange;
     if (newQuantity < 0) {
       throw Exception(
-          'Insufficient stock for ${product.name}. Available: ${product.stockQuantity}');
+        'Insufficient stock for ${product.name}. Available: ${product.stockQuantity}',
+      );
     }
 
     // Update using raw update
-    await (db.update(db.products)..where((p) => p.id.equals(update.productId)))
-        .write(ProductsCompanion(
-      stockQuantity: Value(newQuantity),
-      updatedAt: Value(DateTime.now()),
-    ));
+    await (db.update(
+      db.products,
+    )..where((p) => p.id.equals(update.productId))).write(
+      ProductsCompanion(
+        stockQuantity: Value(newQuantity),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 }
 

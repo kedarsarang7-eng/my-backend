@@ -45,10 +45,7 @@ class RecommendationService {
       }
 
       // 4. Fallback to category-based recommendations
-      return await _getCategoryBasedRecommendations(
-        currentItems,
-        allProducts,
-      );
+      return await _getCategoryBasedRecommendations(currentItems, allProducts);
     } catch (e) {
       debugPrint("Recommendation Error: $e");
       return [];
@@ -63,8 +60,10 @@ class RecommendationService {
     try {
       // Get sales history for the last 30 days
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-      final salesHistory =
-          await _calculateProductFrequency(userId, thirtyDaysAgo);
+      final salesHistory = await _calculateProductFrequency(
+        userId,
+        thirtyDaysAgo,
+      );
 
       // Sort products by sales frequency
       final scoredProducts = allProducts.map((product) {
@@ -86,9 +85,7 @@ class RecommendationService {
     String userId,
     DateTime since,
   ) async {
-    final result = await _billsRepo.getAll(
-      userId: userId,
-    );
+    final result = await _billsRepo.getAll(userId: userId);
 
     final bills = result.data ?? [];
     final frequency = <String, double>{};
@@ -115,9 +112,7 @@ class RecommendationService {
   ) async {
     try {
       // Get bills from last 90 days for pattern detection
-      final result = await _billsRepo.getAll(
-        userId: userId,
-      );
+      final result = await _billsRepo.getAll(userId: userId);
       final recentBills = result.data ?? [];
 
       // Filter bills from last 90 days
@@ -255,8 +250,10 @@ class RecommendationService {
       final previous7Days = now.subtract(const Duration(days: 14));
 
       final recentFreq = await _calculateProductFrequency(userId, last7Days);
-      final previousFreq =
-          await _calculateProductFrequency(userId, previous7Days);
+      final previousFreq = await _calculateProductFrequency(
+        userId,
+        previous7Days,
+      );
 
       // Calculate velocity (growth rate)
       final velocityScores = <String, double>{};

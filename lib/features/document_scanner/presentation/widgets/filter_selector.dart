@@ -94,11 +94,7 @@ class _FilterOption extends StatelessWidget {
               ),
               color: color.withOpacity(0.2),
             ),
-            child: Icon(
-              Icons.filter_b_and_w,
-              color: color,
-              size: 24,
-            ),
+            child: Icon(Icons.filter_b_and_w, color: color, size: 24),
           ),
           const SizedBox(height: 8),
           Text(

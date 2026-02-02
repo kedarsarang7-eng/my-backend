@@ -54,7 +54,8 @@ class SyncStatusManager {
     _lastError = _prefs.getString(_keyLastError);
 
     debugPrint(
-        'SyncStatusManager: Init - Pending: $_pendingCount, LastBackup: $_lastBackupTime');
+      'SyncStatusManager: Init - Pending: $_pendingCount, LastBackup: $_lastBackupTime',
+    );
     _isInit = true;
     _emitStatus();
 

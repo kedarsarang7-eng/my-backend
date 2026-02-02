@@ -160,8 +160,9 @@ class NicIrpConfig {
         ..init(true, PublicKeyParameter<RSAPublicKey>(publicKey));
 
       final passwordBytes = utf8.encode(password);
-      final encryptedBytes =
-          encrypter.process(Uint8List.fromList(passwordBytes));
+      final encryptedBytes = encrypter.process(
+        Uint8List.fromList(passwordBytes),
+      );
 
       return base64Encode(encryptedBytes);
     } catch (e) {
@@ -234,7 +235,8 @@ bool isValidGstinForNic(String gstin) {
   if (gstin.length != 15) return false;
 
   // Basic format check
-  final pattern =
-      RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$');
+  final pattern = RegExp(
+    r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
+  );
   return pattern.hasMatch(gstin);
 }

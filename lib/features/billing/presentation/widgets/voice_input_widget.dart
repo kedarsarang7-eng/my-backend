@@ -59,8 +59,9 @@ class _VoiceInputWidgetState extends ConsumerState<VoiceInputWidget> {
           widget.onItemsDetected(items);
           Navigator.pop(context); // Close the sheet
         } else {
-          setState(() =>
-              _recognizedText = 'No items found. Try saying "2 kg Sugar"');
+          setState(
+            () => _recognizedText = 'No items found. Try saying "2 kg Sugar"',
+          );
         }
       },
     );

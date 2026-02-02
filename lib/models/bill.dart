@@ -95,22 +95,34 @@ class BillItem {
     this.lotId,
     this.drugSchedule,
     double? totalOverride,
-  }) : total = totalOverride ??
-            _calculateTotal(qty, price, discount, cgst, sgst, igst, laborCharge,
-                partsCharge, commission, marketFee);
+  }) : total =
+           totalOverride ??
+           _calculateTotal(
+             qty,
+             price,
+             discount,
+             cgst,
+             sgst,
+             igst,
+             laborCharge,
+             partsCharge,
+             commission,
+             marketFee,
+           );
 
   static double _calculateTotal(
-      double qty,
-      double price,
-      double discount,
-      double cgst,
-      double sgst,
-      double igst,
-      double? laborCharge,
-      double? partsCharge,
-      // Mandi additions
-      [double? commission,
-      double? marketFee]) {
+    double qty,
+    double price,
+    double discount,
+    double cgst,
+    double sgst,
+    double igst,
+    double? laborCharge,
+    double? partsCharge, [
+    // Mandi additions
+    double? commission,
+    double? marketFee,
+  ]) {
     double base = (qty * price) - discount + cgst + sgst + igst;
     if (laborCharge != null) base += laborCharge;
     if (partsCharge != null) base += partsCharge;
@@ -135,64 +147,70 @@ class BillItem {
   double get taxRate => gstRate;
 
   Map<String, dynamic> toMap() => {
-        'productId': productId,
-        'productName': productName,
-        'qty': qty,
-        'price': price,
-        'total': total,
-        'isBold': isBold,
-        'unit': unit,
-        'hsn': hsn,
-        'gstRate': gstRate,
-        'discount': discount,
-        'cgst': cgst,
-        'sgst': sgst,
-        'igst': igst,
-        // Business-specific
-        if (batchId != null) 'batchId': batchId,
-        if (batchNo != null) 'batchNo': batchNo,
-        if (expiryDate != null) 'expiryDate': expiryDate!.toIso8601String(),
-        if (doctorName != null) 'doctorName': doctorName,
-        if (serialNo != null) 'serialNo': serialNo,
-        if (warrantyMonths != null) 'warrantyMonths': warrantyMonths,
-        if (size != null) 'size': size,
-        if (color != null) 'color': color,
-        if (tableNo != null) 'tableNo': tableNo,
-        if (isParcel != null) 'isParcel': isParcel,
-        if (isHalf != null) 'isHalf': isHalf,
-        if (laborCharge != null) 'laborCharge': laborCharge,
-        if (partsCharge != null) 'partsCharge': partsCharge,
-        if (notes != null) 'notes': notes,
-        if (weight != null) 'weight': weight,
-        if (dimensions != null) 'dimensions': dimensions,
-        // Petrol Pump
-        if (nozzleId != null) 'nozzleId': nozzleId,
-        if (dispenserId != null) 'dispenserId': dispenserId,
-        if (vehicleNumber != null) 'vehicleNumber': vehicleNumber,
-        // Vegetable Broker
-        if (grossWeight != null) 'grossWeight': grossWeight,
-        if (tareWeight != null) 'tareWeight': tareWeight,
-        if (netWeight != null) 'netWeight': netWeight,
-        if (commission != null) 'commission': commission,
-        if (marketFee != null) 'marketFee': marketFee,
-        if (lotId != null) 'lotId': lotId,
-        if (drugSchedule != null) 'drugSchedule': drugSchedule,
-        // Legacy fields for backward compatibility
-        'vegId': productId,
-        'vegName': productName,
-        'itemName': productName,
-        'qtyKg': qty,
-        'pricePerKg': price,
-      };
+    'productId': productId,
+    'productName': productName,
+    'qty': qty,
+    'price': price,
+    'total': total,
+    'isBold': isBold,
+    'unit': unit,
+    'hsn': hsn,
+    'gstRate': gstRate,
+    'discount': discount,
+    'cgst': cgst,
+    'sgst': sgst,
+    'igst': igst,
+    // Business-specific
+    if (batchId != null) 'batchId': batchId,
+    if (batchNo != null) 'batchNo': batchNo,
+    if (expiryDate != null) 'expiryDate': expiryDate!.toIso8601String(),
+    if (doctorName != null) 'doctorName': doctorName,
+    if (serialNo != null) 'serialNo': serialNo,
+    if (warrantyMonths != null) 'warrantyMonths': warrantyMonths,
+    if (size != null) 'size': size,
+    if (color != null) 'color': color,
+    if (tableNo != null) 'tableNo': tableNo,
+    if (isParcel != null) 'isParcel': isParcel,
+    if (isHalf != null) 'isHalf': isHalf,
+    if (laborCharge != null) 'laborCharge': laborCharge,
+    if (partsCharge != null) 'partsCharge': partsCharge,
+    if (notes != null) 'notes': notes,
+    if (weight != null) 'weight': weight,
+    if (dimensions != null) 'dimensions': dimensions,
+    // Petrol Pump
+    if (nozzleId != null) 'nozzleId': nozzleId,
+    if (dispenserId != null) 'dispenserId': dispenserId,
+    if (vehicleNumber != null) 'vehicleNumber': vehicleNumber,
+    // Vegetable Broker
+    if (grossWeight != null) 'grossWeight': grossWeight,
+    if (tareWeight != null) 'tareWeight': tareWeight,
+    if (netWeight != null) 'netWeight': netWeight,
+    if (commission != null) 'commission': commission,
+    if (marketFee != null) 'marketFee': marketFee,
+    if (lotId != null) 'lotId': lotId,
+    if (drugSchedule != null) 'drugSchedule': drugSchedule,
+    // Legacy fields for backward compatibility
+    'vegId': productId,
+    'vegName': productName,
+    'itemName': productName,
+    'qtyKg': qty,
+    'pricePerKg': price,
+  };
 
   factory BillItem.fromMap(Map<String, dynamic> m) {
     // Handle legacy data with strict fallback
-    final name = DataGuard.safeString(m['productName'],
-        fallback: DataGuard.safeString(m['itemName'],
-            fallback: DataGuard.safeString(m['vegName'])));
+    final name = DataGuard.safeString(
+      m['productName'],
+      fallback: DataGuard.safeString(
+        m['itemName'],
+        fallback: DataGuard.safeString(m['vegName']),
+      ),
+    );
 
-    final id = DataGuard.safeString(m['productId'],
-        fallback: DataGuard.safeString(m['vegId']));
+    final id = DataGuard.safeString(
+      m['productId'],
+      fallback: DataGuard.safeString(m['vegId']),
+    );
 
     final q = DataGuard.safeDouble(m['qty'] ?? m['qtyKg']);
     final p = DataGuard.safeDouble(m['price'] ?? m['pricePerKg']);
@@ -223,8 +241,9 @@ class BillItem {
       size: m['size']?.toString(),
       color: m['color']?.toString(),
       tableNo: m['tableNo']?.toString(),
-      isParcel:
-          m['isParcel'] != null ? DataGuard.safeBool(m['isParcel']) : null,
+      isParcel: m['isParcel'] != null
+          ? DataGuard.safeBool(m['isParcel'])
+          : null,
       isHalf: m['isHalf'] != null ? DataGuard.safeBool(m['isHalf']) : null,
       laborCharge: m['laborCharge'] != null
           ? DataGuard.safeDouble(m['laborCharge'])
@@ -246,13 +265,15 @@ class BillItem {
       tareWeight: m['tareWeight'] != null
           ? DataGuard.safeDouble(m['tareWeight'])
           : null,
-      netWeight:
-          m['netWeight'] != null ? DataGuard.safeDouble(m['netWeight']) : null,
+      netWeight: m['netWeight'] != null
+          ? DataGuard.safeDouble(m['netWeight'])
+          : null,
       commission: m['commission'] != null
           ? DataGuard.safeDouble(m['commission'])
           : null,
-      marketFee:
-          m['marketFee'] != null ? DataGuard.safeDouble(m['marketFee']) : null,
+      marketFee: m['marketFee'] != null
+          ? DataGuard.safeDouble(m['marketFee'])
+          : null,
       lotId: m['lotId']?.toString(),
       drugSchedule: m['drugSchedule']?.toString(),
     );
@@ -321,10 +342,12 @@ class BillItem {
       // Business-specific
       batchId: batchId is _Unset ? this.batchId : batchId as String?,
       batchNo: batchNo is _Unset ? this.batchNo : batchNo as String?,
-      expiryDate:
-          expiryDate is _Unset ? this.expiryDate : expiryDate as DateTime?,
-      doctorName:
-          doctorName is _Unset ? this.doctorName : doctorName as String?,
+      expiryDate: expiryDate is _Unset
+          ? this.expiryDate
+          : expiryDate as DateTime?,
+      doctorName: doctorName is _Unset
+          ? this.doctorName
+          : doctorName as String?,
       serialNo: serialNo is _Unset ? this.serialNo : serialNo as String?,
       warrantyMonths: warrantyMonths is _Unset
           ? this.warrantyMonths
@@ -334,33 +357,41 @@ class BillItem {
       tableNo: tableNo is _Unset ? this.tableNo : tableNo as String?,
       isParcel: isParcel is _Unset ? this.isParcel : isParcel as bool?,
       isHalf: isHalf is _Unset ? this.isHalf : isHalf as bool?,
-      laborCharge:
-          laborCharge is _Unset ? this.laborCharge : laborCharge as double?,
-      partsCharge:
-          partsCharge is _Unset ? this.partsCharge : partsCharge as double?,
+      laborCharge: laborCharge is _Unset
+          ? this.laborCharge
+          : laborCharge as double?,
+      partsCharge: partsCharge is _Unset
+          ? this.partsCharge
+          : partsCharge as double?,
       notes: notes is _Unset ? this.notes : notes as String?,
       weight: weight is _Unset ? this.weight : weight as String?,
-      dimensions:
-          dimensions is _Unset ? this.dimensions : dimensions as String?,
+      dimensions: dimensions is _Unset
+          ? this.dimensions
+          : dimensions as String?,
       // Petrol Pump
       nozzleId: nozzleId is _Unset ? this.nozzleId : nozzleId as String?,
-      dispenserId:
-          dispenserId is _Unset ? this.dispenserId : dispenserId as String?,
+      dispenserId: dispenserId is _Unset
+          ? this.dispenserId
+          : dispenserId as String?,
       vehicleNumber: vehicleNumber is _Unset
           ? this.vehicleNumber
           : vehicleNumber as String?,
       // Vegetable Broker
-      grossWeight:
-          grossWeight is _Unset ? this.grossWeight : grossWeight as double?,
-      tareWeight:
-          tareWeight is _Unset ? this.tareWeight : tareWeight as double?,
+      grossWeight: grossWeight is _Unset
+          ? this.grossWeight
+          : grossWeight as double?,
+      tareWeight: tareWeight is _Unset
+          ? this.tareWeight
+          : tareWeight as double?,
       netWeight: netWeight is _Unset ? this.netWeight : netWeight as double?,
-      commission:
-          commission is _Unset ? this.commission : commission as double?,
+      commission: commission is _Unset
+          ? this.commission
+          : commission as double?,
       marketFee: marketFee is _Unset ? this.marketFee : marketFee as double?,
       lotId: lotId is _Unset ? this.lotId : lotId as String?,
-      drugSchedule:
-          drugSchedule is _Unset ? this.drugSchedule : drugSchedule as String?,
+      drugSchedule: drugSchedule is _Unset
+          ? this.drugSchedule
+          : drugSchedule as String?,
       totalOverride: total is _Unset ? null : total as double?,
     );
   }
@@ -385,7 +416,7 @@ class Bill {
   double subtotal; // Before tax
   double totalTax; // New
   double
-      grandTotal; // New (replaces subtotal in some contexts, or subtotal is final)
+  grandTotal; // New (replaces subtotal in some contexts, or subtotal is final)
   double paidAmount;
   double cashPaid;
   double onlinePaid;
@@ -513,67 +544,68 @@ class Bill {
   bool get isSynced => true;
 
   factory Bill.empty() => Bill(
-        id: '',
-        customerId: '',
-        date: DateTime.now(),
-        items: const <BillItem>[],
-      );
+    id: '',
+    customerId: '',
+    date: DateTime.now(),
+    items: const <BillItem>[],
+  );
 
   Map<String, dynamic> toMap() => {
-        'invoiceNumber': invoiceNumber,
-        'customerId': customerId,
-        'customerName': customerName,
-        'customerPhone': customerPhone,
-        'customerAddress': customerAddress,
-        'customerGst': customerGst,
-        if (customerEmail != null) 'customerEmail': customerEmail,
-        'date': date.toIso8601String(),
-        'items': items.map((e) => e.toMap()).toList(),
-        'subtotal': subtotal,
-        'totalTax': totalTax,
-        'grandTotal': grandTotal,
-        'paidAmount': paidAmount,
-        'cashPaid': cashPaid,
-        'onlinePaid': onlinePaid,
-        'status': status,
-        'paymentType': paymentType,
-        'discountApplied': discountApplied,
-        'marketTicket': marketTicket,
-        'ownerId': ownerId,
-        'shopName': shopName,
-        'shopAddress': shopAddress,
-        'shopGst': shopGst,
-        'shopContact': shopContact,
-        'source': source,
-        'deliveryChallanId': deliveryChallanId,
-        'shiftId': shiftId,
-        'prescriptionId': prescriptionId,
-        'visitId': visitId,
-        'businessType': businessType,
-        'serviceCharge': serviceCharge,
-        'printCount': printCount,
-        if (businessId != null) 'businessId': businessId,
-        // Restaurant
-        if (tableNumber != null) 'tableNumber': tableNumber,
-        if (waiterId != null) 'waiterId': waiterId,
-        if (kotId != null) 'kotId': kotId,
-        // Petrol Pump
-        if (vehicleNumber != null) 'vehicleNumber': vehicleNumber,
-        if (driverName != null) 'driverName': driverName,
-        if (fuelType != null) 'fuelType': fuelType,
-        if (pumpReadingStart != null) 'pumpReadingStart': pumpReadingStart,
-        if (pumpReadingEnd != null) 'pumpReadingEnd': pumpReadingEnd,
-        // Mandi
-        if (brokerId != null) 'brokerId': brokerId,
-        if (marketCess > 0) 'marketCess': marketCess,
-        if (commissionAmount > 0) 'commissionAmount': commissionAmount,
-      };
+    'invoiceNumber': invoiceNumber,
+    'customerId': customerId,
+    'customerName': customerName,
+    'customerPhone': customerPhone,
+    'customerAddress': customerAddress,
+    'customerGst': customerGst,
+    if (customerEmail != null) 'customerEmail': customerEmail,
+    'date': date.toIso8601String(),
+    'items': items.map((e) => e.toMap()).toList(),
+    'subtotal': subtotal,
+    'totalTax': totalTax,
+    'grandTotal': grandTotal,
+    'paidAmount': paidAmount,
+    'cashPaid': cashPaid,
+    'onlinePaid': onlinePaid,
+    'status': status,
+    'paymentType': paymentType,
+    'discountApplied': discountApplied,
+    'marketTicket': marketTicket,
+    'ownerId': ownerId,
+    'shopName': shopName,
+    'shopAddress': shopAddress,
+    'shopGst': shopGst,
+    'shopContact': shopContact,
+    'source': source,
+    'deliveryChallanId': deliveryChallanId,
+    'shiftId': shiftId,
+    'prescriptionId': prescriptionId,
+    'visitId': visitId,
+    'businessType': businessType,
+    'serviceCharge': serviceCharge,
+    'printCount': printCount,
+    if (businessId != null) 'businessId': businessId,
+    // Restaurant
+    if (tableNumber != null) 'tableNumber': tableNumber,
+    if (waiterId != null) 'waiterId': waiterId,
+    if (kotId != null) 'kotId': kotId,
+    // Petrol Pump
+    if (vehicleNumber != null) 'vehicleNumber': vehicleNumber,
+    if (driverName != null) 'driverName': driverName,
+    if (fuelType != null) 'fuelType': fuelType,
+    if (pumpReadingStart != null) 'pumpReadingStart': pumpReadingStart,
+    if (pumpReadingEnd != null) 'pumpReadingEnd': pumpReadingEnd,
+    // Mandi
+    if (brokerId != null) 'brokerId': brokerId,
+    if (marketCess > 0) 'marketCess': marketCess,
+    if (commissionAmount > 0) 'commissionAmount': commissionAmount,
+  };
 
   factory Bill.fromMap(String id, Map<String, dynamic> m) {
     final itemsRaw = DataGuard.safeList(m['items']);
     final items = itemsRaw.map((item) {
-      final itemMap =
-          item is Map ? Map<String, dynamic>.from(item) : <String, dynamic>{};
+      final itemMap = item is Map
+          ? Map<String, dynamic>.from(item)
+          : <String, dynamic>{};
       return BillItem.fromMap(itemMap);
     }).toList();
 
@@ -617,8 +649,10 @@ class Bill {
       shiftId: m['shiftId']?.toString(),
       prescriptionId: m['prescriptionId']?.toString(),
       visitId: m['visitId']?.toString(),
-      businessType:
-          DataGuard.safeString(m['businessType'], fallback: 'grocery'),
+      businessType: DataGuard.safeString(
+        m['businessType'],
+        fallback: 'grocery',
+      ),
       serviceCharge: DataGuard.safeDouble(m['serviceCharge']),
       printCount: DataGuard.safeInt(m['printCount']),
       businessId: m['businessId']?.toString(),
@@ -725,19 +759,22 @@ class Bill {
       businessType: businessType ?? this.businessType,
       serviceCharge: serviceCharge ?? this.serviceCharge,
       printCount: printCount ?? this.printCount,
-      businessId:
-          businessId is _Unset ? this.businessId : businessId as String?,
+      businessId: businessId is _Unset
+          ? this.businessId
+          : businessId as String?,
       // Restaurant
-      tableNumber:
-          tableNumber is _Unset ? this.tableNumber : tableNumber as String?,
+      tableNumber: tableNumber is _Unset
+          ? this.tableNumber
+          : tableNumber as String?,
       waiterId: waiterId is _Unset ? this.waiterId : waiterId as String?,
       kotId: kotId is _Unset ? this.kotId : kotId as String?,
       // Petrol Pump
       vehicleNumber: vehicleNumber is _Unset
           ? this.vehicleNumber
           : vehicleNumber as String?,
-      driverName:
-          driverName is _Unset ? this.driverName : driverName as String?,
+      driverName: driverName is _Unset
+          ? this.driverName
+          : driverName as String?,
       fuelType: fuelType is _Unset ? this.fuelType : fuelType as String?,
       pumpReadingStart: pumpReadingStart is _Unset
           ? this.pumpReadingStart
@@ -763,15 +800,19 @@ class Bill {
         value.isFinite ? (value < 0 ? 0 : value) : 0;
 
     final safeItems = items
-        .where((item) =>
-            item.productName.trim().isNotEmpty &&
-            item.qty > 0 &&
-            item.price >= 0)
-        .map((item) => item.copyWith(
-              productName: item.productName.trim(),
-              qty: roundTo(item.qty, 3),
-              price: roundTo(item.price, 2),
-            ))
+        .where(
+          (item) =>
+              item.productName.trim().isNotEmpty &&
+              item.qty > 0 &&
+              item.price >= 0,
+        )
+        .map(
+          (item) => item.copyWith(
+            productName: item.productName.trim(),
+            qty: roundTo(item.qty, 3),
+            price: roundTo(item.price, 2),
+          ),
+        )
         .toList();
 
     // Recalculate totals based on items
@@ -783,12 +824,16 @@ class Bill {
     // Given the complexity of tax/discount, let's trust the passed values but clamp them.
 
     final safeGrandTotal = roundTo(ensureNonNegative(grandTotal), 2);
-    final safePaid =
-        roundTo(ensureNonNegative(paidAmount).clamp(0, safeGrandTotal), 2);
+    final safePaid = roundTo(
+      ensureNonNegative(paidAmount).clamp(0, safeGrandTotal),
+      2,
+    );
     final safeCash = roundTo(ensureNonNegative(cashPaid).clamp(0, safePaid), 2);
     final remainingForOnline = (safePaid - safeCash).clamp(0, safePaid);
-    final safeOnline =
-        roundTo(ensureNonNegative(onlinePaid).clamp(0, remainingForOnline), 2);
+    final safeOnline = roundTo(
+      ensureNonNegative(onlinePaid).clamp(0, remainingForOnline),
+      2,
+    );
 
     return copyWith(
       invoiceNumber: invoiceNumber.trim(),
@@ -812,7 +857,10 @@ class Bill {
   }
 
   static String _derivePaymentType(
-      double cash, double online, String fallback) {
+    double cash,
+    double online,
+    String fallback,
+  ) {
     if (cash > 0 && online > 0) return 'Mixed';
     if (cash > 0) return 'Cash';
     if (online > 0) return 'Online';
@@ -824,8 +872,10 @@ class Bill {
     if (raw is DateTime) return raw;
     if (raw is int) {
       final isSeconds = raw.toString().length <= 10;
-      return DateTime.fromMillisecondsSinceEpoch(isSeconds ? raw * 1000 : raw,
-          isUtc: false);
+      return DateTime.fromMillisecondsSinceEpoch(
+        isSeconds ? raw * 1000 : raw,
+        isUtc: false,
+      );
     }
     if (raw is double) {
       return DateTime.fromMillisecondsSinceEpoch(raw.toInt(), isUtc: false);

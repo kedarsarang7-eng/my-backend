@@ -185,8 +185,10 @@ class _AlertsNotificationsScreenState
           // Refresh
           IconButton(
             onPressed: _loadData,
-            icon: Icon(Icons.refresh,
-                color: isDark ? Colors.white70 : Colors.grey[600]),
+            icon: Icon(
+              Icons.refresh,
+              color: isDark ? Colors.white70 : Colors.grey[600],
+            ),
           ),
         ],
       ),
@@ -212,7 +214,9 @@ class _AlertsNotificationsScreenState
                 if (_alerts.isNotEmpty) ...[
                   const SizedBox(width: 8),
                   _buildBadge(
-                      _alerts.length.toString(), const Color(0xFF06B6D4)),
+                    _alerts.length.toString(),
+                    const Color(0xFF06B6D4),
+                  ),
                 ],
               ],
             ),
@@ -229,11 +233,12 @@ class _AlertsNotificationsScreenState
                     .isNotEmpty) ...[
                   const SizedBox(width: 8),
                   _buildBadge(
-                      _alerts
-                          .where((a) => a.type == AlertType.lowStock)
-                          .length
-                          .toString(),
-                      const Color(0xFFF59E0B)),
+                    _alerts
+                        .where((a) => a.type == AlertType.lowStock)
+                        .length
+                        .toString(),
+                    const Color(0xFFF59E0B),
+                  ),
                 ],
               ],
             ),
@@ -250,11 +255,12 @@ class _AlertsNotificationsScreenState
                     .isNotEmpty) ...[
                   const SizedBox(width: 8),
                   _buildBadge(
-                      _alerts
-                          .where((a) => a.type == AlertType.expiry)
-                          .length
-                          .toString(),
-                      const Color(0xFFEF4444)),
+                    _alerts
+                        .where((a) => a.type == AlertType.expiry)
+                        .length
+                        .toString(),
+                    const Color(0xFFEF4444),
+                  ),
                 ],
               ],
             ),
@@ -269,8 +275,9 @@ class _AlertsNotificationsScreenState
                 if (_notifications.where((n) => !n.isRead).isNotEmpty) ...[
                   const SizedBox(width: 8),
                   _buildBadge(
-                      _notifications.where((n) => !n.isRead).length.toString(),
-                      const Color(0xFF10B981)),
+                    _notifications.where((n) => !n.isRead).length.toString(),
+                    const Color(0xFF10B981),
+                  ),
                 ],
               ],
             ),
@@ -301,7 +308,10 @@ class _AlertsNotificationsScreenState
   Widget _buildAllTab(bool isDark) {
     if (_alerts.isEmpty) {
       return _buildEmptyState(
-          isDark, 'No alerts', 'Your business is running smoothly!');
+        isDark,
+        'No alerts',
+        'Your business is running smoothly!',
+      );
     }
 
     return ListView.builder(
@@ -312,12 +322,16 @@ class _AlertsNotificationsScreenState
   }
 
   Widget _buildLowStockTab(bool isDark) {
-    final lowStockAlerts =
-        _alerts.where((a) => a.type == AlertType.lowStock).toList();
+    final lowStockAlerts = _alerts
+        .where((a) => a.type == AlertType.lowStock)
+        .toList();
 
     if (lowStockAlerts.isEmpty) {
       return _buildEmptyState(
-          isDark, 'No low stock alerts', 'All products have sufficient stock');
+        isDark,
+        'No low stock alerts',
+        'All products have sufficient stock',
+      );
     }
 
     return ListView.builder(
@@ -329,12 +343,16 @@ class _AlertsNotificationsScreenState
   }
 
   Widget _buildExpiryTab(bool isDark) {
-    final expiryAlerts =
-        _alerts.where((a) => a.type == AlertType.expiry).toList();
+    final expiryAlerts = _alerts
+        .where((a) => a.type == AlertType.expiry)
+        .toList();
 
     if (expiryAlerts.isEmpty) {
       return _buildEmptyState(
-          isDark, 'No expiry alerts', 'All products are within expiry date');
+        isDark,
+        'No expiry alerts',
+        'All products are within expiry date',
+      );
     }
 
     return ListView.builder(
@@ -348,7 +366,10 @@ class _AlertsNotificationsScreenState
   Widget _buildNotificationsTab(bool isDark) {
     if (_notifications.isEmpty) {
       return _buildEmptyState(
-          isDark, 'No notifications', 'You\'re all caught up!');
+        isDark,
+        'No notifications',
+        'You\'re all caught up!',
+      );
     }
 
     return ListView.builder(
@@ -383,10 +404,7 @@ class _AlertsNotificationsScreenState
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: alertColor.withOpacity(0.3),
-          width: 1,
-        ),
+        border: Border.all(color: alertColor.withOpacity(0.3), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -415,11 +433,7 @@ class _AlertsNotificationsScreenState
                     color: alertColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    alertIcon,
-                    color: alertColor,
-                    size: 24,
-                  ),
+                  child: Icon(alertIcon, color: alertColor, size: 24),
                 ),
                 const SizedBox(width: 16),
                 // Content
@@ -467,8 +481,8 @@ class _AlertsNotificationsScreenState
       decoration: BoxDecoration(
         color: isDark
             ? (notification.isRead
-                ? const Color(0xFF1E293B)
-                : const Color(0xFF1E293B).withOpacity(0.8))
+                  ? const Color(0xFF1E293B)
+                  : const Color(0xFF1E293B).withOpacity(0.8))
             : (notification.isRead ? Colors.white : Colors.blue.shade50),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(

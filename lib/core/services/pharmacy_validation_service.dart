@@ -35,8 +35,11 @@ class PharmacyValidationService {
   /// Rules:
   /// - ALL business types: Block sale of expired items (if expiryDate is set)
   /// - Pharmacy/Wholesale: Require batch number and expiry date
-  void validateBillItems(List<BillItem> items, BusinessType businessType,
-      {String? prescriptionId}) {
+  void validateBillItems(
+    List<BillItem> items,
+    BusinessType businessType, {
+    String? prescriptionId,
+  }) {
     for (final item in items) {
       validateBillItem(item, businessType, prescriptionId: prescriptionId);
     }
@@ -45,8 +48,11 @@ class PharmacyValidationService {
   /// Validates a single bill item for pharmacy compliance
   ///
   /// Throws [PharmacyComplianceException] if validation fails.
-  void validateBillItem(BillItem item, BusinessType businessType,
-      {String? prescriptionId}) {
+  void validateBillItem(
+    BillItem item,
+    BusinessType businessType, {
+    String? prescriptionId,
+  }) {
     final now = DateTime.now();
 
     // Rule 0: Scheduled Drugs require Prescription (ALL Business Types)
@@ -151,53 +157,63 @@ class PharmacyValidationService {
       // Check Schedule H/H1/X compliance
       if (_isScheduledDrug(item.drugSchedule)) {
         if (prescriptionId == null || prescriptionId.isEmpty) {
-          issues.add(PharmacyComplianceIssue(
-            productName: item.productName,
-            issueType: IssueType.missingPrescription,
-            severity: IssueSeverity.blocking,
-            message:
-                'Schedule ${item.drugSchedule} drug requires a prescription',
-          ));
+          issues.add(
+            PharmacyComplianceIssue(
+              productName: item.productName,
+              issueType: IssueType.missingPrescription,
+              severity: IssueSeverity.blocking,
+              message:
+                  'Schedule ${item.drugSchedule} drug requires a prescription',
+            ),
+          );
         }
       }
 
       // Check expired
       if (item.expiryDate != null && item.expiryDate!.isBefore(now)) {
-        issues.add(PharmacyComplianceIssue(
-          productName: item.productName,
-          issueType: IssueType.expired,
-          severity: IssueSeverity.blocking,
-          message: 'Product has expired on ${_formatDate(item.expiryDate!)}',
-        ));
+        issues.add(
+          PharmacyComplianceIssue(
+            productName: item.productName,
+            issueType: IssueType.expired,
+            severity: IssueSeverity.blocking,
+            message: 'Product has expired on ${_formatDate(item.expiryDate!)}',
+          ),
+        );
       }
       // Check near expiry
       else if (item.expiryDate != null &&
           item.expiryDate!.isBefore(warningDate)) {
-        issues.add(PharmacyComplianceIssue(
-          productName: item.productName,
-          issueType: IssueType.nearExpiry,
-          severity: IssueSeverity.warning,
-          message: 'Product expires on ${_formatDate(item.expiryDate!)}',
-        ));
+        issues.add(
+          PharmacyComplianceIssue(
+            productName: item.productName,
+            issueType: IssueType.nearExpiry,
+            severity: IssueSeverity.warning,
+            message: 'Product expires on ${_formatDate(item.expiryDate!)}',
+          ),
+        );
       }
 
       // Check mandatory fields for pharmacy
       if (_requiresPharmacyValidation(businessType)) {
         if (item.batchNo == null || item.batchNo!.trim().isEmpty) {
-          issues.add(PharmacyComplianceIssue(
-            productName: item.productName,
-            issueType: IssueType.missingBatch,
-            severity: IssueSeverity.blocking,
-            message: 'Batch number is required',
-          ));
+          issues.add(
+            PharmacyComplianceIssue(
+              productName: item.productName,
+              issueType: IssueType.missingBatch,
+              severity: IssueSeverity.blocking,
+              message: 'Batch number is required',
+            ),
+          );
         }
         if (item.expiryDate == null) {
-          issues.add(PharmacyComplianceIssue(
-            productName: item.productName,
-            issueType: IssueType.missingExpiry,
-            severity: IssueSeverity.blocking,
-            message: 'Expiry date is required',
-          ));
+          issues.add(
+            PharmacyComplianceIssue(
+              productName: item.productName,
+              issueType: IssueType.missingExpiry,
+              severity: IssueSeverity.blocking,
+              message: 'Expiry date is required',
+            ),
+          );
         }
       }
     }

@@ -130,7 +130,8 @@ class DeviceSecurityService {
       // Check if package name is correct
       if (packageInfo.packageName != 'com.jayhandeveg.billing') {
         debugPrint(
-            'DeviceSecurity: Package name mismatch: ${packageInfo.packageName}');
+          'DeviceSecurity: Package name mismatch: ${packageInfo.packageName}',
+        );
         return false;
       }
 

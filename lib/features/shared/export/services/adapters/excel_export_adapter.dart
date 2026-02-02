@@ -42,13 +42,13 @@ class ExcelExportAdapter implements ExportAdapter {
       TextCellValue('Invoice No'),
       TextCellValue(data.document.number),
       TextCellValue('Date'),
-      TextCellValue(data.document.date.toString().split(' ')[0])
+      TextCellValue(data.document.date.toString().split(' ')[0]),
     ]);
     sheet.appendRow([
       TextCellValue('Customer'),
       TextCellValue(data.party.name),
       TextCellValue('Phone'),
-      TextCellValue(data.party.phone ?? '')
+      TextCellValue(data.party.phone ?? ''),
     ]);
     sheet.appendRow([TextCellValue('')]);
 
@@ -87,7 +87,7 @@ class ExcelExportAdapter implements ExportAdapter {
       TextCellValue(''),
       TextCellValue(''),
       TextCellValue('Subtotal'),
-      DoubleCellValue(data.totals.subtotal)
+      DoubleCellValue(data.totals.subtotal),
     ]);
     sheet.appendRow([
       TextCellValue(''),
@@ -95,7 +95,7 @@ class ExcelExportAdapter implements ExportAdapter {
       TextCellValue(''),
       TextCellValue(''),
       TextCellValue('Tax'),
-      DoubleCellValue(data.totals.totalTax)
+      DoubleCellValue(data.totals.totalTax),
     ]);
     sheet.appendRow([
       TextCellValue(''),
@@ -103,7 +103,7 @@ class ExcelExportAdapter implements ExportAdapter {
       TextCellValue(''),
       TextCellValue(''),
       TextCellValue('Grand Total'),
-      DoubleCellValue(data.totals.grandTotal)
+      DoubleCellValue(data.totals.grandTotal),
     ]);
 
     return excel.save() ?? [];

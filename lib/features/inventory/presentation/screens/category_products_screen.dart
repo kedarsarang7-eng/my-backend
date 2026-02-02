@@ -8,10 +8,7 @@ import '../../../../widgets/modern_ui_components.dart';
 class CategoryProductsScreen extends StatefulWidget {
   final String category;
 
-  const CategoryProductsScreen({
-    super.key,
-    required this.category,
-  });
+  const CategoryProductsScreen({super.key, required this.category});
 
   @override
   State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
@@ -30,8 +27,9 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           : FuturisticColors.background,
       appBar: AppBar(
         title: Text('${widget.category} Products'),
-        backgroundColor:
-            isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+        backgroundColor: isDark
+            ? FuturisticColors.darkSurface
+            : FuturisticColors.surface,
         elevation: 0,
       ),
       body: StreamBuilder<List<Product>>(
@@ -47,9 +45,11 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 
           final allProducts = snapshot.data ?? [];
           final products = allProducts
-              .where((p) =>
-                  (p.category ?? '').toLowerCase() ==
-                  widget.category.toLowerCase())
+              .where(
+                (p) =>
+                    (p.category ?? '').toLowerCase() ==
+                    widget.category.toLowerCase(),
+              )
               .toList();
 
           if (products.isEmpty) {
@@ -57,11 +57,16 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inventory_2_outlined,
-                      size: 64, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.inventory_2_outlined,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
                   const SizedBox(height: 16),
-                  Text('No products found in ${widget.category}',
-                      style: TextStyle(color: Colors.grey.shade600)),
+                  Text(
+                    'No products found in ${widget.category}',
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
                 ],
               ),
             );
@@ -82,8 +87,9 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 
   Widget _buildProductCard(Product p, bool isDark) {
     return ModernCard(
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
@@ -94,13 +100,15 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                 Text(
                   p.name,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 Text(
                   '₹${p.sellingPrice} | Stock: ${p.stockQuantity} ${p.unit}',
                   style: TextStyle(
-                      color:
-                          isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                  ),
                 ),
               ],
             ),

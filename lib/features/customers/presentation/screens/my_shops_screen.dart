@@ -65,14 +65,16 @@ class _MyShopsScreenState extends ConsumerState<MyShopsScreen> {
                   Text(
                     "No shops linked yet",
                     style: GoogleFonts.outfit(
-                        fontSize: 18, color: Colors.grey.shade500),
+                      fontSize: 18,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () =>
                         Navigator.pushNamed(context, '/customer_link_shop'),
                     child: const Text("Find a Shop"),
-                  )
+                  ),
                 ],
               ),
             );
@@ -107,8 +109,9 @@ class _MyShopsScreenState extends ConsumerState<MyShopsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text("Shop context switched!"),
-              duration: Duration(milliseconds: 1500)),
+            content: Text("Shop context switched!"),
+            duration: Duration(milliseconds: 1500),
+          ),
         );
         // Optionally pop back to home to refresh everything cleanly
         Navigator.popUntil(context, (route) => route.isFirst);
@@ -117,8 +120,9 @@ class _MyShopsScreenState extends ConsumerState<MyShopsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text("Error switching shop: $e"),
-              backgroundColor: Colors.red),
+            content: Text("Error switching shop: $e"),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -172,16 +176,20 @@ class _ShopListItem extends StatelessWidget {
             ],
           ),
           child: ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
             onTap: onTap,
             leading: CircleAvatar(
               radius: 24,
               backgroundColor: isSelected ? Colors.blue : Colors.grey.shade200,
               backgroundImage: logoUrl != null ? NetworkImage(logoUrl) : null,
               child: logoUrl == null
-                  ? Icon(Icons.store,
-                      color: isSelected ? Colors.white : Colors.grey)
+                  ? Icon(
+                      Icons.store,
+                      color: isSelected ? Colors.white : Colors.grey,
+                    )
                   : null,
             ),
             title: Text(
@@ -201,8 +209,11 @@ class _ShopListItem extends StatelessWidget {
             ),
             trailing: isSelected
                 ? const Icon(Icons.check_circle, color: Colors.blue)
-                : const Icon(Icons.arrow_forward_ios,
-                    size: 16, color: Colors.grey),
+                : const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.grey,
+                  ),
           ),
         );
       },

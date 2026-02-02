@@ -5,10 +5,7 @@ import '../core/repository/customers_repository.dart';
 class CustomerProfileManagementScreen extends StatefulWidget {
   final String ownerId;
 
-  const CustomerProfileManagementScreen({
-    super.key,
-    required this.ownerId,
-  });
+  const CustomerProfileManagementScreen({super.key, required this.ownerId});
 
   @override
   State<CustomerProfileManagementScreen> createState() =>
@@ -34,7 +31,8 @@ class _CustomerProfileManagementScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                'Are you sure you want to delete ${customer.name}\'s profile?'),
+              'Are you sure you want to delete ${customer.name}\'s profile?',
+            ),
             const SizedBox(height: 16),
             const Text(
               '⚠️ WARNING: This action is permanent and cannot be undone.',
@@ -54,10 +52,7 @@ class _CustomerProfileManagementScreenState
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -66,8 +61,10 @@ class _CustomerProfileManagementScreenState
     if (confirmed != true) return;
 
     try {
-      await sl<CustomersRepository>()
-          .deleteCustomer(customer.id, userId: widget.ownerId);
+      await sl<CustomersRepository>().deleteCustomer(
+        customer.id,
+        userId: widget.ownerId,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -79,9 +76,9 @@ class _CustomerProfileManagementScreenState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error deleting profile: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error deleting profile: $e')));
       }
     }
   }
@@ -94,97 +91,98 @@ class _CustomerProfileManagementScreenState
         elevation: 0,
       ),
       body: StreamBuilder<List<Customer>>(
-          stream: sl<CustomersRepository>().watchAll(userId: widget.ownerId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        stream: sl<CustomersRepository>().watchAll(userId: widget.ownerId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            final customers = snapshot.data ?? [];
+          final customers = snapshot.data ?? [];
 
-            if (customers.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.people_outline,
-                      size: 80,
-                      color: Colors.grey.shade400,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('No customers created yet'),
-                  ],
-                ),
-              );
-            }
+          if (customers.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.people_outline,
+                    size: 80,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('No customers created yet'),
+                ],
+              ),
+            );
+          }
 
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: customers.length,
-              itemBuilder: (context, index) {
-                final customer = customers[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.blue.shade700,
-                      child: Text(
-                        customer.name.isNotEmpty
-                            ? customer.name[0].toUpperCase()
-                            : '?',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    title: Text(customer.name),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 4),
-                        Text(
-                          'Phone: ${customer.phone ?? 'N/A'}',
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        Text(
-                          'Dues: ₹${customer.totalDues.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                    trailing: PopupMenuButton(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          child: const Text('View Details'),
-                          onTap: () {
-                            _showCustomerDetails(customer);
-                          },
-                        ),
-                        PopupMenuItem(
-                          child: const Text('Edit Profile'),
-                          onTap: () {
-                            Future.microtask(() => _showEditDialog(customer));
-                          },
-                        ),
-                        PopupMenuItem(
-                          child: const Text(
-                            'Delete Profile',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          onTap: () {
-                            _deleteCustomerProfile(customer);
-                          },
-                        ),
-                      ],
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: customers.length,
+            itemBuilder: (context, index) {
+              final customer = customers[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.blue.shade700,
+                    child: Text(
+                      customer.name.isNotEmpty
+                          ? customer.name[0].toUpperCase()
+                          : '?',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
-                );
-              },
-            );
-          }),
+                  title: Text(customer.name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 4),
+                      Text(
+                        'Phone: ${customer.phone ?? 'N/A'}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        'Dues: ₹${customer.totalDues.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: const Text('View Details'),
+                        onTap: () {
+                          _showCustomerDetails(customer);
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: const Text('Edit Profile'),
+                        onTap: () {
+                          Future.microtask(() => _showEditDialog(customer));
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: const Text(
+                          'Delete Profile',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onTap: () {
+                          _deleteCustomerProfile(customer);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -202,7 +200,9 @@ class _CustomerProfileManagementScreenState
               _buildDetailRow('Phone:', customer.phone ?? 'N/A'),
               _buildDetailRow('Address:', customer.address ?? 'N/A'),
               _buildDetailRow(
-                  'Total Dues:', '₹${customer.totalDues.toStringAsFixed(2)}'),
+                'Total Dues:',
+                '₹${customer.totalDues.toStringAsFixed(2)}',
+              ),
               // _buildDetailRow(
               //    'Cash Dues:', '₹${customer.cashDues.toStringAsFixed(2)}'), // Removed: Not in new model
               // _buildDetailRow(
@@ -300,14 +300,9 @@ class _CustomerProfileManagementScreenState
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(value),
-          ),
+          Expanded(child: Text(value)),
         ],
       ),
     );

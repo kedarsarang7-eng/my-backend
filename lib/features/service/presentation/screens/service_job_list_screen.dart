@@ -164,12 +164,7 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
     );
   }
 
-  Widget _buildStatusCard(
-    String label,
-    int count,
-    Color color,
-    IconData icon,
-  ) {
+  Widget _buildStatusCard(String label, int count, Color color, IconData icon) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: InkWell(
@@ -207,10 +202,7 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
     );
   }
 
-  Widget _buildJobList({
-    bool activeOnly = false,
-    bool completedOnly = false,
-  }) {
+  Widget _buildJobList({bool activeOnly = false, bool completedOnly = false}) {
     if (_userId == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -237,10 +229,7 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
                 const SizedBox(height: 16),
                 Text(
                   'No service jobs yet',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -257,9 +246,11 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
         // Filter by completed status
         if (completedOnly) {
           jobs = jobs
-              .where((j) =>
-                  j.status == ServiceJobStatus.delivered ||
-                  j.status == ServiceJobStatus.cancelled)
+              .where(
+                (j) =>
+                    j.status == ServiceJobStatus.delivered ||
+                    j.status == ServiceJobStatus.cancelled,
+              )
               .toList();
         }
 
@@ -293,7 +284,8 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
   Widget _buildJobCard(ServiceJob job) {
     final theme = Theme.of(context);
     final statusColor = _getStatusColor(job.status);
-    final isOverdue = job.expectedDelivery != null &&
+    final isOverdue =
+        job.expectedDelivery != null &&
         job.expectedDelivery!.isBefore(DateTime.now()) &&
         job.isActive;
 
@@ -350,8 +342,11 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
                   ),
                   if (job.priority == ServicePriority.urgent) ...[
                     const SizedBox(width: 8),
-                    const Icon(Icons.priority_high,
-                        color: Colors.red, size: 20),
+                    const Icon(
+                      Icons.priority_high,
+                      color: Colors.red,
+                      size: 20,
+                    ),
                   ],
                 ],
               ),
@@ -361,8 +356,11 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
               // Customer info
               Row(
                 children: [
-                  const Icon(Icons.person_outline,
-                      size: 18, color: Colors.grey),
+                  const Icon(
+                    Icons.person_outline,
+                    size: 18,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -403,10 +401,7 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
                 job.problemDescription,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: Colors.grey[700], fontSize: 13),
               ),
 
               const SizedBox(height: 12),
@@ -419,10 +414,7 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
                   const SizedBox(width: 4),
                   Text(
                     _dateFormat.format(job.receivedAt),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[500],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                   ),
 
                   const SizedBox(width: 16),
@@ -468,8 +460,9 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
                       decoration: BoxDecoration(
                         color: Colors.green.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(4),
-                        border:
-                            Border.all(color: Colors.green.withOpacity(0.3)),
+                        border: Border.all(
+                          color: Colors.green.withOpacity(0.3),
+                        ),
                       ),
                       child: const Text(
                         'WARRANTY',
@@ -541,10 +534,7 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
           children: [
             const Text(
               'Filter by Status',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -559,14 +549,16 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
                     Navigator.pop(context);
                   },
                 ),
-                ...ServiceJobStatus.values.map((status) => FilterChip(
-                      label: Text(status.displayName),
-                      selected: _filterStatus == status,
-                      onSelected: (_) {
-                        setState(() => _filterStatus = status);
-                        Navigator.pop(context);
-                      },
-                    )),
+                ...ServiceJobStatus.values.map(
+                  (status) => FilterChip(
+                    label: Text(status.displayName),
+                    selected: _filterStatus == status,
+                    onSelected: (_) {
+                      setState(() => _filterStatus = status);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
               ],
             ),
           ],
@@ -578,18 +570,14 @@ class _ServiceJobListScreenState extends State<ServiceJobListScreen>
   void _navigateToCreate(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const CreateServiceJobScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const CreateServiceJobScreen()),
     );
   }
 
   void _navigateToDetail(BuildContext context, ServiceJob job) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ServiceJobDetailScreen(job: job),
-      ),
+      MaterialPageRoute(builder: (context) => ServiceJobDetailScreen(job: job)),
     );
   }
 }

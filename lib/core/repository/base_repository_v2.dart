@@ -181,7 +181,8 @@ abstract class BaseRepositoryV2<T, ID> {
 
     await syncManager.enqueue(item);
     debugPrint(
-        '[$runtimeType] Queued for sync: ${operationType.value} $documentId');
+      '[$runtimeType] Queued for sync: ${operationType.value} $documentId',
+    );
   }
 
   // ============================================

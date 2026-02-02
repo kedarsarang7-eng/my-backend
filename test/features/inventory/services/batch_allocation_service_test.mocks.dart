@@ -37,58 +37,46 @@ class MockProductBatchRepository extends _i1.Mock
 
   @override
   _i3.Future<List<_i4.ProductBatchEntity>> getBatchesForFefo(
-          String? productId) =>
+    String? productId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBatchesForFefo,
-          [productId],
-        ),
-        returnValue: _i3.Future<List<_i4.ProductBatchEntity>>.value(
-            <_i4.ProductBatchEntity>[]),
-      ) as _i3.Future<List<_i4.ProductBatchEntity>>);
+            Invocation.method(#getBatchesForFefo, [productId]),
+            returnValue: _i3.Future<List<_i4.ProductBatchEntity>>.value(
+              <_i4.ProductBatchEntity>[],
+            ),
+          )
+          as _i3.Future<List<_i4.ProductBatchEntity>>);
 
   @override
   _i3.Future<List<_i4.ProductBatchEntity>> getAllBatches(String? productId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAllBatches,
-          [productId],
-        ),
-        returnValue: _i3.Future<List<_i4.ProductBatchEntity>>.value(
-            <_i4.ProductBatchEntity>[]),
-      ) as _i3.Future<List<_i4.ProductBatchEntity>>);
+            Invocation.method(#getAllBatches, [productId]),
+            returnValue: _i3.Future<List<_i4.ProductBatchEntity>>.value(
+              <_i4.ProductBatchEntity>[],
+            ),
+          )
+          as _i3.Future<List<_i4.ProductBatchEntity>>);
 
   @override
   _i3.Future<String> createBatch(_i4.ProductBatchesCompanion? batch) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createBatch,
-          [batch],
-        ),
-        returnValue: _i3.Future<String>.value(_i5.dummyValue<String>(
-          this,
-          Invocation.method(
-            #createBatch,
-            [batch],
-          ),
-        )),
-      ) as _i3.Future<String>);
+            Invocation.method(#createBatch, [batch]),
+            returnValue: _i3.Future<String>.value(
+              _i5.dummyValue<String>(
+                this,
+                Invocation.method(#createBatch, [batch]),
+              ),
+            ),
+          )
+          as _i3.Future<String>);
 
   @override
-  _i3.Future<double> updateBatchStock(
-    String? batchId,
-    double? deltaQty,
-  ) =>
+  _i3.Future<double> updateBatchStock(String? batchId, double? deltaQty) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateBatchStock,
-          [
-            batchId,
-            deltaQty,
-          ],
-        ),
-        returnValue: _i3.Future<double>.value(0.0),
-      ) as _i3.Future<double>);
+            Invocation.method(#updateBatchStock, [batchId, deltaQty]),
+            returnValue: _i3.Future<double>.value(0.0),
+          )
+          as _i3.Future<double>);
 
   @override
   _i3.Future<_i4.ProductBatchEntity?> getBatchByNumber(
@@ -96,13 +84,8 @@ class MockProductBatchRepository extends _i1.Mock
     String? batchNumber,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBatchByNumber,
-          [
-            productId,
-            batchNumber,
-          ],
-        ),
-        returnValue: _i3.Future<_i4.ProductBatchEntity?>.value(),
-      ) as _i3.Future<_i4.ProductBatchEntity?>);
+            Invocation.method(#getBatchByNumber, [productId, batchNumber]),
+            returnValue: _i3.Future<_i4.ProductBatchEntity?>.value(),
+          )
+          as _i3.Future<_i4.ProductBatchEntity?>);
 }

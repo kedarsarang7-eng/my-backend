@@ -58,7 +58,8 @@ class SyncEngine {
     _startWatching();
 
     debugPrint(
-        'SyncEngine: Initialized (Circuit: ${_breaker.isOpen ? "OPEN" : "CLOSED"})');
+      'SyncEngine: Initialized (Circuit: ${_breaker.isOpen ? "OPEN" : "CLOSED"})',
+    );
   }
 
   void _startWatching() {
@@ -125,34 +126,49 @@ class SyncEngine {
           await _processor.process(item);
           stopwatch.stop();
 
-          await _repo.markSynced(item.operationId,
-              collection: item.targetCollection, docId: item.documentId);
+          await _repo.markSynced(
+            item.operationId,
+            collection: item.targetCollection,
+            docId: item.documentId,
+          );
           _breaker.onSuccess();
 
           // Emit Success Event
-          _eventController.add(SyncResult.success(
-              operationId: item.operationId, duration: stopwatch.elapsed));
+          _eventController.add(
+            SyncResult.success(
+              operationId: item.operationId,
+              duration: stopwatch.elapsed,
+            ),
+          );
         } on SyncFailure catch (e) {
           stopwatch.stop();
           unawaited(_handleFailure(item, e));
 
           // Emit Failure Event
-          _eventController.add(SyncResult.failure(
+          _eventController.add(
+            SyncResult.failure(
               operationId: item.operationId,
               failure: e,
-              duration: stopwatch.elapsed));
+              duration: stopwatch.elapsed,
+            ),
+          );
         } catch (e) {
           // Unexpected catch-all
           stopwatch.stop();
-          final failure =
-              SyncUnknownFailure(message: e.toString(), originalError: e);
+          final failure = SyncUnknownFailure(
+            message: e.toString(),
+            originalError: e,
+          );
           unawaited(_handleFailure(item, failure));
 
           // Emit Failure Event
-          _eventController.add(SyncResult.failure(
+          _eventController.add(
+            SyncResult.failure(
               operationId: item.operationId,
               failure: failure,
-              duration: stopwatch.elapsed));
+              duration: stopwatch.elapsed,
+            ),
+          );
         }
       }
     } catch (e, st) {
@@ -181,7 +197,10 @@ class SyncEngine {
     } else {
       // RETRY
       await _repo.markFailed(
-          item.operationId, failure.message, item.retryCount + 1);
+        item.operationId,
+        failure.message,
+        item.retryCount + 1,
+      );
 
       // Circuit Breaker
       if (failure is SyncNetworkFailure || failure is SyncAuthFailure) {

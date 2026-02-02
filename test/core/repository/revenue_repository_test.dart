@@ -232,8 +232,10 @@ void main() {
       // Filter last 3 days
       final fromDate = now.subtract(const Duration(days: 3));
       final filteredReceipts = receipts
-          .where((r) =>
-              r.date.isAfter(fromDate) || r.date.isAtSameMomentAs(fromDate))
+          .where(
+            (r) =>
+                r.date.isAfter(fromDate) || r.date.isAtSameMomentAs(fromDate),
+          )
           .toList();
 
       expect(filteredReceipts.length, 2);
@@ -245,36 +247,41 @@ void main() {
       final now = DateTime.now();
       final receipts = [
         Receipt(
-            id: 'rcpt-1',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 1000.0,
-            paymentMode: 'Cash',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-1',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 1000.0,
+          paymentMode: 'Cash',
+          date: now,
+          createdAt: now,
+        ),
         Receipt(
-            id: 'rcpt-2',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 2000.0,
-            paymentMode: 'UPI',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-2',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 2000.0,
+          paymentMode: 'UPI',
+          date: now,
+          createdAt: now,
+        ),
         Receipt(
-            id: 'rcpt-3',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 1500.0,
-            paymentMode: 'Card',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-3',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 1500.0,
+          paymentMode: 'Card',
+          date: now,
+          createdAt: now,
+        ),
       ];
 
-      final totalCollections =
-          receipts.fold<double>(0, (sum, r) => sum + r.amount);
+      final totalCollections = receipts.fold<double>(
+        0,
+        (sum, r) => sum + r.amount,
+      );
 
       expect(totalCollections, 4500.0);
     });
@@ -283,41 +290,45 @@ void main() {
       final now = DateTime.now();
       final receipts = [
         Receipt(
-            id: 'rcpt-1',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 1000.0,
-            paymentMode: 'Cash',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-1',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 1000.0,
+          paymentMode: 'Cash',
+          date: now,
+          createdAt: now,
+        ),
         Receipt(
-            id: 'rcpt-2',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 2000.0,
-            paymentMode: 'UPI',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-2',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 2000.0,
+          paymentMode: 'UPI',
+          date: now,
+          createdAt: now,
+        ),
         Receipt(
-            id: 'rcpt-3',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 1500.0,
-            paymentMode: 'Cash',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-3',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 1500.0,
+          paymentMode: 'Cash',
+          date: now,
+          createdAt: now,
+        ),
         Receipt(
-            id: 'rcpt-4',
-            ownerId: 'owner',
-            customerId: 'cust',
-            customerName: 'Test Customer',
-            amount: 500.0,
-            paymentMode: 'UPI',
-            date: now,
-            createdAt: now),
+          id: 'rcpt-4',
+          ownerId: 'owner',
+          customerId: 'cust',
+          customerName: 'Test Customer',
+          amount: 500.0,
+          paymentMode: 'UPI',
+          date: now,
+          createdAt: now,
+        ),
       ];
 
       final byMode = <String, double>{};

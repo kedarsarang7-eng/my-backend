@@ -118,36 +118,36 @@ enum AppScreen {
 
   /// Whether this screen requires data preloading
   bool get requiresPreload => switch (this) {
-        AppScreen.newSale => true,
-        AppScreen.salesRegister => true,
-        AppScreen.stockSummary => true,
-        AppScreen.partyLedger => true,
-        AppScreen.gstr1 => true,
-        AppScreen.transactionReports => true,
-        AppScreen.analyticsHub => true,
-        _ => false,
-      };
+    AppScreen.newSale => true,
+    AppScreen.salesRegister => true,
+    AppScreen.stockSummary => true,
+    AppScreen.partyLedger => true,
+    AppScreen.gstr1 => true,
+    AppScreen.transactionReports => true,
+    AppScreen.analyticsHub => true,
+    _ => false,
+  };
 
   /// Whether this screen should be kept alive (cached)
   bool get keepAlive => switch (this) {
-        AppScreen.executiveDashboard => true,
-        AppScreen.newSale => true,
-        AppScreen.stockSummary => true,
-        AppScreen.customers => true,
-        _ => false,
-      };
+    AppScreen.executiveDashboard => true,
+    AppScreen.newSale => true,
+    AppScreen.stockSummary => true,
+    AppScreen.customers => true,
+    _ => false,
+  };
 
   /// Icon for this screen
   IconData get icon => switch (this) {
-        AppScreen.executiveDashboard => Icons.dashboard_rounded,
-        AppScreen.newSale => Icons.point_of_sale_rounded,
-        AppScreen.stockSummary => Icons.inventory_2_rounded,
-        AppScreen.customers => Icons.people_rounded,
-        AppScreen.settings => Icons.settings_rounded,
-        AppScreen.gstr1 => Icons.receipt_long_rounded,
-        AppScreen.partyLedger => Icons.account_balance_rounded,
-        _ => Icons.article_rounded,
-      };
+    AppScreen.executiveDashboard => Icons.dashboard_rounded,
+    AppScreen.newSale => Icons.point_of_sale_rounded,
+    AppScreen.stockSummary => Icons.inventory_2_rounded,
+    AppScreen.customers => Icons.people_rounded,
+    AppScreen.settings => Icons.settings_rounded,
+    AppScreen.gstr1 => Icons.receipt_long_rounded,
+    AppScreen.partyLedger => Icons.account_balance_rounded,
+    _ => Icons.article_rounded,
+  };
 
   /// Returns the corresponding sidebar item ID string
   String get id {

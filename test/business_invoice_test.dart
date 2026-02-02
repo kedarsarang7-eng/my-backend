@@ -37,7 +37,7 @@ void main() {
           warrantyMonths: type == BusinessType.electronics ? 12 : null,
           size: type == BusinessType.clothing ? 'XL' : null,
           color: type == BusinessType.clothing ? 'Red' : null,
-        )
+        ),
       ],
       subtotal: 200,
       discountApplied: 0,

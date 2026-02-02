@@ -36,8 +36,9 @@ class _BuyOrdersScreenState extends ConsumerState<BuyOrdersScreen> {
         ),
       ],
       child: StreamBuilder<List<repo.PurchaseOrder>>(
-        stream: sl<repo.PurchaseRepository>()
-            .watchAll(userId: _session.ownerId ?? ''),
+        stream: sl<repo.PurchaseRepository>().watchAll(
+          userId: _session.ownerId ?? '',
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -49,19 +50,25 @@ class _BuyOrdersScreenState extends ConsumerState<BuyOrdersScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.assignment_add,
-                      size: 64,
-                      color: isDark ? Colors.white24 : Colors.grey[300]),
+                  Icon(
+                    Icons.assignment_add,
+                    size: 64,
+                    color: isDark ? Colors.white24 : Colors.grey[300],
+                  ),
                   const SizedBox(height: 16),
-                  Text("No Purchase Orders",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: isDark ? Colors.white60 : Colors.grey[600])),
+                  Text(
+                    "No Purchase Orders",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: isDark ? Colors.white60 : Colors.grey[600],
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   ElevatedButton.icon(
-                      onPressed: _createNewOrder,
-                      icon: const Icon(Icons.add),
-                      label: const Text("Create PO"))
+                    onPressed: _createNewOrder,
+                    icon: const Icon(Icons.add),
+                    label: const Text("Create PO"),
+                  ),
                 ],
               ),
             );
@@ -70,11 +77,14 @@ class _BuyOrdersScreenState extends ConsumerState<BuyOrdersScreen> {
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: orders.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final order = orders[index];
               return _PurchaseOrderCard(
-                  order: order, isDark: isDark, onConvert: _convertToStock);
+                order: order,
+                isDark: isDark,
+                onConvert: _convertToStock,
+              );
             },
           );
         },
@@ -84,16 +94,21 @@ class _BuyOrdersScreenState extends ConsumerState<BuyOrdersScreen> {
 
   void _createNewOrder() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const _CreateOrderScreen()));
+      context,
+      MaterialPageRoute(builder: (_) => const _CreateOrderScreen()),
+    );
   }
 
   void _convertToStock(String orderId) async {
-    final result = await sl<repo.PurchaseRepository>()
-        .completePurchaseOrder(id: orderId, userId: _session.ownerId ?? '');
+    final result = await sl<repo.PurchaseRepository>().completePurchaseOrder(
+      id: orderId,
+      userId: _session.ownerId ?? '',
+    );
     if (result.isSuccess) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Order converted to Stock")));
+          const SnackBar(content: Text("Order converted to Stock")),
+        );
       }
     }
   }
@@ -128,9 +143,10 @@ class _PurchaseOrderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E293B) : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: statusColor.withOpacity(0.3))),
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: statusColor.withOpacity(0.3)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -145,48 +161,66 @@ class _PurchaseOrderCard extends StatelessWidget {
                       color: statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child:
-                        Icon(Icons.shopping_bag, color: statusColor, size: 20),
+                    child: Icon(
+                      Icons.shopping_bag,
+                      color: statusColor,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(vendorName,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: isDark ? Colors.white : Colors.black87)),
-                      Text("${order.items.length} Items",
-                          style: TextStyle(
-                              color: isDark ? Colors.white54 : Colors.grey)),
+                      Text(
+                        vendorName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        "${order.items.length} Items",
+                        style: TextStyle(
+                          color: isDark ? Colors.white54 : Colors.grey,
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text(status,
-                    style: TextStyle(
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11)),
-              )
+                  color: statusColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  status,
+                  style: TextStyle(
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
             ],
           ),
           const Divider(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Est. Total: ₹${total.toStringAsFixed(2)}",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: isDark ? Colors.white : Colors.black87)),
+              Text(
+                "Est. Total: ₹${total.toStringAsFixed(2)}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
               if (status == 'PENDING')
                 OutlinedButton(
                   onPressed: () => onConvert(order.id),
@@ -240,24 +274,31 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Vendor Details',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87)),
+                  Text(
+                    'Vendor Details',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _vendorCtrl,
                     style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87),
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
                     decoration: InputDecoration(
-                        labelText: "Vendor Name",
-                        hintText: "Type vendor name...",
-                        filled: true,
-                        fillColor:
-                            isDark ? const Color(0xFF0F172A) : Colors.grey[50],
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12))),
+                      labelText: "Vendor Name",
+                      hintText: "Type vendor name...",
+                      filled: true,
+                      fillColor: isDark
+                          ? const Color(0xFF0F172A)
+                          : Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 24),
                   Container(
@@ -305,11 +346,14 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Order Items',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87)),
+                      Text(
+                        'Order Items',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
                       ElevatedButton.icon(
                         onPressed: () => _showAddItemDialog(context, isDark),
                         icon: const Icon(Icons.add, size: 18),
@@ -324,51 +368,62 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.shopping_cart_outlined,
-                                    size: 48,
-                                    color: isDark
-                                        ? Colors.white24
-                                        : Colors.grey[300]),
+                                Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 48,
+                                  color: isDark
+                                      ? Colors.white24
+                                      : Colors.grey[300],
+                                ),
                                 const SizedBox(height: 16),
-                                Text("No items added",
-                                    style: TextStyle(
-                                        color: isDark
-                                            ? Colors.white60
-                                            : Colors.grey[600])),
+                                Text(
+                                  "No items added",
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white60
+                                        : Colors.grey[600],
+                                  ),
+                                ),
                               ],
                             ),
                           )
                         : ListView.separated(
                             itemCount: _items.length,
-                            separatorBuilder: (_, __) => const Divider(),
+                            separatorBuilder: (_, _) => const Divider(),
                             itemBuilder: (_, i) => ListTile(
                               contentPadding: EdgeInsets.zero,
-                              title: Text(_items[i].productName,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: isDark
-                                          ? Colors.white
-                                          : Colors.black87)),
+                              title: Text(
+                                _items[i].productName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? Colors.white : Colors.black87,
+                                ),
+                              ),
                               subtitle: Text(
-                                  "Qty: ${_items[i].quantity} × ₹${_items[i].costPrice}",
-                                  style: TextStyle(
-                                      color: isDark
-                                          ? Colors.white60
-                                          : Colors.grey[600])),
+                                "Qty: ${_items[i].quantity} × ₹${_items[i].costPrice}",
+                                style: TextStyle(
+                                  color: isDark
+                                      ? Colors.white60
+                                      : Colors.grey[600],
+                                ),
+                              ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     "₹${_items[i].totalAmount.toStringAsFixed(2)}",
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black87),
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black87,
+                                    ),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
                                     onPressed: () =>
                                         setState(() => _items.removeAt(i)),
                                   ),
@@ -381,17 +436,21 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Total Amount',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87)),
+                      Text(
+                        'Total Amount',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
                       Text(
                         '₹${_items.fold<double>(0, (sum, i) => sum + i.totalAmount).toStringAsFixed(2)}',
                         style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
                       ),
                     ],
                   ),
@@ -404,13 +463,18 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blueAccent,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: _isSaving
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text("Create Purchase Order",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
+                          : const Text(
+                              "Create Purchase Order",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -431,8 +495,10 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-        title: Text('Add Item',
-            style: TextStyle(color: isDark ? Colors.white : Colors.black)),
+        title: Text(
+          'Add Item',
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -441,11 +507,14 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
                 labelText: 'Item Name',
-                labelStyle:
-                    TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                labelStyle: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: isDark ? Colors.white24 : Colors.grey)),
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.white24 : Colors.grey,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -455,11 +524,14 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
                 labelText: 'Quantity',
-                labelStyle:
-                    TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                labelStyle: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: isDark ? Colors.white24 : Colors.grey)),
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.white24 : Colors.grey,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -469,11 +541,14 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
                 labelText: 'Price',
-                labelStyle:
-                    TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                labelStyle: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: isDark ? Colors.white24 : Colors.grey)),
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.white24 : Colors.grey,
+                  ),
+                ),
               ),
             ),
           ],
@@ -487,14 +562,17 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
             onPressed: () {
               if (nameCtrl.text.isNotEmpty) {
                 setState(() {
-                  _items.add(repo.PurchaseItem(
-                    id: const Uuid().v4(),
-                    productName: nameCtrl.text,
-                    quantity: double.tryParse(qtyCtrl.text) ?? 1,
-                    costPrice: double.tryParse(priceCtrl.text) ?? 0,
-                    totalAmount: (double.tryParse(qtyCtrl.text) ?? 1) *
-                        (double.tryParse(priceCtrl.text) ?? 0),
-                  ));
+                  _items.add(
+                    repo.PurchaseItem(
+                      id: const Uuid().v4(),
+                      productName: nameCtrl.text,
+                      quantity: double.tryParse(qtyCtrl.text) ?? 1,
+                      costPrice: double.tryParse(priceCtrl.text) ?? 0,
+                      totalAmount:
+                          (double.tryParse(qtyCtrl.text) ?? 1) *
+                          (double.tryParse(priceCtrl.text) ?? 0),
+                    ),
+                  );
                 });
                 Navigator.pop(ctx);
               }
@@ -508,13 +586,15 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
 
   void _saveOrder() async {
     if (_vendorCtrl.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please enter vendor name")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter vendor name")));
       return;
     }
     if (_items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please add at least one item")));
+        const SnackBar(content: Text("Please add at least one item")),
+      );
       return;
     }
 
@@ -535,8 +615,9 @@ class __CreateOrderScreenState extends ConsumerState<_CreateOrderScreen> {
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error saving order: $e")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error saving order: $e")));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);

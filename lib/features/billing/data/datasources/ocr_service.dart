@@ -4,13 +4,14 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 
 class OcrService {
   final TextRecognizer _recognizer = TextRecognizer(
-      script: TextRecognitionScript
-          .latin); // Or .devanagari if needed for Indian langs
+    script: TextRecognitionScript.latin,
+  ); // Or .devanagari if needed for Indian langs
 
   Future<String> scanImage(String imagePath) async {
     if (kIsWeb) {
       debugPrint(
-          "OCR Web: Backend integration required. Returning Mock Data for UI testing.");
+        "OCR Web: Backend integration required. Returning Mock Data for UI testing.",
+      );
       return "Web Mock Data: Shop X, Total 100";
     } else {
       try {
@@ -20,7 +21,8 @@ class OcrService {
 
         final text = recognizedText.text;
         debugPrint(
-            "ML Kit Result: ${text.substring(0, text.length > 100 ? 100 : text.length)}...");
+          "ML Kit Result: ${text.substring(0, text.length > 100 ? 100 : text.length)}...",
+        );
         return text;
       } catch (e) {
         debugPrint("ML Kit Error: $e");

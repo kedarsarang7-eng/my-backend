@@ -26,19 +26,13 @@ class AppGradients {
   );
 
   static const LinearGradient glass = LinearGradient(
-    colors: [
-      Color(0x33FFFFFF),
-      Color(0x1AFFFFFF),
-    ],
+    colors: [Color(0x33FFFFFF), Color(0x1AFFFFFF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient darkGlass = LinearGradient(
-    colors: [
-      Color(0x991E293B),
-      Color(0xCC0F172A),
-    ],
+    colors: [Color(0x991E293B), Color(0xCC0F172A)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

@@ -21,8 +21,10 @@ class OwnerSummaryCards extends StatelessWidget {
         final customers = customerSnap.data ?? [];
 
         final totalCustomers = customers.length;
-        final totalDues =
-            customers.fold<double>(0, (sum, c) => sum + c.totalDues);
+        final totalDues = customers.fold<double>(
+          0,
+          (sum, c) => sum + c.totalDues,
+        );
 
         return StreamBuilder(
           stream: billsRepo.watchAll(userId: userId),
@@ -33,8 +35,11 @@ class OwnerSummaryCards extends StatelessWidget {
             final now = DateTime.now();
             final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
             final weekSales = bills
-                .where((b) => b.date
-                    .isAfter(startOfWeek.subtract(const Duration(seconds: 1))))
+                .where(
+                  (b) => b.date.isAfter(
+                    startOfWeek.subtract(const Duration(seconds: 1)),
+                  ),
+                )
                 .fold<double>(0, (sum, b) => sum + b.grandTotal);
 
             return Row(
@@ -52,18 +57,20 @@ class OwnerSummaryCards extends StatelessWidget {
   }
 
   Widget _card(String title, String value) => Card(
-        child: SizedBox(
-          width: 120,
-          height: 80,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(title, style: const TextStyle(fontSize: 12)),
-              const SizedBox(height: 6),
-              Text(value, style: const TextStyle(fontWeight: FontWeight.bold))
-            ]),
-          ),
+    child: SizedBox(
+      width: 120,
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(title, style: const TextStyle(fontSize: 12)),
+            const SizedBox(height: 6),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }

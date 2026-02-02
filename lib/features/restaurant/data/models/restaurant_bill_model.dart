@@ -50,10 +50,10 @@ class TaxBreakdownItem {
   });
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'rate': rate,
-        'amount': amount,
-      };
+    'name': name,
+    'rate': rate,
+    'amount': amount,
+  };
 
   factory TaxBreakdownItem.fromJson(Map<String, dynamic> json) {
     return TaxBreakdownItem(
@@ -150,26 +150,26 @@ class RestaurantBill extends Equatable {
 
   /// Convert to Firestore map
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'vendorId': vendorId,
-        'orderId': orderId,
-        'customerId': customerId,
-        'tableNumber': tableNumber,
-        'billNumber': billNumber,
-        'subtotal': subtotal,
-        'cgst': cgst,
-        'sgst': sgst,
-        'serviceCharge': serviceCharge,
-        'discountAmount': discountAmount,
-        'grandTotal': grandTotal,
-        'taxBreakdown': taxBreakdown.map((e) => e.toJson()).toList(),
-        'paymentStatus': paymentStatus.value,
-        'paymentMode': paymentMode,
-        'generatedAt': generatedAt.toIso8601String(),
-        if (paidAt != null) 'paidAt': paidAt!.toIso8601String(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'vendorId': vendorId,
+    'orderId': orderId,
+    'customerId': customerId,
+    'tableNumber': tableNumber,
+    'billNumber': billNumber,
+    'subtotal': subtotal,
+    'cgst': cgst,
+    'sgst': sgst,
+    'serviceCharge': serviceCharge,
+    'discountAmount': discountAmount,
+    'grandTotal': grandTotal,
+    'taxBreakdown': taxBreakdown.map((e) => e.toJson()).toList(),
+    'paymentStatus': paymentStatus.value,
+    'paymentMode': paymentMode,
+    'generatedAt': generatedAt.toIso8601String(),
+    if (paidAt != null) 'paidAt': paidAt!.toIso8601String(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   RestaurantBill copyWith({
     String? id,
@@ -218,6 +218,11 @@ class RestaurantBill extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, orderId, billNumber, grandTotal, paymentStatus];
+  List<Object?> get props => [
+    id,
+    orderId,
+    billNumber,
+    grandTotal,
+    paymentStatus,
+  ];
 }

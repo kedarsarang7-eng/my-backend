@@ -42,7 +42,8 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
       // Save image temporarily for OCR
       final tempDir = await getTemporaryDirectory();
       final tempFile = File(
-          '${tempDir.path}/p2d_ocr_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        '${tempDir.path}/p2d_ocr_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      );
       await tempFile.writeAsBytes(widget.imageBytes);
 
       final ocrService = sl<MLKitOcrService>();
@@ -72,16 +73,18 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
 
     // Map OCR result to PurchaseOrder
     final purchaseItems = _ocrResult!.items
-        .map((e) => PurchaseItem(
-              id: const Uuid().v4(),
-              productId: null,
-              productName: e.name,
-              quantity: e.quantity,
-              unit: 'pc',
-              costPrice: e.price,
-              taxRate: 0,
-              totalAmount: e.amount,
-            ))
+        .map(
+          (e) => PurchaseItem(
+            id: const Uuid().v4(),
+            productId: null,
+            productName: e.name,
+            quantity: e.quantity,
+            unit: 'pc',
+            costPrice: e.price,
+            taxRate: 0,
+            totalAmount: e.amount,
+          ),
+        )
         .toList();
 
     final purchaseOrder = PurchaseOrder(
@@ -144,10 +147,7 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: Row(
@@ -199,10 +199,7 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
           const SizedBox(height: 24),
           Text(
             'Extracting Intelligence...',
-            style: TextStyle(
-              color: kP2DTextSecondary,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: kP2DTextSecondary, fontSize: 14),
           ),
         ],
       ),
@@ -360,11 +357,7 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
                 color: kP2DAccentCyan.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                icon,
-                color: kP2DAccentCyan,
-                size: 20,
-              ),
+              child: Icon(icon, color: kP2DAccentCyan, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -373,10 +366,7 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
-                      color: kP2DTextMuted,
-                      fontSize: 11,
-                    ),
+                    style: const TextStyle(color: kP2DTextMuted, fontSize: 11),
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -411,10 +401,7 @@ class _P2DOcrScreenState extends State<P2DOcrScreen> {
             Expanded(
               child: Text(
                 item.name,
-                style: const TextStyle(
-                  color: kP2DTextPrimary,
-                  fontSize: 13,
-                ),
+                style: const TextStyle(color: kP2DTextPrimary, fontSize: 13),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

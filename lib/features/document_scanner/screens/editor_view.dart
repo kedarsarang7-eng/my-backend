@@ -19,11 +19,15 @@ class EditorView extends ConsumerWidget {
           children: [
             const Icon(Icons.edit_off, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            Text("No pages to edit",
-                style: GoogleFonts.outfit(color: Colors.grey, fontSize: 18)),
+            Text(
+              "No pages to edit",
+              style: GoogleFonts.outfit(color: Colors.grey, fontSize: 18),
+            ),
             const SizedBox(height: 8),
-            Text("Capture or import images first",
-                style: GoogleFonts.inter(color: Colors.grey)),
+            Text(
+              "Capture or import images first",
+              style: GoogleFonts.inter(color: Colors.grey),
+            ),
           ],
         ),
       );

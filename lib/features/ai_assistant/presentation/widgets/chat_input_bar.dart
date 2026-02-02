@@ -42,12 +42,12 @@ class _ChatInputBarState extends State<ChatInputBar> {
     return Container(
       // Ensure bottom padding for safe area (Chin) if not handled by scaffold
       padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 12,
-          bottom:
-              12 // We rely on scaffold padding for viewInsets, but this adds internal breathing room
-          ),
+        left: 16,
+        right: 16,
+        top: 12,
+        bottom:
+            12, // We rely on scaffold padding for viewInsets, but this adds internal breathing room
+      ),
       decoration: const BoxDecoration(
         color: Color(0xFF1E1E1E),
         // Removed shadows/borders to prevent "white line" artifacts
@@ -105,12 +105,16 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   shape: BoxShape.circle,
                   gradient: _hasText
                       ? const LinearGradient(
-                          colors: [Color(0xFF6A11CB), Color(0xFF2575FC)])
+                          colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+                        )
                       : null,
                   color: _hasText ? null : Colors.white.withOpacity(0.1),
                 ),
-                child: Icon(Icons.send,
-                    color: _hasText ? Colors.white : Colors.white24, size: 20),
+                child: Icon(
+                  Icons.send,
+                  color: _hasText ? Colors.white : Colors.white24,
+                  size: 20,
+                ),
               ),
             ),
           ],

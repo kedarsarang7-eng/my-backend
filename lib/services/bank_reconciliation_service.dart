@@ -23,7 +23,7 @@ class BankReconciliationService {
   final FirebaseFirestore _firestore;
 
   BankReconciliationService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   // ============================================================
   // BANK STATEMENT ENTRY MANAGEMENT
@@ -89,7 +89,8 @@ class BankReconciliationService {
       await batch.commit();
 
       debugPrint(
-          '[BANK_RECON] Imported $imported entries, $duplicates duplicates skipped');
+        '[BANK_RECON] Imported $imported entries, $duplicates duplicates skipped',
+      );
 
       return ImportResult(
         imported: imported,
@@ -130,12 +131,16 @@ class BankReconciliationService {
         .where('isReconciled', isEqualTo: false);
 
     if (fromDate != null) {
-      query = query.where('date',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+      query = query.where(
+        'date',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),
+      );
     }
     if (toDate != null) {
-      query =
-          query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+      query = query.where(
+        'date',
+        isLessThanOrEqualTo: Timestamp.fromDate(toDate),
+      );
     }
 
     final unreconciledEntries = await query.get();
@@ -254,15 +259,16 @@ class BankReconciliationService {
         .collection('bank_statement_entries')
         .doc(bankStatementEntryId)
         .update({
-      'isReconciled': true,
-      'matchedTransactionId': ledgerTransactionId,
-      'matchConfidence': 1.0,
-      'reconciledAt': FieldValue.serverTimestamp(),
-      'reconciledBy': matchedBy,
-    });
+          'isReconciled': true,
+          'matchedTransactionId': ledgerTransactionId,
+          'matchConfidence': 1.0,
+          'reconciledAt': FieldValue.serverTimestamp(),
+          'reconciledBy': matchedBy,
+        });
 
     debugPrint(
-        '[BANK_RECON] Manually matched $bankStatementEntryId -> $ledgerTransactionId');
+      '[BANK_RECON] Manually matched $bankStatementEntryId -> $ledgerTransactionId',
+    );
   }
 
   /// Mark a bank statement entry as reconciled without matching.
@@ -281,13 +287,13 @@ class BankReconciliationService {
         .collection('bank_statement_entries')
         .doc(bankStatementEntryId)
         .update({
-      'isReconciled': true,
-      'matchedTransactionId': null,
-      'matchConfidence': 0.0,
-      'reconciliationNote': reason,
-      'reconciledAt': FieldValue.serverTimestamp(),
-      'reconciledBy': reconciledBy,
-    });
+          'isReconciled': true,
+          'matchedTransactionId': null,
+          'matchConfidence': 0.0,
+          'reconciliationNote': reason,
+          'reconciledAt': FieldValue.serverTimestamp(),
+          'reconciledBy': reconciledBy,
+        });
   }
 
   /// Unmatch a previously reconciled entry.
@@ -301,13 +307,13 @@ class BankReconciliationService {
         .collection('bank_statement_entries')
         .doc(bankStatementEntryId)
         .update({
-      'isReconciled': false,
-      'matchedTransactionId': null,
-      'matchConfidence': 0.0,
-      'reconciledAt': null,
-      'reconciledBy': null,
-      'reconciliationNote': null,
-    });
+          'isReconciled': false,
+          'matchedTransactionId': null,
+          'matchConfidence': 0.0,
+          'reconciledAt': null,
+          'reconciledBy': null,
+          'reconciliationNote': null,
+        });
   }
 
   // ============================================================
@@ -387,24 +393,36 @@ class BankReconciliationService {
     // - Bank debits not in books (charges, etc.)
     // = Book Balance
 
-    double depositTotal =
-        unrecreditedDeposits.fold(0.0, (total, item) => total + item.amount);
-    double chequeTotal =
-        unpresentedCheques.fold(0.0, (total, item) => total + item.amount);
-    double bankCreditTotal =
-        bankOnlyCredits.fold(0.0, (total, item) => total + item.amount);
-    double bankDebitTotal =
-        bankOnlyDebits.fold(0.0, (total, item) => total + item.amount);
+    double depositTotal = unrecreditedDeposits.fold(
+      0.0,
+      (total, item) => total + item.amount,
+    );
+    double chequeTotal = unpresentedCheques.fold(
+      0.0,
+      (total, item) => total + item.amount,
+    );
+    double bankCreditTotal = bankOnlyCredits.fold(
+      0.0,
+      (total, item) => total + item.amount,
+    );
+    double bankDebitTotal = bankOnlyDebits.fold(
+      0.0,
+      (total, item) => total + item.amount,
+    );
 
-    double bookBalance = bankBalance +
+    double bookBalance =
+        bankBalance +
         depositTotal -
         chequeTotal +
         bankCreditTotal -
         bankDebitTotal;
 
     // 6. Get actual book balance from ledger
-    final ledgerBalance =
-        await _getLedgerBalance(businessId, bankAccountId, asOfDate);
+    final ledgerBalance = await _getLedgerBalance(
+      businessId,
+      bankAccountId,
+      asOfDate,
+    );
 
     // 7. Calculate difference
     final difference = (bookBalance - ledgerBalance).abs();
@@ -451,8 +469,10 @@ class BankReconciliationService {
           .get();
 
       // Get all matched transaction IDs
-      final matchedIds =
-          await _getMatchedTransactionIds(businessId, bankAccountId);
+      final matchedIds = await _getMatchedTransactionIds(
+        businessId,
+        bankAccountId,
+      );
 
       for (final doc in ledgerQuery.docs) {
         final data = doc.data();
@@ -462,14 +482,16 @@ class BankReconciliationService {
           final entryType = debit > credit ? 'DEBIT' : 'CREDIT';
 
           if (entryType == type) {
-            items.add(ReconciliationItem(
-              id: doc.id,
-              date: _parseDate(data['date']) ?? asOfDate,
-              description: data['description'] ?? 'Unknown',
-              amount: (debit - credit).abs(),
-              type: type,
-              source: source,
-            ));
+            items.add(
+              ReconciliationItem(
+                id: doc.id,
+                date: _parseDate(data['date']) ?? asOfDate,
+                description: data['description'] ?? 'Unknown',
+                amount: (debit - credit).abs(),
+                type: type,
+                source: source,
+              ),
+            );
           }
         }
       }
@@ -487,14 +509,16 @@ class BankReconciliationService {
 
       for (final doc in bankQuery.docs) {
         final data = doc.data();
-        items.add(ReconciliationItem(
-          id: doc.id,
-          date: (data['date'] as Timestamp).toDate(),
-          description: data['description'] ?? 'Unknown',
-          amount: (data['amount'] as num).toDouble(),
-          type: type,
-          source: source,
-        ));
+        items.add(
+          ReconciliationItem(
+            id: doc.id,
+            date: (data['date'] as Timestamp).toDate(),
+            description: data['description'] ?? 'Unknown',
+            amount: (data['amount'] as num).toDouble(),
+            type: type,
+            source: source,
+          ),
+        );
       }
     }
 
@@ -637,13 +661,13 @@ class ReconciliationItem {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'date': date.toIso8601String(),
-        'description': description,
-        'amount': amount,
-        'type': type,
-        'source': source,
-      };
+    'id': id,
+    'date': date.toIso8601String(),
+    'description': description,
+    'amount': amount,
+    'type': type,
+    'source': source,
+  };
 }
 
 /// Bank Reconciliation Statement
@@ -687,22 +711,20 @@ class BankReconciliationStatement {
       chequesNotPresented.fold(0.0, (total, item) => total + item.amount);
 
   Map<String, dynamic> toMap() => {
-        'businessId': businessId,
-        'bankAccountId': bankAccountId,
-        'asOfDate': asOfDate.toIso8601String(),
-        'bankBalance': bankBalance,
-        'depositsNotCredited':
-            depositsNotCredited.map((e) => e.toMap()).toList(),
-        'chequesNotPresented':
-            chequesNotPresented.map((e) => e.toMap()).toList(),
-        'bankCreditsNotInBooks':
-            bankCreditsNotInBooks.map((e) => e.toMap()).toList(),
-        'bankDebitsNotInBooks':
-            bankDebitsNotInBooks.map((e) => e.toMap()).toList(),
-        'calculatedBookBalance': calculatedBookBalance,
-        'actualBookBalance': actualBookBalance,
-        'difference': difference,
-        'isReconciled': isReconciled,
-        'generatedAt': generatedAt.toIso8601String(),
-      };
+    'businessId': businessId,
+    'bankAccountId': bankAccountId,
+    'asOfDate': asOfDate.toIso8601String(),
+    'bankBalance': bankBalance,
+    'depositsNotCredited': depositsNotCredited.map((e) => e.toMap()).toList(),
+    'chequesNotPresented': chequesNotPresented.map((e) => e.toMap()).toList(),
+    'bankCreditsNotInBooks': bankCreditsNotInBooks
+        .map((e) => e.toMap())
+        .toList(),
+    'bankDebitsNotInBooks': bankDebitsNotInBooks.map((e) => e.toMap()).toList(),
+    'calculatedBookBalance': calculatedBookBalance,
+    'actualBookBalance': actualBookBalance,
+    'difference': difference,
+    'isReconciled': isReconciled,
+    'generatedAt': generatedAt.toIso8601String(),
+  };
 }

@@ -24,10 +24,8 @@ class CustomerQrDialog extends StatefulWidget {
   }) async {
     await showDialog(
       context: context,
-      builder: (context) => CustomerQrDialog(
-        customerId: customerId,
-        customerName: customerName,
-      ),
+      builder: (context) =>
+          CustomerQrDialog(customerId: customerId, customerName: customerName),
     );
   }
 
@@ -122,7 +120,7 @@ class _CustomerQrDialogState extends State<CustomerQrDialog> {
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
-                )
+                ),
               ],
             ),
             const SizedBox(height: 24),
@@ -135,8 +133,11 @@ class _CustomerQrDialogState extends State<CustomerQrDialog> {
               SizedBox(
                 height: 200,
                 child: Center(
-                    child: Text("Error: $_error",
-                        style: const TextStyle(color: Colors.red))),
+                  child: Text(
+                    "Error: $_error",
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
               )
             else if (_linkUrl != null) ...[
               // QR Code
@@ -151,7 +152,7 @@ class _CustomerQrDialogState extends State<CustomerQrDialog> {
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ],
                 ),
                 child: QrImageView(
@@ -178,7 +179,8 @@ class _CustomerQrDialogState extends State<CustomerQrDialog> {
                       Clipboard.setData(ClipboardData(text: _linkUrl!));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text("Link copied to clipboard")),
+                          content: Text("Link copied to clipboard"),
+                        ),
                       );
                     },
                   ),
@@ -188,7 +190,8 @@ class _CustomerQrDialogState extends State<CustomerQrDialog> {
                     color: Colors.blue,
                     onTap: () {
                       Share.share(
-                          "Connect with ${widget.customerName} on DukanX: $_linkUrl");
+                        "Connect with ${widget.customerName} on DukanX: $_linkUrl",
+                      );
                     },
                   ),
                   _ActionButton(
@@ -198,7 +201,7 @@ class _CustomerQrDialogState extends State<CustomerQrDialog> {
                     onTap: _regenerateLink,
                   ),
                 ],
-              )
+              ),
             ],
           ],
         ),

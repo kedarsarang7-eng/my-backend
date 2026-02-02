@@ -123,9 +123,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sharing: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error sharing: $e')));
       }
     }
   }
@@ -137,9 +137,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
       await _invoiceService.printInvoice(_pdfBytes!);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error printing: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error printing: $e')));
       }
     }
   }
@@ -149,7 +149,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
 
     try {
       final path = await _invoiceService.saveInvoice(
-          _pdfBytes!, widget.bill.invoiceNumber);
+        _pdfBytes!,
+        widget.bill.invoiceNumber,
+      );
       if (path != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -160,9 +162,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving: $e')));
       }
     }
   }
@@ -175,8 +177,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
       final billingRepo = sl<BillingRepository>(); // Assuming SL has it
       final exportService = ExportService(billingRepo);
 
-      final exportFormat =
-          format == 'excel' ? ExportFormat.excel : ExportFormat.word;
+      final exportFormat = format == 'excel'
+          ? ExportFormat.excel
+          : ExportFormat.word;
       final bytes = await exportService.generateBillExport(
         billId: widget.bill.id,
         format: exportFormat,
@@ -211,7 +214,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Export Failed: $e'), backgroundColor: Colors.red),
+            content: Text('Export Failed: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -223,8 +228,9 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
     final isDark = theme.isDark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: Text(
           'Invoice Preview',
@@ -262,8 +268,11 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
                   value: 'excel',
                   child: Row(
                     children: [
-                      Icon(Icons.table_chart_rounded,
-                          color: Colors.green, size: 20),
+                      Icon(
+                        Icons.table_chart_rounded,
+                        color: Colors.green,
+                        size: 20,
+                      ),
                       SizedBox(width: 12),
                       Text('Export as Excel'),
                     ],
@@ -273,8 +282,11 @@ class _InvoicePreviewScreenState extends ConsumerState<InvoicePreviewScreen> {
                   value: 'word',
                   child: Row(
                     children: [
-                      Icon(Icons.description_rounded,
-                          color: Colors.blue, size: 20),
+                      Icon(
+                        Icons.description_rounded,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
                       SizedBox(width: 12),
                       Text('Export as Word'),
                     ],
@@ -462,9 +474,7 @@ class InvoiceGeneratorButton extends StatelessWidget {
   void _openPreview(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => InvoicePreviewScreen(bill: bill),
-      ),
+      MaterialPageRoute(builder: (context) => InvoicePreviewScreen(bill: bill)),
     );
   }
 }

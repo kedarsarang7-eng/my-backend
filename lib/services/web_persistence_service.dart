@@ -38,7 +38,10 @@ class WebPersistenceService {
   }
 
   Future<void> put(
-      String storeName, String key, Map<String, dynamic> data) async {
+    String storeName,
+    String key,
+    Map<String, dynamic> data,
+  ) async {
     if (!_initialized) return;
     _cache[storeName]?[key] = Map<String, dynamic>.from(data);
   }
@@ -90,7 +93,8 @@ class WebPersistenceService {
   }
 
   Future<List<Map<String, dynamic>>> getBillsForCustomer(
-      String customerId) async {
+    String customerId,
+  ) async {
     final allBills = await getAll('bills');
     return allBills.where((b) => b['customerId'] == customerId).toList();
   }

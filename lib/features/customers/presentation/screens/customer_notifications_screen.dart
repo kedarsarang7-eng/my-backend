@@ -21,8 +21,9 @@ class CustomerNotificationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notificationsAsync =
-        ref.watch(customerNotificationsProvider(customerId));
+    final notificationsAsync = ref.watch(
+      customerNotificationsProvider(customerId),
+    );
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -102,8 +103,9 @@ class CustomerNotificationsScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF2A2A3E) : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border:
-            isUnread ? Border.all(color: Colors.blue.withOpacity(0.3)) : null,
+        border: isUnread
+            ? Border.all(color: Colors.blue.withOpacity(0.3))
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -139,8 +141,9 @@ class CustomerNotificationsScreen extends ConsumerWidget {
                           child: Text(
                             notification.title,
                             style: GoogleFonts.poppins(
-                              fontWeight:
-                                  isUnread ? FontWeight.w600 : FontWeight.w500,
+                              fontWeight: isUnread
+                                  ? FontWeight.w600
+                                  : FontWeight.w500,
                             ),
                           ),
                         ),
@@ -188,8 +191,11 @@ class CustomerNotificationsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.notifications_off_outlined,
-              size: 64, color: Colors.grey.shade400),
+          Icon(
+            Icons.notifications_off_outlined,
+            size: 64,
+            color: Colors.grey.shade400,
+          ),
           const SizedBox(height: 16),
           Text(
             'No notifications',
@@ -242,7 +248,8 @@ class CustomerNotificationsScreen extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Opening ${notification.actionType}: ${notification.actionId}'),
+            'Opening ${notification.actionType}: ${notification.actionId}',
+          ),
         ),
       );
     }
@@ -253,9 +260,9 @@ class CustomerNotificationsScreen extends ConsumerWidget {
     final result = await repo.markAllAsRead(customerId);
 
     if (result.isSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Marked ${result.data} as read')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Marked ${result.data} as read')));
     }
   }
 }

@@ -29,26 +29,28 @@ class _ClinicInvoicePreviewScreenState
 
   Future<void> _loadBill() async {
     final db = sl<AppDatabase>();
-    final billEntity = await (db.select(db.bills)
-          ..where((t) => t.id.equals(widget.billId)))
-        .getSingleOrNull();
+    final billEntity = await (db.select(
+      db.bills,
+    )..where((t) => t.id.equals(widget.billId))).getSingleOrNull();
 
     if (billEntity != null) {
       // We also need items
-      final itemsEntity = await (db.select(db.billItems)
-            ..where((t) => t.billId.equals(widget.billId)))
-          .get();
+      final itemsEntity = await (db.select(
+        db.billItems,
+      )..where((t) => t.billId.equals(widget.billId))).get();
 
       // Convert to Model (Simplified for preview)
       final items = itemsEntity
-          .map((e) => BillItem(
-                productId: e.productId ?? '',
-                productName: e.productName,
-                qty: e.quantity,
-                price: e.unitPrice,
-                // ... simple mapping
-                gstRate: e.cgstRate + e.sgstRate + e.igstRate,
-              ))
+          .map(
+            (e) => BillItem(
+              productId: e.productId ?? '',
+              productName: e.productName,
+              qty: e.quantity,
+              price: e.unitPrice,
+              // ... simple mapping
+              gstRate: e.cgstRate + e.sgstRate + e.igstRate,
+            ),
+          )
           .toList();
 
       if (mounted) {
@@ -83,16 +85,16 @@ class _ClinicInvoicePreviewScreenState
     }
 
     if (_bill == null) {
-      return const Scaffold(
-        body: Center(child: Text('Invoice Not Found')),
-      );
+      return const Scaffold(body: Center(child: Text('Invoice Not Found')));
     }
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // Professional Paper bg
       appBar: AppBar(
-        title: Text('Invoice Preview',
-            style: GoogleFonts.outfit(color: Colors.black)),
+        title: Text(
+          'Invoice Preview',
+          style: GoogleFonts.outfit(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
         elevation: 1,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -108,10 +110,7 @@ class _ClinicInvoicePreviewScreenState
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 20,
-              )
+              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20),
             ],
           ),
           child: Column(
@@ -151,35 +150,57 @@ class _ClinicInvoicePreviewScreenState
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('HEALTH PLUS CLINIC',
-                    style: GoogleFonts.outfit(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: FuturisticColors.neonBlue)),
-                Text('Dr. Strange, MD',
-                    style: GoogleFonts.outfit(
-                        fontSize: 16, color: Colors.black87)),
-                Text('Reg No. 12345/MMC',
-                    style: GoogleFonts.outfit(
-                        fontSize: 14, color: Colors.black54)),
+                Text(
+                  'HEALTH PLUS CLINIC',
+                  style: GoogleFonts.outfit(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: FuturisticColors.neonBlue,
+                  ),
+                ),
+                Text(
+                  'Dr. Strange, MD',
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  'Reg No. 12345/MMC',
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('INVOICE',
-                    style: GoogleFonts.outfit(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.grey[200])),
-                Text(_bill!.invoiceNumber,
-                    style: GoogleFonts.outfit(
-                        fontSize: 14, fontWeight: FontWeight.bold)),
-                Text(DateFormat('dd MMM yyyy').format(_bill!.date),
-                    style: GoogleFonts.outfit(
-                        fontSize: 14, color: Colors.black54)),
+                Text(
+                  'INVOICE',
+                  style: GoogleFonts.outfit(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.grey[200],
+                  ),
+                ),
+                Text(
+                  _bill!.invoiceNumber,
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  DateFormat('dd MMM yyyy').format(_bill!.date),
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ],
@@ -196,18 +217,24 @@ class _ClinicInvoicePreviewScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('BILL TO',
-              style: GoogleFonts.outfit(
-                  fontSize: 12,
-                  color: Colors.blue[900],
-                  fontWeight: FontWeight.bold)),
+          Text(
+            'BILL TO',
+            style: GoogleFonts.outfit(
+              fontSize: 12,
+              color: Colors.blue[900],
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 4),
           Text(
-              _bill!.customerName.isNotEmpty
-                  ? _bill!.customerName
-                  : 'Walk-in Patient',
-              style: GoogleFonts.outfit(
-                  fontSize: 18, fontWeight: FontWeight.bold)),
+            _bill!.customerName.isNotEmpty
+                ? _bill!.customerName
+                : 'Walk-in Patient',
+            style: GoogleFonts.outfit(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           // Text('Age: 32 | Gender: M', style: GoogleFonts.outfit(fontSize: 14, color: Colors.black54)),
         ],
       ),
@@ -221,60 +248,92 @@ class _ClinicInvoicePreviewScreenState
         Row(
           children: [
             Expanded(
-                flex: 3,
-                child: Text('DESCRIPTION',
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold, color: Colors.grey))),
+              flex: 3,
+              child: Text(
+                'DESCRIPTION',
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
             Expanded(
-                flex: 1,
-                child: Text('QTY',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold, color: Colors.grey))),
+              flex: 1,
+              child: Text(
+                'QTY',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
             Expanded(
-                flex: 1,
-                child: Text('PRICE',
-                    textAlign: TextAlign.right,
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold, color: Colors.grey))),
+              flex: 1,
+              child: Text(
+                'PRICE',
+                textAlign: TextAlign.right,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
             Expanded(
-                flex: 1,
-                child: Text('TOTAL',
-                    textAlign: TextAlign.right,
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold, color: Colors.grey))),
+              flex: 1,
+              child: Text(
+                'TOTAL',
+                textAlign: TextAlign.right,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
           ],
         ),
         const Divider(),
         // Items
-        ..._bill!.items.map((item) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 3,
-                      child: Text(item.productName,
-                          style:
-                              GoogleFonts.outfit(fontWeight: FontWeight.w500))),
-                  Expanded(
-                      flex: 1,
-                      child: Text(item.qty.toString(),
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.outfit())),
-                  Expanded(
-                      flex: 1,
-                      child: Text(item.price.toStringAsFixed(2),
-                          textAlign: TextAlign.right,
-                          style: GoogleFonts.outfit())),
-                  Expanded(
-                      flex: 1,
-                      child: Text((item.qty * item.price).toStringAsFixed(2),
-                          textAlign: TextAlign.right,
-                          style:
-                              GoogleFonts.outfit(fontWeight: FontWeight.bold))),
-                ],
-              ),
-            )),
+        ..._bill!.items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.productName,
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    item.qty.toString(),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.outfit(),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    item.price.toStringAsFixed(2),
+                    textAlign: TextAlign.right,
+                    style: GoogleFonts.outfit(),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    (item.qty * item.price).toStringAsFixed(2),
+                    textAlign: TextAlign.right,
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -289,24 +348,35 @@ class _ClinicInvoicePreviewScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Subtotal:',
-                    style: GoogleFonts.outfit(color: Colors.black54)),
-                Text(_bill!.subtotal.toStringAsFixed(2),
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                Text(
+                  'Subtotal:',
+                  style: GoogleFonts.outfit(color: Colors.black54),
+                ),
+                Text(
+                  _bill!.subtotal.toStringAsFixed(2),
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total:',
-                    style: GoogleFonts.outfit(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-                Text('₹${_bill!.grandTotal.toStringAsFixed(2)}',
-                    style: GoogleFonts.outfit(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: FuturisticColors.neonBlue)),
+                Text(
+                  'Total:',
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '₹${_bill!.grandTotal.toStringAsFixed(2)}',
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: FuturisticColors.neonBlue,
+                  ),
+                ),
               ],
             ),
           ],
@@ -317,8 +387,10 @@ class _ClinicInvoicePreviewScreenState
 
   Widget _buildFooter() {
     return Center(
-      child: Text('Thank you for choosing Health Plus!',
-          style: GoogleFonts.outfit(color: Colors.black38, fontSize: 12)),
+      child: Text(
+        'Thank you for choosing Health Plus!',
+        style: GoogleFonts.outfit(color: Colors.black38, fontSize: 12),
+      ),
     );
   }
 }

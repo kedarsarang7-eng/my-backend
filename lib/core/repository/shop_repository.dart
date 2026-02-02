@@ -20,16 +20,17 @@ class ShopRepository {
   /// Get shop profile by owner ID
   Future<RepositoryResult<ShopEntity?>> getShopProfile(String ownerId) async {
     return await errorHandler.runSafe<ShopEntity?>(() async {
-      return await (database.select(database.shops)
-            ..where((t) => t.id.equals(ownerId)))
-          .getSingleOrNull();
+      return await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(ownerId))).getSingleOrNull();
     }, 'getShopProfile');
   }
 
   /// Watch shop profile
   Stream<ShopEntity?> watchShopProfile(String ownerId) {
-    return (database.select(database.shops)..where((t) => t.id.equals(ownerId)))
-        .watchSingleOrNull();
+    return (database.select(
+      database.shops,
+    )..where((t) => t.id.equals(ownerId))).watchSingleOrNull();
   }
 
   /// Create or Update shop profile
@@ -59,8 +60,9 @@ class ShopRepository {
         phone: phone != null ? Value(phone) : const Value.absent(),
         email: email != null ? Value(email) : const Value.absent(),
         gstin: gstin != null ? Value(gstin) : const Value.absent(),
-        invoiceTerms:
-            invoiceTerms != null ? Value(invoiceTerms) : const Value.absent(),
+        invoiceTerms: invoiceTerms != null
+            ? Value(invoiceTerms)
+            : const Value.absent(),
         showTaxOnInvoice: showTaxOnInvoice != null
             ? Value(showTaxOnInvoice)
             : const Value.absent(),
@@ -71,28 +73,32 @@ class ShopRepository {
             ? Value(invoiceLanguage)
             : const Value.absent(),
         logoPath: logoPath != null ? Value(logoPath) : const Value.absent(),
-        signaturePath:
-            signaturePath != null ? Value(signaturePath) : const Value.absent(),
+        signaturePath: signaturePath != null
+            ? Value(signaturePath)
+            : const Value.absent(),
         isSynced: const Value(false),
         updatedAt: Value(now),
-        createdAt:
-            Value(now), // Drift will ignore on update if structured correctly
+        createdAt: Value(
+          now,
+        ), // Drift will ignore on update if structured correctly
       );
 
       await database.into(database.shops).insertOnConflictUpdate(companion);
 
-      final updatedProfile = await (database.select(database.shops)
-            ..where((t) => t.id.equals(ownerId)))
-          .getSingle();
+      final updatedProfile = await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(ownerId))).getSingle();
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: ownerId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: ownerId,
-        payload: _entityToMap(updatedProfile),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: ownerId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: ownerId,
+          payload: _entityToMap(updatedProfile),
+        ),
+      );
 
       return updatedProfile;
     }, 'updateShopProfile');
@@ -102,24 +108,28 @@ class ShopRepository {
   Future<RepositoryResult<void>> completeOnboarding(String ownerId) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.shops)
-            ..where((t) => t.id.equals(ownerId)))
-          .write(ShopsCompanion(
-        onboardingCompleted: const Value(true),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.shops,
+      )..where((t) => t.id.equals(ownerId))).write(
+        ShopsCompanion(
+          onboardingCompleted: const Value(true),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: ownerId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: ownerId,
-        payload: {
-          'onboardingCompleted': true,
-          'onboardingCompletedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: ownerId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: ownerId,
+          payload: {
+            'onboardingCompleted': true,
+            'onboardingCompletedAt': now.toIso8601String(),
+          },
+        ),
+      );
     }, 'completeOnboarding');
   }
 
@@ -127,31 +137,35 @@ class ShopRepository {
   Future<RepositoryResult<bool>> isBusinessLocked(String ownerId) async {
     return await errorHandler.runSafe<bool>(() async {
       // Check Bills
-      final bill = await (database.select(database.bills)
-            ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
-            ..limit(1))
-          .getSingleOrNull();
+      final bill =
+          await (database.select(database.bills)
+                ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
+                ..limit(1))
+              .getSingleOrNull();
       if (bill != null) return true;
 
       // Check Expenses
-      final expense = await (database.select(database.expenses)
-            ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
-            ..limit(1))
-          .getSingleOrNull();
+      final expense =
+          await (database.select(database.expenses)
+                ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
+                ..limit(1))
+              .getSingleOrNull();
       if (expense != null) return true;
 
       // Check Purchase Orders
-      final po = await (database.select(database.purchaseOrders)
-            ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
-            ..limit(1))
-          .getSingleOrNull();
+      final po =
+          await (database.select(database.purchaseOrders)
+                ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
+                ..limit(1))
+              .getSingleOrNull();
       if (po != null) return true;
 
       // Check Payments (Money In/Out) - Consistency with OnboardingRepository
-      final payment = await (database.select(database.payments)
-            ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
-            ..limit(1))
-          .getSingleOrNull();
+      final payment =
+          await (database.select(database.payments)
+                ..where((t) => t.userId.equals(ownerId) & t.deletedAt.isNull())
+                ..limit(1))
+              .getSingleOrNull();
       if (payment != null) return true;
 
       return false;
@@ -160,12 +174,14 @@ class ShopRepository {
 
   /// Save business type
   Future<RepositoryResult<void>> saveBusinessType(
-      String ownerId, String type) async {
+    String ownerId,
+    String type,
+  ) async {
     return await errorHandler.runSafe<void>(() async {
       // SECURITY: Enforce Business Type Lockdown
-      final currentShop = await (database.select(database.shops)
-            ..where((t) => t.id.equals(ownerId)))
-          .getSingleOrNull();
+      final currentShop = await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(ownerId))).getSingleOrNull();
 
       if (currentShop != null &&
           currentShop.businessType != null &&
@@ -176,59 +192,71 @@ class ShopRepository {
         final isLockedResult = await isBusinessLocked(ownerId);
         if (isLockedResult.data == true) {
           throw Exception(
-              'Business Type is LOCKED. You have existing transactions (Bills, Expenses, or POs). '
-              'You cannot change Business Type once you start operations. '
-              'Please contact support for a Hard Reset if this is a mistake.');
+            'Business Type is LOCKED. You have existing transactions (Bills, Expenses, or POs). '
+            'You cannot change Business Type once you start operations. '
+            'Please contact support for a Hard Reset if this is a mistake.',
+          );
         }
       }
 
       final now = DateTime.now();
-      await (database.update(database.shops)
-            ..where((t) => t.id.equals(ownerId)))
-          .write(ShopsCompanion(
-        businessType: Value(type),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.shops,
+      )..where((t) => t.id.equals(ownerId))).write(
+        ShopsCompanion(
+          businessType: Value(type),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: ownerId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: ownerId,
-        payload: {
-          'businessType': type,
-          'billTemplate': type, // Legacy support
-          'updatedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: ownerId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: ownerId,
+          payload: {
+            'businessType': type,
+            'billTemplate': type, // Legacy support
+            'updatedAt': now.toIso8601String(),
+          },
+        ),
+      );
     }, 'saveBusinessType');
   }
 
   /// Save app language
   Future<RepositoryResult<void>> saveLanguage(
-      String ownerId, String language, String code) async {
+    String ownerId,
+    String language,
+    String code,
+  ) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.shops)
-            ..where((t) => t.id.equals(ownerId)))
-          .write(ShopsCompanion(
-        appLanguage: Value(language),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.shops,
+      )..where((t) => t.id.equals(ownerId))).write(
+        ShopsCompanion(
+          appLanguage: Value(language),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: ownerId,
-        operationType: SyncOperationType.update,
-        targetCollection: collectionName,
-        documentId: ownerId,
-        payload: {
-          'appLanguage': language,
-          'invoiceLanguage': code,
-          'updatedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: ownerId,
+          operationType: SyncOperationType.update,
+          targetCollection: collectionName,
+          documentId: ownerId,
+          payload: {
+            'appLanguage': language,
+            'invoiceLanguage': code,
+            'updatedAt': now.toIso8601String(),
+          },
+        ),
+      );
     }, 'saveLanguage');
   }
 

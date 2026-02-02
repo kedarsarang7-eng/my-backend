@@ -73,8 +73,9 @@ class VoiceParser {
 
       // Pattern 1: Direct number + currency
       final directPattern = RegExp(
-          r'(\d+(?:\.\d+)?)\s*(?:rupees?|rupay?|rs|₹|rupaiya)',
-          caseSensitive: false);
+        r'(\d+(?:\.\d+)?)\s*(?:rupees?|rupay?|rs|₹|rupaiya)',
+        caseSensitive: false,
+      );
       for (final match in directPattern.allMatches(text)) {
         final amount = double.tryParse(match.group(1)!) ?? 0;
         if (amount > 0) amounts.add(amount);
@@ -108,8 +109,9 @@ class VoiceParser {
 
       // Pattern 3: "total is X" or "amount is X" or "paisa hai"
       final totalPattern = RegExp(
-          r'(?:total|amount|bill|payment|paisa)\s*(?:is|hai|h|:)?\s*(\d+(?:\.\d+)?)',
-          caseSensitive: false);
+        r'(?:total|amount|bill|payment|paisa)\s*(?:is|hai|h|:)?\s*(\d+(?:\.\d+)?)',
+        caseSensitive: false,
+      );
       for (final match in totalPattern.allMatches(text)) {
         amounts.add(double.tryParse(match.group(1)!) ?? 0);
       }
@@ -131,40 +133,52 @@ class VoiceParser {
 
       // Pattern: X quantity of product at Y price
       final itemPattern1 = RegExp(
-          r'(\d+)\s*(?:piece|pcs|unit|kg|packet|bottle)?\s*(?:of|ka|ke|ki)?\s*(\w+(?:\s+\w+)?)\s*(?:at|@|ka)?\s*(\d+)',
-          caseSensitive: false);
+        r'(\d+)\s*(?:piece|pcs|unit|kg|packet|bottle)?\s*(?:of|ka|ke|ki)?\s*(\w+(?:\s+\w+)?)\s*(?:at|@|ka)?\s*(\d+)',
+        caseSensitive: false,
+      );
       for (final match in itemPattern1.allMatches(text)) {
         final qty = int.tryParse(match.group(1)!) ?? 1;
         final name = match.group(2)!;
         final price = double.tryParse(match.group(3)!) ?? 0;
 
-        if (!['rupees', 'rupay', 'total', 'bill', 'amount']
-            .contains(name.toLowerCase())) {
-          items.add(VoiceItem(
-            productName: name,
-            quantity: qty.toDouble(),
-            unitPrice: price,
-          ));
+        if (![
+          'rupees',
+          'rupay',
+          'total',
+          'bill',
+          'amount',
+        ].contains(name.toLowerCase())) {
+          items.add(
+            VoiceItem(
+              productName: name,
+              quantity: qty.toDouble(),
+              unitPrice: price,
+            ),
+          );
           confidenceFactors.add(0.1);
         }
       }
 
       // Pattern: Product for X rupees
       final itemPattern2 = RegExp(
-          r'(\w+(?:\s+\w+)?)\s+(?:for|ka|ke|ki)?\s*(\d+)\s*(?:rupees?|rupay?|rs)',
-          caseSensitive: false);
+        r'(\w+(?:\s+\w+)?)\s+(?:for|ka|ke|ki)?\s*(\d+)\s*(?:rupees?|rupay?|rs)',
+        caseSensitive: false,
+      );
       for (final match in itemPattern2.allMatches(text)) {
         final name = match.group(1)!;
         final price = double.tryParse(match.group(2)!) ?? 0;
 
-        if (!['rupees', 'rupay', 'total', 'bill', 'amount']
-                .contains(name.toLowerCase()) &&
+        if (![
+              'rupees',
+              'rupay',
+              'total',
+              'bill',
+              'amount',
+            ].contains(name.toLowerCase()) &&
             name.length > 1) {
-          items.add(VoiceItem(
-            productName: name,
-            quantity: 1,
-            unitPrice: price,
-          ));
+          items.add(
+            VoiceItem(productName: name, quantity: 1, unitPrice: price),
+          );
           confidenceFactors.add(0.1);
         }
       }
@@ -172,8 +186,9 @@ class VoiceParser {
       // Customer Detection
       String? customerName;
       final customerPattern = RegExp(
-          r'(?:customer|party|for|ko|ka naam|customer ka naam)\s*(?:is|hai|h|name|naam)?[:.]?\s*([a-zA-Z]+(?:\s+[a-zA-Z]+)?)',
-          caseSensitive: false);
+        r'(?:customer|party|for|ko|ka naam|customer ka naam)\s*(?:is|hai|h|name|naam)?[:.]?\s*([a-zA-Z]+(?:\s+[a-zA-Z]+)?)',
+        caseSensitive: false,
+      );
       final custMatch = customerPattern.firstMatch(text);
       if (custMatch != null && custMatch.group(1)!.length > 2) {
         customerName = custMatch.group(1)!.trim();
@@ -423,10 +438,11 @@ void main() {
 
       // Should not have 'rupees' as an item name
       expect(
-          result.items
-              .where((i) => i.productName.toLowerCase() == 'rupees')
-              .isEmpty,
-          isTrue);
+        result.items
+            .where((i) => i.productName.toLowerCase() == 'rupees')
+            .isEmpty,
+        isTrue,
+      );
     });
   });
 

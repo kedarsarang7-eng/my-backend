@@ -120,7 +120,8 @@ class KeyboardStateNotifier extends Notifier<KeyboardState> {
 
 final keyboardStateProvider =
     NotifierProvider<KeyboardStateNotifier, KeyboardState>(
-        () => KeyboardStateNotifier());
+      () => KeyboardStateNotifier(),
+    );
 
 // ============================================================================
 // GLOBAL SHORTCUTS MAP
@@ -144,8 +145,9 @@ Map<ShortcutActivator, Intent> buildGlobalShortcuts() {
     const SingleActivator(LogicalKeyboardKey.f12): const FunctionKeyIntent(12),
 
     // ========== NAVIGATION KEYS ==========
-    const SingleActivator(LogicalKeyboardKey.escape):
-        const NavigationIntent(NavigationType.escape),
+    const SingleActivator(LogicalKeyboardKey.escape): const NavigationIntent(
+      NavigationType.escape,
+    ),
 
     // ========== COMMON SHORTCUTS (CTRL+KEY) ==========
     const SingleActivator(LogicalKeyboardKey.keyN, control: true):
@@ -221,17 +223,17 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
                 _handleCommonShortcut(context, intent.shortcut, userRole),
           ),
         },
-        child: Focus(
-          autofocus: true,
-          child: widget.child,
-        ),
+        child: Focus(autofocus: true, child: widget.child),
       ),
     );
   }
 
   /// Handle Function Keys F1-F12
   Object? _handleFunctionKey(
-      BuildContext context, int keyNumber, UserRole role) {
+    BuildContext context,
+    int keyNumber,
+    UserRole role,
+  ) {
     switch (keyNumber) {
       case 1: // F1 → Help / Keyboard Shortcut Overlay
         ref.read(keyboardStateProvider.notifier).toggleHelpOverlay();
@@ -240,12 +242,20 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
 
       case 2: // F2 → Edit selected record
         _navigateIfPermitted(
-            context, role, Permission.editBill, '/edit_selected');
+          context,
+          role,
+          Permission.editBill,
+          '/edit_selected',
+        );
         break;
 
       case 3: // F3 → Change Company / Business
         _navigateIfPermitted(
-            context, role, Permission.manageSettings, '/change_business');
+          context,
+          role,
+          Permission.manageSettings,
+          '/change_business',
+        );
         break;
 
       case 4: // F4 → Inventory / Stock
@@ -254,27 +264,47 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
 
       case 5: // F5 → Payments
         _navigateIfPermitted(
-            context, role, Permission.receivePayment, '/payment-history');
+          context,
+          role,
+          Permission.receivePayment,
+          '/payment-history',
+        );
         break;
 
       case 6: // F6 → Receipts
         _navigateIfPermitted(
-            context, role, Permission.viewReports, '/receipts');
+          context,
+          role,
+          Permission.viewReports,
+          '/receipts',
+        );
         break;
 
       case 7: // F7 → Journal
         _navigateIfPermitted(
-            context, role, Permission.viewCashBook, '/daybook');
+          context,
+          role,
+          Permission.viewCashBook,
+          '/daybook',
+        );
         break;
 
       case 8: // F8 → Sales (Invoice) - PRIMARY BILLING KEY
         _navigateIfPermitted(
-            context, role, Permission.createBill, '/billing_flow');
+          context,
+          role,
+          Permission.createBill,
+          '/billing_flow',
+        );
         break;
 
       case 9: // F9 → Purchase
         _navigateIfPermitted(
-            context, role, Permission.createPurchase, '/purchase');
+          context,
+          role,
+          Permission.createPurchase,
+          '/purchase',
+        );
         break;
 
       case 10: // F10 → Reports
@@ -283,12 +313,20 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
 
       case 11: // F11 → Settings
         _navigateIfPermitted(
-            context, role, Permission.manageSettings, '/settings');
+          context,
+          role,
+          Permission.manageSettings,
+          '/settings',
+        );
         break;
 
       case 12: // F12 → Configuration
         _navigateIfPermitted(
-            context, role, Permission.manageSettings, '/configuration');
+          context,
+          role,
+          Permission.manageSettings,
+          '/configuration',
+        );
         break;
     }
     return null;
@@ -312,11 +350,18 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
 
   /// Handle Common Shortcuts (Ctrl+Key)
   Object? _handleCommonShortcut(
-      BuildContext context, CommonShortcut shortcut, UserRole role) {
+    BuildContext context,
+    CommonShortcut shortcut,
+    UserRole role,
+  ) {
     switch (shortcut) {
       case CommonShortcut.newRecord:
         _navigateIfPermitted(
-            context, role, Permission.createBill, '/billing_flow');
+          context,
+          role,
+          Permission.createBill,
+          '/billing_flow',
+        );
         break;
 
       case CommonShortcut.save:
@@ -350,12 +395,20 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
 
       case CommonShortcut.ledger:
         _navigateIfPermitted(
-            context, role, Permission.viewLedger, '/party_ledger');
+          context,
+          role,
+          Permission.viewLedger,
+          '/party_ledger',
+        );
         break;
 
       case CommonShortcut.backup:
         _navigateIfPermitted(
-            context, role, Permission.manageSettings, '/backup');
+          context,
+          role,
+          Permission.manageSettings,
+          '/backup',
+        );
         break;
 
       case CommonShortcut.quit:
@@ -374,8 +427,12 @@ class _GlobalKeyboardHandlerState extends ConsumerState<GlobalKeyboardHandler> {
   }
 
   /// Navigate only if user has permission
-  void _navigateIfPermitted(BuildContext context, UserRole role,
-      Permission permission, String route) {
+  void _navigateIfPermitted(
+    BuildContext context,
+    UserRole role,
+    Permission permission,
+    String route,
+  ) {
     if (RolePermissions.hasPermission(role, permission)) {
       Navigator.of(context).pushNamed(route);
     } else {
@@ -430,7 +487,8 @@ class KeyboardIntentNotifier extends Notifier<KeyboardIntentState> {
 
 final keyboardIntentProvider =
     NotifierProvider<KeyboardIntentNotifier, KeyboardIntentState>(
-        () => KeyboardIntentNotifier());
+      () => KeyboardIntentNotifier(),
+    );
 
 // ============================================================================
 // USER ROLE PROVIDER (for keyboard permission checks)
@@ -439,9 +497,7 @@ final keyboardIntentProvider =
 /// Provider that returns current user's role
 /// Async Notifier that returns current user's role from session
 final currentUserRoleProvider =
-    AsyncNotifierProvider<UserRoleNotifier, UserRole>(
-  () => UserRoleNotifier(),
-);
+    AsyncNotifierProvider<UserRoleNotifier, UserRole>(() => UserRoleNotifier());
 
 class UserRoleNotifier extends AsyncNotifier<UserRole> {
   @override

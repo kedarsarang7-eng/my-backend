@@ -28,19 +28,23 @@ class ModernTabBar extends StatelessWidget {
               onTap: () => onTabSelected(index),
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
-                    color: isSelected
-                        ? FuturisticColors.primary.withOpacity(0.1)
-                        : Colors.transparent,
-                    border: Border(
-                        left: BorderSide(
+                  color: isSelected
+                      ? FuturisticColors.primary.withOpacity(0.1)
+                      : Colors.transparent,
+                  border: Border(
+                    left: BorderSide(
                       color: isSelected
                           ? FuturisticColors.primary
                           : Colors.transparent,
                       width: 3,
-                    ))),
+                    ),
+                  ),
+                ),
                 child: Text(
                   tabs[index],
                   style: TextStyle(
@@ -74,21 +78,23 @@ class ModernTabBar extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
-                    color: isSelected
-                        ? FuturisticColors.surfaceElevated
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2))
-                          ]
-                        : [],
-                    border: isSelected
-                        ? Border.all(color: Colors.white.withOpacity(0.05))
-                        : null),
+                  color: isSelected
+                      ? FuturisticColors.surfaceElevated
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [],
+                  border: isSelected
+                      ? Border.all(color: Colors.white.withOpacity(0.05))
+                      : null,
+                ),
                 alignment: Alignment.center,
                 child: Text(
                   tabs[index],

@@ -41,8 +41,9 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
     _nameController = TextEditingController(text: widget.staff?.name ?? '');
     _phoneController = TextEditingController(text: widget.staff?.phone ?? '');
     _emailController = TextEditingController(text: widget.staff?.email ?? '');
-    _addressController =
-        TextEditingController(text: widget.staff?.address ?? '');
+    _addressController = TextEditingController(
+      text: widget.staff?.address ?? '',
+    );
     _salaryController = TextEditingController(
       text: widget.staff?.baseSalary.toStringAsFixed(0) ?? '',
     );
@@ -69,8 +70,9 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit Staff' : 'Add Staff'),
         backgroundColor: Colors.transparent,
@@ -232,10 +234,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
         const SizedBox(width: 8),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -277,9 +276,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -352,12 +349,16 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       final companion = StaffMembersCompanion(
         name: Value(_nameController.text.trim()),
         phone: Value(_phoneController.text.trim()),
-        email: Value(_emailController.text.trim().isEmpty
-            ? null
-            : _emailController.text.trim()),
-        address: Value(_addressController.text.trim().isEmpty
-            ? null
-            : _addressController.text.trim()),
+        email: Value(
+          _emailController.text.trim().isEmpty
+              ? null
+              : _emailController.text.trim(),
+        ),
+        address: Value(
+          _addressController.text.trim().isEmpty
+              ? null
+              : _addressController.text.trim(),
+        ),
         role: Value(_selectedRole.name.toUpperCase()),
         baseSalary: Value(double.parse(_salaryController.text)),
         salaryType: Value(_selectedSalaryType.name.toUpperCase()),

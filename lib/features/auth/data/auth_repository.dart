@@ -57,8 +57,9 @@ class AuthRepository {
 
     try {
       // Check if doc exists with role already set
-      final existingDoc =
-          await userRef.get().timeout(const Duration(seconds: 3));
+      final existingDoc = await userRef.get().timeout(
+        const Duration(seconds: 3),
+      );
       if (existingDoc.exists && existingDoc.data()?['role'] != null) {
         return existingDoc.data()!;
       }
@@ -109,8 +110,11 @@ class AuthRepository {
         return _localUserData(userData);
       } catch (e) {
         if (writeAttempts >= 5) {
-          return _localUserData(userData,
-              pendingSync: true, error: e.toString());
+          return _localUserData(
+            userData,
+            pendingSync: true,
+            error: e.toString(),
+          );
         }
         await Future.delayed(Duration(milliseconds: 1000 * writeAttempts));
       }
@@ -162,7 +166,9 @@ class AuthRepository {
   }
 
   Future<void> updateOwnerProfile(
-      String ownerId, Map<String, dynamic> data) async {
+    String ownerId,
+    Map<String, dynamic> data,
+  ) async {
     await _db
         .collection('owners')
         .doc(ownerId)

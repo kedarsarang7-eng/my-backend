@@ -22,10 +22,7 @@ class AuditRepository {
   final ErrorHandler errorHandler;
   final HashService _hashService = HashService();
 
-  AuditRepository({
-    required this.database,
-    required this.errorHandler,
-  });
+  AuditRepository({required this.database, required this.errorHandler});
 
   String get collectionName => 'auditLogs';
 
@@ -73,11 +70,12 @@ class AuditRepository {
   ) async {
     final now = DateTime.now();
 
-    final lastLog = await (database.select(database.auditLogs)
-          ..where((t) => t.userId.equals(userId))
-          ..orderBy([(t) => OrderingTerm.desc(t.id)])
-          ..limit(1))
-        .getSingleOrNull();
+    final lastLog =
+        await (database.select(database.auditLogs)
+              ..where((t) => t.userId.equals(userId))
+              ..orderBy([(t) => OrderingTerm.desc(t.id)])
+              ..limit(1))
+            .getSingleOrNull();
 
     final previousHash =
         lastLog?.currentHash ?? '00000000000000000000000000000000';
@@ -96,7 +94,9 @@ class AuditRepository {
 
     final currentHash = _hashService.computeChainHash(previousHash, logData);
 
-    await database.into(database.auditLogs).insert(
+    await database
+        .into(database.auditLogs)
+        .insert(
           AuditLogsCompanion.insert(
             userId: userId,
             targetTableName: targetTableName,
@@ -124,13 +124,16 @@ class AuditRepository {
     int limit = 50,
   }) async {
     return await errorHandler.runSafe<List<AuditLogEntity>>(() async {
-      final results = await (database.select(database.auditLogs)
-            ..where((t) =>
-                t.targetTableName.equals(tableName) &
-                t.recordId.equals(recordId))
-            ..orderBy([(t) => OrderingTerm.desc(t.timestamp)])
-            ..limit(limit))
-          .get();
+      final results =
+          await (database.select(database.auditLogs)
+                ..where(
+                  (t) =>
+                      t.targetTableName.equals(tableName) &
+                      t.recordId.equals(recordId),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.timestamp)])
+                ..limit(limit))
+              .get();
       return results;
     }, 'getLogsForRecord');
   }
@@ -141,11 +144,12 @@ class AuditRepository {
     int limit = 100,
   }) async {
     return await errorHandler.runSafe<List<AuditLogEntity>>(() async {
-      final results = await (database.select(database.auditLogs)
-            ..where((t) => t.userId.equals(userId))
-            ..orderBy([(t) => OrderingTerm.desc(t.timestamp)])
-            ..limit(limit))
-          .get();
+      final results =
+          await (database.select(database.auditLogs)
+                ..where((t) => t.userId.equals(userId))
+                ..orderBy([(t) => OrderingTerm.desc(t.timestamp)])
+                ..limit(limit))
+              .get();
       return results;
     }, 'getLogsForUser');
   }
@@ -157,13 +161,16 @@ class AuditRepository {
     required DateTime to,
   }) async {
     return await errorHandler.runSafe<List<AuditLogEntity>>(() async {
-      final results = await (database.select(database.auditLogs)
-            ..where((t) =>
-                t.userId.equals(userId) &
-                t.timestamp.isBiggerOrEqualValue(from) &
-                t.timestamp.isSmallerOrEqualValue(to))
-            ..orderBy([(t) => OrderingTerm.desc(t.timestamp)]))
-          .get();
+      final results =
+          await (database.select(database.auditLogs)
+                ..where(
+                  (t) =>
+                      t.userId.equals(userId) &
+                      t.timestamp.isBiggerOrEqualValue(from) &
+                      t.timestamp.isSmallerOrEqualValue(to),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.timestamp)]))
+              .get();
       return results;
     }, 'getLogsByDateRange');
   }
@@ -173,10 +180,11 @@ class AuditRepository {
   Future<RepositoryResult<bool>> verifyChain(String userId) async {
     return await errorHandler.runSafe<bool>(() async {
       // Fetch all logs for user, ordered by ID ASC (Chronological)
-      final logs = await (database.select(database.auditLogs)
-            ..where((t) => t.userId.equals(userId))
-            ..orderBy([(t) => OrderingTerm.asc(t.id)]))
-          .get();
+      final logs =
+          await (database.select(database.auditLogs)
+                ..where((t) => t.userId.equals(userId))
+                ..orderBy([(t) => OrderingTerm.asc(t.id)]))
+              .get();
 
       if (logs.isEmpty) return true;
 
@@ -186,7 +194,8 @@ class AuditRepository {
         // 1. Check Linkage
         if (log.previousHash != expectedPrevHash) {
           debugPrint(
-              'AUDIT TAMPER: Broken Link at ID ${log.id}. Exp: $expectedPrevHash, Found: ${log.previousHash}');
+            'AUDIT TAMPER: Broken Link at ID ${log.id}. Exp: $expectedPrevHash, Found: ${log.previousHash}',
+          );
           return false;
         }
 
@@ -203,8 +212,10 @@ class AuditRepository {
           'timestamp': log.timestamp.toIso8601String(),
         };
 
-        final computedHash =
-            _hashService.computeChainHash(expectedPrevHash, logData);
+        final computedHash = _hashService.computeChainHash(
+          expectedPrevHash,
+          logData,
+        );
 
         if (computedHash != log.currentHash) {
           debugPrint('AUDIT TAMPER: Hash Mismatch at ID ${log.id}.');
@@ -255,20 +266,22 @@ class AuditRepository {
       // 3. Build export entries
       final entries = <AuditExportEntry>[];
       for (final log in logs) {
-        entries.add(AuditExportEntry(
-          id: log.id,
-          userId: log.userId,
-          targetTable: log.targetTableName,
-          recordId: log.recordId,
-          action: log.action,
-          oldValue: log.oldValueJson,
-          newValue: log.newValueJson,
-          deviceId: log.deviceId,
-          appVersion: log.appVersion,
-          timestamp: log.timestamp,
-          previousHash: log.previousHash,
-          currentHash: log.currentHash,
-        ));
+        entries.add(
+          AuditExportEntry(
+            id: log.id,
+            userId: log.userId,
+            targetTable: log.targetTableName,
+            recordId: log.recordId,
+            action: log.action,
+            oldValue: log.oldValueJson,
+            newValue: log.newValueJson,
+            deviceId: log.deviceId,
+            appVersion: log.appVersion,
+            timestamp: log.timestamp,
+            previousHash: log.previousHash,
+            currentHash: log.currentHash,
+          ),
+        );
       }
 
       // 4. Compute summary hash of entire export
@@ -310,19 +323,22 @@ class AuditRepository {
 
       // Header
       buffer.writeln(
-          'ID,Timestamp,Table,RecordID,Action,DeviceID,AppVersion,PreviousHash,CurrentHash');
+        'ID,Timestamp,Table,RecordID,Action,DeviceID,AppVersion,PreviousHash,CurrentHash',
+      );
 
       // Rows
       for (final entry in report.entries) {
-        buffer.writeln('${entry.id},'
-            '${entry.timestamp.toIso8601String()},'
-            '${entry.targetTable},'
-            '${entry.recordId},'
-            '${entry.action},'
-            '${entry.deviceId ?? ""},'
-            '${entry.appVersion ?? ""},'
-            '${entry.previousHash ?? ""},'
-            '${entry.currentHash ?? ""}');
+        buffer.writeln(
+          '${entry.id},'
+          '${entry.timestamp.toIso8601String()},'
+          '${entry.targetTable},'
+          '${entry.recordId},'
+          '${entry.action},'
+          '${entry.deviceId ?? ""},'
+          '${entry.appVersion ?? ""},'
+          '${entry.previousHash ?? ""},'
+          '${entry.currentHash ?? ""}',
+        );
       }
 
       // Footer with verification
@@ -365,15 +381,15 @@ class AuditExportReport {
   });
 
   Map<String, dynamic> toJson() => {
-        'userId': userId,
-        'exportedAt': exportedAt.toIso8601String(),
-        if (fromDate != null) 'fromDate': fromDate!.toIso8601String(),
-        if (toDate != null) 'toDate': toDate!.toIso8601String(),
-        'totalEntries': totalEntries,
-        'chainValid': chainValid,
-        'summaryHash': summaryHash,
-        'entries': entries.map((e) => e.toJson()).toList(),
-      };
+    'userId': userId,
+    'exportedAt': exportedAt.toIso8601String(),
+    if (fromDate != null) 'fromDate': fromDate!.toIso8601String(),
+    if (toDate != null) 'toDate': toDate!.toIso8601String(),
+    'totalEntries': totalEntries,
+    'chainValid': chainValid,
+    'summaryHash': summaryHash,
+    'entries': entries.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// Individual audit log entry for export
@@ -407,17 +423,17 @@ class AuditExportEntry {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'userId': userId,
-        'targetTable': targetTable,
-        'recordId': recordId,
-        'action': action,
-        if (oldValue != null) 'oldValue': oldValue,
-        if (newValue != null) 'newValue': newValue,
-        if (deviceId != null) 'deviceId': deviceId,
-        if (appVersion != null) 'appVersion': appVersion,
-        'timestamp': timestamp.toIso8601String(),
-        'previousHash': previousHash,
-        'currentHash': currentHash,
-      };
+    'id': id,
+    'userId': userId,
+    'targetTable': targetTable,
+    'recordId': recordId,
+    'action': action,
+    if (oldValue != null) 'oldValue': oldValue,
+    if (newValue != null) 'newValue': newValue,
+    if (deviceId != null) 'deviceId': deviceId,
+    if (appVersion != null) 'appVersion': appVersion,
+    'timestamp': timestamp.toIso8601String(),
+    'previousHash': previousHash,
+    'currentHash': currentHash,
+  };
 }

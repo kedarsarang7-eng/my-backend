@@ -101,7 +101,7 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
                   vendorsAsync.when(
                     data: (vendors) => _buildVendorDropdown(vendors),
                     loading: () => const LinearProgressIndicator(),
-                    error: (_, __) => const Text('Failed to load vendors'),
+                    error: (_, _) => const Text('Failed to load vendors'),
                   ),
                   const SizedBox(height: 20),
 
@@ -198,8 +198,10 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
       items: vendors.map((v) {
         return DropdownMenuItem(
@@ -257,10 +259,7 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
       controller: _amountController,
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      style: GoogleFonts.poppins(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-      ),
+      style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         prefixText: '₹ ',
         prefixStyle: GoogleFonts.poppins(
@@ -337,8 +336,8 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
           color: isSelected
               ? const Color(0xFF6C5CE7)
               : Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF2A2A3E)
-                  : Colors.grey.shade100,
+              ? const Color(0xFF2A2A3E)
+              : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? const Color(0xFF6C5CE7) : Colors.grey.shade300,
@@ -478,9 +477,9 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
   Future<void> _submitPayment() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedVendorId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a vendor')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a vendor')));
       return;
     }
 
@@ -509,8 +508,9 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
 
       if (result.isSuccess) {
         // Create notification for both customer and vendor
-        final notificationsRepo =
-            ref.read(customerNotificationsRepositoryProvider);
+        final notificationsRepo = ref.read(
+          customerNotificationsRepositoryProvider,
+        );
         await notificationsRepo.createNotification(
           customerId: widget.customerId,
           vendorId: _selectedVendorId,
@@ -538,10 +538,7 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -592,10 +589,7 @@ class _CustomerPaymentScreenState extends ConsumerState<CustomerPaymentScreen> {
             Text(
               'Your ledger has been updated.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
             ),
           ],
         ),

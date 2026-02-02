@@ -33,8 +33,9 @@ class _CustomerDashboardScreenState
 
   @override
   Widget build(BuildContext context) {
-    final statsAsync =
-        ref.watch(customerDashboardStatsProvider(widget.customerId));
+    final statsAsync = ref.watch(
+      customerDashboardStatsProvider(widget.customerId),
+    );
 
     return DesktopContentContainer(
       title: "My Dashboard",
@@ -90,7 +91,7 @@ class _CustomerDashboardScreenState
             color: Colors.blue.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -98,10 +99,7 @@ class _CustomerDashboardScreenState
         children: [
           Text(
             "Total Outstanding",
-            style: GoogleFonts.outfit(
-              color: Colors.white70,
-              fontSize: 16,
-            ),
+            style: GoogleFonts.outfit(color: Colors.white70, fontSize: 16),
           ),
           const SizedBox(height: 8),
           Text(
@@ -117,11 +115,13 @@ class _CustomerDashboardScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatItem(
-                  "Total Paid", "₹${stats.totalPaid.toStringAsFixed(0)}"),
+                "Total Paid",
+                "₹${stats.totalPaid.toStringAsFixed(0)}",
+              ),
               _buildStatItem("Unpaid Bills", "${stats.unpaidInvoiceCount}"),
               _buildStatItem("Shops", "${stats.vendorCount}"),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -141,10 +141,7 @@ class _CustomerDashboardScreenState
         ),
         Text(
           label,
-          style: GoogleFonts.outfit(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
+          style: GoogleFonts.outfit(color: Colors.white70, fontSize: 12),
         ),
       ],
     );
@@ -167,7 +164,8 @@ class _CustomerDashboardScreenState
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 0,
               color: Colors.white,
               child: ListTile(
@@ -182,9 +180,13 @@ class _CustomerDashboardScreenState
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
-                    "Balance: ₹${vendor.outstandingBalance.toStringAsFixed(0)}"),
-                trailing: const Icon(Icons.arrow_forward_ios,
-                    size: 16, color: Colors.grey),
+                  "Balance: ₹${vendor.outstandingBalance.toStringAsFixed(0)}",
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey,
+                ),
                 onTap: () {
                   // Navigate to Vendor Detail View (Invoices from this vendor)
                   Navigator.push(
@@ -203,7 +205,7 @@ class _CustomerDashboardScreenState
         );
       },
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 }

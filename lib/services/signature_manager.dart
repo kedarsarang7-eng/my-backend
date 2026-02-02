@@ -94,9 +94,9 @@ class SignatureManager {
           .collection('settings')
           .doc('signature')
           .set({
-        'signatureBase64': base64String,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'signatureBase64': base64String,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
       // Save to local storage
       final prefs = await SharedPreferences.getInstance();

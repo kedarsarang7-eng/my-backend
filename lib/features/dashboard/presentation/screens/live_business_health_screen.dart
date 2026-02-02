@@ -79,8 +79,9 @@ class _LiveBusinessHealthScreenState
       // Today's bills
       final today = DateTime.now();
       final startOfDay = DateTime(today.year, today.month, today.day);
-      final todayBills =
-          bills.where((b) => b.date.isAfter(startOfDay)).toList();
+      final todayBills = bills
+          .where((b) => b.date.isAfter(startOfDay))
+          .toList();
 
       _todaySales = todayBills.fold(0.0, (sum, b) => sum + b.grandTotal);
       _todayCollections = todayBills.fold(0.0, (sum, b) => sum + b.paidAmount);
@@ -109,8 +110,10 @@ class _LiveBusinessHealthScreenState
       final products = productsResult.data ?? [];
 
       _lowStockCount = products.where((p) => p.isLowStock).length;
-      _stockValue =
-          products.fold(0.0, (sum, p) => sum + (p.stockQuantity * p.costPrice));
+      _stockValue = products.fold(
+        0.0,
+        (sum, p) => sum + (p.stockQuantity * p.costPrice),
+      );
 
       // Load bank balances
       try {
@@ -199,12 +202,14 @@ class _LiveBusinessHealthScreenState
               children: [
                 // Health Score Card
                 _buildHealthScoreCard(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
                 const SizedBox(height: 24),
 
                 // QuickMetrics Row
                 _buildQuickMetrics(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
                 const SizedBox(height: 24),
 
                 // Detailed Cards
@@ -216,10 +221,12 @@ class _LiveBusinessHealthScreenState
                       child: Column(
                         children: [
                           _buildCashPositionCard(
-                              Theme.of(context).brightness == Brightness.dark),
+                            Theme.of(context).brightness == Brightness.dark,
+                          ),
                           const SizedBox(height: 16),
                           _buildReceivablesCard(
-                              Theme.of(context).brightness == Brightness.dark),
+                            Theme.of(context).brightness == Brightness.dark,
+                          ),
                         ],
                       ),
                     ),
@@ -229,10 +236,12 @@ class _LiveBusinessHealthScreenState
                       child: Column(
                         children: [
                           _buildStockAlertsCard(
-                              Theme.of(context).brightness == Brightness.dark),
+                            Theme.of(context).brightness == Brightness.dark,
+                          ),
                           const SizedBox(height: 16),
                           _buildTodayMetricsCard(
-                              Theme.of(context).brightness == Brightness.dark),
+                            Theme.of(context).brightness == Brightness.dark,
+                          ),
                         ],
                       ),
                     ),
@@ -325,11 +334,20 @@ class _LiveBusinessHealthScreenState
                   ),
                   const SizedBox(height: 16),
                   _buildHealthIndicator(
-                      'Receivables', _overdueCount == 0, isDark),
+                    'Receivables',
+                    _overdueCount == 0,
+                    isDark,
+                  ),
                   _buildHealthIndicator(
-                      'Stock Levels', _lowStockCount == 0, isDark),
+                    'Stock Levels',
+                    _lowStockCount == 0,
+                    isDark,
+                  ),
                   _buildHealthIndicator(
-                      'Cash Position', _totalLiquidity > 10000, isDark),
+                    'Cash Position',
+                    _totalLiquidity > 10000,
+                    isDark,
+                  ),
                 ],
               ),
             ),
@@ -366,42 +384,55 @@ class _LiveBusinessHealthScreenState
     return Row(
       children: [
         Expanded(
-            child: _buildMetricTile(
-                'Today\'s Sales',
-                '₹${_formatAmount(_todaySales)}',
-                Icons.trending_up,
-                const Color(0xFF10B981),
-                isDark)),
+          child: _buildMetricTile(
+            'Today\'s Sales',
+            '₹${_formatAmount(_todaySales)}',
+            Icons.trending_up,
+            const Color(0xFF10B981),
+            isDark,
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildMetricTile(
-                'Collections',
-                '₹${_formatAmount(_todayCollections)}',
-                Icons.payments,
-                const Color(0xFF06B6D4),
-                isDark)),
+          child: _buildMetricTile(
+            'Collections',
+            '₹${_formatAmount(_todayCollections)}',
+            Icons.payments,
+            const Color(0xFF06B6D4),
+            isDark,
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildMetricTile(
-                'Receivables',
-                '₹${_formatAmount(_totalReceivables)}',
-                Icons.account_balance_wallet,
-                const Color(0xFFF59E0B),
-                isDark)),
+          child: _buildMetricTile(
+            'Receivables',
+            '₹${_formatAmount(_totalReceivables)}',
+            Icons.account_balance_wallet,
+            const Color(0xFFF59E0B),
+            isDark,
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
-            child: _buildMetricTile(
-                'Liquidity',
-                '₹${_formatAmount(_totalLiquidity)}',
-                Icons.savings,
-                const Color(0xFF8B5CF6),
-                isDark)),
+          child: _buildMetricTile(
+            'Liquidity',
+            '₹${_formatAmount(_totalLiquidity)}',
+            Icons.savings,
+            const Color(0xFF8B5CF6),
+            isDark,
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildMetricTile(
-      String label, String value, IconData icon, Color color, bool isDark) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -451,13 +482,22 @@ class _LiveBusinessHealthScreenState
       Column(
         children: [
           _buildDetailRow(
-              'Cash in Hand', '₹${_formatAmount(_cashBalance)}', isDark),
+            'Cash in Hand',
+            '₹${_formatAmount(_cashBalance)}',
+            isDark,
+          ),
           _buildDetailRow(
-              'Bank Balance', '₹${_formatAmount(_bankBalance)}', isDark),
+            'Bank Balance',
+            '₹${_formatAmount(_bankBalance)}',
+            isDark,
+          ),
           const Divider(height: 24),
           _buildDetailRow(
-              'Total Liquidity', '₹${_formatAmount(_totalLiquidity)}', isDark,
-              isBold: true),
+            'Total Liquidity',
+            '₹${_formatAmount(_totalLiquidity)}',
+            isDark,
+            isBold: true,
+          ),
         ],
       ),
     );
@@ -471,11 +511,17 @@ class _LiveBusinessHealthScreenState
       const Color(0xFFF59E0B),
       Column(
         children: [
-          _buildDetailRow('Total Outstanding',
-              '₹${_formatAmount(_totalReceivables)}', isDark),
           _buildDetailRow(
-              'Overdue (>30 days)', '₹${_formatAmount(_overdueAmount)}', isDark,
-              valueColor: const Color(0xFFEF4444)),
+            'Total Outstanding',
+            '₹${_formatAmount(_totalReceivables)}',
+            isDark,
+          ),
+          _buildDetailRow(
+            'Overdue (>30 days)',
+            '₹${_formatAmount(_overdueAmount)}',
+            isDark,
+            valueColor: const Color(0xFFEF4444),
+          ),
           _buildDetailRow('Overdue Invoices', '$_overdueCount', isDark),
         ],
       ),
@@ -490,10 +536,17 @@ class _LiveBusinessHealthScreenState
       const Color(0xFFEF4444),
       Column(
         children: [
-          _buildDetailRow('Low Stock Items', '$_lowStockCount', isDark,
-              valueColor: _lowStockCount > 0 ? const Color(0xFFF59E0B) : null),
           _buildDetailRow(
-              'Stock Value', '₹${_formatAmount(_stockValue)}', isDark),
+            'Low Stock Items',
+            '$_lowStockCount',
+            isDark,
+            valueColor: _lowStockCount > 0 ? const Color(0xFFF59E0B) : null,
+          ),
+          _buildDetailRow(
+            'Stock Value',
+            '₹${_formatAmount(_stockValue)}',
+            isDark,
+          ),
         ],
       ),
     );
@@ -509,9 +562,15 @@ class _LiveBusinessHealthScreenState
         children: [
           _buildDetailRow('Invoices Created', '$_todayInvoices', isDark),
           _buildDetailRow(
-              'Total Sales', '₹${_formatAmount(_todaySales)}', isDark),
+            'Total Sales',
+            '₹${_formatAmount(_todaySales)}',
+            isDark,
+          ),
           _buildDetailRow(
-              'Collected', '₹${_formatAmount(_todayCollections)}', isDark),
+            'Collected',
+            '₹${_formatAmount(_todayCollections)}',
+            isDark,
+          ),
           _buildDetailRow(
             'Collection Rate',
             _todaySales > 0
@@ -525,7 +584,12 @@ class _LiveBusinessHealthScreenState
   }
 
   Widget _buildCard(
-      bool isDark, String title, IconData icon, Color color, Widget content) {
+    bool isDark,
+    String title,
+    IconData icon,
+    Color color,
+    Widget content,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -566,8 +630,13 @@ class _LiveBusinessHealthScreenState
     );
   }
 
-  Widget _buildDetailRow(String label, String value, bool isDark,
-      {bool isBold = false, Color? valueColor}) {
+  Widget _buildDetailRow(
+    String label,
+    String value,
+    bool isDark, {
+    bool isBold = false,
+    Color? valueColor,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(

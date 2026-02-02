@@ -55,24 +55,26 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
       final history = <PaymentHistory>[];
       for (var bill in billsResult.data!) {
         if (bill.paidAmount > 0) {
-          history.add(PaymentHistory(
-            id: bill.id,
-            customerId: widget.customerId,
-            paymentDate: bill.date,
-            amount: bill.paidAmount,
-            paymentType: bill.paymentType,
-            status: 'Completed',
-            description: 'Bill #${bill.id.substring(0, 8)}',
-          ));
+          history.add(
+            PaymentHistory(
+              id: bill.id,
+              customerId: widget.customerId,
+              paymentDate: bill.date,
+              amount: bill.paidAmount,
+              paymentType: bill.paymentType,
+              status: 'Completed',
+              description: 'Bill #${bill.id.substring(0, 8)}',
+            ),
+          );
         }
       }
 
       setState(() => _paymentHistory = history);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -80,9 +82,9 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
 
   Future<void> _recordPayment() async {
     if (_amountController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter amount')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter amount')));
       return;
     }
 
@@ -106,9 +108,9 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -165,9 +167,13 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Current Dues',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.grey)),
+                                  const Text(
+                                    'Current Dues',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                   Text(
                                     '₹${widget.currentDues.toStringAsFixed(2)}',
                                     style: const TextStyle(
@@ -181,9 +187,13 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('💵 Cash Paid',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.grey)),
+                                  const Text(
+                                    '💵 Cash Paid',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                   Text(
                                     '₹${totalCashPaid.toStringAsFixed(2)}',
                                     style: const TextStyle(
@@ -197,9 +207,13 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('💳 Online Paid',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.grey)),
+                                  const Text(
+                                    '💳 Online Paid',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                   Text(
                                     '₹${totalOnlinePaid.toStringAsFixed(2)}',
                                     style: const TextStyle(
@@ -221,10 +235,7 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                   // Record Payment Section
                   const Text(
                     'Record Payment',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Card(
@@ -264,7 +275,8 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                                     groupValue: _selectedPaymentType,
                                     onChanged: (value) {
                                       setState(
-                                          () => _selectedPaymentType = value!);
+                                        () => _selectedPaymentType = value!,
+                                      );
                                     },
                                   ),
                                 ),
@@ -275,7 +287,8 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                                     groupValue: _selectedPaymentType,
                                     onChanged: (value) {
                                       setState(
-                                          () => _selectedPaymentType = value!);
+                                        () => _selectedPaymentType = value!,
+                                      );
                                     },
                                   ),
                                 ),
@@ -308,8 +321,9 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                               label: const Text('Record Payment'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: FuturisticColors.success,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                               ),
                             ),
                           ),
@@ -322,27 +336,27 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                   // Filter Section
                   const Text(
                     'Payment History',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: ['All', 'Cash', 'Online']
-                          .map((filter) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: ChoiceChip(
-                                  label: Text(filter),
-                                  selected: _selectedFilter == filter,
-                                  onSelected: (_) {
-                                    setState(() => _selectedFilter = filter);
-                                  },
-                                ),
-                              ))
+                          .map(
+                            (filter) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: ChoiceChip(
+                                label: Text(filter),
+                                selected: _selectedFilter == filter,
+                                onSelected: (_) {
+                                  setState(() => _selectedFilter = filter);
+                                },
+                              ),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
@@ -364,13 +378,16 @@ class _PaymentManagementScreenState extends State<PaymentManagementScreen> {
                           itemCount: filteredHistory.length,
                           itemBuilder: (context, index) {
                             final payment = filteredHistory[index];
-                            final icon =
-                                payment.paymentType == 'Cash' ? '💵' : '💳';
+                            final icon = payment.paymentType == 'Cash'
+                                ? '💵'
+                                : '💳';
                             return Card(
                               margin: const EdgeInsets.only(bottom: 12),
                               child: ListTile(
-                                leading: Text(icon,
-                                    style: const TextStyle(fontSize: 24)),
+                                leading: Text(
+                                  icon,
+                                  style: const TextStyle(fontSize: 24),
+                                ),
                                 title: Text(payment.description),
                                 subtitle: Text(
                                   '${payment.paymentDate.day}/${payment.paymentDate.month}/${payment.paymentDate.year}',

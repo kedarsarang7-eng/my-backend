@@ -41,8 +41,8 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
     final statusColor = bill.status == 'Paid'
         ? FuturisticColors.paid
         : bill.status == 'Partial'
-            ? FuturisticColors.warning
-            : FuturisticColors.unpaid;
+        ? FuturisticColors.warning
+        : FuturisticColors.unpaid;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,8 +107,10 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  _infoRow('Customer ID:',
-                      bill.customerId.isEmpty ? 'N/A' : bill.customerId),
+                  _infoRow(
+                    'Customer ID:',
+                    bill.customerId.isEmpty ? 'N/A' : bill.customerId,
+                  ),
                   const SizedBox(height: 8),
                   _infoRow(
                     'Date:',
@@ -210,11 +212,15 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
               child: Column(
                 children: [
                   _summaryRow(
-                      'Subtotal:', '₹${bill.subtotal.toStringAsFixed(2)}'),
+                    'Subtotal:',
+                    '₹${bill.subtotal.toStringAsFixed(2)}',
+                  ),
                   const SizedBox(height: 8),
                   _summaryRow(
-                      'Paid Amount:', '₹${bill.paidAmount.toStringAsFixed(2)}',
-                      color: FuturisticColors.paid),
+                    'Paid Amount:',
+                    '₹${bill.paidAmount.toStringAsFixed(2)}',
+                    color: FuturisticColors.paid,
+                  ),
                   const Divider(),
                   _summaryRow(
                     'Remaining Due:',
@@ -277,12 +283,14 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
               totalAmount: bill.subtotal,
               status: bill.status,
               items: bill.items
-                  .map((item) => {
-                        'vegName': item.vegName,
-                        'pricePerKg': item.pricePerKg,
-                        'qtyKg': item.qtyKg,
-                        'total': item.total,
-                      })
+                  .map(
+                    (item) => {
+                      'vegName': item.vegName,
+                      'pricePerKg': item.pricePerKg,
+                      'qtyKg': item.qtyKg,
+                      'total': item.total,
+                    },
+                  )
                   .toList(),
               onStatusChanged: (billId, newStatus, paidAmount) {
                 if (mounted) {
@@ -352,7 +360,11 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
 
   /// Handles payment logic using OFFLINE-FIRST Repository
   Future<void> _handlePayment(
-      BuildContext context, Bill bill, double amount, String method) async {
+    BuildContext context,
+    Bill bill,
+    double amount,
+    String method,
+  ) async {
     // 1. Confirmation (for UPI only as per original logic, or always good?)
     if (method == 'upi') {
       final upiUrl = Uri.parse(
@@ -362,9 +374,9 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
         await launchUrl(upiUrl);
       } else {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cannot open UPI app')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Cannot open UPI app')));
         return;
       }
 
@@ -434,27 +446,32 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
           final customer = customerRes.data!;
           // Recalculate dues logic (simplified)
           // Old Dues - Payment Amount
-          final newDues =
-              (customer.totalDues - amount).clamp(0.0, double.infinity);
-          await custRepo.updateCustomer(customer.copyWith(totalDues: newDues),
-              userId: bill.ownerId);
+          final newDues = (customer.totalDues - amount).clamp(
+            0.0,
+            double.infinity,
+          );
+          await custRepo.updateCustomer(
+            customer.copyWith(totalDues: newDues),
+            userId: bill.ownerId,
+          );
         }
       }
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('${method == 'cash' ? 'Cash' : 'UPI'} payment recorded ✓'),
+          content: Text(
+            '${method == 'cash' ? 'Cash' : 'UPI'} payment recorded ✓',
+          ),
           backgroundColor: FuturisticColors.success,
         ),
       );
       Navigator.pop(context); // Go back
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error recording payment: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error recording payment: $e')));
     }
   }
 
@@ -509,7 +526,8 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
           ],
         ),
         content: const Text(
-            'Editing this bill will create a permanent audit log entry.\n\nThe original version will be archived and visible in the history.'),
+          'Editing this bill will create a permanent audit log entry.\n\nThe original version will be archived and visible in the history.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

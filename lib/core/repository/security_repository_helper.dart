@@ -50,10 +50,7 @@ class SecurityCheckResult {
   }
 
   factory SecurityCheckResult.blocked(String reason) {
-    return SecurityCheckResult._(
-      isAllowed: false,
-      blockedReason: reason,
-    );
+    return SecurityCheckResult._(isAllowed: false, blockedReason: reason);
   }
 
   factory SecurityCheckResult.pinRequired(PinProtectedAction action) {
@@ -76,9 +73,9 @@ class RepositorySecurityHelper {
     PinVerificationService? pinService,
     PeriodLockService? periodLockService,
     AuditRepository? auditRepository,
-  })  : _pinService = pinService,
-        _periodLockService = periodLockService,
-        _auditRepository = auditRepository;
+  }) : _pinService = pinService,
+       _periodLockService = periodLockService,
+       _auditRepository = auditRepository;
 
   /// Check if period is locked for a date
   Future<SecurityCheckResult> checkPeriodLock({

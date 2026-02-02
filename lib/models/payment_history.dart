@@ -24,7 +24,8 @@ class PaymentHistory {
         id: id,
         customerId: map['customerId'] ?? '',
         paymentDate: DateTime.parse(
-            map['paymentDate'] ?? DateTime.now().toIso8601String()),
+          map['paymentDate'] ?? DateTime.now().toIso8601String(),
+        ),
         amount: (map['amount'] ?? 0).toDouble(),
         paymentType: map['paymentType'] ?? 'Cash',
         status: map['status'] ?? 'Completed',
@@ -33,14 +34,14 @@ class PaymentHistory {
       );
 
   Map<String, dynamic> toMap() => {
-        'customerId': customerId,
-        'paymentDate': paymentDate.toIso8601String(),
-        'amount': amount,
-        'paymentType': paymentType,
-        'status': status,
-        'description': description,
-        'duesCleared': duesCleared,
-      };
+    'customerId': customerId,
+    'paymentDate': paymentDate.toIso8601String(),
+    'amount': amount,
+    'paymentType': paymentType,
+    'status': status,
+    'description': description,
+    'duesCleared': duesCleared,
+  };
 }
 
 class DailyBillSummary {
@@ -77,14 +78,14 @@ class DailyBillSummary {
       );
 
   Map<String, dynamic> toMap() => {
-        'totalBills': totalBills,
-        'totalRevenue': totalRevenue,
-        'totalPaid': totalPaid,
-        'totalDues': totalDues,
-        'cashSales': cashSales,
-        'onlineSales': onlineSales,
-        'vegetableTypes': vegetableTypes,
-      };
+    'totalBills': totalBills,
+    'totalRevenue': totalRevenue,
+    'totalPaid': totalPaid,
+    'totalDues': totalDues,
+    'cashSales': cashSales,
+    'onlineSales': onlineSales,
+    'vegetableTypes': vegetableTypes,
+  };
 }
 
 class BlacklistedCustomer {
@@ -111,20 +112,22 @@ class BlacklistedCustomer {
         customerId: id,
         customerName: map['customerName'] ?? '',
         blacklistDate: DateTime.parse(
-            map['blacklistDate'] ?? DateTime.now().toIso8601String()),
-        fromDate:
-            map['fromDate'] != null ? DateTime.parse(map['fromDate']) : null,
+          map['blacklistDate'] ?? DateTime.now().toIso8601String(),
+        ),
+        fromDate: map['fromDate'] != null
+            ? DateTime.parse(map['fromDate'])
+            : null,
         toDate: map['toDate'] != null ? DateTime.parse(map['toDate']) : null,
         duesAmount: (map['duesAmount'] ?? 0).toDouble(),
         reason: map['reason'] ?? 'Non-payment',
       );
 
   Map<String, dynamic> toMap() => {
-        'customerName': customerName,
-        'blacklistDate': blacklistDate.toIso8601String(),
-        'fromDate': fromDate?.toIso8601String(),
-        'toDate': toDate?.toIso8601String(),
-        'duesAmount': duesAmount,
-        'reason': reason,
-      };
+    'customerName': customerName,
+    'blacklistDate': blacklistDate.toIso8601String(),
+    'fromDate': fromDate?.toIso8601String(),
+    'toDate': toDate?.toIso8601String(),
+    'duesAmount': duesAmount,
+    'reason': reason,
+  };
 }

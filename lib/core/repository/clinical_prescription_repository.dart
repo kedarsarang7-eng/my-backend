@@ -24,7 +24,8 @@ class ClinicalPrescriptionRepository {
   // ============================================
 
   Future<RepositoryResult<Prescription>> createPrescription(
-      Prescription prescription) async {
+    Prescription prescription,
+  ) async {
     return await errorHandler.runSafe<Prescription>(() async {
       final now = DateTime.now();
 
@@ -34,7 +35,9 @@ class ClinicalPrescriptionRepository {
       // Wait, 'prescriptions' table in tables.dart has 'medicines' column?
       // I added it in previous session.
 
-      await database.into(database.prescriptions).insert(
+      await database
+          .into(database.prescriptions)
+          .insert(
             PrescriptionsCompanion.insert(
               id: prescription.id,
               userId: prescription.doctorId,
@@ -43,10 +46,12 @@ class ClinicalPrescriptionRepository {
               doctorId: Value(prescription.doctorId),
               date: prescription.date,
               medicinesJson: jsonEncode(
-                  prescription.medicines.map((e) => e.toMap()).toList()),
+                prescription.medicines.map((e) => e.toMap()).toList(),
+              ),
               advice: Value(prescription.advice),
-              nextVisitDate:
-                  Value(DateTime.tryParse(prescription.nextVisitDate ?? '')),
+              nextVisitDate: Value(
+                DateTime.tryParse(prescription.nextVisitDate ?? ''),
+              ),
               isSynced: const Value(false),
               createdAt: now,
               updatedAt: now,
@@ -64,16 +69,19 @@ class ClinicalPrescriptionRepository {
       await syncManager.enqueue(item);
 
       return prescription.copyWith(
-          createdAt: now,
-          updatedAt: now); // Helper copyWith if exists or just return input
+        createdAt: now,
+        updatedAt: now,
+      ); // Helper copyWith if exists or just return input
     }, 'createClinicalPrescription');
   }
 
   Future<RepositoryResult<Prescription?>> getByVisitId(String visitId) async {
     return await errorHandler.runSafe<Prescription?>(() async {
-      final entity = await (database.select(database.prescriptions)
-            ..where((t) => t.visitId.equals(visitId) & t.deletedAt.isNull()))
-          .getSingleOrNull();
+      final entity =
+          await (database.select(
+                database.prescriptions,
+              )..where((t) => t.visitId.equals(visitId) & t.deletedAt.isNull()))
+              .getSingleOrNull();
 
       if (entity == null) return null;
       return _entityToModel(entity);

@@ -27,8 +27,8 @@ class AccessControlService {
   AccessControlService({
     required AuditRepository auditRepository,
     FraudDetectionService? fraudService,
-  })  : _auditRepository = auditRepository,
-        _fraudService = fraudService;
+  }) : _auditRepository = auditRepository,
+       _fraudService = fraudService;
 
   /// Check if user has a specific permission
   bool hasPermission(String userId, Permission permission) {
@@ -139,7 +139,8 @@ class AccessControlService {
         targetTableName: 'permission_denial',
         recordId: businessId,
         action: 'DENIED',
-        newValueJson: '''{
+        newValueJson:
+            '''{
           "permission": "${permission.name}",
           "role": "${role.name}",
           "context": ${context != null ? '"$context"' : 'null'}

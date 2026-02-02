@@ -84,8 +84,9 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
     _filteredBills = _allBills.where((bill) {
       // Date Range
       final date = bill.date;
-      final afterStart =
-          date.isAfter(_startDate.subtract(const Duration(days: 1)));
+      final afterStart = date.isAfter(
+        _startDate.subtract(const Duration(days: 1)),
+      );
       final beforeEnd = date.isBefore(_endDate.add(const Duration(days: 1)));
       if (!afterStart || !beforeEnd) return false;
 
@@ -113,21 +114,23 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
 
   Future<void> _selectDateRange() async {
     final picked = await showDateRangePicker(
-        context: context,
-        firstDate: DateTime(2020),
-        lastDate: DateTime.now().add(const Duration(days: 1)),
-        initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              primaryColor: Colors.orange,
-              colorScheme: const ColorScheme.light(primary: Colors.orange),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+      initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: Colors.orange,
+            colorScheme: const ColorScheme.light(primary: Colors.orange),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary,
             ),
-            child: child!,
-          );
-        });
+          ),
+          child: child!,
+        );
+      },
+    );
 
     if (picked != null) {
       setState(() {
@@ -213,63 +216,68 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredBills.isEmpty
-                    ? _buildEmptyState(isDark)
-                    : EnterpriseTable<PurchaseBill>(
-                        data: _filteredBills,
-                        columns: [
-                          EnterpriseTableColumn(
-                            title: 'Date',
-                            valueBuilder: (b) =>
-                                DateFormat('dd MMM, hh:mm a').format(b.date),
-                          ),
-                          EnterpriseTableColumn(
-                            title: 'Bill No',
-                            valueBuilder: (b) => b.billNumber,
-                          ),
-                          EnterpriseTableColumn(
-                            title: 'Supplier',
-                            valueBuilder: (b) => b.supplierName.isEmpty
-                                ? 'Unknown'
-                                : b.supplierName,
-                          ),
-                          EnterpriseTableColumn(
-                              title: 'Status',
-                              valueBuilder: (b) =>
-                                  b.paidAmount >= b.grandTotal ? 'Paid' : 'Due',
-                              widgetBuilder: (b) {
-                                final isPaid = b.paidAmount >= b.grandTotal;
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: isPaid
-                                        ? FuturisticColors.paidBackground
-                                        : FuturisticColors.unpaidBackground,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(isPaid ? 'PAID' : 'DUE',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                          color: isPaid
-                                              ? FuturisticColors.paid
-                                              : FuturisticColors.unpaid)),
-                                );
-                              }),
-                          EnterpriseTableColumn(
-                            title: 'Total',
-                            valueBuilder: (b) => b.grandTotal,
-                            isNumeric: true,
-                            widgetBuilder: (b) => Text(
-                              '₹${b.grandTotal.toStringAsFixed(0)}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      isDark ? Colors.white : Colors.black87),
-                            ),
-                          ),
-                        ],
+                ? _buildEmptyState(isDark)
+                : EnterpriseTable<PurchaseBill>(
+                    data: _filteredBills,
+                    columns: [
+                      EnterpriseTableColumn(
+                        title: 'Date',
+                        valueBuilder: (b) =>
+                            DateFormat('dd MMM, hh:mm a').format(b.date),
                       ),
+                      EnterpriseTableColumn(
+                        title: 'Bill No',
+                        valueBuilder: (b) => b.billNumber,
+                      ),
+                      EnterpriseTableColumn(
+                        title: 'Supplier',
+                        valueBuilder: (b) =>
+                            b.supplierName.isEmpty ? 'Unknown' : b.supplierName,
+                      ),
+                      EnterpriseTableColumn(
+                        title: 'Status',
+                        valueBuilder: (b) =>
+                            b.paidAmount >= b.grandTotal ? 'Paid' : 'Due',
+                        widgetBuilder: (b) {
+                          final isPaid = b.paidAmount >= b.grandTotal;
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isPaid
+                                  ? FuturisticColors.paidBackground
+                                  : FuturisticColors.unpaidBackground,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              isPaid ? 'PAID' : 'DUE',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: isPaid
+                                    ? FuturisticColors.paid
+                                    : FuturisticColors.unpaid,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      EnterpriseTableColumn(
+                        title: 'Total',
+                        valueBuilder: (b) => b.grandTotal,
+                        isNumeric: true,
+                        widgetBuilder: (b) => Text(
+                          '₹${b.grandTotal.toStringAsFixed(0)}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
 
           // Summary Footer
@@ -278,21 +286,29 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF1E293B) : Colors.white,
               border: Border(
-                  top: BorderSide(
-                      color: isDark ? Colors.white10 : Colors.grey.shade200)),
+                top: BorderSide(
+                  color: isDark ? Colors.white10 : Colors.grey.shade200,
+                ),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('Total Purchase (${_filteredBills.length}): ',
-                    style: TextStyle(
-                        color: isDark ? Colors.white70 : Colors.grey)),
+                Text(
+                  'Total Purchase (${_filteredBills.length}): ',
+                  style: TextStyle(
+                    color: isDark ? Colors.white70 : Colors.grey,
+                  ),
+                ),
                 const SizedBox(width: 8),
-                Text('₹${_calculateTotal()}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87)),
+                Text(
+                  '₹${_calculateTotal()}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
               ],
             ),
           ),
@@ -314,8 +330,9 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
           });
         }
       },
-      backgroundColor:
-          isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade100,
+      backgroundColor: isDark
+          ? Colors.white.withOpacity(0.05)
+          : Colors.grey.shade100,
       selectedColor: Colors.orange,
       labelStyle: TextStyle(
         color: isSelected
@@ -331,11 +348,16 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_cart_outlined,
-              size: 80, color: isDark ? Colors.white10 : Colors.grey.shade200),
+          Icon(
+            Icons.shopping_cart_outlined,
+            size: 80,
+            color: isDark ? Colors.white10 : Colors.grey.shade200,
+          ),
           const SizedBox(height: 16),
-          Text("No purchases found",
-              style: TextStyle(color: isDark ? Colors.white70 : Colors.grey)),
+          Text(
+            "No purchases found",
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.grey),
+          ),
         ],
       ),
     );
@@ -349,14 +371,18 @@ class _PurchaseReportScreenState extends ConsumerState<PurchaseReportScreen> {
   Future<void> _generatePdf() async {
     final pdfService = PdfService();
     final data = _filteredBills
-        .map((b) => {
-              'label': '#${b.billNumber} ${b.supplierName}',
-              'value': b.grandTotal,
-            })
+        .map(
+          (b) => {
+            'label': '#${b.billNumber} ${b.supplierName}',
+            'value': b.grandTotal,
+          },
+        )
         .toList();
 
     final bytes = await pdfService.generateReportPdf(
-        "Purchase Report", data.cast<Map<String, dynamic>>());
+      "Purchase Report",
+      data.cast<Map<String, dynamic>>(),
+    );
     await Printing.layoutPdf(onLayout: (_) async => bytes);
   }
 }

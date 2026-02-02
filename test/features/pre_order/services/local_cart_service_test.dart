@@ -17,13 +17,15 @@ void main() {
 
     test('Should add items when initialized', () {
       service.initializeForVendor('vendor1');
-      service.addItem(CustomerItemRequestItem(
-        productId: 'p1',
-        productName: 'Test Product',
-        requestedQty: 1,
-        unit: 'pcs',
-        // other required params if any
-      ));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'Test Product',
+          requestedQty: 1,
+          unit: 'pcs',
+          // other required params if any
+        ),
+      );
 
       expect(service.items.length, 1);
       expect(service.items.first.productId, 'p1');
@@ -31,19 +33,29 @@ void main() {
 
     test('Should fail to add item if not initialized', () {
       expect(
-          () => service.addItem(CustomerItemRequestItem(
-              productId: 'p1',
-              productName: 'Test',
-              requestedQty: 1,
-              unit: 'pcs')),
-          throwsException);
+        () => service.addItem(
+          CustomerItemRequestItem(
+            productId: 'p1',
+            productName: 'Test',
+            requestedQty: 1,
+            unit: 'pcs',
+          ),
+        ),
+        throwsException,
+      );
     });
 
     test('Vendor Change should CLEAR cart', () {
       // 1. Setup Vendor 1
       service.initializeForVendor('vendor1');
-      service.addItem(CustomerItemRequestItem(
-          productId: 'p1', productName: 'P1', requestedQty: 1, unit: 'pcs'));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'P1',
+          requestedQty: 1,
+          unit: 'pcs',
+        ),
+      );
       expect(service.items.length, 1);
 
       // 2. Switch to Vendor 2
@@ -56,8 +68,14 @@ void main() {
 
     test('Same Vendor Init should NOT clear cart', () {
       service.initializeForVendor('vendor1');
-      service.addItem(CustomerItemRequestItem(
-          productId: 'p1', productName: 'P1', requestedQty: 1, unit: 'pcs'));
+      service.addItem(
+        CustomerItemRequestItem(
+          productId: 'p1',
+          productName: 'P1',
+          requestedQty: 1,
+          unit: 'pcs',
+        ),
+      );
 
       service.initializeForVendor('vendor1');
       expect(service.items.length, 1);

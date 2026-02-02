@@ -41,8 +41,8 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
 
     try {
       if (_customerId != null) {
-        final connections =
-            await sl<ConnectionService>().getAcceptedConnections();
+        final connections = await sl<ConnectionService>()
+            .getAcceptedConnections();
         setState(() {
           _linkedShops = connections;
         });
@@ -85,10 +85,12 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
       await _loadCustomerData();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
-          backgroundColor: FuturisticColors.error,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceAll('Exception: ', '')),
+            backgroundColor: FuturisticColors.error,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -103,12 +105,16 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
         content: Text('Remove "$shopName" from your account?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Unlink',
-                  style: TextStyle(color: FuturisticColors.error))),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Unlink',
+              style: TextStyle(color: FuturisticColors.error),
+            ),
+          ),
         ],
       ),
     );
@@ -121,8 +127,9 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
       await _loadCustomerData();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -139,8 +146,9 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
             title: 'My Connected Shops',
             actions: [
               IconButton(
-                  onPressed: _loadCustomerData,
-                  icon: const Icon(Icons.refresh)),
+                onPressed: _loadCustomerData,
+                icon: const Icon(Icons.refresh),
+              ),
             ],
           ),
           Expanded(
@@ -156,9 +164,10 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
                         const Text(
                           "LINKED SHOPS",
                           style: TextStyle(
-                              color: FuturisticColors.textSecondary,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2),
+                            color: FuturisticColors.textSecondary,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Expanded(
@@ -167,11 +176,11 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
                               : GridView.builder(
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 300,
-                                    mainAxisSpacing: 16,
-                                    crossAxisSpacing: 16,
-                                    childAspectRatio: 1.5,
-                                  ),
+                                        maxCrossAxisExtent: 300,
+                                        mainAxisSpacing: 16,
+                                        crossAxisSpacing: 16,
+                                        childAspectRatio: 1.5,
+                                      ),
                                   itemCount: _linkedShops.length,
                                   itemBuilder: (context, index) {
                                     return _buildShopCard(_linkedShops[index]);
@@ -203,15 +212,19 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Link a New Shop',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: FuturisticColors.textPrimary)),
+                  const Text(
+                    'Link a New Shop',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: FuturisticColors.textPrimary,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   const Text(
-                      'Enter the Shop ID provided by the store owner to connect.',
-                      style: TextStyle(color: FuturisticColors.textSecondary)),
+                    'Enter the Shop ID provided by the store owner to connect.',
+                    style: TextStyle(color: FuturisticColors.textSecondary),
+                  ),
                 ],
               ),
             ),
@@ -223,8 +236,10 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
                 style: const TextStyle(color: FuturisticColors.textPrimary),
                 decoration: const InputDecoration(
                   hintText: 'Enter Shop ID / Name',
-                  prefixIcon:
-                      Icon(Icons.store, color: FuturisticColors.primary),
+                  prefixIcon: Icon(
+                    Icons.store,
+                    color: FuturisticColors.primary,
+                  ),
                   filled: true,
                   fillColor: FuturisticColors.background,
                   border: OutlineInputBorder(),
@@ -247,13 +262,13 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
   Widget _buildShopCard(Map<String, dynamic> shop) {
     return Container(
       decoration: BoxDecoration(
-          color: FuturisticColors.cardBackground,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: FuturisticColors.border),
-          boxShadow: const [
-            BoxShadow(
-                color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
-          ]),
+        color: FuturisticColors.cardBackground,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: FuturisticColors.border),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -269,19 +284,25 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor:
-                          FuturisticColors.primary.withOpacity(0.1),
-                      child: const Icon(Icons.store,
-                          color: FuturisticColors.primary),
+                      backgroundColor: FuturisticColors.primary.withOpacity(
+                        0.1,
+                      ),
+                      child: const Icon(
+                        Icons.store,
+                        color: FuturisticColors.primary,
+                      ),
                     ),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.link_off,
-                          size: 20, color: FuturisticColors.error),
+                      icon: const Icon(
+                        Icons.link_off,
+                        size: 20,
+                        color: FuturisticColors.error,
+                      ),
                       tooltip: 'Unlink',
                       onPressed: () =>
                           _unlinkShop(shop['id'], shop['shopName'] ?? ''),
-                    )
+                    ),
                   ],
                 ),
                 const Spacer(),
@@ -313,12 +334,19 @@ class _ShopSelectionScreenState extends ConsumerState<ShopSelectionScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
-          Icon(Icons.storefront,
-              size: 64, color: FuturisticColors.textSecondary),
+          Icon(
+            Icons.storefront,
+            size: 64,
+            color: FuturisticColors.textSecondary,
+          ),
           SizedBox(height: 16),
-          Text('No Shops Linked',
-              style: TextStyle(
-                  fontSize: 18, color: FuturisticColors.textSecondary)),
+          Text(
+            'No Shops Linked',
+            style: TextStyle(
+              fontSize: 18,
+              color: FuturisticColors.textSecondary,
+            ),
+          ),
         ],
       ),
     );

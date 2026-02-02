@@ -40,20 +40,20 @@ class LabReportModel {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'patientId': patientId,
-        'doctorId': doctorId,
-        'visitId': visitId,
-        'testName': testName,
-        'testCode': testCode,
-        'reportUrl': reportUrl,
-        'notes': notes,
-        'status': status.name.toUpperCase(),
-        'orderedAt': orderedAt.toIso8601String(),
-        'uploadedAt': uploadedAt?.toIso8601String(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'patientId': patientId,
+    'doctorId': doctorId,
+    'visitId': visitId,
+    'testName': testName,
+    'testCode': testCode,
+    'reportUrl': reportUrl,
+    'notes': notes,
+    'status': status.name.toUpperCase(),
+    'orderedAt': orderedAt.toIso8601String(),
+    'uploadedAt': uploadedAt?.toIso8601String(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory LabReportModel.fromMap(Map<String, dynamic> map) {
     return LabReportModel(

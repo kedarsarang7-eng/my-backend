@@ -48,20 +48,20 @@ class PatientModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'phone': phone,
-        'age': age,
-        'gender': gender,
-        'bloodGroup': bloodGroup,
-        'address': address,
-        'qrToken': qrToken,
-        'chronicConditions': chronicConditions,
-        'allergies': allergies,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'isSynced': isSynced,
-      };
+    'id': id,
+    'name': name,
+    'phone': phone,
+    'age': age,
+    'gender': gender,
+    'bloodGroup': bloodGroup,
+    'address': address,
+    'qrToken': qrToken,
+    'chronicConditions': chronicConditions,
+    'allergies': allergies,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'isSynced': isSynced,
+  };
 
   PatientModel copyWith({
     String? id,

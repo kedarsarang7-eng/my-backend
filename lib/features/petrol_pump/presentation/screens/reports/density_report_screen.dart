@@ -38,9 +38,9 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
       final tanks = await tankService.getTanks().first;
 
       // Load density records
-      final records = await (db.select(db.densityRecords)
-            ..orderBy([(d) => OrderingTerm.desc(d.recordDate)]))
-          .get();
+      final records = await (db.select(
+        db.densityRecords,
+      )..orderBy([(d) => OrderingTerm.desc(d.recordDate)])).get();
 
       setState(() {
         _tanks = tanks;
@@ -50,9 +50,9 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading data: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading data: $e')));
       }
     }
   }
@@ -68,10 +68,7 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
       appBar: AppBar(
         title: const Text('Density Report'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -95,11 +92,15 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
                       ),
                       items: [
                         const DropdownMenuItem(
-                            value: null, child: Text('All Tanks')),
-                        ..._tanks.map((tank) => DropdownMenuItem(
-                              value: tank.tankId,
-                              child: Text(tank.tankName),
-                            )),
+                          value: null,
+                          child: Text('All Tanks'),
+                        ),
+                        ..._tanks.map(
+                          (tank) => DropdownMenuItem(
+                            value: tank.tankId,
+                            child: Text(tank.tankName),
+                          ),
+                        ),
                       ],
                       onChanged: (value) {
                         setState(() => _selectedTankId = value);
@@ -144,7 +145,9 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
                 Text(
                   tank.tankName,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 Text(
                   dateFormat.format(record.recordDate),
@@ -156,23 +159,29 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildMeasurement('Density',
-                    '${record.density.toStringAsFixed(3)} kg/L', Colors.blue),
+                _buildMeasurement(
+                  'Density',
+                  '${record.density.toStringAsFixed(3)} kg/L',
+                  Colors.blue,
+                ),
                 if (record.temperature != null)
                   _buildMeasurement(
-                      'Temp',
-                      '${record.temperature!.toStringAsFixed(1)}°C',
-                      Colors.orange),
+                    'Temp',
+                    '${record.temperature!.toStringAsFixed(1)}°C',
+                    Colors.orange,
+                  ),
                 if (record.dipReading != null)
                   _buildMeasurement(
-                      'Dip',
-                      '${record.dipReading!.toStringAsFixed(0)} mm',
-                      Colors.green),
+                    'Dip',
+                    '${record.dipReading!.toStringAsFixed(0)} mm',
+                    Colors.green,
+                  ),
                 if (record.calculatedVolume != null)
                   _buildMeasurement(
-                      'Volume',
-                      '${record.calculatedVolume!.toStringAsFixed(0)} L',
-                      Colors.purple),
+                    'Volume',
+                    '${record.calculatedVolume!.toStringAsFixed(0)} L',
+                    Colors.purple,
+                  ),
               ],
             ),
             if (record.notes != null && record.notes!.isNotEmpty) ...[
@@ -180,9 +189,10 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
               Text(
                 record.notes!,
                 style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                    fontStyle: FontStyle.italic),
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
           ],
@@ -196,8 +206,10 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
       children: [
         Text(label, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
         const SizedBox(height: 4),
-        Text(value,
-            style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+        Text(
+          value,
+          style: TextStyle(fontWeight: FontWeight.bold, color: color),
+        ),
       ],
     );
   }
@@ -221,18 +233,21 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
                 value: selectedTankId,
                 decoration: const InputDecoration(labelText: 'Tank'),
                 items: _tanks
-                    .map((tank) => DropdownMenuItem(
-                          value: tank.tankId,
-                          child: Text(tank.tankName),
-                        ))
+                    .map(
+                      (tank) => DropdownMenuItem(
+                        value: tank.tankId,
+                        child: Text(tank.tankName),
+                      ),
+                    )
                     .toList(),
                 onChanged: (value) => selectedTankId = value,
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: densityController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Density (kg/L)',
                   hintText: '0.755',
@@ -241,8 +256,9 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: tempController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Temperature (°C)',
                   hintText: '30.0',
@@ -303,14 +319,18 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
       final db = sl<AppDatabase>();
       final id = DateTime.now().millisecondsSinceEpoch.toString();
 
-      await db.into(db.densityRecords).insert(DensityRecordsCompanion.insert(
-            id: id,
-            ownerId: sl<SessionManager>().ownerId ?? 'unknown',
-            tankId: tankId,
-            recordDate: DateTime.now(),
-            density: density,
-            createdAt: DateTime.now(),
-          ));
+      await db
+          .into(db.densityRecords)
+          .insert(
+            DensityRecordsCompanion.insert(
+              id: id,
+              ownerId: sl<SessionManager>().ownerId ?? 'unknown',
+              tankId: tankId,
+              recordDate: DateTime.now(),
+              density: density,
+              createdAt: DateTime.now(),
+            ),
+          );
 
       _loadData();
 
@@ -321,9 +341,9 @@ class _DensityReportScreenState extends State<DensityReportScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error recording density: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error recording density: $e')));
       }
     }
   }

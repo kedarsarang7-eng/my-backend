@@ -71,9 +71,11 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ErrorHandler.handle(e,
-            stackTrace: StackTrace.current,
-            userMessage: 'Failed to load shop details. Please retry.');
+        ErrorHandler.handle(
+          e,
+          stackTrace: StackTrace.current,
+          userMessage: 'Failed to load shop details. Please retry.',
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -100,17 +102,13 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
             children: [
               // Header
               _buildHeader(), // Cart Summary & Vendor Info
-
               // Expanded Content
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Catalog (Left/Main)
-                    Expanded(
-                      flex: 6,
-                      child: _buildCatalog(),
-                    ),
+                    Expanded(flex: 6, child: _buildCatalog()),
 
                     // Cart & History (Right - Desktop Style or Tabbed on Mobile)
                     // Assuming Desktop/Tablet due to "DukanX" context, but using adaptable layout
@@ -118,7 +116,8 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
                       width: 400,
                       decoration: BoxDecoration(
                         border: Border(
-                            left: BorderSide(color: Colors.grey.shade200)),
+                          left: BorderSide(color: Colors.grey.shade200),
+                        ),
                       ),
                       child: Column(
                         children: [
@@ -154,8 +153,10 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
           const SizedBox(height: 16),
           Text(
             'Not Linked to any Shop',
-            style:
-                GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.bold),
+            style: GoogleFonts.outfit(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           const Text('Link to a vendor to start ordering items.'),
@@ -165,7 +166,8 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => const CustomerLinkShopScreen()),
+                  builder: (_) => const CustomerLinkShopScreen(),
+                ),
               );
               if (result == true) {
                 // Refresh linkage
@@ -194,19 +196,25 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Ordering from',
-                  style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey)),
+              Text(
+                'Ordering from',
+                style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey),
+              ),
               // Ideally show Vendor Name, but we have ID. Can fetch later.
-              Text(_linkedVendorId ?? 'Unknown',
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+              Text(
+                _linkedVendorId ?? 'Unknown',
+                style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const Spacer(),
           // Business Type Badge
           if (_businessType != null)
             Chip(
-              label: Text(_businessType!.toUpperCase(),
-                  style: const TextStyle(fontSize: 10)),
+              label: Text(
+                _businessType!.toUpperCase(),
+                style: const TextStyle(fontSize: 10),
+              ),
               backgroundColor: Colors.blue.withOpacity(0.1),
               visualDensity: VisualDensity.compact,
             ),
@@ -224,7 +232,8 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
         }
         if (snapshot.hasError) {
           return Center(
-              child: Text('Error loading catalog: ${snapshot.error}'));
+            child: Text('Error loading catalog: ${snapshot.error}'),
+          );
         }
 
         final products = snapshot.data?.data ?? [];
@@ -267,9 +276,10 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
               Expanded(
                 child: Center(
                   child: Icon(
-                      isPharmacy ? Icons.medication : Icons.shopping_bag,
-                      size: 48,
-                      color: Colors.grey.shade300),
+                    isPharmacy ? Icons.medication : Icons.shopping_bag,
+                    size: 48,
+                    color: Colors.grey.shade300,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -286,7 +296,9 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
                   Text(
                     '₹${product.sellingPrice}',
                     style: GoogleFonts.outfit(
-                        color: Colors.green, fontWeight: FontWeight.bold),
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     '/ ${product.unit}',
@@ -312,15 +324,21 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Current Request',
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(
+                  'Current Request',
+                  style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
                 if (_cartService.itemCount > 0)
                   TextButton(
                     onPressed: () => _cartService.clear(),
-                    child: const Text('Clear',
-                        style: TextStyle(color: Colors.red)),
-                  )
+                    child: const Text(
+                      'Clear',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -354,9 +372,13 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(12),
-          child: Text('Past Requests',
-              style: GoogleFonts.outfit(
-                  fontWeight: FontWeight.bold, fontSize: 16)),
+          child: Text(
+            'Past Requests',
+            style: GoogleFonts.outfit(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
         ),
         Expanded(
           child: StreamBuilder<List<CustomerItemRequest>>(
@@ -411,19 +433,22 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               final qty = double.tryParse(qtyController.text) ?? 0;
               if (qty > 0) {
-                _cartService.addItem(CustomerItemRequestItem(
-                  productId: product.id,
-                  productName: product.name,
-                  requestedQty: qty,
-                  unit: product.unit,
-                  status: ItemStatus.pending,
-                ));
+                _cartService.addItem(
+                  CustomerItemRequestItem(
+                    productId: product.id,
+                    productName: product.name,
+                    requestedQty: qty,
+                    unit: product.unit,
+                    status: ItemStatus.pending,
+                  ),
+                );
               }
               Navigator.pop(context);
             },
@@ -454,15 +479,17 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text(
-                  'Request sent successfully! Vendor will review it shortly.')),
+            content: Text(
+              'Request sent successfully! Vendor will review it shortly.',
+            ),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to send request: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to send request: $e')));
       }
     }
   }
@@ -499,11 +526,17 @@ class _CustomerPreOrderScreenState extends State<CustomerPreOrderScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(4)),
-      child: Text(status.name.toUpperCase(),
-          style: TextStyle(
-              color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        status.name.toUpperCase(),
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 

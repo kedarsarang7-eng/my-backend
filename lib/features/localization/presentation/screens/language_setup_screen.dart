@@ -21,10 +21,7 @@ import '../../../onboarding/vendor_onboarding_screen.dart';
 class LanguageSetupScreen extends ConsumerStatefulWidget {
   final String selectedLocaleCode;
 
-  const LanguageSetupScreen({
-    super.key,
-    required this.selectedLocaleCode,
-  });
+  const LanguageSetupScreen({super.key, required this.selectedLocaleCode});
 
   @override
   ConsumerState<LanguageSetupScreen> createState() =>
@@ -73,17 +70,14 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
     final locale = Locale(widget.selectedLocaleCode);
     final service = LocalizationService();
 
-    final success = await service.setupLanguage(
-      locale,
-      (status, progress) {
-        if (mounted) {
-          setState(() {
-            _statusMessage = status;
-            _progress = progress;
-          });
-        }
-      },
-    );
+    final success = await service.setupLanguage(locale, (status, progress) {
+      if (mounted) {
+        setState(() {
+          _statusMessage = status;
+          _progress = progress;
+        });
+      }
+    });
 
     if (!mounted) return;
 
@@ -105,11 +99,8 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
                 const VendorOnboardingScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
+                  return FadeTransition(opacity: animation, child: child);
+                },
             transitionDuration: const Duration(milliseconds: 500),
           ),
         );
@@ -148,26 +139,24 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
                         colors: _hasError
                             ? [const Color(0xFFEF4444), const Color(0xFFDC2626)]
                             : _isComplete
-                                ? [
-                                    const Color(0xFF22C55E),
-                                    const Color(0xFF16A34A)
-                                  ]
-                                : [
-                                    const Color(0xFF3B82F6),
-                                    const Color(0xFF8B5CF6)
-                                  ],
+                            ? [const Color(0xFF22C55E), const Color(0xFF16A34A)]
+                            : [
+                                const Color(0xFF3B82F6),
+                                const Color(0xFF8B5CF6),
+                              ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: (_hasError
-                                  ? const Color(0xFFEF4444)
-                                  : _isComplete
+                          color:
+                              (_hasError
+                                      ? const Color(0xFFEF4444)
+                                      : _isComplete
                                       ? const Color(0xFF22C55E)
                                       : const Color(0xFF3B82F6))
-                              .withOpacity(0.4),
+                                  .withOpacity(0.4),
                           blurRadius: 30,
                           offset: const Offset(0, 10),
                         ),
@@ -177,8 +166,8 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
                       _hasError
                           ? Icons.error_outline_rounded
                           : _isComplete
-                              ? Icons.check_rounded
-                              : Icons.translate_rounded,
+                          ? Icons.check_rounded
+                          : Icons.translate_rounded,
                       color: Colors.white,
                       size: 48,
                     ),
@@ -202,8 +191,9 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
-                          color:
-                              isDark ? Colors.white : const Color(0xFF1E293B),
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF1E293B),
                         ),
                       ),
                     ],
@@ -219,8 +209,8 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
                     color: _hasError
                         ? const Color(0xFFEF4444)
                         : isDark
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade600,
+                        ? Colors.grey.shade400
+                        : Colors.grey.shade600,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -251,8 +241,9 @@ class _LanguageSetupScreenState extends ConsumerState<LanguageSetupScreen>
                     style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color:
-                          isDark ? Colors.grey.shade500 : Colors.grey.shade500,
+                      color: isDark
+                          ? Colors.grey.shade500
+                          : Colors.grey.shade500,
                     ),
                   ),
                 ],

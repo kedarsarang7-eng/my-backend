@@ -51,11 +51,11 @@ class EInvoiceDashboardSummary {
   });
 
   factory EInvoiceDashboardSummary.empty() => EInvoiceDashboardSummary(
-        totalHighValue: 0,
-        pending: 0,
-        compliancePercentage: 100,
-        pendingInvoices: [],
-      );
+    totalHighValue: 0,
+    pending: 0,
+    compliancePercentage: 100,
+    pendingInvoices: [],
+  );
 
   bool get isFullyCompliant => pending == 0;
 }
@@ -81,22 +81,27 @@ class EInvoiceStatusService {
 
     // Filter to this month in Dart to avoid 'isBiggerThanValue' issues
     final monthBills = allBills
-        .where((b) =>
-            b.billDate.isAfter(startOfMonth.subtract(const Duration(days: 1))))
+        .where(
+          (b) => b.billDate.isAfter(
+            startOfMonth.subtract(const Duration(days: 1)),
+          ),
+        )
         .toList();
 
     final highValueInvoices = <EInvoiceInfo>[];
 
     for (final bill in monthBills) {
       if (bill.grandTotal >= 250000) {
-        highValueInvoices.add(EInvoiceInfo(
-          billId: bill.id,
-          invoiceNumber: bill.invoiceNumber,
-          customerName: bill.customerName ?? 'Unknown',
-          amount: bill.grandTotal,
-          billDate: bill.billDate,
-          status: EInvoiceStatus.pending,
-        ));
+        highValueInvoices.add(
+          EInvoiceInfo(
+            billId: bill.id,
+            invoiceNumber: bill.invoiceNumber,
+            customerName: bill.customerName ?? 'Unknown',
+            amount: bill.grandTotal,
+            billDate: bill.billDate,
+            status: EInvoiceStatus.pending,
+          ),
+        );
       }
     }
 

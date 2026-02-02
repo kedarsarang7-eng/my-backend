@@ -53,10 +53,7 @@ class _SaleHomeScreenState extends ConsumerState<SaleHomeScreen>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                FuturisticColors.primary,
-                FuturisticColors.secondary,
-              ],
+              colors: [FuturisticColors.primary, FuturisticColors.secondary],
             ),
           ),
         ),
@@ -99,10 +96,7 @@ class _SaleHomeScreenState extends ConsumerState<SaleHomeScreen>
               : const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFFF8FAFC),
-                    Color(0xFFE2E8F0),
-                  ],
+                  colors: [Color(0xFFF8FAFC), Color(0xFFE2E8F0)],
                 ),
         ),
         child: TabBarView(

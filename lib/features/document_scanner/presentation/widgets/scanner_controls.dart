@@ -61,7 +61,7 @@ class MicroToolbar extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -100,8 +100,11 @@ class ShutterButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isProcessing;
 
-  const ShutterButton(
-      {super.key, required this.onTap, this.isProcessing = false});
+  const ShutterButton({
+    super.key,
+    required this.onTap,
+    this.isProcessing = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +119,7 @@ class ShutterButton extends StatelessWidget {
         height: 72,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.white,
-            width: 4,
-          ),
+          border: Border.all(color: Colors.white, width: 4),
           color: Colors.transparent,
         ),
         child: Center(
@@ -129,8 +129,9 @@ class ShutterButton extends StatelessWidget {
             height: isProcessing ? 24 : 58,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color:
-                  isProcessing ? Colors.white : Colors.white.withOpacity(0.9),
+              color: isProcessing
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.9),
             ),
           ),
         ),

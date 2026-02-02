@@ -26,13 +26,15 @@ void main() {
         expect(isPaid, true);
       });
 
-      test('should mark bill as unpaid when paidAmount less than grandTotal',
-          () {
-        final grandTotal = 500.0;
-        final paidAmount = 250.0;
-        final isPaid = paidAmount >= grandTotal;
-        expect(isPaid, false);
-      });
+      test(
+        'should mark bill as unpaid when paidAmount less than grandTotal',
+        () {
+          final grandTotal = 500.0;
+          final paidAmount = 250.0;
+          final isPaid = paidAmount >= grandTotal;
+          expect(isPaid, false);
+        },
+      );
     });
 
     group('BillItem Calculation Tests', () {

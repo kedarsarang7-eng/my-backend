@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../models/fuel_type.dart';
 import '../../services/fuel_service.dart';
@@ -47,8 +47,10 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> {
               return Card(
                 child: ListTile(
                   leading: const Icon(Icons.local_gas_station, size: 32),
-                  title: Text(fuel.fuelName,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(
+                    fuel.fuelName,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Text('GST: ${fuel.linkedGSTRate}%'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -58,13 +60,17 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                              '₹${fuel.currentRatePerLitre.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green)),
-                          const Text('per litre',
-                              style: TextStyle(fontSize: 10)),
+                            '₹${fuel.currentRatePerLitre.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                          const Text(
+                            'per litre',
+                            style: TextStyle(fontSize: 10),
+                          ),
                         ],
                       ),
                       const SizedBox(width: 16),
@@ -90,9 +96,12 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> {
   }
 
   Future<void> _showUpdateRateDialog(
-      BuildContext context, FuelType fuel) async {
-    final controller =
-        TextEditingController(text: fuel.currentRatePerLitre.toString());
+    BuildContext context,
+    FuelType fuel,
+  ) async {
+    final controller = TextEditingController(
+      text: fuel.currentRatePerLitre.toString(),
+    );
 
     await showDialog(
       context: context,

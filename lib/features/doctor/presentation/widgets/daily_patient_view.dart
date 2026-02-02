@@ -8,8 +8,11 @@ class DailyPatientView extends StatelessWidget {
   final List<AppointmentEntity> appointments;
   final Function(String)? onPatientTap;
 
-  const DailyPatientView(
-      {super.key, required this.appointments, this.onPatientTap});
+  const DailyPatientView({
+    super.key,
+    required this.appointments,
+    this.onPatientTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +39,10 @@ class DailyPatientView extends StatelessWidget {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: FuturisticColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -59,13 +64,17 @@ class DailyPatientView extends StatelessWidget {
               child: Center(
                 child: Column(
                   children: [
-                    Icon(Icons.event_available,
-                        size: 48, color: FuturisticColors.textDisabled),
+                    Icon(
+                      Icons.event_available,
+                      size: 48,
+                      color: FuturisticColors.textDisabled,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'No appointments for today',
                       style: GoogleFonts.inter(
-                          color: FuturisticColors.textSecondary),
+                        color: FuturisticColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -95,34 +104,41 @@ class DailyPatientView extends StatelessWidget {
                   title: Text(
                     'Patient ID: ${appt.patientId}',
                     style: GoogleFonts.inter(
-                        color: FuturisticColors.textPrimary,
-                        fontWeight: FontWeight.w500),
+                      color: FuturisticColors.textPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   subtitle: Row(
                     children: [
-                      Icon(Icons.access_time,
-                          size: 14, color: FuturisticColors.textSecondary),
+                      Icon(
+                        Icons.access_time,
+                        size: 14,
+                        color: FuturisticColors.textSecondary,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         DateFormat('hh:mm a').format(appt.scheduledTime),
                         style: GoogleFonts.inter(
-                            color: FuturisticColors.textSecondary,
-                            fontSize: 13),
+                          color: FuturisticColors.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Container(
                         width: 4,
                         height: 4,
                         decoration: const BoxDecoration(
-                            color: FuturisticColors.textDisabled,
-                            shape: BoxShape.circle),
+                          color: FuturisticColors.textDisabled,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         appt.purpose ?? "Consultation",
                         style: GoogleFonts.inter(
-                            color: FuturisticColors.textSecondary,
-                            fontSize: 13),
+                          color: FuturisticColors.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),

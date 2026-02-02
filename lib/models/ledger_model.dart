@@ -5,13 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Used to categorize accounts for financial statements:
 /// - Assets & Expenses have Debit normal balance
 /// - Liabilities, Income & Equity have Credit normal balance
-enum LedgerGroup {
-  assets,
-  liabilities,
-  income,
-  expenses,
-  equity,
-}
+enum LedgerGroup { assets, liabilities, income, expenses, equity }
 
 /// Specific ledger types for quick filtering and behavior.
 enum LedgerType {

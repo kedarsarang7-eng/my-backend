@@ -92,7 +92,7 @@ class _ProformaScreenState extends ConsumerState<ProformaScreen>
                   statuses: const [
                     ProformaStatus.draft,
                     ProformaStatus.sent,
-                    ProformaStatus.accepted
+                    ProformaStatus.accepted,
                   ],
                   isDark: isDark,
                   onConvert: _handleConvert,
@@ -107,7 +107,7 @@ class _ProformaScreenState extends ConsumerState<ProformaScreen>
                   ownerId: ownerId,
                   statuses: const [
                     ProformaStatus.expired,
-                    ProformaStatus.rejected
+                    ProformaStatus.rejected,
                   ],
                   isDark: isDark,
                   onConvert: _handleConvert,
@@ -128,7 +128,8 @@ class _ProformaScreenState extends ConsumerState<ProformaScreen>
       builder: (ctx) => AlertDialog(
         title: Text('Convert to Invoice?'),
         content: Text(
-            'This will create a new invoice from this estimate and mark it as converted.'),
+          'This will create a new invoice from this estimate and mark it as converted.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -167,9 +168,7 @@ class _ProformaScreenState extends ConsumerState<ProformaScreen>
   void _showAddProformaSheet(BuildContext context, String ownerId) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => _AddProformaScreen(ownerId: ownerId),
-      ),
+      MaterialPageRoute(builder: (_) => _AddProformaScreen(ownerId: ownerId)),
     );
   }
 }
@@ -196,16 +195,20 @@ class _ProformaListView extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final proformas =
-            snapshot.data!.where((p) => statuses.contains(p.status)).toList();
+        final proformas = snapshot.data!
+            .where((p) => statuses.contains(p.status))
+            .toList();
 
         if (proformas.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.description_outlined,
-                    size: 64, color: Colors.grey[400]),
+                Icon(
+                  Icons.description_outlined,
+                  size: 64,
+                  color: Colors.grey[400],
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'No estimates in this category',
@@ -267,12 +270,15 @@ class _ProformaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMM yyyy');
-    final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
     final isExpiringSoon =
         proforma.validUntil.difference(DateTime.now()).inDays <= 3 &&
-            proforma.status != ProformaStatus.converted &&
-            proforma.status != ProformaStatus.expired;
+        proforma.status != ProformaStatus.converted &&
+        proforma.status != ProformaStatus.expired;
 
     return GlassCard(
       child: Column(
@@ -290,8 +296,11 @@ class _ProformaCard extends StatelessWidget {
                       color: Colors.purple.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child:
-                        Icon(Icons.description, color: Colors.purple, size: 20),
+                    child: Icon(
+                      Icons.description,
+                      color: Colors.purple,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(
@@ -316,8 +325,10 @@ class _ProformaCard extends StatelessWidget {
                 ],
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _getStatusColor().withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
@@ -350,15 +361,18 @@ class _ProformaCard extends StatelessWidget {
                   color: isExpiringSoon
                       ? Colors.orange
                       : (isDark ? Colors.white70 : Colors.black54),
-                  fontWeight:
-                      isExpiringSoon ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: isExpiringSoon
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
               ),
               if (isExpiringSoon) ...[
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.orange,
                     borderRadius: BorderRadius.circular(4),
@@ -366,9 +380,10 @@ class _ProformaCard extends StatelessWidget {
                   child: Text(
                     'EXPIRING SOON',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -417,7 +432,8 @@ class _ProformaCard extends StatelessWidget {
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
             ],
@@ -466,7 +482,8 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
 
   final _customerNameController = TextEditingController();
   final _termsController = TextEditingController(
-      text: 'Prices valid for 30 days from date of estimate.');
+    text: 'Prices valid for 30 days from date of estimate.',
+  );
   final _notesController = TextEditingController();
   final _discountController = TextEditingController(text: '0');
 
@@ -589,8 +606,9 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
             decoration: InputDecoration(
               labelText: 'Customer Name *',
               prefixIcon: const Icon(Icons.person),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             validator: (val) => val?.isEmpty == true ? 'Required' : null,
           ),
@@ -677,8 +695,10 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
                   children: [
                     const Icon(Icons.inventory_2, size: 48, color: Colors.grey),
                     const SizedBox(height: 8),
-                    const Text('No items added',
-                        style: TextStyle(color: Colors.grey)),
+                    const Text(
+                      'No items added',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ],
                 ),
               ),
@@ -690,13 +710,15 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   item.itemName,
-                  style:
-                      TextStyle(color: isDark ? Colors.white : Colors.black87),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                 ),
                 subtitle: Text(
                   '${item.quantity.toStringAsFixed(0)} ${item.unit} × ₹${item.rate.toStringAsFixed(0)}',
                   style: TextStyle(
-                      color: isDark ? Colors.white54 : Colors.black45),
+                    color: isDark ? Colors.white54 : Colors.black45,
+                  ),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -709,8 +731,11 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
                       ),
                     ),
                     IconButton(
-                      icon:
-                          const Icon(Icons.delete, color: Colors.red, size: 20),
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                        size: 20,
+                      ),
                       onPressed: () => setState(() => _items.removeAt(index)),
                     ),
                   ],
@@ -729,12 +754,16 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Subtotal',
-                  style: TextStyle(
-                      color: isDark ? Colors.white54 : Colors.black45)),
-              Text('₹${_subtotal.toStringAsFixed(0)}',
-                  style:
-                      TextStyle(color: isDark ? Colors.white : Colors.black87)),
+              Text(
+                'Subtotal',
+                style: TextStyle(
+                  color: isDark ? Colors.white54 : Colors.black45,
+                ),
+              ),
+              Text(
+                '₹${_subtotal.toStringAsFixed(0)}',
+                style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -753,7 +782,8 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
                     prefixText: '- ₹',
                     isDense: true,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
               ),
@@ -791,32 +821,40 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Terms & Conditions',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black87)),
+          Text(
+            'Terms & Conditions',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _termsController,
             maxLines: 2,
             decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
           const SizedBox(height: 16),
-          Text('Notes',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black87)),
+          Text(
+            'Notes',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _notesController,
             maxLines: 2,
             decoration: InputDecoration(
               hintText: 'Additional notes...',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ],
@@ -832,8 +870,9 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.purple,
           foregroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         child: _isSaving
             ? const CircularProgressIndicator(color: Colors.white)
@@ -889,20 +928,24 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx), child: Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               final qty = double.tryParse(qtyController.text) ?? 0;
               final rate = double.tryParse(rateController.text) ?? 0;
               if (nameController.text.isNotEmpty && qty > 0 && rate > 0) {
                 setState(() {
-                  _items.add(ProformaItem(
-                    itemId: DateTime.now().millisecondsSinceEpoch.toString(),
-                    itemName: nameController.text,
-                    quantity: qty,
-                    rate: rate,
-                    amount: qty * rate,
-                  ));
+                  _items.add(
+                    ProformaItem(
+                      itemId: DateTime.now().millisecondsSinceEpoch.toString(),
+                      itemName: nameController.text,
+                      quantity: qty,
+                      rate: rate,
+                      amount: qty * rate,
+                    ),
+                  );
                 });
                 Navigator.pop(ctx);
               }
@@ -917,8 +960,9 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
   Future<void> _saveProforma() async {
     if (!_formKey.currentState!.validate()) return;
     if (_items.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Add at least one item')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Add at least one item')));
       return;
     }
 
@@ -949,8 +993,9 @@ class _AddProformaScreenState extends ConsumerState<_AddProformaScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Estimate created!'),
-              backgroundColor: Colors.green),
+            content: Text('Estimate created!'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.pop(context, true);
       }

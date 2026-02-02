@@ -18,10 +18,7 @@ class HeuristicParser {
         .toList();
 
     // Default result
-    final result = <String, dynamic>{
-      'rawText': text,
-      'lines': lines,
-    };
+    final result = <String, dynamic>{'rawText': text, 'lines': lines};
 
     // 1. Common Extractions (MRP, Rate, Qty)
     _extractCommonFields(lines, result);
@@ -44,12 +41,15 @@ class HeuristicParser {
   }
 
   static void _extractCommonFields(
-      List<String> lines, Map<String, dynamic> result) {
+    List<String> lines,
+    Map<String, dynamic> result,
+  ) {
     // MRP / Rate Detection
     // Look for patterns like "MRP 100", "Rate: 50.00", "Rs. 299"
     final moneyRegex = RegExp(
-        r'(?:MRP|Rate|Price|Rs\.?|₹)\s*:?\s*([\d,]+\.?\d*)',
-        caseSensitive: false);
+      r'(?:MRP|Rate|Price|Rs\.?|₹)\s*:?\s*([\d,]+\.?\d*)',
+      caseSensitive: false,
+    );
 
     for (final line in lines) {
       final match = moneyRegex.firstMatch(line);
@@ -75,15 +75,20 @@ class HeuristicParser {
   }
 
   static void _extractPharmacyFields(
-      List<String> lines, Map<String, dynamic> result) {
+    List<String> lines,
+    Map<String, dynamic> result,
+  ) {
     // Expiry Date
     final expiryRegex = RegExp(
-        r'(?:Exp|Expiry|Use Before)\s*:?\s*(\d{1,2}[/-]\d{2,4})',
-        caseSensitive: false);
+      r'(?:Exp|Expiry|Use Before)\s*:?\s*(\d{1,2}[/-]\d{2,4})',
+      caseSensitive: false,
+    );
 
     // Batch No
-    final batchRegex =
-        RegExp(r'(?:Batch|Lot|B\.No)\s*:?\s*([A-Z0-9]+)', caseSensitive: false);
+    final batchRegex = RegExp(
+      r'(?:Batch|Lot|B\.No)\s*:?\s*([A-Z0-9]+)',
+      caseSensitive: false,
+    );
 
     for (final line in lines) {
       if (result['expiryDate'] == null) {
@@ -99,14 +104,20 @@ class HeuristicParser {
   }
 
   static void _extractElectronicsFields(
-      List<String> lines, Map<String, dynamic> result) {
+    List<String> lines,
+    Map<String, dynamic> result,
+  ) {
     // Serial Number / IMEI
-    final serialRegex = RegExp(r'(?:S\/N|Serial|IMEI)\s*:?\s*([A-Z0-9]+)',
-        caseSensitive: false);
+    final serialRegex = RegExp(
+      r'(?:S\/N|Serial|IMEI)\s*:?\s*([A-Z0-9]+)',
+      caseSensitive: false,
+    );
 
     // Model
-    final modelRegex =
-        RegExp(r'(?:Model)\s*:?\s*([A-Z0-9-]+)', caseSensitive: false);
+    final modelRegex = RegExp(
+      r'(?:Model)\s*:?\s*([A-Z0-9-]+)',
+      caseSensitive: false,
+    );
 
     for (final line in lines) {
       if (result['serialNumber'] == null) {

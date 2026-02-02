@@ -34,8 +34,9 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
 
     try {
       // 1. Fetch all customers
-      final customersResult =
-          await sl<CustomersRepository>().getAll(userId: ownerId);
+      final customersResult = await sl<CustomersRepository>().getAll(
+        userId: ownerId,
+      );
       if (!customersResult.isSuccess || customersResult.data == null) {
         throw Exception('Failed to fetch customers: ${customersResult.error}');
       }
@@ -57,7 +58,8 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
       for (final customer in customers) {
         final customerBills = bills
             .where(
-                (b) => b.customerId == customer.id && b.status != 'Cancelled')
+              (b) => b.customerId == customer.id && b.status != 'Cancelled',
+            )
             .toList();
 
         // Calculate expected dues from bills
@@ -119,11 +121,14 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Recompute customer dues from bills',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Recompute customer dues from bills',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 12),
             const Text(
-                'This will iterate all bills locally and update each customer\'s `totalDues` to match outstanding amounts. Use this if totals are inconsistent.'),
+              'This will iterate all bills locally and update each customer\'s `totalDues` to match outstanding amounts. Use this if totals are inconsistent.',
+            ),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -137,7 +142,8 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
                     icon: const Icon(Icons.visibility),
                     label: const Text('Preview (dry-run)'),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueGrey),
+                      backgroundColor: Colors.blueGrey,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -151,15 +157,17 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Confirm recompute'),
                                 content: const Text(
-                                    'This will overwrite `totalDues` for all customers based on local bills. \n\nEnsure all bills are synced effectively if using multi-device before running this.'),
+                                  'This will overwrite `totalDues` for all customers based on local bills. \n\nEnsure all bills are synced effectively if using multi-device before running this.',
+                                ),
                                 actions: [
                                   TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(ctx, false),
-                                      child: const Text('Cancel')),
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Cancel'),
+                                  ),
                                   ElevatedButton(
-                                      onPressed: () => Navigator.pop(ctx, true),
-                                      child: const Text('Run')),
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Run'),
+                                  ),
                                 ],
                               ),
                             );
@@ -168,7 +176,8 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
                     icon: const Icon(Icons.refresh),
                     label: const Text('Run recompute'),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green.shade700),
+                      backgroundColor: Colors.green.shade700,
+                    ),
                   ),
                 ),
               ],
@@ -191,8 +200,9 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
                 const SizedBox(width: 16),
                 const Text('Preview:'),
                 Switch(
-                    value: _preview,
-                    onChanged: (v) => setState(() => _preview = v)),
+                  value: _preview,
+                  onChanged: (v) => setState(() => _preview = v),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -205,10 +215,12 @@ class _AdminMigrationsScreenState extends State<AdminMigrationsScreen> {
                 child: ListView(
                   children: _previewResult!.entries
                       .take(200)
-                      .map((e) => ListTile(
-                            title: Text(e.key),
-                            trailing: Text('₹${e.value.toStringAsFixed(2)}'),
-                          ))
+                      .map(
+                        (e) => ListTile(
+                          title: Text(e.key),
+                          trailing: Text('₹${e.value.toStringAsFixed(2)}'),
+                        ),
+                      )
                       .toList(),
                 ),
               ),

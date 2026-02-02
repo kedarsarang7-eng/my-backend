@@ -15,9 +15,11 @@ class RecurringBillingService {
 
     // Query Active Subscriptions due for billing
     var query = _db.select(_db.subscriptions)
-      ..where((t) =>
-          t.status.equals('ACTIVE') &
-          t.nextInvoiceDate.isSmallerOrEqualValue(now));
+      ..where(
+        (t) =>
+            t.status.equals('ACTIVE') &
+            t.nextInvoiceDate.isSmallerOrEqualValue(now),
+      );
 
     if (specificUserId != null) {
       query = query..where((t) => t.userId.equals(specificUserId));
@@ -53,26 +55,38 @@ class RecurringBillingService {
           nextDate = sub.nextInvoiceDate.add(const Duration(days: 7));
           break;
         case 'QUARTERLY':
-          nextDate = DateTime(sub.nextInvoiceDate.year,
-              sub.nextInvoiceDate.month + 3, sub.nextInvoiceDate.day);
+          nextDate = DateTime(
+            sub.nextInvoiceDate.year,
+            sub.nextInvoiceDate.month + 3,
+            sub.nextInvoiceDate.day,
+          );
           break;
         case 'YEARLY':
-          nextDate = DateTime(sub.nextInvoiceDate.year + 1,
-              sub.nextInvoiceDate.month, sub.nextInvoiceDate.day);
+          nextDate = DateTime(
+            sub.nextInvoiceDate.year + 1,
+            sub.nextInvoiceDate.month,
+            sub.nextInvoiceDate.day,
+          );
           break;
         case 'MONTHLY':
         default:
-          nextDate = DateTime(sub.nextInvoiceDate.year,
-              sub.nextInvoiceDate.month + 1, sub.nextInvoiceDate.day);
+          nextDate = DateTime(
+            sub.nextInvoiceDate.year,
+            sub.nextInvoiceDate.month + 1,
+            sub.nextInvoiceDate.day,
+          );
           break;
       }
 
       // Update Subscription
-      await (_db.update(_db.subscriptions)..where((t) => t.id.equals(sub.id)))
-          .write(SubscriptionsCompanion(
-        nextInvoiceDate: Value(nextDate),
-        lastGeneratedAt: Value(now),
-      ));
+      await (_db.update(
+        _db.subscriptions,
+      )..where((t) => t.id.equals(sub.id))).write(
+        SubscriptionsCompanion(
+          nextInvoiceDate: Value(nextDate),
+          lastGeneratedAt: Value(now),
+        ),
+      );
 
       // 3. Create Bill via Billing Service (Handles Rules & Stock)
       // We need to map Subscription items to BillItemEntity list

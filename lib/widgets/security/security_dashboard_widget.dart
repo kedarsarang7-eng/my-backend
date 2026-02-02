@@ -86,12 +86,15 @@ class SecurityDashboardWidget extends StatelessWidget {
   Widget _buildAlertSummary(BuildContext context) {
     final theme = Theme.of(context);
 
-    final criticalCount =
-        pendingAlerts.where((a) => a.severity == FraudSeverity.critical).length;
-    final highCount =
-        pendingAlerts.where((a) => a.severity == FraudSeverity.high).length;
-    final mediumCount =
-        pendingAlerts.where((a) => a.severity == FraudSeverity.medium).length;
+    final criticalCount = pendingAlerts
+        .where((a) => a.severity == FraudSeverity.critical)
+        .length;
+    final highCount = pendingAlerts
+        .where((a) => a.severity == FraudSeverity.high)
+        .length;
+    final mediumCount = pendingAlerts
+        .where((a) => a.severity == FraudSeverity.medium)
+        .length;
 
     return Row(
       children: [
@@ -164,10 +167,14 @@ class SecurityDashboardWidget extends StatelessWidget {
             color: Colors.green,
           )
         else
-          ...pendingAlerts.take(5).map((alert) => _FraudAlertTile(
-                alert: alert,
-                onTap: () => onAlertTap?.call(alert),
-              )),
+          ...pendingAlerts
+              .take(5)
+              .map(
+                (alert) => _FraudAlertTile(
+                  alert: alert,
+                  onTap: () => onAlertTap?.call(alert),
+                ),
+              ),
       ],
     );
   }
@@ -207,12 +214,14 @@ class SecurityDashboardWidget extends StatelessWidget {
               .toList()
               .asMap()
               .entries
-              .map((entry) => _SessionTile(
-                    session: entry.value,
-                    onTap: () => onSessionTap?.call(entry.value),
-                    // First session is typically the current device
-                    isCurrentDevice: entry.key == 0,
-                  )),
+              .map(
+                (entry) => _SessionTile(
+                  session: entry.value,
+                  onTap: () => onSessionTap?.call(entry.value),
+                  // First session is typically the current device
+                  isCurrentDevice: entry.key == 0,
+                ),
+              ),
       ],
     );
   }
@@ -235,10 +244,7 @@ class SecurityDashboardWidget extends StatelessWidget {
               ),
             ),
             if (onManageLocks != null)
-              TextButton(
-                onPressed: onManageLocks,
-                child: const Text('Manage'),
-              ),
+              TextButton(onPressed: onManageLocks, child: const Text('Manage')),
           ],
         ),
         const SizedBox(height: 12),
@@ -298,10 +304,7 @@ class _SummaryCard extends StatelessWidget {
           ),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 12,
-              color: color.withOpacity(0.8),
-            ),
+            style: TextStyle(fontSize: 12, color: color.withOpacity(0.8)),
           ),
         ],
       ),
@@ -487,10 +490,7 @@ class _EmptyStateCard extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 32),
           const SizedBox(height: 8),
-          Text(
-            message,
-            style: TextStyle(color: color),
-          ),
+          Text(message, style: TextStyle(color: color)),
         ],
       ),
     );

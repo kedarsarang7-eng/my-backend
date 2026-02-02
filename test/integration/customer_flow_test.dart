@@ -32,11 +32,15 @@ void main() {
     mockSyncManager = MockSyncManager();
 
     // Setup default stubs for watchAll methods to avoid MissingStubError
-    when(mockBillsRepo.watchAll(
-            userId: anyNamed('userId'), customerId: anyNamed('customerId')))
-        .thenAnswer((_) => Stream.value([]));
-    when(mockCustomersRepo.watchAll(userId: anyNamed('userId')))
-        .thenAnswer((_) => Stream.value([]));
+    when(
+      mockBillsRepo.watchAll(
+        userId: anyNamed('userId'),
+        customerId: anyNamed('customerId'),
+      ),
+    ).thenAnswer((_) => Stream.value([]));
+    when(
+      mockCustomersRepo.watchAll(userId: anyNamed('userId')),
+    ).thenAnswer((_) => Stream.value([]));
 
     // Register mocks in Service Locator
     GetIt.I.registerSingleton<BillsRepository>(mockBillsRepo);
@@ -66,13 +70,14 @@ void main() {
       );
 
       // Mock the stream to return a list containing the new bill
-      when(mockBillsRepo.watchAll(
-              userId: testOwnerId, customerId: testCustomerId))
-          .thenAnswer((_) => Stream.value([bill]));
+      when(
+        mockBillsRepo.watchAll(userId: testOwnerId, customerId: testCustomerId),
+      ).thenAnswer((_) => Stream.value([bill]));
 
       // Fixed: CustomersRepository uses watchAll with userId filter, not watchCustomer
-      when(mockCustomersRepo.watchAll(userId: testOwnerId))
-          .thenAnswer((_) => Stream.value([]));
+      when(
+        mockCustomersRepo.watchAll(userId: testOwnerId),
+      ).thenAnswer((_) => Stream.value([]));
 
       // ACT
       // Trigger controller initialization (which listens to streams)
@@ -85,9 +90,9 @@ void main() {
 
       // Let's verify the repository interaction which is the "Integration" point
       // Ensure the controller is actually listening to the repo
-      verify(mockBillsRepo.watchAll(
-              userId: testOwnerId, customerId: testCustomerId))
-          .called(1);
+      verify(
+        mockBillsRepo.watchAll(userId: testOwnerId, customerId: testCustomerId),
+      ).called(1);
     });
 
     test('2. Payment Recording Updates Balance', () async {
@@ -104,23 +109,29 @@ void main() {
         totalDues: 500,
       );
 
-      when(mockCustomersRepo.recordPayment(
-        customerId: testCustomerId,
-        amount: paymentAmount,
-        userId: testOwnerId,
-      )).thenAnswer((_) async => RepositoryResult.success(updatedCustomer));
+      when(
+        mockCustomersRepo.recordPayment(
+          customerId: testCustomerId,
+          amount: paymentAmount,
+          userId: testOwnerId,
+        ),
+      ).thenAnswer((_) async => RepositoryResult.success(updatedCustomer));
 
       // ACT
       final success = await controller.recordPayment(
-          amount: paymentAmount, paymentMode: 'Cash');
+        amount: paymentAmount,
+        paymentMode: 'Cash',
+      );
 
       // ASSERT
       expect(success, true);
-      verify(mockCustomersRepo.recordPayment(
-        customerId: testCustomerId,
-        amount: paymentAmount,
-        userId: testOwnerId,
-      )).called(1);
+      verify(
+        mockCustomersRepo.recordPayment(
+          customerId: testCustomerId,
+          amount: paymentAmount,
+          userId: testOwnerId,
+        ),
+      ).called(1);
     });
 
     test('3. No Data Leakage (Shop Scoping)', () async {
@@ -132,9 +143,12 @@ void main() {
       // Controller initialization calls these
 
       // ASSERT - verify watchAll was called with userId parameter
-      verify(mockBillsRepo.watchAll(
-              userId: anyNamed('userId'), customerId: anyNamed('customerId')))
-          .called(greaterThanOrEqualTo(1));
+      verify(
+        mockBillsRepo.watchAll(
+          userId: anyNamed('userId'),
+          customerId: anyNamed('customerId'),
+        ),
+      ).called(greaterThanOrEqualTo(1));
       // If it were fetching global data, it might call watchAll() without arguments or wrong ID
     });
 

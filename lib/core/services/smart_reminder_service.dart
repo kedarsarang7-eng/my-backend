@@ -35,23 +35,29 @@ class SmartReminderService {
     switch (tone) {
       case ReminderTone.friendly:
         sb.write(
-            'Hello $customerName, just a gentle reminder that your bill of $amount is pending. ');
+          'Hello $customerName, just a gentle reminder that your bill of $amount is pending. ',
+        );
         sb.write(
-            'Please pay by $dueDate to avoid any hassle. Thank you for shopping with $businessName!');
+          'Please pay by $dueDate to avoid any hassle. Thank you for shopping with $businessName!',
+        );
         break;
 
       case ReminderTone.firm:
         sb.write(
-            'Dear $customerName, your payment of $amount is overdue by $daysOverdue days. ');
+          'Dear $customerName, your payment of $amount is overdue by $daysOverdue days. ',
+        );
         sb.write(
-            'Please clear this amount immediately to maintain a good credit limit with $businessName.');
+          'Please clear this amount immediately to maintain a good credit limit with $businessName.',
+        );
         break;
 
       case ReminderTone.finalWarning:
         sb.write(
-            'URGENT: $customerName, your bill of $amount is severely overdue ($daysOverdue days). ');
+          'URGENT: $customerName, your bill of $amount is severely overdue ($daysOverdue days). ',
+        );
         sb.write(
-            'Please pay immediately. Failure to do so may affect future credit services.');
+          'Please pay immediately. Failure to do so may affect future credit services.',
+        );
         break;
     }
 
@@ -70,11 +76,13 @@ class SmartReminderService {
 
     // Use specific WhatsApp URL scheme
     final url = Uri.parse(
-        'whatsapp://send?phone=$cleanPhone&text=${Uri.encodeComponent(message)}');
+      'whatsapp://send?phone=$cleanPhone&text=${Uri.encodeComponent(message)}',
+    );
 
     // Fallback to web link if app not installed (or generic launch)
     final webUrl = Uri.parse(
-        'https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}');
+      'https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}',
+    );
 
     try {
       if (await canLaunchUrl(url)) {
@@ -93,9 +101,7 @@ class SmartReminderService {
     final Uri smsLaunchUri = Uri(
       scheme: 'sms',
       path: phone,
-      queryParameters: <String, String>{
-        'body': message,
-      },
+      queryParameters: <String, String>{'body': message},
     );
     if (await canLaunchUrl(smsLaunchUri)) {
       await launchUrl(smsLaunchUri);

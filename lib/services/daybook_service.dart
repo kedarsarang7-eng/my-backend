@@ -11,7 +11,7 @@ class DayBookService {
   final SyncManager? _syncManager;
 
   DayBookService(this._db, {SyncManager? syncManager})
-      : _syncManager = syncManager;
+    : _syncManager = syncManager;
 
   String _dateKey(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
@@ -19,14 +19,16 @@ class DayBookService {
 
   /// Get or create a day book entry (Local First)
   Future<DayBookEntry> getOrCreateEntry(
-      String businessId, DateTime date) async {
+    String businessId,
+    DateTime date,
+  ) async {
     final dateKey = _dateKey(date);
     final id = '${businessId}_$dateKey';
 
     // 1. Try Local DB
-    final localEntry = await (_db.select(_db.dayBook)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final localEntry = await (_db.select(
+      _db.dayBook,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (localEntry != null) {
       return DayBookEntry(
@@ -64,8 +66,10 @@ class DayBookService {
     // 2. Create New Entry
     // Get previous day's closing balance
     final previousDate = date.subtract(const Duration(days: 1));
-    final openingBalance =
-        await _getPreviousClosingBalance(businessId, previousDate);
+    final openingBalance = await _getPreviousClosingBalance(
+      businessId,
+      previousDate,
+    );
 
     final now = DateTime.now();
     final newEntity = DayBookCompanion.insert(
@@ -85,7 +89,9 @@ class DayBookService {
 
   /// Compute and update day book entry from LOCAL transactions.
   Future<DayBookEntry> computeDaySummary(
-      String businessId, DateTime date) async {
+    String businessId,
+    DateTime date,
+  ) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
@@ -95,12 +101,14 @@ class DayBookService {
     final id = '${businessId}_$dateKey';
 
     // 1. SALES (From Bills table)
-    final bills = await (_db.select(_db.bills)
-          ..where((t) =>
-              t.userId.equals(businessId) &
-              t.billDate.isBetweenValues(startOfDay, endOfDay) &
-              t.deletedAt.isNull()))
-        .get();
+    final bills =
+        await (_db.select(_db.bills)..where(
+              (t) =>
+                  t.userId.equals(businessId) &
+                  t.billDate.isBetweenValues(startOfDay, endOfDay) &
+                  t.deletedAt.isNull(),
+            ))
+            .get();
 
     double totalSales = 0;
     double cashSales = 0; // Cash + UPI (Realized immediately)
@@ -129,12 +137,14 @@ class DayBookService {
     }
 
     // 2. EXPENSES (From Expenses table)
-    final expenses = await (_db.select(_db.expenses)
-          ..where((t) =>
-              t.userId.equals(businessId) &
-              t.expenseDate.isBetweenValues(startOfDay, endOfDay) &
-              t.deletedAt.isNull()))
-        .get();
+    final expenses =
+        await (_db.select(_db.expenses)..where(
+              (t) =>
+                  t.userId.equals(businessId) &
+                  t.expenseDate.isBetweenValues(startOfDay, endOfDay) &
+                  t.deletedAt.isNull(),
+            ))
+            .get();
 
     double totalExpenses = 0;
     double cashExpenses = 0;
@@ -150,12 +160,14 @@ class DayBookService {
     }
 
     // 3. PURCHASES (From PurchaseOrders)
-    final purchases = await (_db.select(_db.purchaseOrders)
-          ..where((t) =>
-              t.userId.equals(businessId) &
-              t.purchaseDate.isBetweenValues(startOfDay, endOfDay) &
-              t.deletedAt.isNull()))
-        .get();
+    final purchases =
+        await (_db.select(_db.purchaseOrders)..where(
+              (t) =>
+                  t.userId.equals(businessId) &
+                  t.purchaseDate.isBetweenValues(startOfDay, endOfDay) &
+                  t.deletedAt.isNull(),
+            ))
+            .get();
 
     double totalPurchases = 0;
     double cashPurchases = 0;
@@ -176,12 +188,14 @@ class DayBookService {
 
     // 4. PAYMENTS RECEIVED (From Payments Table)
     // Tracks money coming in from customers (Settling Dues)
-    final payments = await (_db.select(_db.payments)
-          ..where((t) =>
-              t.userId.equals(businessId) &
-              t.paymentDate.isBetweenValues(startOfDay, endOfDay) &
-              t.deletedAt.isNull()))
-        .get();
+    final payments =
+        await (_db.select(_db.payments)..where(
+              (t) =>
+                  t.userId.equals(businessId) &
+                  t.paymentDate.isBetweenValues(startOfDay, endOfDay) &
+                  t.deletedAt.isNull(),
+            ))
+            .get();
 
     double totalPaymentsReceived = 0; // All modes
     double cashPaymentsReceived = 0; // Only Cash/UPI
@@ -204,11 +218,12 @@ class DayBookService {
 
     // Calculate Closing Balance
     // Need Opening Balance
-    final currentEntry = await (_db.select(_db.dayBook)
-          ..where((t) => t.id.equals(id)))
-        .getSingle();
+    final currentEntry = await (_db.select(
+      _db.dayBook,
+    )..where((t) => t.id.equals(id))).getSingle();
 
-    final computedClosing = currentEntry.openingCashBalance +
+    final computedClosing =
+        currentEntry.openingCashBalance +
         cashSales +
         cashPaymentsReceived -
         cashPurchases -
@@ -237,13 +252,14 @@ class DayBookService {
       isSynced: const Value(false),
     );
 
-    await (_db.update(_db.dayBook)..where((t) => t.id.equals(id)))
-        .write(updateComp);
+    await (_db.update(
+      _db.dayBook,
+    )..where((t) => t.id.equals(id))).write(updateComp);
 
     // Fetch updated
-    final updatedData = await (_db.select(_db.dayBook)
-          ..where((t) => t.id.equals(id)))
-        .getSingle();
+    final updatedData = await (_db.select(
+      _db.dayBook,
+    )..where((t) => t.id.equals(id))).getSingle();
 
     // Trigger Sync
     await _enqueueSync(updatedData);
@@ -282,16 +298,18 @@ class DayBookService {
 
   /// Get previous closing balance locally
   Future<double> _getPreviousClosingBalance(
-      String businessId, DateTime date) async {
+    String businessId,
+    DateTime date,
+  ) async {
     // Look back up to 7 days to find the last closing balance
     for (int i = 1; i <= 7; i++) {
       final previousDate = date.subtract(Duration(days: i));
       final dateKey = _dateKey(previousDate);
       final id = '${businessId}_$dateKey';
 
-      final entry = await (_db.select(_db.dayBook)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entry = await (_db.select(
+        _db.dayBook,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       if (entry != null) {
         return entry.closingCashBalance;
@@ -341,18 +359,23 @@ class DayBookService {
     final operationId =
         'SYNC_DAYBOOK_${entry.id}_${DateTime.now().millisecondsSinceEpoch}';
 
-    await _db.into(_db.syncQueue).insert(SyncQueueCompanion(
-          operationId: Value(operationId),
-          operationType: const Value('UPDATE'),
-          targetCollection: const Value('day_book'),
-          documentId: Value(
-              entry.id), // Use local ID or construct remote ID dynamically
-          payload: Value(payload),
-          status: const Value('PENDING'),
-          createdAt: Value(DateTime.now()),
-          retryCount: const Value(0),
-          userId: Value(entry.businessId), // Using businessId as owner
-        ));
+    await _db
+        .into(_db.syncQueue)
+        .insert(
+          SyncQueueCompanion(
+            operationId: Value(operationId),
+            operationType: const Value('UPDATE'),
+            targetCollection: const Value('day_book'),
+            documentId: Value(
+              entry.id,
+            ), // Use local ID or construct remote ID dynamically
+            payload: Value(payload),
+            status: const Value('PENDING'),
+            createdAt: Value(DateTime.now()),
+            retryCount: const Value(0),
+            userId: Value(entry.businessId), // Using businessId as owner
+          ),
+        );
   }
 
   // ============================================
@@ -443,7 +466,9 @@ class DayBookService {
     // For now, simpler implementation: check generic settings if available
     // Otherwise return false to avoid blocking offline flow if settings missing
     return const DayClosureStatus(
-        isRequired: false, reason: 'Offline mode: check disabled');
+      isRequired: false,
+      reason: 'Offline mode: check disabled',
+    );
   }
 
   Future<void> enforceDayClosure(String businessId) async {
@@ -469,10 +494,7 @@ class DayClosureRequiredException implements Exception {
   final String message;
   final DateTime? pendingDate;
 
-  DayClosureRequiredException({
-    required this.message,
-    this.pendingDate,
-  });
+  DayClosureRequiredException({required this.message, this.pendingDate});
 
   @override
   String toString() =>

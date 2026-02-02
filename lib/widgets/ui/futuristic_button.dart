@@ -192,7 +192,8 @@ class _FuturisticButtonState extends State<FuturisticButton>
     final isDisabled = widget.onPressed == null || widget.isLoading;
     final effectiveGradient = widget.gradient;
     final effectiveBgColor = widget.backgroundColor ?? FuturisticColors.primary;
-    final effectiveFgColor = widget.foregroundColor ??
+    final effectiveFgColor =
+        widget.foregroundColor ??
         (widget.isOutlined ? effectiveBgColor : Colors.white);
 
     return GestureDetector(
@@ -203,16 +204,14 @@ class _FuturisticButtonState extends State<FuturisticButton>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: widget.width,
           height: widget.height ?? 56,
-          padding: widget.padding ??
+          padding:
+              widget.padding ??
               const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           decoration: BoxDecoration(
             gradient: widget.isOutlined ? null : effectiveGradient,
@@ -227,10 +226,11 @@ class _FuturisticButtonState extends State<FuturisticButton>
                 ? null
                 : [
                     BoxShadow(
-                      color: (effectiveGradient != null
-                              ? effectiveGradient.colors.first
-                              : effectiveBgColor)
-                          .withOpacity(_isPressed ? 0.4 : 0.25),
+                      color:
+                          (effectiveGradient != null
+                                  ? effectiveGradient.colors.first
+                                  : effectiveBgColor)
+                              .withOpacity(_isPressed ? 0.4 : 0.25),
                       blurRadius: _isPressed ? 12 : 8,
                       offset: const Offset(0, 4),
                       spreadRadius: _isPressed ? 2 : 0,
@@ -336,10 +336,7 @@ class _FuturisticIconButtonState extends State<FuturisticIconButton>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: Container(
           width: widget.size,

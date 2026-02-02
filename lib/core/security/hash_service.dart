@@ -43,7 +43,10 @@ class HashService {
 
   /// Verify a hash match
   bool verifyHash(
-      String previousHash, Map<String, dynamic> data, String currentHash) {
+    String previousHash,
+    Map<String, dynamic> data,
+    String currentHash,
+  ) {
     final computed = computeChainHash(previousHash, data);
     return computed == currentHash;
   }

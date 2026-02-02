@@ -87,23 +87,23 @@ class VendorConnection {
   }
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'customerId': customerId,
-        'vendorId': vendorId,
-        'vendorName': vendorName,
-        'vendorPhone': vendorPhone,
-        'vendorBusinessName': vendorBusinessName,
-        'vendorAddress': vendorAddress,
-        'customerRefId': customerRefId,
-        'status': status,
-        'totalBilled': totalBilled,
-        'totalPaid': totalPaid,
-        'outstandingBalance': outstandingBalance,
-        'lastInvoiceDate': lastInvoiceDate?.toIso8601String(),
-        'lastPaymentDate': lastPaymentDate?.toIso8601String(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'customerId': customerId,
+    'vendorId': vendorId,
+    'vendorName': vendorName,
+    'vendorPhone': vendorPhone,
+    'vendorBusinessName': vendorBusinessName,
+    'vendorAddress': vendorAddress,
+    'customerRefId': customerRefId,
+    'status': status,
+    'totalBilled': totalBilled,
+    'totalPaid': totalPaid,
+    'outstandingBalance': outstandingBalance,
+    'lastInvoiceDate': lastInvoiceDate?.toIso8601String(),
+    'lastPaymentDate': lastPaymentDate?.toIso8601String(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 /// Customer dashboard statistics
@@ -156,7 +156,8 @@ class CustomerInvoice {
   double get balanceDue => grandTotal - paidAmount;
 
   factory CustomerInvoice.fromBillEntity(BillEntity e) {
-    final isOverdue = e.dueDate != null &&
+    final isOverdue =
+        e.dueDate != null &&
         DateTime.now().isAfter(e.dueDate!) &&
         e.paidAmount < e.grandTotal;
 
@@ -199,13 +200,15 @@ class CustomerDashboardRepository {
 
   /// Get all connected vendors for a customer
   Future<RepositoryResult<List<VendorConnection>>> getConnectedVendors(
-      String customerId) async {
+    String customerId,
+  ) async {
     return errorHandler.runSafe(() async {
-      final entities = await (database.select(database.customerConnections)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.status.equals('ACTIVE'))
-            ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
-          .get();
+      final entities =
+          await (database.select(database.customerConnections)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.status.equals('ACTIVE'))
+                ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
+              .get();
 
       return entities.map(VendorConnection.fromEntity).toList();
     }, 'getConnectedVendors');
@@ -249,28 +252,30 @@ class CustomerDashboardRepository {
       await database.into(database.customerConnections).insert(entity);
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: customerId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'customer_connections',
-        documentId: id,
-        payload: {
-          'id': id,
-          'customerId': customerId,
-          'vendorId': vendorId,
-          'vendorName': vendorName,
-          'vendorPhone': vendorPhone,
-          'vendorBusinessName': vendorBusinessName,
-          'customerRefId': customerRefId,
-          'status': 'ACTIVE',
-          'createdAt': now.toIso8601String(),
-          'updatedAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: customerId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'customer_connections',
+          documentId: id,
+          payload: {
+            'id': id,
+            'customerId': customerId,
+            'vendorId': vendorId,
+            'vendorName': vendorName,
+            'vendorPhone': vendorPhone,
+            'vendorBusinessName': vendorBusinessName,
+            'customerRefId': customerRefId,
+            'status': 'ACTIVE',
+            'createdAt': now.toIso8601String(),
+            'updatedAt': now.toIso8601String(),
+          },
+        ),
+      );
 
-      final result = await (database.select(database.customerConnections)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final result = await (database.select(
+        database.customerConnections,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return VendorConnection.fromEntity(result);
     }, 'addVendorConnection');
@@ -282,19 +287,25 @@ class CustomerDashboardRepository {
 
   /// Get customer dashboard statistics
   Future<RepositoryResult<CustomerDashboardStats>> getDashboardStats(
-      String customerId) async {
+    String customerId,
+  ) async {
     return errorHandler.runSafe(() async {
       // Get all vendor connections
-      final connections = await (database.select(database.customerConnections)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.status.equals('ACTIVE')))
-          .get();
+      final connections =
+          await (database.select(database.customerConnections)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.status.equals('ACTIVE')))
+              .get();
 
       // Calculate total outstanding and paid
       final totalOutstanding = connections.fold<double>(
-          0, (total, c) => total + c.outstandingBalance);
-      final totalPaid =
-          connections.fold<double>(0, (total, c) => total + c.totalPaid);
+        0,
+        (total, c) => total + c.outstandingBalance,
+      );
+      final totalPaid = connections.fold<double>(
+        0,
+        (total, c) => total + c.totalPaid,
+      );
 
       // Get unread notifications count
       final unreadNotifications =
@@ -311,8 +322,9 @@ class CustomerDashboardRepository {
       }
 
       // Count unpaid invoices (simplified - from connections)
-      final unpaidCount =
-          connections.where((c) => c.outstandingBalance > 0).length;
+      final unpaidCount = connections
+          .where((c) => c.outstandingBalance > 0)
+          .length;
 
       return CustomerDashboardStats(
         totalOutstanding: totalOutstanding,
@@ -333,34 +345,39 @@ class CustomerDashboardRepository {
           ..where((t) => t.status.equals('ACTIVE')))
         .watch()
         .asyncMap((connections) async {
-      final totalOutstanding = connections.fold<double>(
-          0, (total, c) => total + c.outstandingBalance);
-      final totalPaid =
-          connections.fold<double>(0, (total, c) => total + c.totalPaid);
+          final totalOutstanding = connections.fold<double>(
+            0,
+            (total, c) => total + c.outstandingBalance,
+          );
+          final totalPaid = connections.fold<double>(
+            0,
+            (total, c) => total + c.totalPaid,
+          );
 
-      final unreadNotifications =
-          await (database.select(database.customerNotifications)
-                ..where((t) => t.customerId.equals(customerId))
-                ..where((t) => t.isRead.equals(false)))
-              .get();
+          final unreadNotifications =
+              await (database.select(database.customerNotifications)
+                    ..where((t) => t.customerId.equals(customerId))
+                    ..where((t) => t.isRead.equals(false)))
+                  .get();
 
-      VendorConnection? lastActiveVendor;
-      if (connections.isNotEmpty) {
-        connections.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-        lastActiveVendor = VendorConnection.fromEntity(connections.first);
-      }
+          VendorConnection? lastActiveVendor;
+          if (connections.isNotEmpty) {
+            connections.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+            lastActiveVendor = VendorConnection.fromEntity(connections.first);
+          }
 
-      return CustomerDashboardStats(
-        totalOutstanding: totalOutstanding,
-        totalPaid: totalPaid,
-        vendorCount: connections.length,
-        unpaidInvoiceCount:
-            connections.where((c) => c.outstandingBalance > 0).length,
-        unreadNotificationCount: unreadNotifications.length,
-        lastActiveVendor: lastActiveVendor,
-        calculatedAt: DateTime.now(),
-      );
-    });
+          return CustomerDashboardStats(
+            totalOutstanding: totalOutstanding,
+            totalPaid: totalPaid,
+            vendorCount: connections.length,
+            unpaidInvoiceCount: connections
+                .where((c) => c.outstandingBalance > 0)
+                .length,
+            unreadNotificationCount: unreadNotifications.length,
+            lastActiveVendor: lastActiveVendor,
+            calculatedAt: DateTime.now(),
+          );
+        });
   }
 
   // ============================================
@@ -375,28 +392,31 @@ class CustomerDashboardRepository {
   }) async {
     return errorHandler.runSafe(() async {
       // Get customer's reference ID at this vendor
-      final connection = await (database.select(database.customerConnections)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.vendorId.equals(vendorId)))
-          .getSingleOrNull();
+      final connection =
+          await (database.select(database.customerConnections)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.vendorId.equals(vendorId)))
+              .getSingleOrNull();
 
       String? customerRefToSearch = connection?.customerRefId;
 
       // FALLBACK: If customerRefId is null, try phone-based lookup
       if (customerRefToSearch == null) {
         // Get customer's phone from current user data
-        final customerProfile = await (database.select(database.customers)
-              ..where((t) => t.id.equals(customerId))
-              ..limit(1))
-            .getSingleOrNull();
+        final customerProfile =
+            await (database.select(database.customers)
+                  ..where((t) => t.id.equals(customerId))
+                  ..limit(1))
+                .getSingleOrNull();
 
         if (customerProfile?.phone != null &&
             customerProfile!.phone!.isNotEmpty) {
           // Find matching customer in vendor's customer list by phone
-          final vendorCustomer = await (database.select(database.customers)
-                ..where((t) => t.userId.equals(vendorId))
-                ..where((t) => t.phone.equals(customerProfile.phone!)))
-              .getSingleOrNull();
+          final vendorCustomer =
+              await (database.select(database.customers)
+                    ..where((t) => t.userId.equals(vendorId))
+                    ..where((t) => t.phone.equals(customerProfile.phone!)))
+                  .getSingleOrNull();
 
           customerRefToSearch = vendorCustomer?.id;
         }
@@ -439,7 +459,9 @@ class CustomerDashboardRepository {
   }
 
   void _updateBillListeners(
-      List<VendorConnection> connections, String customerId) {
+    List<VendorConnection> connections,
+    String customerId,
+  ) {
     _billsSubscription?.cancel();
 
     for (final vendor in connections) {
@@ -463,23 +485,29 @@ class CustomerDashboardRepository {
   }
 
   Future<void> _syncBillFromFirestore(
-      DocumentSnapshot doc, String vendorId) async {
+    DocumentSnapshot doc,
+    String vendorId,
+  ) async {
     try {
       final data = doc.data() as Map<String, dynamic>;
       final billDate = (data['billDate'] as Timestamp).toDate();
 
-      await database.into(database.bills).insertOnConflictUpdate(BillsCompanion(
-            id: Value(doc.id),
-            userId: Value(vendorId),
-            billDate: Value(billDate),
-            grandTotal: Value((data['totalAmount'] ?? 0).toDouble()),
-            paidAmount: Value((data['paidAmount'] ?? 0).toDouble()),
-            status: Value(data['status'] ?? 'pending'),
-            itemsJson: Value('[]'),
-            createdAt: Value(billDate),
-            updatedAt: Value(DateTime.now()),
-            isSynced: const Value(true),
-          ));
+      await database
+          .into(database.bills)
+          .insertOnConflictUpdate(
+            BillsCompanion(
+              id: Value(doc.id),
+              userId: Value(vendorId),
+              billDate: Value(billDate),
+              grandTotal: Value((data['totalAmount'] ?? 0).toDouble()),
+              paidAmount: Value((data['paidAmount'] ?? 0).toDouble()),
+              status: Value(data['status'] ?? 'pending'),
+              itemsJson: Value('[]'),
+              createdAt: Value(billDate),
+              updatedAt: Value(DateTime.now()),
+              isSynced: const Value(true),
+            ),
+          );
     } catch (e) {
       ErrorHandler.handle(e, stackTrace: StackTrace.current, showUI: false);
     }
@@ -498,24 +526,24 @@ class CustomerDashboardRepository {
 /// Provider for CustomerDashboardRepository
 final customerDashboardRepositoryProvider =
     Provider<CustomerDashboardRepository>((ref) {
-  return CustomerDashboardRepository(
-    database: AppDatabase.instance,
-    syncManager: sl<SyncManager>(),
-    errorHandler: sl<ErrorHandler>(),
-    firestore: FirebaseFirestore.instance,
-  );
-});
+      return CustomerDashboardRepository(
+        database: AppDatabase.instance,
+        syncManager: sl<SyncManager>(),
+        errorHandler: sl<ErrorHandler>(),
+        firestore: FirebaseFirestore.instance,
+      );
+    });
 
 /// Provider for dashboard stats
 final customerDashboardStatsProvider =
     StreamProvider.family<CustomerDashboardStats, String>((ref, customerId) {
-  final repo = ref.watch(customerDashboardRepositoryProvider);
-  return repo.watchDashboardStats(customerId);
-});
+      final repo = ref.watch(customerDashboardRepositoryProvider);
+      return repo.watchDashboardStats(customerId);
+    });
 
 /// Provider for connected vendors
 final connectedVendorsProvider =
     StreamProvider.family<List<VendorConnection>, String>((ref, customerId) {
-  final repo = ref.watch(customerDashboardRepositoryProvider);
-  return repo.watchConnectedVendors(customerId);
-});
+      final repo = ref.watch(customerDashboardRepositoryProvider);
+      return repo.watchConnectedVendors(customerId);
+    });

@@ -63,7 +63,8 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
         // Show error for invalid/expired QR
         if (validationResult.error!.contains('expired')) {
           _showError(
-              'This QR code has expired. Please ask the shop for a new one.');
+            'This QR code has expired. Please ask the shop for a new one.',
+          );
         } else if (validationResult.error!.contains('tampered')) {
           _showError('Invalid QR code. This may be a security issue.');
         }
@@ -130,10 +131,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          MobileScanner(
-            controller: controller,
-            onDetect: _onDetect,
-          ),
+          MobileScanner(controller: controller, onDetect: _onDetect),
 
           // Overlay
           Container(
@@ -234,18 +232,23 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
               onPressed: () {
                 controller.stop();
                 Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const ManualShopAddScreen()));
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ManualShopAddScreen(),
+                  ),
+                );
               },
               icon: const Icon(Icons.keyboard, color: Colors.white),
-              label: const Text("Enter Shop ID Manually",
-                  style: TextStyle(color: Colors.white)),
+              label: const Text(
+                "Enter Shop ID Manually",
+                style: TextStyle(color: Colors.white),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white.withOpacity(0.2),
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
             ),
           ),
@@ -332,26 +335,42 @@ class QrScannerOverlayShape extends ShapeBorder {
     // Top left
     path.moveTo(cutOutRect.left, cutOutRect.top + borderLength);
     path.lineTo(cutOutRect.left, cutOutRect.top + borderRadius);
-    path.quadraticBezierTo(cutOutRect.left, cutOutRect.top,
-        cutOutRect.left + borderRadius, cutOutRect.top);
+    path.quadraticBezierTo(
+      cutOutRect.left,
+      cutOutRect.top,
+      cutOutRect.left + borderRadius,
+      cutOutRect.top,
+    );
     path.lineTo(cutOutRect.left + borderLength, cutOutRect.top);
     // Top right
     path.moveTo(cutOutRect.right - borderLength, cutOutRect.top);
     path.lineTo(cutOutRect.right - borderRadius, cutOutRect.top);
-    path.quadraticBezierTo(cutOutRect.right, cutOutRect.top, cutOutRect.right,
-        cutOutRect.top + borderRadius);
+    path.quadraticBezierTo(
+      cutOutRect.right,
+      cutOutRect.top,
+      cutOutRect.right,
+      cutOutRect.top + borderRadius,
+    );
     path.lineTo(cutOutRect.right, cutOutRect.top + borderLength);
     // Bottom right
     path.moveTo(cutOutRect.right, cutOutRect.bottom - borderLength);
     path.lineTo(cutOutRect.right, cutOutRect.bottom - borderRadius);
-    path.quadraticBezierTo(cutOutRect.right, cutOutRect.bottom,
-        cutOutRect.right - borderRadius, cutOutRect.bottom);
+    path.quadraticBezierTo(
+      cutOutRect.right,
+      cutOutRect.bottom,
+      cutOutRect.right - borderRadius,
+      cutOutRect.bottom,
+    );
     path.lineTo(cutOutRect.right - borderLength, cutOutRect.bottom);
     // Bottom left
     path.moveTo(cutOutRect.left + borderLength, cutOutRect.bottom);
     path.lineTo(cutOutRect.left + borderRadius, cutOutRect.bottom);
-    path.quadraticBezierTo(cutOutRect.left, cutOutRect.bottom, cutOutRect.left,
-        cutOutRect.bottom - borderRadius);
+    path.quadraticBezierTo(
+      cutOutRect.left,
+      cutOutRect.bottom,
+      cutOutRect.left,
+      cutOutRect.bottom - borderRadius,
+    );
     path.lineTo(cutOutRect.left, cutOutRect.bottom - borderLength);
 
     canvas.drawPath(path, borderPaint);

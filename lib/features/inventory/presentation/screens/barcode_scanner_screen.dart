@@ -40,8 +40,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title:
-            const Text("Scan Barcode", style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "Scan Barcode",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -55,8 +57,9 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                   torchState == TorchState.on
                       ? Icons.flash_on
                       : Icons.flash_off,
-                  color:
-                      torchState == TorchState.on ? Colors.yellow : Colors.grey,
+                  color: torchState == TorchState.on
+                      ? Colors.yellow
+                      : Colors.grey,
                 ),
                 onPressed: () => _controller.toggleTorch(),
               );
@@ -66,8 +69,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             valueListenable: _controller,
             builder: (context, state, child) {
               return IconButton(
-                icon:
-                    const Icon(Icons.cameraswitch_rounded, color: Colors.white),
+                icon: const Icon(
+                  Icons.cameraswitch_rounded,
+                  color: Colors.white,
+                ),
                 onPressed: () => _controller.switchCamera(),
               );
             },
@@ -77,24 +82,23 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          MobileScanner(
-            controller: _controller,
-            onDetect: _onDetect,
-          ),
+          MobileScanner(controller: _controller, onDetect: _onDetect),
           // Overlay guides
           Center(
             child: Container(
               width: 250,
               height: 250,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.greenAccent, width: 2),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.greenAccent.withOpacity(0.2),
-                        blurRadius: 20,
-                        spreadRadius: 5)
-                  ]),
+                border: Border.all(color: Colors.greenAccent, width: 2),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.greenAccent.withOpacity(0.2),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
               child: Stack(
                 children: [
                   // Corners or animation can be added here
@@ -112,12 +116,16 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 opacity: 0.3,
                 color: Colors.black,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text("Align barcode within frame",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                child: Text(
+                  "Align barcode within frame",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

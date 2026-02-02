@@ -17,7 +17,9 @@ class PharmacyDao {
   /// Get all active batches for a specific product, sorted by Expiry (FEFO)
   /// STRICT ISOLATION: Must filter by [userId]
   Future<List<ProductBatchEntity>> getBatchesForProduct(
-      String userId, String productId) {
+    String userId,
+    String productId,
+  ) {
     return (db.select(db.productBatches)
           ..where((t) => t.userId.equals(userId))
           ..where((t) => t.productId.equals(productId))
@@ -27,8 +29,10 @@ class PharmacyDao {
   }
 
   /// Get all batches expiring within the next [days] days
-  Future<List<ProductBatchEntity>> getExpiringBatches(String userId,
-      {int days = 30}) {
+  Future<List<ProductBatchEntity>> getExpiringBatches(
+    String userId, {
+    int days = 30,
+  }) {
     final expiryThreshold = DateTime.now().add(Duration(days: days));
     return (db.select(db.productBatches)
           ..where((t) => t.userId.equals(userId))
@@ -40,7 +44,10 @@ class PharmacyDao {
 
   /// Find a specific batch by its number
   Future<ProductBatchEntity?> getBatchByNumber(
-      String userId, String productId, String batchNumber) {
+    String userId,
+    String productId,
+    String batchNumber,
+  ) {
     return (db.select(db.productBatches)
           ..where((t) => t.userId.equals(userId))
           ..where((t) => t.productId.equals(productId))
@@ -55,19 +62,26 @@ class PharmacyDao {
   /// Consumes stock from a specific batch.
   /// Returns true if successful, false if insufficient stock.
   Future<bool> consumeBatchStock(
-      String userId, String batchId, double quantity) async {
+    String userId,
+    String batchId,
+    double quantity,
+  ) async {
     return db.transaction(() async {
-      final batch = await (db.select(db.productBatches)
-            ..where((t) => t.id.equals(batchId))
-            ..where((t) => t.userId.equals(userId))) // Double check isolation
-          .getSingle();
+      final batch =
+          await (db.select(db.productBatches)
+                ..where((t) => t.id.equals(batchId))
+                ..where(
+                  (t) => t.userId.equals(userId),
+                )) // Double check isolation
+              .getSingle();
 
       if (batch.stockQuantity < quantity) {
         return false; // Insufficient stock
       }
 
-      await (db.update(db.productBatches)..where((t) => t.id.equals(batchId)))
-          .write(
+      await (db.update(
+        db.productBatches,
+      )..where((t) => t.id.equals(batchId))).write(
         ProductBatchesCompanion(
           stockQuantity: Value(batch.stockQuantity - quantity),
           updatedAt: Value(DateTime.now()),
@@ -75,7 +89,9 @@ class PharmacyDao {
       );
 
       // Also log movement in generic stock table
-      await db.into(db.stockMovements).insert(
+      await db
+          .into(db.stockMovements)
+          .insert(
             StockMovementsCompanion.insert(
               id: '${batchId}_${DateTime.now().millisecondsSinceEpoch}', // Simple ID gen
               userId: userId,

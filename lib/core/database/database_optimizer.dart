@@ -34,8 +34,9 @@ class DatabaseOptimizer {
   static Future<bool> enableWalMode(AppDatabase db) async {
     try {
       // Check current journal mode
-      final currentMode =
-          await db.customSelect('PRAGMA journal_mode').getSingle();
+      final currentMode = await db
+          .customSelect('PRAGMA journal_mode')
+          .getSingle();
       final journalMode = currentMode.data['journal_mode'] as String?;
 
       if (journalMode?.toLowerCase() == 'wal') {
@@ -56,9 +57,11 @@ class DatabaseOptimizer {
 
         // Set optimal WAL configuration
         await db.customStatement(
-            'PRAGMA synchronous=NORMAL'); // Good balance of safety/speed
+          'PRAGMA synchronous=NORMAL',
+        ); // Good balance of safety/speed
         await db.customStatement(
-            'PRAGMA wal_autocheckpoint=1000'); // Checkpoint every 1000 pages
+          'PRAGMA wal_autocheckpoint=1000',
+        ); // Checkpoint every 1000 pages
         await db.customStatement('PRAGMA cache_size=-2000'); // 2MB cache
       } else {
         debugPrint('[DatabaseOptimizer] Failed to enable WAL mode');
@@ -73,13 +76,16 @@ class DatabaseOptimizer {
 
   /// Get current database optimization status
   static Future<Map<String, dynamic>> getOptimizationStatus(
-      AppDatabase db) async {
+    AppDatabase db,
+  ) async {
     try {
-      final journalMode =
-          await db.customSelect('PRAGMA journal_mode').getSingle();
+      final journalMode = await db
+          .customSelect('PRAGMA journal_mode')
+          .getSingle();
       final cacheSize = await db.customSelect('PRAGMA cache_size').getSingle();
-      final synchronous =
-          await db.customSelect('PRAGMA synchronous').getSingle();
+      final synchronous = await db
+          .customSelect('PRAGMA synchronous')
+          .getSingle();
       final pageCount = await db.customSelect('PRAGMA page_count').getSingle();
       final pageSize = await db.customSelect('PRAGMA page_size').getSingle();
 
@@ -97,7 +103,7 @@ class DatabaseOptimizer {
         'databaseSizeMB': (dbSizeBytes / 1024 / 1024).toStringAsFixed(2),
         'isOptimized':
             (journalMode.data['journal_mode'] as String?)?.toLowerCase() ==
-                'wal',
+            'wal',
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {
@@ -164,13 +170,13 @@ class PaginatedResult<T> {
   bool get isLastPage => !hasMore;
 
   Map<String, dynamic> toJson() => {
-        'items': items.length,
-        'page': page,
-        'pageSize': pageSize,
-        'totalItems': totalItems,
-        'totalPages': totalPages,
-        'hasMore': hasMore,
-      };
+    'items': items.length,
+    'page': page,
+    'pageSize': pageSize,
+    'totalItems': totalItems,
+    'totalPages': totalPages,
+    'hasMore': hasMore,
+  };
 }
 
 /// Pagination request parameters
@@ -178,10 +184,7 @@ class PaginationParams {
   final int page;
   final int pageSize;
 
-  const PaginationParams({
-    this.page = 0,
-    this.pageSize = 20,
-  });
+  const PaginationParams({this.page = 0, this.pageSize = 20});
 
   int get offset => page * pageSize;
   int get limit => pageSize;
@@ -193,10 +196,8 @@ class PaginationParams {
 
   PaginationParams nextPage() =>
       PaginationParams(page: page + 1, pageSize: pageSize);
-  PaginationParams previousPage() => PaginationParams(
-        page: page > 0 ? page - 1 : 0,
-        pageSize: pageSize,
-      );
+  PaginationParams previousPage() =>
+      PaginationParams(page: page > 0 ? page - 1 : 0, pageSize: pageSize);
 }
 
 // ============================================================================

@@ -107,7 +107,8 @@ class _EnterpriseTableState<T> extends State<EnterpriseTable<T>> {
 
     if (widget.isLoading) {
       return Center(
-          child: CircularProgressIndicator(color: colorScheme.primary));
+        child: CircularProgressIndicator(color: colorScheme.primary),
+      );
     }
 
     if (widget.data.isEmpty) {
@@ -129,24 +130,25 @@ class _EnterpriseTableState<T> extends State<EnterpriseTable<T>> {
         Expanded(
           child: Theme(
             data: theme.copyWith(
-                dividerColor: theme.dividerColor,
-                dataTableTheme: DataTableThemeData(
-                  headingRowColor: WidgetStateProperty.all(colorScheme.surface),
-                  dataRowColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.hovered)) {
-                      return colorScheme.primary.withOpacity(0.05);
-                    }
-                    if (states.contains(WidgetState.selected)) {
-                      return colorScheme.primary.withOpacity(0.1);
-                    }
-                    return Colors.transparent;
-                  }),
-                  headingTextStyle: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.hintColor,
-                  ),
-                  dataTextStyle: theme.textTheme.bodyMedium,
-                )),
+              dividerColor: theme.dividerColor,
+              dataTableTheme: DataTableThemeData(
+                headingRowColor: WidgetStateProperty.all(colorScheme.surface),
+                dataRowColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.hovered)) {
+                    return colorScheme.primary.withOpacity(0.05);
+                  }
+                  if (states.contains(WidgetState.selected)) {
+                    return colorScheme.primary.withOpacity(0.1);
+                  }
+                  return Colors.transparent;
+                }),
+                headingTextStyle: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.hintColor,
+                ),
+                dataTextStyle: theme.textTheme.bodyMedium,
+              ),
+            ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
@@ -182,14 +184,14 @@ class _EnterpriseTableState<T> extends State<EnterpriseTable<T>> {
                           : null,
                       cells: [
                         for (final col in widget.columns)
-                          DataCell(
-                            _buildCellContent(col, item),
-                          ),
+                          DataCell(_buildCellContent(col, item)),
                         if (widget.actionsBuilder != null)
-                          DataCell(Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: widget.actionsBuilder!(item),
-                          ))
+                          DataCell(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: widget.actionsBuilder!(item),
+                            ),
+                          ),
                       ],
                     );
                   }).toList(),
@@ -215,26 +217,30 @@ class _EnterpriseTableState<T> extends State<EnterpriseTable<T>> {
                 ),
                 const SizedBox(width: 16),
                 IconButton(
-                  icon: Icon(Icons.chevron_left,
-                      color: _currentPage > 0
-                          ? theme.iconTheme.color
-                          : theme.disabledColor),
+                  icon: Icon(
+                    Icons.chevron_left,
+                    color: _currentPage > 0
+                        ? theme.iconTheme.color
+                        : theme.disabledColor,
+                  ),
                   onPressed: _currentPage > 0
                       ? () => setState(() => _currentPage--)
                       : null,
                 ),
                 IconButton(
-                  icon: Icon(Icons.chevron_right,
-                      color: _currentPage < _totalPages - 1
-                          ? theme.iconTheme.color
-                          : theme.disabledColor),
+                  icon: Icon(
+                    Icons.chevron_right,
+                    color: _currentPage < _totalPages - 1
+                        ? theme.iconTheme.color
+                        : theme.disabledColor,
+                  ),
                   onPressed: _currentPage < _totalPages - 1
                       ? () => setState(() => _currentPage++)
                       : null,
                 ),
               ],
             ),
-          )
+          ),
       ],
     );
   }

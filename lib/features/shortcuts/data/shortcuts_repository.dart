@@ -19,7 +19,9 @@ class ShortcutsRepository {
   Future<void> seedDefinitions(List<ShortcutDefinition> definitions) async {
     await _db.transaction(() async {
       for (final def in definitions) {
-        await _db.into(_db.shortcutDefinitions).insert(
+        await _db
+            .into(_db.shortcutDefinitions)
+            .insert(
               ShortcutDefinitionsCompanion(
                 id: Value(def.id),
                 label: Value(def.label),
@@ -27,8 +29,9 @@ class ShortcutsRepository {
                 route: Value(def.route),
                 actionType: Value(def.actionType.name),
                 category: Value(def.category),
-                allowedBusinessTypes:
-                    Value(jsonEncode(def.allowedBusinessTypes)),
+                allowedBusinessTypes: Value(
+                  jsonEncode(def.allowedBusinessTypes),
+                ),
                 requiredPermission: Value(def.requiredPermission?.name),
                 hasBadge: Value(def.hasBadge),
                 defaultKeyBinding: Value(def.defaultKeyBinding),
@@ -53,15 +56,20 @@ class ShortcutsRepository {
 
   /// Get user's configured shortcuts (joined with definitions)
   Stream<List<UserShortcutConfig>> watchUserShortcuts(String userId) {
-    final query = _db.select(_db.userShortcuts).join([
-      innerJoin(
-        _db.shortcutDefinitions,
-        _db.shortcutDefinitions.id.equalsExp(_db.userShortcuts.shortcutId),
-      ),
-    ])
-      ..where(_db.userShortcuts.userId.equals(userId) &
-          _db.userShortcuts.isEnabled.equals(true))
-      ..orderBy([OrderingTerm.asc(_db.userShortcuts.orderIndex)]);
+    final query =
+        _db.select(_db.userShortcuts).join([
+            innerJoin(
+              _db.shortcutDefinitions,
+              _db.shortcutDefinitions.id.equalsExp(
+                _db.userShortcuts.shortcutId,
+              ),
+            ),
+          ])
+          ..where(
+            _db.userShortcuts.userId.equals(userId) &
+                _db.userShortcuts.isEnabled.equals(true),
+          )
+          ..orderBy([OrderingTerm.asc(_db.userShortcuts.orderIndex)]);
 
     return query.watch().map((rows) {
       return rows.map((row) {
@@ -75,24 +83,26 @@ class ShortcutsRepository {
   /// Initialize default shortcuts for a new user
   Future<void> initializeForUser(String userId) async {
     // Check if user already has shortcuts
-    final count = await (_db.select(_db.userShortcuts)
-          ..where((t) => t.userId.equals(userId)))
-        .get()
-        .then((l) => l.length);
+    final count = await (_db.select(
+      _db.userShortcuts,
+    )..where((t) => t.userId.equals(userId))).get().then((l) => l.length);
 
     if (count > 0) return; // Already initialized
 
     // Get default definitions
-    final defaults = await (_db.select(_db.shortcutDefinitions)
-          ..where((t) => t.isDefault.equals(true))
-          ..orderBy([(t) => OrderingTerm.asc(t.defaultSortOrder)]))
-        .get();
+    final defaults =
+        await (_db.select(_db.shortcutDefinitions)
+              ..where((t) => t.isDefault.equals(true))
+              ..orderBy([(t) => OrderingTerm.asc(t.defaultSortOrder)]))
+            .get();
 
     // Insert user configs
     await _db.transaction(() async {
       for (int i = 0; i < defaults.length; i++) {
         final def = defaults[i];
-        await _db.into(_db.userShortcuts).insert(
+        await _db
+            .into(_db.userShortcuts)
+            .insert(
               UserShortcutsCompanion(
                 id: Value(const Uuid().v4()),
                 userId: Value(userId),
@@ -111,14 +121,16 @@ class ShortcutsRepository {
   Future<void> updateOrder(String userId, List<String> shortcutIds) async {
     await _db.transaction(() async {
       for (int i = 0; i < shortcutIds.length; i++) {
-        await (_db.update(_db.userShortcuts)
-              ..where((t) =>
-                  t.userId.equals(userId) &
-                  t.shortcutId.equals(shortcutIds[i])))
-            .write(UserShortcutsCompanion(
-          orderIndex: Value(i),
-          updatedAt: Value(DateTime.now()),
-        ));
+        await (_db.update(_db.userShortcuts)..where(
+              (t) =>
+                  t.userId.equals(userId) & t.shortcutId.equals(shortcutIds[i]),
+            ))
+            .write(
+              UserShortcutsCompanion(
+                orderIndex: Value(i),
+                updatedAt: Value(DateTime.now()),
+              ),
+            );
       }
     });
   }
@@ -134,38 +146,47 @@ class ShortcutsRepository {
 
   /// Toggle enabled status
   Future<void> toggleShortcut(
-      String userId, String shortcutId, bool isEnabled) async {
-    await (_db.update(_db.userShortcuts)
-          ..where(
-              (t) => t.userId.equals(userId) & t.shortcutId.equals(shortcutId)))
-        .write(UserShortcutsCompanion(
-      isEnabled: Value(isEnabled),
-      updatedAt: Value(DateTime.now()),
-    ));
+    String userId,
+    String shortcutId,
+    bool isEnabled,
+  ) async {
+    await (_db.update(_db.userShortcuts)..where(
+          (t) => t.userId.equals(userId) & t.shortcutId.equals(shortcutId),
+        ))
+        .write(
+          UserShortcutsCompanion(
+            isEnabled: Value(isEnabled),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
   }
 
   /// Add a new shortcut for user
   Future<void> addUserShortcut(String userId, String shortcutId) async {
     // Get max order index
-    final maxOrder = await (_db.select(_db.userShortcuts)
-          ..where((t) => t.userId.equals(userId))
-          ..orderBy([(t) => OrderingTerm.desc(t.orderIndex)])
-          ..limit(1))
-        .getSingleOrNull();
+    final maxOrder =
+        await (_db.select(_db.userShortcuts)
+              ..where((t) => t.userId.equals(userId))
+              ..orderBy([(t) => OrderingTerm.desc(t.orderIndex)])
+              ..limit(1))
+            .getSingleOrNull();
 
     final nextOrder = (maxOrder?.orderIndex ?? -1) + 1;
 
-    await _db.into(_db.userShortcuts).insert(
-        UserShortcutsCompanion(
-          id: Value(const Uuid().v4()),
-          userId: Value(userId),
-          shortcutId: Value(shortcutId),
-          orderIndex: Value(nextOrder),
-          isEnabled: Value(true),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ),
-        mode: InsertMode.insertOrReplace);
+    await _db
+        .into(_db.userShortcuts)
+        .insert(
+          UserShortcutsCompanion(
+            id: Value(const Uuid().v4()),
+            userId: Value(userId),
+            shortcutId: Value(shortcutId),
+            orderIndex: Value(nextOrder),
+            isEnabled: Value(true),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
   }
 
   // ============================================================================
@@ -183,8 +204,9 @@ class ShortcutsRepository {
         orElse: () => ActionType.navigate,
       ),
       category: row.category,
-      allowedBusinessTypes:
-          List<String>.from(jsonDecode(row.allowedBusinessTypes) as List),
+      allowedBusinessTypes: List<String>.from(
+        jsonDecode(row.allowedBusinessTypes) as List,
+      ),
       requiredPermission: row.requiredPermission != null
           ? Permission.values.firstWhere(
               (e) => e.name == row.requiredPermission,
@@ -199,7 +221,9 @@ class ShortcutsRepository {
   }
 
   UserShortcutConfig _mapUserConfig(
-      UserShortcutEntity config, ShortcutDefinitionEntity def) {
+    UserShortcutEntity config,
+    ShortcutDefinitionEntity def,
+  ) {
     return UserShortcutConfig(
       id: config.id,
       userId: config.userId,

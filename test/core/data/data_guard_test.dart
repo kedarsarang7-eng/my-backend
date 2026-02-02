@@ -32,8 +32,10 @@ void main() {
       expect(DataGuard.safeJsonMap(null), {});
       expect(DataGuard.safeJsonMap(''), {});
       expect(DataGuard.safeJsonMap('{broken json'), {});
-      expect(DataGuard.safeJsonMap('["list", "not", "map"]'),
-          {}); // Valid JSON but not map
+      expect(
+        DataGuard.safeJsonMap('["list", "not", "map"]'),
+        {},
+      ); // Valid JSON but not map
 
       final json = '{"key": "value"}';
       expect(DataGuard.safeJsonMap(json), {'key': 'value'});

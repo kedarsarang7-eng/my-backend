@@ -82,8 +82,9 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
   void _shareCatalogue() async {
     if (_selectedIds.isEmpty) return;
 
-    final selectedProducts =
-        _allProducts.where((p) => _selectedIds.contains(p.id)).toList();
+    final selectedProducts = _allProducts
+        .where((p) => _selectedIds.contains(p.id))
+        .toList();
     if (selectedProducts.isEmpty) return;
 
     final buffer = StringBuffer();
@@ -149,24 +150,29 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
               decoration: InputDecoration(
                 hintText: 'Search products...',
                 hintStyle: TextStyle(color: FuturisticColors.textSecondary),
-                prefixIcon:
-                    Icon(Icons.search, color: FuturisticColors.textSecondary),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: FuturisticColors.textSecondary,
+                ),
                 filled: true,
                 fillColor: FuturisticColors.surface.withOpacity(0.5),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                      color: FuturisticColors.border.withOpacity(0.3)),
+                    color: FuturisticColors.border.withOpacity(0.3),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                      color: FuturisticColors.border.withOpacity(0.3)),
+                    color: FuturisticColors.border.withOpacity(0.3),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                      color: FuturisticColors.premiumBlue.withOpacity(0.5)),
+                    color: FuturisticColors.premiumBlue.withOpacity(0.5),
+                  ),
                 ),
               ),
               onChanged: (val) => setState(() => _searchQuery = val),
@@ -182,27 +188,27 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
                     ),
                   )
                 : _filteredProducts.isEmpty
-                    ? const EmptyStateWidget(
-                        icon: Icons.inventory_2_outlined,
-                        title: 'No Products Found',
-                        description:
-                            'Your inventory is empty or all items are out of stock.',
-                      )
-                    : GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                ? const EmptyStateWidget(
+                    icon: Icons.inventory_2_outlined,
+                    title: 'No Products Found',
+                    description:
+                        'Your inventory is empty or all items are out of stock.',
+                  )
+                : GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                           childAspectRatio: 1.5,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
                         ),
-                        itemCount: _filteredProducts.length,
-                        itemBuilder: (context, index) {
-                          final product = _filteredProducts[index];
-                          final isSelected = _selectedIds.contains(product.id);
-                          return _buildProductCard(product, isSelected);
-                        },
-                      ),
+                    itemCount: _filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = _filteredProducts[index];
+                      final isSelected = _selectedIds.contains(product.id);
+                      return _buildProductCard(product, isSelected);
+                    },
+                  ),
           ),
         ],
       ),
@@ -325,7 +331,9 @@ class _CatalogueScreenState extends ConsumerState<CatalogueScreen> {
                       const Spacer(),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: FuturisticColors.premiumBlue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10),

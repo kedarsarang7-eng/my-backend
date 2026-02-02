@@ -99,17 +99,29 @@ class InvoiceTemplateFactory {
 class PetrolPumpInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'fuel_type', label: 'Fuel Type', widthRatio: 0.15),
-        InvoiceColumn(id: 'nozzle', label: 'Nozzle', widthRatio: 0.10),
-        InvoiceColumn(id: 'vehicle', label: 'Vehicle', widthRatio: 0.15),
-        InvoiceColumn(
-            id: 'litres', label: 'Litres', widthRatio: 0.15, isNumeric: true),
-        InvoiceColumn(
-            id: 'rate', label: 'Rate/L', widthRatio: 0.15, isCurrency: true),
-        InvoiceColumn(
-            id: 'amount', label: 'Amount', widthRatio: 0.20, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'fuel_type', label: 'Fuel Type', widthRatio: 0.15),
+    InvoiceColumn(id: 'nozzle', label: 'Nozzle', widthRatio: 0.10),
+    InvoiceColumn(id: 'vehicle', label: 'Vehicle', widthRatio: 0.15),
+    InvoiceColumn(
+      id: 'litres',
+      label: 'Litres',
+      widthRatio: 0.15,
+      isNumeric: true,
+    ),
+    InvoiceColumn(
+      id: 'rate',
+      label: 'Rate/L',
+      widthRatio: 0.15,
+      isCurrency: true,
+    ),
+    InvoiceColumn(
+      id: 'amount',
+      label: 'Amount',
+      widthRatio: 0.20,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'FUEL INVOICE';
@@ -134,9 +146,7 @@ class PetrolPumpInvoiceTemplate implements InvoiceTemplate {
 
   @override
   Map<String, String> getHeaderFields(Bill bill) {
-    return {
-      if (bill.shiftId != null) 'Shift ID': bill.shiftId!,
-    };
+    return {if (bill.shiftId != null) 'Shift ID': bill.shiftId!};
   }
 
   @override
@@ -157,20 +167,21 @@ class PetrolPumpInvoiceTemplate implements InvoiceTemplate {
 class PharmacyInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'medicine', label: 'Medicine', widthRatio: 0.20),
-        InvoiceColumn(id: 'batch', label: 'Batch', widthRatio: 0.10),
-        InvoiceColumn(id: 'expiry', label: 'Expiry', widthRatio: 0.10),
-        InvoiceColumn(id: 'hsn', label: 'HSN', widthRatio: 0.08),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.07, isNumeric: true),
-        InvoiceColumn(
-            id: 'mrp', label: 'MRP', widthRatio: 0.10, isCurrency: true),
-        InvoiceColumn(
-            id: 'gst', label: 'GST%', widthRatio: 0.08, isNumeric: true),
-        InvoiceColumn(
-            id: 'amount', label: 'Amount', widthRatio: 0.12, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'medicine', label: 'Medicine', widthRatio: 0.20),
+    InvoiceColumn(id: 'batch', label: 'Batch', widthRatio: 0.10),
+    InvoiceColumn(id: 'expiry', label: 'Expiry', widthRatio: 0.10),
+    InvoiceColumn(id: 'hsn', label: 'HSN', widthRatio: 0.08),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.07, isNumeric: true),
+    InvoiceColumn(id: 'mrp', label: 'MRP', widthRatio: 0.10, isCurrency: true),
+    InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.08, isNumeric: true),
+    InvoiceColumn(
+      id: 'amount',
+      label: 'Amount',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'MEDICAL INVOICE';
@@ -203,8 +214,9 @@ class PharmacyInvoiceTemplate implements InvoiceTemplate {
   @override
   Map<String, String> getHeaderFields(Bill bill) {
     return {
-      'Doctor':
-          bill.items.isNotEmpty ? (bill.items.first.doctorName ?? '-') : '-',
+      'Doctor': bill.items.isNotEmpty
+          ? (bill.items.first.doctorName ?? '-')
+          : '-',
       'Patient': bill.customerName.isNotEmpty ? bill.customerName : '-',
     };
   }
@@ -219,28 +231,36 @@ class PharmacyInvoiceTemplate implements InvoiceTemplate {
 class GroceryInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'item', label: 'Item Name', widthRatio: 0.25),
-        InvoiceColumn(id: 'hsn', label: 'HSN', widthRatio: 0.08),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.08, isNumeric: true),
-        InvoiceColumn(
-            id: 'rate', label: 'Rate', widthRatio: 0.12, isCurrency: true),
-        InvoiceColumn(
-            id: 'gst', label: 'GST%', widthRatio: 0.08, isNumeric: true),
-        InvoiceColumn(
-            id: 'gst_amt',
-            label: 'GST Amt',
-            widthRatio: 0.12,
-            isCurrency: true),
-        InvoiceColumn(
-            id: 'discount',
-            label: 'Discount',
-            widthRatio: 0.10,
-            isCurrency: true),
-        InvoiceColumn(
-            id: 'total', label: 'Total', widthRatio: 0.12, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'item', label: 'Item Name', widthRatio: 0.25),
+    InvoiceColumn(id: 'hsn', label: 'HSN', widthRatio: 0.08),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.08, isNumeric: true),
+    InvoiceColumn(
+      id: 'rate',
+      label: 'Rate',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+    InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.08, isNumeric: true),
+    InvoiceColumn(
+      id: 'gst_amt',
+      label: 'GST Amt',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+    InvoiceColumn(
+      id: 'discount',
+      label: 'Discount',
+      widthRatio: 0.10,
+      isCurrency: true,
+    ),
+    InvoiceColumn(
+      id: 'total',
+      label: 'Total',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'TAX INVOICE';
@@ -278,10 +298,12 @@ class GroceryInvoiceTemplate implements InvoiceTemplate {
     }
 
     return gstBreakdown.entries
-        .map((e) => {
-              'label': 'GST ${e.key.toStringAsFixed(0)}%',
-              'value': '₹${e.value.toStringAsFixed(2)}'
-            })
+        .map(
+          (e) => {
+            'label': 'GST ${e.key.toStringAsFixed(0)}%',
+            'value': '₹${e.value.toStringAsFixed(2)}',
+          },
+        )
         .toList();
   }
 }
@@ -292,15 +314,23 @@ class GroceryInvoiceTemplate implements InvoiceTemplate {
 class ServiceInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'service', label: 'Service', widthRatio: 0.30),
-        InvoiceColumn(id: 'hsn', label: 'SAC Code', widthRatio: 0.12),
-        InvoiceColumn(
-            id: 'rate', label: 'Rate', widthRatio: 0.15, isCurrency: true),
-        InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.10),
-        InvoiceColumn(
-            id: 'amount', label: 'Amount', widthRatio: 0.18, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'service', label: 'Service', widthRatio: 0.30),
+    InvoiceColumn(id: 'hsn', label: 'SAC Code', widthRatio: 0.12),
+    InvoiceColumn(
+      id: 'rate',
+      label: 'Rate',
+      widthRatio: 0.15,
+      isCurrency: true,
+    ),
+    InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.10),
+    InvoiceColumn(
+      id: 'amount',
+      label: 'Amount',
+      widthRatio: 0.18,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'SERVICE INVOICE';
@@ -322,9 +352,7 @@ class ServiceInvoiceTemplate implements InvoiceTemplate {
 
   @override
   Map<String, String> getHeaderFields(Bill bill) {
-    return {
-      'Service Date': DateFormat('dd/MM/yyyy').format(bill.date),
-    };
+    return {'Service Date': DateFormat('dd/MM/yyyy').format(bill.date)};
   }
 
   @override
@@ -340,7 +368,7 @@ class ServiceInvoiceTemplate implements InvoiceTemplate {
       return [
         {
           'label': 'Labour Charges',
-          'value': '₹${totalLabour.toStringAsFixed(2)}'
+          'value': '₹${totalLabour.toStringAsFixed(2)}',
         },
       ];
     }
@@ -354,16 +382,23 @@ class ServiceInvoiceTemplate implements InvoiceTemplate {
 class RestaurantInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.35),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.10, isNumeric: true),
-        InvoiceColumn(
-            id: 'price', label: 'Price', widthRatio: 0.15, isCurrency: true),
-        InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.10),
-        InvoiceColumn(
-            id: 'total', label: 'Total', widthRatio: 0.15, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.35),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.10, isNumeric: true),
+    InvoiceColumn(
+      id: 'price',
+      label: 'Price',
+      widthRatio: 0.15,
+      isCurrency: true,
+    ),
+    InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.10),
+    InvoiceColumn(
+      id: 'total',
+      label: 'Total',
+      widthRatio: 0.15,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'RESTAURANT BILL';
@@ -387,9 +422,7 @@ class RestaurantInvoiceTemplate implements InvoiceTemplate {
   Map<String, String> getHeaderFields(Bill bill) {
     // Get table from first item
     final tableNo = bill.items.isNotEmpty ? bill.items.first.tableNo : null;
-    return {
-      if (tableNo != null) 'Table': tableNo,
-    };
+    return {'Table': ?tableNo};
   }
 
   @override
@@ -398,7 +431,7 @@ class RestaurantInvoiceTemplate implements InvoiceTemplate {
       return [
         {
           'label': 'Service Charge',
-          'value': '₹${bill.serviceCharge.toStringAsFixed(2)}'
+          'value': '₹${bill.serviceCharge.toStringAsFixed(2)}',
         },
       ];
     }
@@ -412,18 +445,25 @@ class RestaurantInvoiceTemplate implements InvoiceTemplate {
 class ElectronicsInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'product', label: 'Product', widthRatio: 0.20),
-        InvoiceColumn(id: 'serial', label: 'Serial No', widthRatio: 0.15),
-        InvoiceColumn(id: 'warranty', label: 'Warranty', widthRatio: 0.10),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.08, isNumeric: true),
-        InvoiceColumn(
-            id: 'price', label: 'Price', widthRatio: 0.12, isCurrency: true),
-        InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.08),
-        InvoiceColumn(
-            id: 'total', label: 'Total', widthRatio: 0.12, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'product', label: 'Product', widthRatio: 0.20),
+    InvoiceColumn(id: 'serial', label: 'Serial No', widthRatio: 0.15),
+    InvoiceColumn(id: 'warranty', label: 'Warranty', widthRatio: 0.10),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.08, isNumeric: true),
+    InvoiceColumn(
+      id: 'price',
+      label: 'Price',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+    InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.08),
+    InvoiceColumn(
+      id: 'total',
+      label: 'Total',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'ELECTRONICS INVOICE';
@@ -471,22 +511,30 @@ class ElectronicsInvoiceTemplate implements InvoiceTemplate {
 class ClothingInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.22),
-        InvoiceColumn(id: 'size', label: 'Size', widthRatio: 0.08),
-        InvoiceColumn(id: 'color', label: 'Color', widthRatio: 0.10),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.08, isNumeric: true),
-        InvoiceColumn(
-            id: 'price', label: 'Price', widthRatio: 0.12, isCurrency: true),
-        InvoiceColumn(
-            id: 'discount',
-            label: 'Discount',
-            widthRatio: 0.10,
-            isCurrency: true),
-        InvoiceColumn(
-            id: 'total', label: 'Total', widthRatio: 0.15, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.22),
+    InvoiceColumn(id: 'size', label: 'Size', widthRatio: 0.08),
+    InvoiceColumn(id: 'color', label: 'Color', widthRatio: 0.10),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.08, isNumeric: true),
+    InvoiceColumn(
+      id: 'price',
+      label: 'Price',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+    InvoiceColumn(
+      id: 'discount',
+      label: 'Discount',
+      widthRatio: 0.10,
+      isCurrency: true,
+    ),
+    InvoiceColumn(
+      id: 'total',
+      label: 'Total',
+      widthRatio: 0.15,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'FASHION INVOICE';
@@ -522,17 +570,24 @@ class ClothingInvoiceTemplate implements InvoiceTemplate {
 class HardwareInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.25),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.10, isNumeric: true),
-        InvoiceColumn(id: 'unit', label: 'Unit', widthRatio: 0.08),
-        InvoiceColumn(
-            id: 'rate', label: 'Rate', widthRatio: 0.12, isCurrency: true),
-        InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.08),
-        InvoiceColumn(
-            id: 'total', label: 'Total', widthRatio: 0.15, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.25),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.10, isNumeric: true),
+    InvoiceColumn(id: 'unit', label: 'Unit', widthRatio: 0.08),
+    InvoiceColumn(
+      id: 'rate',
+      label: 'Rate',
+      widthRatio: 0.12,
+      isCurrency: true,
+    ),
+    InvoiceColumn(id: 'gst', label: 'GST%', widthRatio: 0.08),
+    InvoiceColumn(
+      id: 'total',
+      label: 'Total',
+      widthRatio: 0.15,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'HARDWARE INVOICE';
@@ -566,15 +621,22 @@ class HardwareInvoiceTemplate implements InvoiceTemplate {
 class GeneralInvoiceTemplate implements InvoiceTemplate {
   @override
   List<InvoiceColumn> get columns => const [
-        InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
-        InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.30),
-        InvoiceColumn(
-            id: 'qty', label: 'Qty', widthRatio: 0.12, isNumeric: true),
-        InvoiceColumn(
-            id: 'rate', label: 'Rate', widthRatio: 0.18, isCurrency: true),
-        InvoiceColumn(
-            id: 'total', label: 'Total', widthRatio: 0.25, isCurrency: true),
-      ];
+    InvoiceColumn(id: 'sno', label: 'S.No', widthRatio: 0.05),
+    InvoiceColumn(id: 'item', label: 'Item', widthRatio: 0.30),
+    InvoiceColumn(id: 'qty', label: 'Qty', widthRatio: 0.12, isNumeric: true),
+    InvoiceColumn(
+      id: 'rate',
+      label: 'Rate',
+      widthRatio: 0.18,
+      isCurrency: true,
+    ),
+    InvoiceColumn(
+      id: 'total',
+      label: 'Total',
+      widthRatio: 0.25,
+      isCurrency: true,
+    ),
+  ];
 
   @override
   String get headerText => 'INVOICE';

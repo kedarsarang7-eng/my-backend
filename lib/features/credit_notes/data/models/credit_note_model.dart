@@ -301,9 +301,11 @@ class CreditNote {
       totalGst: (map['totalGst'] ?? 0).toDouble(),
       grandTotal: (map['grandTotal'] ?? 0).toDouble(),
       gstReversal: map['gstReversal'] != null
-          ? GstReversal.fromMap(map['gstReversal'] is String
-              ? jsonDecode(map['gstReversal'])
-              : map['gstReversal'])
+          ? GstReversal.fromMap(
+              map['gstReversal'] is String
+                  ? jsonDecode(map['gstReversal'])
+                  : map['gstReversal'],
+            )
           : null,
       placeOfSupply: map['placeOfSupply'],
       isReverseCharge: map['isReverseCharge'] ?? false,

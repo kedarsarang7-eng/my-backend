@@ -56,39 +56,39 @@ class CustomerAgingData {
   });
 
   List<AgingBucket> get buckets => [
-        AgingBucket(
-          label: '0-30 Days',
-          minDays: 0,
-          maxDays: 30,
-          amount: current,
-          color: Colors.green,
-          billCount: currentCount,
-        ),
-        AgingBucket(
-          label: '31-60 Days',
-          minDays: 31,
-          maxDays: 60,
-          amount: due31to60,
-          color: Colors.amber,
-          billCount: due31to60Count,
-        ),
-        AgingBucket(
-          label: '61-90 Days',
-          minDays: 61,
-          maxDays: 90,
-          amount: due61to90,
-          color: Colors.orange,
-          billCount: due61to90Count,
-        ),
-        AgingBucket(
-          label: '90+ Days',
-          minDays: 91,
-          maxDays: null,
-          amount: overdue90Plus,
-          color: Colors.red,
-          billCount: overdue90PlusCount,
-        ),
-      ];
+    AgingBucket(
+      label: '0-30 Days',
+      minDays: 0,
+      maxDays: 30,
+      amount: current,
+      color: Colors.green,
+      billCount: currentCount,
+    ),
+    AgingBucket(
+      label: '31-60 Days',
+      minDays: 31,
+      maxDays: 60,
+      amount: due31to60,
+      color: Colors.amber,
+      billCount: due31to60Count,
+    ),
+    AgingBucket(
+      label: '61-90 Days',
+      minDays: 61,
+      maxDays: 90,
+      amount: due61to90,
+      color: Colors.orange,
+      billCount: due61to90Count,
+    ),
+    AgingBucket(
+      label: '90+ Days',
+      minDays: 91,
+      maxDays: null,
+      amount: overdue90Plus,
+      color: Colors.red,
+      billCount: overdue90PlusCount,
+    ),
+  ];
 
   factory CustomerAgingData.empty() => const CustomerAgingData();
 }
@@ -175,9 +175,7 @@ class CustomerAgingWidget extends StatelessWidget {
 
     return Container(
       height: 8,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: Row(

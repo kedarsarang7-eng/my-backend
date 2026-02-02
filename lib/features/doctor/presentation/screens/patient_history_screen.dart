@@ -53,8 +53,9 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
         // Load prescriptions for each visit
         for (final visit in _visits) {
           if (visit.prescriptionId != null) {
-            final prescription = await _prescriptionRepo
-                .getPrescriptionById(visit.prescriptionId!);
+            final prescription = await _prescriptionRepo.getPrescriptionById(
+              visit.prescriptionId!,
+            );
             _prescriptions[visit.id] = prescription;
           }
         }
@@ -74,8 +75,8 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
       child: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _visits.isEmpty
-              ? _buildEmptyState()
-              : _buildTimeline(),
+          ? _buildEmptyState()
+          : _buildTimeline(),
     );
   }
 
@@ -89,7 +90,9 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
           Text(
             'No visit history found',
             style: GoogleFonts.inter(
-                color: Colors.white.withOpacity(0.7), fontSize: 16),
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 16,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -178,7 +181,9 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
         title: Text(
           dateFormat.format(visit.visitDate),
           style: GoogleFonts.inter(
-              color: Colors.white, fontWeight: FontWeight.w600),
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         subtitle: Text(
           visit.diagnosis.isNotEmpty
@@ -240,15 +245,14 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
             width: 120,
             child: Text(
               label,
-              style:
-                  TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 13,
+              ),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(color: Colors.white),
-            ),
+            child: Text(value, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -282,19 +286,22 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
         spacing: 8,
         runSpacing: 4,
         children: vitals
-            .map((v) => Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: FuturisticColors.primary.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(6),
+            .map(
+              (v) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: FuturisticColors.primary.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  v,
+                  style: TextStyle(
+                    color: FuturisticColors.primary,
+                    fontSize: 12,
                   ),
-                  child: Text(
-                    v,
-                    style: TextStyle(
-                        color: FuturisticColors.primary, fontSize: 12),
-                  ),
-                ))
+                ),
+              ),
+            )
             .toList(),
       ),
     );
@@ -311,34 +318,39 @@ class _PatientHistoryScreenState extends ConsumerState<PatientHistoryScreen> {
             Text(
               'Prescription',
               style: GoogleFonts.inter(
-                  color: Colors.white, fontWeight: FontWeight.w600),
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ...prescription.items.map((item) => Padding(
-              padding: const EdgeInsets.only(left: 24, bottom: 4),
-              child: Row(
-                children: [
-                  const Icon(Icons.circle, size: 6, color: Colors.white54),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '${item.medicineName} ${item.dosage ?? ''} - ${item.frequency ?? ''} (${item.duration ?? ''})',
-                      style: const TextStyle(color: Colors.white70),
-                    ),
+        ...prescription.items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(left: 24, bottom: 4),
+            child: Row(
+              children: [
+                const Icon(Icons.circle, size: 6, color: Colors.white54),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '${item.medicineName} ${item.dosage ?? ''} - ${item.frequency ?? ''} (${item.duration ?? ''})',
+                    style: const TextStyle(color: Colors.white70),
                   ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
+          ),
+        ),
         if (prescription.advice?.isNotEmpty == true)
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               'Advice: ${prescription.advice}',
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontStyle: FontStyle.italic),
+                color: Colors.white.withOpacity(0.7),
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
       ],

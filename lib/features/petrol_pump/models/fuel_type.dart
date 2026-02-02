@@ -6,17 +6,13 @@ class RateHistoryEntry {
   final double rate;
   final String? updatedBy;
 
-  RateHistoryEntry({
-    required this.date,
-    required this.rate,
-    this.updatedBy,
-  });
+  RateHistoryEntry({required this.date, required this.rate, this.updatedBy});
 
   Map<String, dynamic> toMap() => {
-        'date': date.toIso8601String(),
-        'rate': rate,
-        if (updatedBy != null) 'updatedBy': updatedBy,
-      };
+    'date': date.toIso8601String(),
+    'rate': rate,
+    if (updatedBy != null) 'updatedBy': updatedBy,
+  };
 
   factory RateHistoryEntry.fromMap(Map<String, dynamic> map) =>
       RateHistoryEntry(
@@ -49,8 +45,8 @@ class FuelType {
     DateTime? createdAt,
     DateTime? updatedAt,
     this.isActive = true,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Create a copy with updated fields
   FuelType copyWith({
@@ -92,16 +88,16 @@ class FuelType {
   }
 
   Map<String, dynamic> toMap() => {
-        'fuelId': fuelId,
-        'fuelName': fuelName,
-        'currentRatePerLitre': currentRatePerLitre,
-        'rateHistory': rateHistory.map((e) => e.toMap()).toList(),
-        'linkedGSTRate': linkedGSTRate,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'isActive': isActive,
-      };
+    'fuelId': fuelId,
+    'fuelName': fuelName,
+    'currentRatePerLitre': currentRatePerLitre,
+    'rateHistory': rateHistory.map((e) => e.toMap()).toList(),
+    'linkedGSTRate': linkedGSTRate,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'isActive': isActive,
+  };
 
   factory FuelType.fromMap(String id, Map<String, dynamic> map) {
     final historyRaw = map['rateHistory'] as List<dynamic>? ?? [];
@@ -132,31 +128,31 @@ class FuelType {
 
   /// Default fuel types for initial setup
   static List<FuelType> defaultFuelTypes(String ownerId) => [
-        FuelType(
-          fuelId: 'petrol',
-          fuelName: 'Petrol',
-          currentRatePerLitre: 0.0,
-          ownerId: ownerId,
-        ),
-        FuelType(
-          fuelId: 'diesel',
-          fuelName: 'Diesel',
-          currentRatePerLitre: 0.0,
-          ownerId: ownerId,
-        ),
-        FuelType(
-          fuelId: 'cng',
-          fuelName: 'CNG',
-          currentRatePerLitre: 0.0,
-          linkedGSTRate: 5.0, // CNG typically has lower GST
-          ownerId: ownerId,
-        ),
-        FuelType(
-          fuelId: 'power',
-          fuelName: 'Power (EV)',
-          currentRatePerLitre: 0.0, // Per kWh for EV
-          linkedGSTRate: 18.0,
-          ownerId: ownerId,
-        ),
-      ];
+    FuelType(
+      fuelId: 'petrol',
+      fuelName: 'Petrol',
+      currentRatePerLitre: 0.0,
+      ownerId: ownerId,
+    ),
+    FuelType(
+      fuelId: 'diesel',
+      fuelName: 'Diesel',
+      currentRatePerLitre: 0.0,
+      ownerId: ownerId,
+    ),
+    FuelType(
+      fuelId: 'cng',
+      fuelName: 'CNG',
+      currentRatePerLitre: 0.0,
+      linkedGSTRate: 5.0, // CNG typically has lower GST
+      ownerId: ownerId,
+    ),
+    FuelType(
+      fuelId: 'power',
+      fuelName: 'Power (EV)',
+      currentRatePerLitre: 0.0, // Per kWh for EV
+      linkedGSTRate: 18.0,
+      ownerId: ownerId,
+    ),
+  ];
 }

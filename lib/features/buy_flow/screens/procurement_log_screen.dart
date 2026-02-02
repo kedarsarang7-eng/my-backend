@@ -85,9 +85,12 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
               value: _filterStatus,
               dropdownColor: isDark ? const Color(0xFF1E293B) : Colors.white,
               style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-              items: ['All', 'Completed', 'Pending', 'Cancelled']
-                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                  .toList(),
+              items: [
+                'All',
+                'Completed',
+                'Pending',
+                'Cancelled',
+              ].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
               onChanged: (value) =>
                   setState(() => _filterStatus = value ?? 'All'),
             ),
@@ -123,24 +126,44 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
       color: isDark ? const Color(0xFF0F172A) : Colors.grey[100],
       child: Row(
         children: [
-          _buildSummaryChip('Total', '₹${_formatAmount(totalAmount)}',
-              const Color(0xFF8B5CF6), isDark),
-          const SizedBox(width: 12),
-          _buildSummaryChip('Paid', '₹${_formatAmount(totalPaid)}',
-              const Color(0xFF10B981), isDark),
+          _buildSummaryChip(
+            'Total',
+            '₹${_formatAmount(totalAmount)}',
+            const Color(0xFF8B5CF6),
+            isDark,
+          ),
           const SizedBox(width: 12),
           _buildSummaryChip(
-              'Completed', '$completed', const Color(0xFF06B6D4), isDark),
+            'Paid',
+            '₹${_formatAmount(totalPaid)}',
+            const Color(0xFF10B981),
+            isDark,
+          ),
           const SizedBox(width: 12),
           _buildSummaryChip(
-              'Pending', '$pending', const Color(0xFFF59E0B), isDark),
+            'Completed',
+            '$completed',
+            const Color(0xFF06B6D4),
+            isDark,
+          ),
+          const SizedBox(width: 12),
+          _buildSummaryChip(
+            'Pending',
+            '$pending',
+            const Color(0xFFF59E0B),
+            isDark,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSummaryChip(
-      String label, String value, Color color, bool isDark) {
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -149,13 +172,21 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
       ),
       child: Row(
         children: [
-          Text('$label: ',
-              style: TextStyle(
-                  fontSize: 13,
-                  color: isDark ? Colors.white60 : Colors.grey[600])),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+          Text(
+            '$label: ',
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark ? Colors.white60 : Colors.grey[600],
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
@@ -171,13 +202,19 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history,
-                size: 64, color: isDark ? Colors.white24 : Colors.grey[300]),
+            Icon(
+              Icons.history,
+              size: 64,
+              color: isDark ? Colors.white24 : Colors.grey[300],
+            ),
             const SizedBox(height: 16),
-            Text('No procurement records',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: isDark ? Colors.white60 : Colors.grey[600])),
+            Text(
+              'No procurement records',
+              style: TextStyle(
+                fontSize: 18,
+                color: isDark ? Colors.white60 : Colors.grey[600],
+              ),
+            ),
           ],
         ),
       );
@@ -200,7 +237,8 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!),
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!,
+        ),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -219,8 +257,9 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
               child: Text(
                 purchase.invoiceNumber ?? 'Purchase Order',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87),
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
             ),
             _buildStatusBadge(purchase.status, isDark),
@@ -232,15 +271,17 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
             const SizedBox(height: 4),
             Text(
               purchase.vendorName ?? 'Unknown Vendor',
-              style:
-                  TextStyle(color: isDark ? Colors.white70 : Colors.grey[700]),
+              style: TextStyle(
+                color: isDark ? Colors.white70 : Colors.grey[700],
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               DateFormat('dd MMM yyyy, hh:mm a').format(purchase.createdAt),
               style: TextStyle(
-                  fontSize: 12,
-                  color: isDark ? Colors.white60 : Colors.grey[600]),
+                fontSize: 12,
+                color: isDark ? Colors.white60 : Colors.grey[600],
+              ),
             ),
           ],
         ),
@@ -251,9 +292,10 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
             Text(
               '₹${purchase.totalAmount.toStringAsFixed(0)}',
               style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
             if (!isPaid)
               Text(
@@ -290,8 +332,11 @@ class _ProcurementLogScreenState extends ConsumerState<ProcurementLogScreen> {
       ),
       child: Text(
         status,
-        style:
-            TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: color),
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: color,
+        ),
       ),
     );
   }

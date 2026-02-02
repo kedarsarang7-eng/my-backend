@@ -8,7 +8,7 @@ class KotService {
   Future<void> generateAndPrintKot({
     required String orderId,
     required List<FoodOrderItemEntity>
-        items, // Items to print (e.g. only new ones)
+    items, // Items to print (e.g. only new ones)
     required String tableNumber,
     required String waiterName,
   }) async {
@@ -30,7 +30,11 @@ class KotService {
     // 2. Print to Kitchen
     if (kitchenItems.isNotEmpty) {
       await _printTicket(
-          "KITCHEN PRINTER", tableNumber, waiterName, kitchenItems);
+        "KITCHEN PRINTER",
+        tableNumber,
+        waiterName,
+        kitchenItems,
+      );
     }
 
     // 3. Print to Bar
@@ -49,8 +53,12 @@ class KotService {
         name.contains('cocktail');
   }
 
-  Future<void> _printTicket(String printerName, String table, String waiter,
-      List<FoodOrderItemEntity> items) async {
+  Future<void> _printTicket(
+    String printerName,
+    String table,
+    String waiter,
+    List<FoodOrderItemEntity> items,
+  ) async {
     // Log intent to print
     // print("PRINTING TO $printerName for Table $table");
     // Call actual printer service
@@ -63,6 +71,9 @@ class FoodOrderItemEntity {
   final double quantity;
   final String? variant;
 
-  FoodOrderItemEntity(
-      {required this.productName, required this.quantity, this.variant});
+  FoodOrderItemEntity({
+    required this.productName,
+    required this.quantity,
+    this.variant,
+  });
 }

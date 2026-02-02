@@ -34,19 +34,19 @@ class Bill extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        shopName,
-        customerName,
-        customerPhone,
-        date,
-        items,
-        subtotal,
-        tax,
-        discount,
-        totalAmount,
-        paymentMethod,
-        source
-      ];
+    id,
+    shopName,
+    customerName,
+    customerPhone,
+    date,
+    items,
+    subtotal,
+    tax,
+    discount,
+    totalAmount,
+    paymentMethod,
+    source,
+  ];
 
   Bill copyWith({
     String? id,

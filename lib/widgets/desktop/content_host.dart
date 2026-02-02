@@ -132,7 +132,6 @@ class _DesktopContentHostState extends ConsumerState<DesktopContentHost> {
       AppScreen.supplierBills: () => const SupplierBillsScreen(),
       AppScreen.purchaseRegister: () =>
           const BuyOrdersScreen(), // Reuse for now
-
       // UTILITIES & ANALYTICS
       AppScreen.alerts: () => const AlertsScreen(),
       AppScreen.insights: () => const InsightsScreen(),
@@ -183,11 +182,14 @@ class _DesktopContentHostState extends ConsumerState<DesktopContentHost> {
           children: [
             const Icon(Icons.construction, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            Text("Screen: ${screen.name}",
-                style: const TextStyle(fontSize: 24)),
+            Text(
+              "Screen: ${screen.name}",
+              style: const TextStyle(fontSize: 24),
+            ),
             const SizedBox(height: 8),
             const Text(
-                "This screen has not been connected to the new navigation system yet."),
+              "This screen has not been connected to the new navigation system yet.",
+            ),
           ],
         ),
       );

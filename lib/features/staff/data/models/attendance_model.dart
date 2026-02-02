@@ -1,20 +1,8 @@
 /// Attendance Status
-enum AttendanceStatus {
-  present,
-  absent,
-  halfDay,
-  leave,
-  holiday,
-  weekOff,
-}
+enum AttendanceStatus { present, absent, halfDay, leave, holiday, weekOff }
 
 /// Leave Type
-enum LeaveType {
-  casual,
-  sick,
-  paid,
-  unpaid,
-}
+enum LeaveType { casual, sick, paid, unpaid }
 
 /// Staff Attendance Model
 class AttendanceModel {

@@ -18,10 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class GstReportsScreen extends ConsumerStatefulWidget {
   final int initialIndex;
 
-  const GstReportsScreen({
-    super.key,
-    this.initialIndex = 0,
-  });
+  const GstReportsScreen({super.key, this.initialIndex = 0});
 
   @override
   ConsumerState<GstReportsScreen> createState() => _GstReportsScreenState();
@@ -87,17 +84,20 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
               child: SegmentedButton<String>(
                 segments: const [
                   ButtonSegment(
-                      value: 'gstr1',
-                      label: Text('GSTR-1'),
-                      icon: Icon(Icons.upload_file)),
+                    value: 'gstr1',
+                    label: Text('GSTR-1'),
+                    icon: Icon(Icons.upload_file),
+                  ),
                   ButtonSegment(
-                      value: 'gstr3b',
-                      label: Text('GSTR-3B'),
-                      icon: Icon(Icons.summarize)),
+                    value: 'gstr3b',
+                    label: Text('GSTR-3B'),
+                    icon: Icon(Icons.summarize),
+                  ),
                   ButtonSegment(
-                      value: 'hsn',
-                      label: Text('HSN'),
-                      icon: Icon(Icons.category)),
+                    value: 'hsn',
+                    label: Text('HSN'),
+                    icon: Icon(Icons.category),
+                  ),
                 ],
                 selected: {_selectedReport},
                 onSelectionChanged: (selection) =>
@@ -143,7 +143,7 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
                 _buildGstr3bSummary(),
               if (_hsnReport != null && _selectedReport == 'hsn')
                 _buildHsnSummary(),
-            ]
+            ],
           ],
         ),
       ),
@@ -161,11 +161,14 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: FuturisticColors.primary.withOpacity(0.2)),
         ),
-        child: Text(label,
-            style: const TextStyle(
-                fontSize: 12,
-                color: FuturisticColors.primary,
-                fontWeight: FontWeight.bold)),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: FuturisticColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
@@ -203,7 +206,9 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
             _buildSummaryRow('B2CS Invoices', '${summary.b2csCount}'),
             const Divider(),
             _buildSummaryRow(
-                'Taxable Value', _formatCurrency(summary.totalTaxableValue)),
+              'Taxable Value',
+              _formatCurrency(summary.totalTaxableValue),
+            ),
             _buildSummaryRow('CGST', _formatCurrency(summary.totalCgst)),
             _buildSummaryRow('SGST', _formatCurrency(summary.totalSgst)),
             _buildSummaryRow('IGST', _formatCurrency(summary.totalIgst)),
@@ -313,17 +318,21 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
                   DataColumn(label: Text('Tax'), numeric: true),
                 ],
                 rows: report.items.take(10).map((item) {
-                  return DataRow(cells: [
-                    DataCell(Text(item.hsnCode)),
-                    DataCell(Text(
-                      item.description.length > 20
-                          ? '${item.description.substring(0, 20)}...'
-                          : item.description,
-                    )),
-                    DataCell(Text(item.quantity.toStringAsFixed(2))),
-                    DataCell(Text(_formatCurrency(item.taxableValue))),
-                    DataCell(Text(_formatCurrency(item.totalTax))),
-                  ]);
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(item.hsnCode)),
+                      DataCell(
+                        Text(
+                          item.description.length > 20
+                              ? '${item.description.substring(0, 20)}...'
+                              : item.description,
+                        ),
+                      ),
+                      DataCell(Text(item.quantity.toStringAsFixed(2))),
+                      DataCell(Text(_formatCurrency(item.taxableValue))),
+                      DataCell(Text(_formatCurrency(item.totalTax))),
+                    ],
+                  );
                 }).toList(),
               ),
             ),
@@ -351,8 +360,11 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value,
-      {bool isHighlighted = false}) {
+  Widget _buildSummaryRow(
+    String label,
+    String value, {
+    bool isHighlighted = false,
+  }) {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -362,8 +374,9 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
           Text(
             label,
             style: isHighlighted
-                ? theme.textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold)
+                ? theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  )
                 : null,
           ),
           Text(
@@ -441,8 +454,10 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                    content: Text(
-                        'GSTIN not configured. Please configured it in Settings.')),
+                  content: Text(
+                    'GSTIN not configured. Please configured it in Settings.',
+                  ),
+                ),
               );
             }
             return;
@@ -488,9 +503,9 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error generating report: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error generating report: $e')));
       }
     } finally {
       setState(() => _isLoading = false);
@@ -507,9 +522,9 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
       await file.writeAsString(_exportedJson!);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Exported to: ${file.path}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Exported to: ${file.path}')));
       }
     } catch (e) {
       // Fallback to clipboard
@@ -532,9 +547,9 @@ class _GstReportsScreenState extends ConsumerState<GstReportsScreen> {
       await file.writeAsString(_exportedCsv!);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Exported to: ${file.path}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Exported to: ${file.path}')));
       }
     } catch (e) {
       // Fallback to clipboard

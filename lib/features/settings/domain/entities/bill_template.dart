@@ -25,16 +25,16 @@ class BillTemplate extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        showLogo,
-        showShopName,
-        showAddress,
-        showPhone,
-        showTax,
-        headerAlignment,
-        footerText
-      ];
+    id,
+    name,
+    showLogo,
+    showShopName,
+    showAddress,
+    showPhone,
+    showTax,
+    headerAlignment,
+    footerText,
+  ];
 
   BillTemplate copyWith({
     String? id,

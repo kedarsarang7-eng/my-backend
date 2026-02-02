@@ -177,16 +177,10 @@ class _PinVerificationDialogState extends State<PinVerificationDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
-          Icon(
-            Icons.lock_outline,
-            color: severityColor,
-          ),
+          Icon(Icons.lock_outline, color: severityColor),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              widget.title,
-              style: theme.textTheme.titleLarge,
-            ),
+            child: Text(widget.title, style: theme.textTheme.titleLarge),
           ),
         ],
       ),

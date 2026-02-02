@@ -31,8 +31,9 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
       if (ownerId.isEmpty) return;
 
       // Use repository to get customers with dues (potential blacklist)
-      final result =
-          await sl<CustomersRepository>().getCustomersWithDues(userId: ownerId);
+      final result = await sl<CustomersRepository>().getCustomersWithDues(
+        userId: ownerId,
+      );
 
       if (!result.isSuccess || !mounted) return;
 
@@ -40,21 +41,23 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
       final customers = result.data!;
       final blacklist = customers
           .where((c) => c.totalDues > 5000) // Threshold for blacklist
-          .map((c) => BlacklistedCustomer(
-                customerId: c.id,
-                customerName: c.name,
-                blacklistDate: c.updatedAt,
-                duesAmount: c.totalDues,
-                reason: 'Outstanding dues',
-              ))
+          .map(
+            (c) => BlacklistedCustomer(
+              customerId: c.id,
+              customerName: c.name,
+              blacklistDate: c.updatedAt,
+              duesAmount: c.totalDues,
+              reason: 'Outstanding dues',
+            ),
+          )
           .toList();
 
       setState(() => _blacklistedCustomers = blacklist);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -81,19 +84,23 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
 
   Future<void> _filterByDateRange() async {
     if (_selectedFromDate == null || _selectedToDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select both dates')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select both dates')));
       return;
     }
 
     // Filter already loaded list by date
     final filtered = _blacklistedCustomers
-        .where((c) =>
-            c.blacklistDate.isAfter(
-                _selectedFromDate!.subtract(const Duration(days: 1))) &&
-            c.blacklistDate
-                .isBefore(_selectedToDate!.add(const Duration(days: 1))))
+        .where(
+          (c) =>
+              c.blacklistDate.isAfter(
+                _selectedFromDate!.subtract(const Duration(days: 1)),
+              ) &&
+              c.blacklistDate.isBefore(
+                _selectedToDate!.add(const Duration(days: 1)),
+              ),
+        )
         .toList();
 
     setState(() => _blacklistedCustomers = filtered);
@@ -107,9 +114,9 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
     });
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Removed from blacklist')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Removed from blacklist')));
   }
 
   @override
@@ -201,8 +208,10 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
                       children: [
                         Column(
                           children: [
-                            const Text('⛔ Total Blacklisted',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Text(
+                              '⛔ Total Blacklisted',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 4),
                             Text(
                               _blacklistedCustomers.length.toString(),
@@ -216,8 +225,10 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
                         ),
                         Column(
                           children: [
-                            const Text('💰 Total Dues',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Text(
+                              '💰 Total Dues',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 4),
                             Text(
                               '₹${_blacklistedCustomers.fold(0.0, (sum, c) => sum + c.duesAmount).toStringAsFixed(2)}',
@@ -237,10 +248,7 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
                   // Blacklist Listf
                   const Text(
                     'Blacklisted Customers',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   _blacklistedCustomers.isEmpty
@@ -261,11 +269,14 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
                             return Card(
                               margin: const EdgeInsets.only(bottom: 12),
                               child: ExpansionTile(
-                                leading: const Icon(Icons.warning,
-                                    color: Colors.red),
+                                leading: const Icon(
+                                  Icons.warning,
+                                  color: Colors.red,
+                                ),
                                 title: Text(customer.customerName),
                                 subtitle: Text(
-                                    'Dues: ₹${customer.duesAmount.toStringAsFixed(2)}'),
+                                  'Dues: ₹${customer.duesAmount.toStringAsFixed(2)}',
+                                ),
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(16),
@@ -274,35 +285,43 @@ class _BlacklistManagementScreenState extends State<BlacklistManagementScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         _buildInfoRow(
-                                            'Blacklist Date',
-                                            customer.blacklistDate
-                                                .toString()
-                                                .split(' ')[0]),
+                                          'Blacklist Date',
+                                          customer.blacklistDate
+                                              .toString()
+                                              .split(' ')[0],
+                                        ),
                                         _buildInfoRow(
-                                            'From Date',
-                                            customer.fromDate
-                                                    ?.toString()
-                                                    .split(' ')[0] ??
-                                                'N/A'),
+                                          'From Date',
+                                          customer.fromDate?.toString().split(
+                                                ' ',
+                                              )[0] ??
+                                              'N/A',
+                                        ),
                                         _buildInfoRow(
-                                            'To Date',
-                                            customer.toDate
-                                                    ?.toString()
-                                                    .split(' ')[0] ??
-                                                'N/A'),
+                                          'To Date',
+                                          customer.toDate?.toString().split(
+                                                ' ',
+                                              )[0] ??
+                                              'N/A',
+                                        ),
                                         _buildInfoRow(
-                                            'Reason', customer.reason),
+                                          'Reason',
+                                          customer.reason,
+                                        ),
                                         const SizedBox(height: 12),
                                         SizedBox(
                                           width: double.infinity,
                                           child: ElevatedButton.icon(
                                             onPressed: () =>
                                                 _removeFromBlacklist(
-                                                    customer.customerId),
-                                            icon:
-                                                const Icon(Icons.check_circle),
+                                                  customer.customerId,
+                                                ),
+                                            icon: const Icon(
+                                              Icons.check_circle,
+                                            ),
                                             label: const Text(
-                                                'Remove from Blacklist'),
+                                              'Remove from Blacklist',
+                                            ),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.green,
                                             ),

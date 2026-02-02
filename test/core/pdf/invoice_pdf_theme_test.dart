@@ -15,56 +15,72 @@ void main() {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.grocery);
 
       // Verify it's the grocery (green) theme
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.groceryTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.groceryTheme.primaryColor),
+      );
 
       // Green color range check (0xFF059669 is Emerald 600)
       // Primary color should be green-ish
-      expect(theme.primaryColor,
-          isNot(equals(InvoicePdfTheme.pharmacyTheme.primaryColor)));
+      expect(
+        theme.primaryColor,
+        isNot(equals(InvoicePdfTheme.pharmacyTheme.primaryColor)),
+      );
     });
 
     test('pharmacy theme returns blue colors', () {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.pharmacy);
 
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.pharmacyTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.pharmacyTheme.primaryColor),
+      );
       expect(theme, equals(InvoicePdfTheme.pharmacyTheme));
     });
 
     test('restaurant theme returns orange colors', () {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.restaurant);
 
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.restaurantTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.restaurantTheme.primaryColor),
+      );
     });
 
     test('hardware theme returns gray colors', () {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.hardware);
 
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.hardwareTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.hardwareTheme.primaryColor),
+      );
     });
 
     test('service theme returns purple colors', () {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.service);
 
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.serviceTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.serviceTheme.primaryColor),
+      );
     });
 
     test('wholesale theme returns teal colors', () {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.wholesale);
 
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.wholesaleTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.wholesaleTheme.primaryColor),
+      );
     });
 
     test('petrolPump theme returns red colors', () {
       final theme = InvoicePdfTheme.fromBusinessType(BusinessType.petrolPump);
 
-      expect(theme.primaryColor,
-          equals(InvoicePdfTheme.petrolPumpTheme.primaryColor));
+      expect(
+        theme.primaryColor,
+        equals(InvoicePdfTheme.petrolPumpTheme.primaryColor),
+      );
     });
 
     test('all themes have required color properties', () {

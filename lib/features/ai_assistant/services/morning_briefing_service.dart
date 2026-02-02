@@ -21,8 +21,10 @@ class MorningBriefingService {
 
       // 3. Get Yesterday's Sales for comparison
       // We ask for 7 days to be safe, but we look for yesterday
-      final trendResult =
-          await _reportsRepo.getSalesTrend(userId: userId, days: 7);
+      final trendResult = await _reportsRepo.getSalesTrend(
+        userId: userId,
+        days: 7,
+      );
 
       double yesterdaySales = 0;
       if (trendResult.success && trendResult.data != null) {

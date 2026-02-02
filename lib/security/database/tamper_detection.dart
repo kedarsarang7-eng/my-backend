@@ -39,10 +39,12 @@ class TamperDetectionService {
       final content = await hashFile.readAsString();
       final data = jsonDecode(content) as Map<String, dynamic>;
 
-      _customerHashes =
-          Map<String, String>.from(data['customers'] ?? <String, String>{});
-      _billHashes =
-          Map<String, String>.from(data['bills'] ?? <String, String>{});
+      _customerHashes = Map<String, String>.from(
+        data['customers'] ?? <String, String>{},
+      );
+      _billHashes = Map<String, String>.from(
+        data['bills'] ?? <String, String>{},
+      );
     } catch (e) {
       debugPrint('[TamperDetectionService._loadHashDatabase] error: $e');
     }
@@ -217,9 +219,7 @@ class TamperDetectionService {
   }
 
   /// Batch verify all bills
-  Future<List<String>> verifyAllBills(
-    List<Map<String, dynamic>> bills,
-  ) async {
+  Future<List<String>> verifyAllBills(List<Map<String, dynamic>> bills) async {
     try {
       final tamperedBills = <String>[];
 

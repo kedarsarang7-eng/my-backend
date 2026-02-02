@@ -60,14 +60,16 @@ class OnboardingRepository {
 
       if (doc.exists) {
         final data = doc.data();
-        final completed = data?['onboardingCompleted'] == true ||
+        final completed =
+            data?['onboardingCompleted'] == true ||
             data?['hasCompletedOnboarding'] == true; // Support both field names
 
         // Cache locally for offline access
         await _cacheOnboardingStatus(userId, completed);
 
         debugPrint(
-            '[OnboardingRepository] Firestore check: onboardingCompleted=$completed');
+          '[OnboardingRepository] Firestore check: onboardingCompleted=$completed',
+        );
         return completed;
       }
 
@@ -76,7 +78,8 @@ class OnboardingRepository {
       return false;
     } catch (e) {
       debugPrint(
-          '[OnboardingRepository] Firestore unavailable, falling back to local: $e');
+        '[OnboardingRepository] Firestore unavailable, falling back to local: $e',
+      );
     }
 
     // === STEP 2: Fallback to local DB ===
@@ -112,34 +115,40 @@ class OnboardingRepository {
         debugPrint('[OnboardingRepository] Onboarding persisted to Firestore');
       } catch (e) {
         debugPrint(
-            '[OnboardingRepository] Firestore write failed, queueing for sync: $e');
+          '[OnboardingRepository] Firestore write failed, queueing for sync: $e',
+        );
 
         // Queue for sync if Firestore fails
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.update,
-          targetCollection: _collection,
-          documentId: userId,
-          payload: {
-            'onboardingCompleted': true,
-            'hasCompletedOnboarding': true,
-            'businessType': businessType,
-            'onboardingCompletedAt': now.toIso8601String(),
-          },
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.update,
+            targetCollection: _collection,
+            documentId: userId,
+            payload: {
+              'onboardingCompleted': true,
+              'hasCompletedOnboarding': true,
+              'businessType': businessType,
+              'onboardingCompletedAt': now.toIso8601String(),
+            },
+          ),
+        );
       }
 
       // === STEP 2: Update local DB ===
       await _cacheOnboardingStatus(userId, true);
 
       // === STEP 3: Update Shops table for business type ===
-      await (database.update(database.shops)..where((t) => t.id.equals(userId)))
-          .write(ShopsCompanion(
-        onboardingCompleted: const Value(true),
-        businessType: Value(businessType),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.shops,
+      )..where((t) => t.id.equals(userId))).write(
+        ShopsCompanion(
+          onboardingCompleted: const Value(true),
+          businessType: Value(businessType),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       debugPrint('[OnboardingRepository] Onboarding completed for $userId');
     }, 'completeOnboarding');
@@ -159,31 +168,36 @@ class OnboardingRepository {
             .collection(_collection)
             .doc(userId)
             .set({
-          'businessType': businessType,
-          'billTemplate': businessType, // Legacy support
-          'updatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+              'businessType': businessType,
+              'billTemplate': businessType, // Legacy support
+              'updatedAt': FieldValue.serverTimestamp(),
+            }, SetOptions(merge: true));
       } catch (e) {
         // Queue for sync if offline
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.update,
-          targetCollection: _collection,
-          documentId: userId,
-          payload: {
-            'businessType': businessType,
-            'updatedAt': now.toIso8601String(),
-          },
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.update,
+            targetCollection: _collection,
+            documentId: userId,
+            payload: {
+              'businessType': businessType,
+              'updatedAt': now.toIso8601String(),
+            },
+          ),
+        );
       }
 
       // Update local DB
-      await (database.update(database.shops)..where((t) => t.id.equals(userId)))
-          .write(ShopsCompanion(
-        businessType: Value(businessType),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.shops,
+      )..where((t) => t.id.equals(userId))).write(
+        ShopsCompanion(
+          businessType: Value(businessType),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'saveBusinessType');
   }
 
@@ -207,9 +221,9 @@ class OnboardingRepository {
     }
 
     // Fallback to local
-    final shop = await (database.select(database.shops)
-          ..where((t) => t.id.equals(userId)))
-        .getSingleOrNull();
+    final shop = await (database.select(
+      database.shops,
+    )..where((t) => t.id.equals(userId))).getSingleOrNull();
 
     return shop?.businessType;
   }
@@ -222,26 +236,32 @@ class OnboardingRepository {
       final now = DateTime.now();
 
       // Check if shop exists
-      final existing = await (database.select(database.shops)
-            ..where((t) => t.id.equals(userId)))
-          .getSingleOrNull();
+      final existing = await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(userId))).getSingleOrNull();
 
       if (existing != null) {
-        await (database.update(database.shops)
-              ..where((t) => t.id.equals(userId)))
-            .write(ShopsCompanion(
-          onboardingCompleted: Value(completed),
-          updatedAt: Value(now),
-        ));
+        await (database.update(
+          database.shops,
+        )..where((t) => t.id.equals(userId))).write(
+          ShopsCompanion(
+            onboardingCompleted: Value(completed),
+            updatedAt: Value(now),
+          ),
+        );
       } else {
         // Create minimal shop record for caching
-        await database.into(database.shops).insert(ShopsCompanion(
-              id: Value(userId),
-              onboardingCompleted: Value(completed),
-              createdAt: Value(now),
-              updatedAt: Value(now),
-              isSynced: const Value(false),
-            ));
+        await database
+            .into(database.shops)
+            .insert(
+              ShopsCompanion(
+                id: Value(userId),
+                onboardingCompleted: Value(completed),
+                createdAt: Value(now),
+                updatedAt: Value(now),
+                isSynced: const Value(false),
+              ),
+            );
       }
     } catch (e) {
       debugPrint('[OnboardingRepository] Local cache failed: $e');
@@ -251,9 +271,9 @@ class OnboardingRepository {
   /// Get onboarding status from local DB
   Future<bool> _getLocalOnboardingStatus(String userId) async {
     try {
-      final shop = await (database.select(database.shops)
-            ..where((t) => t.id.equals(userId)))
-          .getSingleOrNull();
+      final shop = await (database.select(
+        database.shops,
+      )..where((t) => t.id.equals(userId))).getSingleOrNull();
 
       return shop?.onboardingCompleted ?? false;
     } catch (e) {
@@ -277,38 +297,42 @@ class OnboardingRepository {
     if (userId.isEmpty) return false;
 
     // Check Bills (Sales)
-    final billCount = await (database.select(database.bills)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.deletedAt.isNull()))
-        .get()
-        .then((rows) => rows.length);
+    final billCount =
+        await (database.select(database.bills)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.deletedAt.isNull()))
+            .get()
+            .then((rows) => rows.length);
 
     if (billCount > 0) return true;
 
     // Check Purchase Orders
-    final poCount = await (database.select(database.purchaseOrders)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.deletedAt.isNull()))
-        .get()
-        .then((rows) => rows.length);
+    final poCount =
+        await (database.select(database.purchaseOrders)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.deletedAt.isNull()))
+            .get()
+            .then((rows) => rows.length);
 
     if (poCount > 0) return true;
 
     // Check Expenses
-    final expenseCount = await (database.select(database.expenses)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.deletedAt.isNull()))
-        .get()
-        .then((rows) => rows.length);
+    final expenseCount =
+        await (database.select(database.expenses)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.deletedAt.isNull()))
+            .get()
+            .then((rows) => rows.length);
 
     if (expenseCount > 0) return true;
 
     // Check Payments (Money In/Out)
-    final paymentCount = await (database.select(database.payments)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.deletedAt.isNull()))
-        .get()
-        .then((rows) => rows.length);
+    final paymentCount =
+        await (database.select(database.payments)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.deletedAt.isNull()))
+            .get()
+            .then((rows) => rows.length);
 
     if (paymentCount > 0) return true;
 

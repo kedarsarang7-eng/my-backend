@@ -1,16 +1,6 @@
+enum RequestStatus { pending, approved, rejected, billed }
 
-enum RequestStatus {
-  pending,
-  approved,
-  rejected,
-  billed,
-}
-
-enum ItemStatus {
-  pending,
-  approved,
-  cancelled,
-}
+enum ItemStatus { pending, approved, cancelled }
 
 class CustomerItemRequestItem {
   String productId;
@@ -30,13 +20,13 @@ class CustomerItemRequestItem {
   });
 
   Map<String, dynamic> toMap() => {
-        'productId': productId,
-        'productName': productName,
-        'requestedQty': requestedQty,
-        'approvedQty': approvedQty,
-        'unit': unit,
-        'status': status.name,
-      };
+    'productId': productId,
+    'productName': productName,
+    'requestedQty': requestedQty,
+    'approvedQty': approvedQty,
+    'unit': unit,
+    'status': status.name,
+  };
 
   factory CustomerItemRequestItem.fromMap(Map<String, dynamic> map) {
     return CustomerItemRequestItem(
@@ -93,15 +83,15 @@ class CustomerItemRequest {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'customerId': customerId,
-        'vendorId': vendorId,
-        'status': status.name,
-        'items': items.map((e) => e.toMap()).toList(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'note': note,
-      };
+    'id': id,
+    'customerId': customerId,
+    'vendorId': vendorId,
+    'status': status.name,
+    'items': items.map((e) => e.toMap()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'note': note,
+  };
 
   factory CustomerItemRequest.fromMap(Map<String, dynamic> map) {
     return CustomerItemRequest(
@@ -112,9 +102,13 @@ class CustomerItemRequest {
         (e) => e.name == map['status'],
         orElse: () => RequestStatus.pending,
       ),
-      items: (map['items'] as List<dynamic>?)
-              ?.map((e) =>
-                  CustomerItemRequestItem.fromMap(Map<String, dynamic>.from(e)))
+      items:
+          (map['items'] as List<dynamic>?)
+              ?.map(
+                (e) => CustomerItemRequestItem.fromMap(
+                  Map<String, dynamic>.from(e),
+                ),
+              )
               .toList() ??
           [],
       createdAt: DateTime.tryParse(map['createdAt'] ?? '') ?? DateTime.now(),

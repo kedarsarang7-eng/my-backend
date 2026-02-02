@@ -16,12 +16,12 @@ class UdharTransaction {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'amount': amount,
-        'type': type,
-        'reason': reason,
-        'date': date.toIso8601String(),
-      };
+    'id': id,
+    'amount': amount,
+    'type': type,
+    'reason': reason,
+    'date': date.toIso8601String(),
+  };
 
   factory UdharTransaction.fromMap(String id, Map<String, dynamic> m) =>
       UdharTransaction(
@@ -40,7 +40,8 @@ class UdharTransaction {
 class UdharPerson {
   final String id;
   final String name;
-  final double balance; // positive if customer will receive, negative if customer owes
+  final double
+  balance; // positive if customer will receive, negative if customer owes
   final String note;
 
   UdharPerson({
@@ -51,17 +52,16 @@ class UdharPerson {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'balance': balance,
-        'note': note,
-      };
+    'id': id,
+    'name': name,
+    'balance': balance,
+    'note': note,
+  };
 
-  factory UdharPerson.fromMap(String id, Map<String, dynamic> m) =>
-      UdharPerson(
-        id: id,
-        name: (m['name'] ?? '') as String,
-        balance: (m['balance'] ?? 0).toDouble(),
-        note: (m['note'] ?? '') as String,
-      );
+  factory UdharPerson.fromMap(String id, Map<String, dynamic> m) => UdharPerson(
+    id: id,
+    name: (m['name'] ?? '') as String,
+    balance: (m['balance'] ?? 0).toDouble(),
+    note: (m['note'] ?? '') as String,
+  );
 }

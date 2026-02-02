@@ -92,10 +92,7 @@ class BillDisplayTable extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: _buildTableCell(item.vegName),
-                    ),
+                    Expanded(flex: 3, child: _buildTableCell(item.vegName)),
                     Expanded(
                       flex: 2,
                       child: _buildTableCell(

@@ -117,10 +117,7 @@ class TableQrCodeWidget extends StatelessWidget {
               // Scan instruction
               const Text(
                 'Scan to view menu & order',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -181,9 +178,7 @@ class TableQrCodeWidget extends StatelessWidget {
                 pw.Container(
                   width: 60 * PdfPageFormat.mm,
                   height: 60 * PdfPageFormat.mm,
-                  child: pw.Image(
-                    pw.MemoryImage(qrImage),
-                  ),
+                  child: pw.Image(pw.MemoryImage(qrImage)),
                 ),
                 pw.SizedBox(height: 8),
                 pw.Container(
@@ -206,10 +201,7 @@ class TableQrCodeWidget extends StatelessWidget {
                 pw.SizedBox(height: 6),
                 pw.Text(
                   'Scan to view menu & order',
-                  style: const pw.TextStyle(
-                    fontSize: 8,
-                    color: PdfColors.grey,
-                  ),
+                  style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey),
                 ),
               ],
             ),
@@ -319,9 +311,7 @@ class TableQrCodeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -332,10 +322,7 @@ class TableQrCodeDialog extends StatelessWidget {
               children: [
                 const Text(
                   'Table QR Code',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
@@ -362,10 +349,8 @@ class TableQrCodeDialog extends StatelessWidget {
   }) {
     showDialog(
       context: context,
-      builder: (context) => TableQrCodeDialog(
-        table: table,
-        restaurantName: restaurantName,
-      ),
+      builder: (context) =>
+          TableQrCodeDialog(table: table, restaurantName: restaurantName),
     );
   }
 }

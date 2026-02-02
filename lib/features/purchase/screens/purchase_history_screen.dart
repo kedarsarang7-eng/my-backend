@@ -33,20 +33,14 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
       body: Stack(
         children: [
           // Background
-          Positioned.fill(
-            child: Container(
-              color: palette.mutedGray,
-            ),
-          ),
+          Positioned.fill(child: Container(color: palette.mutedGray)),
 
           SafeArea(
             child: Column(
               children: [
                 _buildHeader(context, palette),
                 _buildSearchBar(palette),
-                Expanded(
-                  child: _buildTimelineList(palette),
-                ),
+                Expanded(child: _buildTimelineList(palette)),
               ],
             ),
           ),
@@ -97,8 +91,11 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
     final userId = sl<SessionManager>().ownerId;
     if (userId == null) {
       return Center(
-          child: Text("Please login first",
-              style: GoogleFonts.inter(color: Colors.white)));
+        child: Text(
+          "Please login first",
+          style: GoogleFonts.inter(color: Colors.white),
+        ),
+      );
     }
 
     return StreamBuilder<List<repo.PurchaseOrder>>(
@@ -110,8 +107,11 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
 
         if (snapshot.hasError) {
           return Center(
-              child: Text("Error: ${snapshot.error}",
-                  style: const TextStyle(color: Colors.red)));
+            child: Text(
+              "Error: ${snapshot.error}",
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
         }
 
         final orders = snapshot.data ?? [];
@@ -129,8 +129,11 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.receipt_long,
-                    size: 64, color: Colors.white.withOpacity(0.3)),
+                Icon(
+                  Icons.receipt_long,
+                  size: 64,
+                  color: Colors.white.withOpacity(0.3),
+                ),
                 const SizedBox(height: 16),
                 Text(
                   "No purchase history found",
@@ -227,7 +230,9 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
                                     Text(
                                       "Inv #${order.invoiceNumber ?? 'N/A'}",
                                       style: const TextStyle(
-                                          color: Colors.white54, fontSize: 12),
+                                        color: Colors.white54,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -246,9 +251,12 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
                                   const SizedBox(height: 4),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: (order.status == 'COMPLETED' ||
+                                      color:
+                                          (order.status == 'COMPLETED' ||
                                               order.status == 'PAID')
                                           ? palette.leafGreen.withOpacity(0.2)
                                           : palette.tomatoRed.withOpacity(0.2),
@@ -257,7 +265,8 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
                                     child: Text(
                                       order.status,
                                       style: TextStyle(
-                                        color: (order.status == 'COMPLETED' ||
+                                        color:
+                                            (order.status == 'COMPLETED' ||
                                                 order.status == 'PAID')
                                             ? palette.leafGreen
                                             : palette.tomatoRed,
@@ -303,8 +312,10 @@ class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Filter Invoices',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Filter Invoices',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             ListTile(
               title: const Text('All'),

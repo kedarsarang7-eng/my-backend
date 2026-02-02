@@ -187,14 +187,14 @@ class DetectionStatusIndicator extends StatelessWidget {
     final color = isStable
         ? kP2DGlowSuccess
         : isDetected
-            ? kP2DAccentCyan
-            : kP2DTextMuted;
+        ? kP2DAccentCyan
+        : kP2DTextMuted;
 
     final text = isStable
         ? 'Ready'
         : isDetected
-            ? 'Hold steady...'
-            : 'Searching...';
+        ? 'Hold steady...'
+        : 'Searching...';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

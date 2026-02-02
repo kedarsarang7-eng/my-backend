@@ -31,17 +31,17 @@ class Product extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        category,
-        price,
-        stockQuantity,
-        unit,
-        expiryDate,
-        lowStockThreshold,
-        barcode,
-        size,
-        color,
-        brand
-      ];
+    id,
+    name,
+    category,
+    price,
+    stockQuantity,
+    unit,
+    expiryDate,
+    lowStockThreshold,
+    barcode,
+    size,
+    color,
+    brand,
+  ];
 }

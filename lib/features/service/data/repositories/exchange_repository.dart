@@ -20,10 +20,11 @@ class ExchangeRepository {
         'EXC-${now.year % 100}${now.month.toString().padLeft(2, '0')}';
 
     // Count existing exchanges for this month
-    final count = await ((_db.select(_db.exchanges)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.exchangeNumber.like('$prefix%'))))
-        .get();
+    final count =
+        await ((_db.select(_db.exchanges)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.exchangeNumber.like('$prefix%'))))
+            .get();
 
     final sequence = (count.length + 1).toString().padLeft(4, '0');
     return '$prefix-$sequence';
@@ -32,11 +33,14 @@ class ExchangeRepository {
   /// Create a new exchange
   Future<Exchange> createExchange(Exchange exchange) async {
     final id = exchange.id.isEmpty ? const Uuid().v4() : exchange.id;
-    final exchangeNumber = exchange.exchangeNumber ??
+    final exchangeNumber =
+        exchange.exchangeNumber ??
         await generateExchangeNumber(exchange.userId);
     final now = DateTime.now();
 
-    await _db.into(_db.exchanges).insert(
+    await _db
+        .into(_db.exchanges)
+        .insert(
           ExchangesCompanion.insert(
             id: id,
             userId: exchange.userId,
@@ -83,44 +87,47 @@ class ExchangeRepository {
   Future<Exchange> updateExchange(Exchange exchange) async {
     final now = DateTime.now();
 
-    await (_db.update(_db.exchanges)..where((t) => t.id.equals(exchange.id)))
-        .write(ExchangesCompanion(
-      customerId: Value(exchange.customerId),
-      customerName: Value(exchange.customerName),
-      customerPhone: Value(exchange.customerPhone),
-      oldDeviceType: Value(exchange.oldDeviceName),
-      oldBrand: Value(exchange.oldDeviceBrand ?? ''),
-      oldModel: Value(exchange.oldDeviceModel ?? ''),
-      oldImeiSerial: Value(exchange.oldImeiSerial),
-      oldCondition: Value(exchange.oldDeviceCondition ?? 'GOOD'),
-      oldConditionNotes: Value(exchange.oldDeviceNotes),
-      oldDeviceValue: Value(exchange.exchangeValue),
-      newProductId: Value(exchange.newProductId),
-      newImeiSerialId: Value(exchange.newImeiSerialId),
-      newProductName: Value(exchange.newProductName),
-      newImeiSerial: Value(exchange.newImeiSerial),
-      newDevicePrice: Value(exchange.newDevicePrice),
-      exchangeValue: Value(exchange.exchangeValue),
-      priceDifference: Value(exchange.priceDifference),
-      additionalDiscount: Value(exchange.additionalDiscount),
-      amountToPay: Value(exchange.amountToPay),
-      paymentStatus: Value(exchange.paymentStatus.value),
-      amountPaid: Value(exchange.amountPaid),
-      paymentMode: Value(exchange.paymentMode),
-      billId: Value(exchange.billId),
-      status: Value(exchange.status.value),
-      updatedAt: Value(now),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.exchanges,
+    )..where((t) => t.id.equals(exchange.id))).write(
+      ExchangesCompanion(
+        customerId: Value(exchange.customerId),
+        customerName: Value(exchange.customerName),
+        customerPhone: Value(exchange.customerPhone),
+        oldDeviceType: Value(exchange.oldDeviceName),
+        oldBrand: Value(exchange.oldDeviceBrand ?? ''),
+        oldModel: Value(exchange.oldDeviceModel ?? ''),
+        oldImeiSerial: Value(exchange.oldImeiSerial),
+        oldCondition: Value(exchange.oldDeviceCondition ?? 'GOOD'),
+        oldConditionNotes: Value(exchange.oldDeviceNotes),
+        oldDeviceValue: Value(exchange.exchangeValue),
+        newProductId: Value(exchange.newProductId),
+        newImeiSerialId: Value(exchange.newImeiSerialId),
+        newProductName: Value(exchange.newProductName),
+        newImeiSerial: Value(exchange.newImeiSerial),
+        newDevicePrice: Value(exchange.newDevicePrice),
+        exchangeValue: Value(exchange.exchangeValue),
+        priceDifference: Value(exchange.priceDifference),
+        additionalDiscount: Value(exchange.additionalDiscount),
+        amountToPay: Value(exchange.amountToPay),
+        paymentStatus: Value(exchange.paymentStatus.value),
+        amountPaid: Value(exchange.amountPaid),
+        paymentMode: Value(exchange.paymentMode),
+        billId: Value(exchange.billId),
+        status: Value(exchange.status.value),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
 
     return exchange.copyWith(updatedAt: now);
   }
 
   /// Get exchange by ID
   Future<Exchange?> getById(String id) async {
-    final entity = await (_db.select(_db.exchanges)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final entity = await (_db.select(
+      _db.exchanges,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (entity == null) return null;
     return _entityToModel(entity);
@@ -128,10 +135,11 @@ class ExchangeRepository {
 
   /// Get exchange by number
   Future<Exchange?> getByNumber(String userId, String exchangeNumber) async {
-    final entity = await (_db.select(_db.exchanges)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.exchangeNumber.equals(exchangeNumber)))
-        .getSingleOrNull();
+    final entity =
+        await (_db.select(_db.exchanges)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.exchangeNumber.equals(exchangeNumber)))
+            .getSingleOrNull();
 
     if (entity == null) return null;
     return _entityToModel(entity);
@@ -139,22 +147,26 @@ class ExchangeRepository {
 
   /// Get all exchanges for user
   Future<List<Exchange>> getAll(String userId) async {
-    final entities = await (_db.select(_db.exchanges)
-          ..where((t) => t.userId.equals(userId))
-          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-        .get();
+    final entities =
+        await (_db.select(_db.exchanges)
+              ..where((t) => t.userId.equals(userId))
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get exchanges by status
   Future<List<Exchange>> getByStatus(
-      String userId, ExchangeStatus status) async {
-    final entities = await (_db.select(_db.exchanges)
-          ..where((t) => t.userId.equals(userId))
-          ..where((t) => t.status.equals(status.value))
-          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-        .get();
+    String userId,
+    ExchangeStatus status,
+  ) async {
+    final entities =
+        await (_db.select(_db.exchanges)
+              ..where((t) => t.userId.equals(userId))
+              ..where((t) => t.status.equals(status.value))
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
@@ -181,48 +193,55 @@ class ExchangeRepository {
   /// Complete an exchange
   Future<void> completeExchange(String id, String? billId) async {
     final now = DateTime.now();
-    await (_db.update(_db.exchanges)..where((t) => t.id.equals(id)))
-        .write(ExchangesCompanion(
-      status: const Value('COMPLETED'),
-      billId: Value(billId),
-      updatedAt: Value(now),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(_db.exchanges)..where((t) => t.id.equals(id))).write(
+      ExchangesCompanion(
+        status: const Value('COMPLETED'),
+        billId: Value(billId),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
   }
 
   /// Cancel an exchange
   Future<void> cancelExchange(String id) async {
     final now = DateTime.now();
-    await (_db.update(_db.exchanges)..where((t) => t.id.equals(id)))
-        .write(ExchangesCompanion(
-      status: const Value('CANCELLED'),
-      updatedAt: Value(now),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(_db.exchanges)..where((t) => t.id.equals(id))).write(
+      ExchangesCompanion(
+        status: const Value('CANCELLED'),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
   }
 
   /// Record payment for an exchange
   Future<void> recordPayment(
-      String id, double amount, String paymentMode) async {
-    final entity = await (_db.select(_db.exchanges)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    String id,
+    double amount,
+    String paymentMode,
+  ) async {
+    final entity = await (_db.select(
+      _db.exchanges,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (entity == null) return;
 
     final newAmountPaid = entity.amountPaid + amount;
     final isPaid = newAmountPaid >= entity.amountToPay;
-    final paymentStatus =
-        isPaid ? 'PAID' : (newAmountPaid > 0 ? 'PARTIAL' : 'PENDING');
+    final paymentStatus = isPaid
+        ? 'PAID'
+        : (newAmountPaid > 0 ? 'PARTIAL' : 'PENDING');
 
-    await (_db.update(_db.exchanges)..where((t) => t.id.equals(id)))
-        .write(ExchangesCompanion(
-      amountPaid: Value(newAmountPaid),
-      paymentMode: Value(paymentMode),
-      paymentStatus: Value(paymentStatus),
-      updatedAt: Value(DateTime.now()),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(_db.exchanges)..where((t) => t.id.equals(id))).write(
+      ExchangesCompanion(
+        amountPaid: Value(newAmountPaid),
+        paymentMode: Value(paymentMode),
+        paymentStatus: Value(paymentStatus),
+        updatedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
   }
 
   /// Convert entity to model

@@ -61,18 +61,20 @@ class ShopLinkRepository {
 
       await database.into(database.shopLinks).insert(companion);
 
-      final link = await (database.select(database.shopLinks)
-            ..where((t) => t.id.equals(linkId)))
-          .getSingle();
+      final link = await (database.select(
+        database.shopLinks,
+      )..where((t) => t.id.equals(linkId))).getSingle();
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: customerId, // Customer owns this link
-        operationType: SyncOperationType.create,
-        targetCollection: collectionName,
-        documentId: linkId,
-        payload: _entityToMap(link),
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: customerId, // Customer owns this link
+          operationType: SyncOperationType.create,
+          targetCollection: collectionName,
+          documentId: linkId,
+          payload: _entityToMap(link),
+        ),
+      );
 
       return link;
     }, 'createLink');
@@ -81,9 +83,9 @@ class ShopLinkRepository {
   /// Get link by ID
   Future<RepositoryResult<ShopLinkEntity?>> getLinkById(String linkId) async {
     return await errorHandler.runSafe<ShopLinkEntity?>(() async {
-      return await (database.select(database.shopLinks)
-            ..where((t) => t.id.equals(linkId)))
-          .getSingleOrNull();
+      return await (database.select(
+        database.shopLinks,
+      )..where((t) => t.id.equals(linkId))).getSingleOrNull();
     }, 'getLinkById');
   }
 
@@ -93,20 +95,23 @@ class ShopLinkRepository {
     required String shopId,
   }) async {
     return await errorHandler.runSafe<ShopLinkEntity?>(() async {
-      return await (database.select(database.shopLinks)
-            ..where((t) =>
-                t.customerId.equals(customerId) & t.shopId.equals(shopId)))
+      return await (database.select(database.shopLinks)..where(
+            (t) => t.customerId.equals(customerId) & t.shopId.equals(shopId),
+          ))
           .getSingleOrNull();
     }, 'getLinkForCustomerShop');
   }
 
   /// Get all active links for a customer
   Future<RepositoryResult<List<ShopLinkEntity>>> getActiveLinksForCustomer(
-      String customerId) async {
+    String customerId,
+  ) async {
     return await errorHandler.runSafe<List<ShopLinkEntity>>(() async {
       return await (database.select(database.shopLinks)
-            ..where((t) =>
-                t.customerId.equals(customerId) & t.status.equals('ACTIVE'))
+            ..where(
+              (t) =>
+                  t.customerId.equals(customerId) & t.status.equals('ACTIVE'),
+            )
             ..orderBy([(t) => OrderingTerm.desc(t.linkedAt)]))
           .get();
     }, 'getActiveLinksForCustomer');
@@ -115,15 +120,17 @@ class ShopLinkRepository {
   /// Watch active links for customer (reactive for dashboard)
   Stream<List<ShopLinkEntity>> watchActiveLinksForCustomer(String customerId) {
     return (database.select(database.shopLinks)
-          ..where((t) =>
-              t.customerId.equals(customerId) & t.status.equals('ACTIVE'))
+          ..where(
+            (t) => t.customerId.equals(customerId) & t.status.equals('ACTIVE'),
+          )
           ..orderBy([(t) => OrderingTerm.desc(t.linkedAt)]))
         .watch();
   }
 
   /// Get all links for a shop (shows linked customers)
   Future<RepositoryResult<List<ShopLinkEntity>>> getLinksForShop(
-      String shopId) async {
+    String shopId,
+  ) async {
     return await errorHandler.runSafe<List<ShopLinkEntity>>(() async {
       return await (database.select(database.shopLinks)
             ..where((t) => t.shopId.equals(shopId) & t.status.equals('ACTIVE'))
@@ -147,29 +154,38 @@ class ShopLinkRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.shopLinks)
-            ..where((t) =>
-                t.customerId.equals(customerId) & t.shopId.equals(shopId)))
-          .write(ShopLinksCompanion(
-        status: const Value('UNLINKED'),
-        unlinkedAt: Value(now),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(database.shopLinks)..where(
+            (t) => t.customerId.equals(customerId) & t.shopId.equals(shopId),
+          ))
+          .write(
+            ShopLinksCompanion(
+              status: const Value('UNLINKED'),
+              unlinkedAt: Value(now),
+              updatedAt: Value(now),
+              isSynced: const Value(false),
+            ),
+          );
 
       // Queue for sync
-      final link = await (database.select(database.shopLinks)
-            ..where((t) =>
-                t.customerId.equals(customerId) & t.shopId.equals(shopId)))
-          .getSingleOrNull();
+      final link =
+          await (database.select(database.shopLinks)..where(
+                (t) =>
+                    t.customerId.equals(customerId) & t.shopId.equals(shopId),
+              ))
+              .getSingleOrNull();
       if (link != null) {
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: customerId,
-          operationType: SyncOperationType.update,
-          targetCollection: collectionName,
-          documentId: link.id,
-          payload: {'status': 'UNLINKED', 'unlinkedAt': now.toIso8601String()},
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: customerId,
+            operationType: SyncOperationType.update,
+            targetCollection: collectionName,
+            documentId: link.id,
+            payload: {
+              'status': 'UNLINKED',
+              'unlinkedAt': now.toIso8601String(),
+            },
+          ),
+        );
       }
     }, 'unlinkShop');
   }
@@ -181,15 +197,18 @@ class ShopLinkRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.shopLinks)
-            ..where((t) =>
+      await (database.update(database.shopLinks)..where(
+            (t) =>
                 t.shopId.equals(shopId) &
-                t.customerProfileId.equals(customerProfileId)))
-          .write(ShopLinksCompanion(
-        status: const Value('BLOCKED'),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+                t.customerProfileId.equals(customerProfileId),
+          ))
+          .write(
+            ShopLinksCompanion(
+              status: const Value('BLOCKED'),
+              updatedAt: Value(now),
+              isSynced: const Value(false),
+            ),
+          );
     }, 'blockCustomerLink');
   }
 
@@ -203,16 +222,18 @@ class ShopLinkRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.shopLinks)
-            ..where((t) =>
-                t.customerId.equals(customerId) & t.shopId.equals(shopId)))
-          .write(ShopLinksCompanion(
-        totalBilled: Value(totalBilled),
-        totalPaid: Value(totalPaid),
-        outstandingBalance: Value(outstandingBalance),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(database.shopLinks)..where(
+            (t) => t.customerId.equals(customerId) & t.shopId.equals(shopId),
+          ))
+          .write(
+            ShopLinksCompanion(
+              totalBilled: Value(totalBilled),
+              totalPaid: Value(totalPaid),
+              outstandingBalance: Value(outstandingBalance),
+              updatedAt: Value(now),
+              isSynced: const Value(false),
+            ),
+          );
     }, 'updateBillingSummary');
   }
 
@@ -221,12 +242,14 @@ class ShopLinkRepository {
     required String customerId,
     required String shopId,
   }) async {
-    final link = await (database.select(database.shopLinks)
-          ..where((t) =>
-              t.customerId.equals(customerId) &
-              t.shopId.equals(shopId) &
-              t.status.equals('ACTIVE')))
-        .getSingleOrNull();
+    final link =
+        await (database.select(database.shopLinks)..where(
+              (t) =>
+                  t.customerId.equals(customerId) &
+                  t.shopId.equals(shopId) &
+                  t.status.equals('ACTIVE'),
+            ))
+            .getSingleOrNull();
     return link != null;
   }
 

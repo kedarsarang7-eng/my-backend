@@ -40,7 +40,9 @@ class PaymentRepository {
 
       await database.transaction(() async {
         // 1. Insert Payment Record
-        await database.into(database.payments).insert(
+        await database
+            .into(database.payments)
+            .insert(
               PaymentsCompanion.insert(
                 id: paymentId,
                 userId: userId,
@@ -58,24 +60,26 @@ class PaymentRepository {
             );
 
         // 2. Queue Sync Operation
-        await syncManager.enqueue(SyncQueueItem.create(
-          userId: userId,
-          operationType: SyncOperationType.create,
-          targetCollection: collectionName,
-          documentId: paymentId,
-          payload: {
-            'id': paymentId,
-            'userId': userId,
-            'billId': billId,
-            'customerId': customerId,
-            'amount': amount,
-            'paymentMode': paymentMode,
-            'referenceNumber': referenceNumber,
-            'notes': notes,
-            'paymentDate': paymentDate.toIso8601String(),
-            'createdAt': now.toIso8601String(),
-          },
-        ));
+        await syncManager.enqueue(
+          SyncQueueItem.create(
+            userId: userId,
+            operationType: SyncOperationType.create,
+            targetCollection: collectionName,
+            documentId: paymentId,
+            payload: {
+              'id': paymentId,
+              'userId': userId,
+              'billId': billId,
+              'customerId': customerId,
+              'amount': amount,
+              'paymentMode': paymentMode,
+              'referenceNumber': referenceNumber,
+              'notes': notes,
+              'paymentDate': paymentDate.toIso8601String(),
+              'createdAt': now.toIso8601String(),
+            },
+          ),
+        );
       });
 
       // 3. Audit Log (non-blocking)
@@ -95,7 +99,8 @@ class PaymentRepository {
 
   /// Get payments for a specific bill
   Future<RepositoryResult<List<PaymentEntity>>> getPaymentsForBill(
-      String billId) async {
+    String billId,
+  ) async {
     return await errorHandler.runSafe<List<PaymentEntity>>(() async {
       return await database.getPaymentsForBill(billId);
     }, 'getPaymentsForBill');

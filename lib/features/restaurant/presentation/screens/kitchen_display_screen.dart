@@ -19,10 +19,7 @@ import '../../data/repositories/food_order_repository.dart';
 class KitchenDisplayScreen extends StatefulWidget {
   final String vendorId;
 
-  const KitchenDisplayScreen({
-    super.key,
-    required this.vendorId,
-  });
+  const KitchenDisplayScreen({super.key, required this.vendorId});
 
   @override
   State<KitchenDisplayScreen> createState() => _KitchenDisplayScreenState();
@@ -47,8 +44,9 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(FuturisticColors.primary),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  FuturisticColors.primary,
+                ),
               ),
             );
           }
@@ -64,9 +62,11 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
               .where((o) => o.orderStatus == FoodOrderStatus.pending)
               .toList();
           final cookingOrders = orders
-              .where((o) =>
-                  o.orderStatus == FoodOrderStatus.accepted ||
-                  o.orderStatus == FoodOrderStatus.cooking)
+              .where(
+                (o) =>
+                    o.orderStatus == FoodOrderStatus.accepted ||
+                    o.orderStatus == FoodOrderStatus.cooking,
+              )
               .toList();
           final readyOrders = orders
               .where((o) => o.orderStatus == FoodOrderStatus.ready)
@@ -132,7 +132,7 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
               ? LinearGradient(
                   colors: [
                     FuturisticColors.darkSurface,
-                    FuturisticColors.darkBackground
+                    FuturisticColors.darkBackground,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -140,7 +140,7 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
               : LinearGradient(
                   colors: [
                     FuturisticColors.surface,
-                    FuturisticColors.background
+                    FuturisticColors.background,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -156,8 +156,11 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
               borderRadius: BorderRadius.circular(AppBorderRadius.md),
               boxShadow: AppShadows.glowShadow(FuturisticColors.primary),
             ),
-            child:
-                const Icon(Icons.soup_kitchen, color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.soup_kitchen,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Text(
@@ -214,8 +217,8 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
           color: isActive
               ? FuturisticColors.primary.withOpacity(0.15)
               : (isDark
-                  ? FuturisticColors.darkSurfaceVariant
-                  : FuturisticColors.surfaceVariant),
+                    ? FuturisticColors.darkSurfaceVariant
+                    : FuturisticColors.surfaceVariant),
           borderRadius: BorderRadius.circular(AppBorderRadius.md),
           border: Border.all(
             color: isActive
@@ -229,8 +232,8 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
           color: isActive
               ? FuturisticColors.primary
               : (isDark
-                  ? FuturisticColors.darkTextSecondary
-                  : FuturisticColors.textSecondary),
+                    ? FuturisticColors.darkTextSecondary
+                    : FuturisticColors.textSecondary),
           size: 22,
         ),
       ),
@@ -383,8 +386,9 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
     final isUrgent = waitTime > 15;
 
     return ModernCard(
-      backgroundColor:
-          isDark ? FuturisticColors.darkSurface : FuturisticColors.surface,
+      backgroundColor: isDark
+          ? FuturisticColors.darkSurface
+          : FuturisticColors.surface,
       borderGradient: isUrgent ? AppGradients.accentGradient : null,
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
@@ -438,12 +442,13 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
                   color: isUrgent
                       ? FuturisticColors.error.withOpacity(0.15)
                       : (isDark
-                          ? FuturisticColors.darkSurfaceVariant
-                          : FuturisticColors.surfaceVariant),
+                            ? FuturisticColors.darkSurfaceVariant
+                            : FuturisticColors.surfaceVariant),
                   borderRadius: BorderRadius.circular(AppBorderRadius.sm),
                   border: isUrgent
                       ? Border.all(
-                          color: FuturisticColors.error.withOpacity(0.5))
+                          color: FuturisticColors.error.withOpacity(0.5),
+                        )
                       : null,
                 ),
                 child: Row(
@@ -480,44 +485,46 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
           ),
           const SizedBox(height: AppSpacing.sm),
           // Order items
-          ...order.items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: accentColor.withOpacity(0.5),
-                          width: 1.5,
-                        ),
-                        borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+          ...order.items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              child: Row(
+                children: [
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: accentColor.withOpacity(0.5),
+                        width: 1.5,
                       ),
-                      child: Center(
-                        child: Text(
-                          '${item.quantity}',
-                          style: AppTypography.labelSmall.copyWith(
-                            color: accentColor,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(AppBorderRadius.sm),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
+                    child: Center(
                       child: Text(
-                        item.itemName,
-                        style: AppTypography.bodyMedium.copyWith(
-                          color: isDark
-                              ? FuturisticColors.darkTextPrimary
-                              : FuturisticColors.textPrimary,
+                        '${item.quantity}',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: accentColor,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      item.itemName,
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: isDark
+                            ? FuturisticColors.darkTextPrimary
+                            : FuturisticColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           // Special instructions
           if (order.specialInstructions?.isNotEmpty ?? false) ...[
             const SizedBox(height: AppSpacing.xs),
@@ -532,11 +539,7 @@ class _KitchenDisplayScreenState extends State<KitchenDisplayScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.notes,
-                    size: 14,
-                    color: FuturisticColors.warning,
-                  ),
+                  Icon(Icons.notes, size: 14, color: FuturisticColors.warning),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(

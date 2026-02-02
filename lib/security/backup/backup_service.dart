@@ -44,8 +44,9 @@ class BackupService {
       }
 
       // Generate backup filename with timestamp
-      final timestamp =
-          DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now());
+      final timestamp = DateFormat(
+        'yyyy-MM-dd-HH-mm-ss',
+      ).format(DateTime.now());
       final backupFileName = '$_backupPrefix$timestamp$_backupExtension';
       final backupPath = '$_localBackupPath/$backupFileName';
 
@@ -67,8 +68,9 @@ class BackupService {
     Map<String, dynamic> appData,
   ) async {
     try {
-      final timestamp =
-          DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now());
+      final timestamp = DateFormat(
+        'yyyy-MM-dd-HH-mm-ss',
+      ).format(DateTime.now());
       final backupFileName = '${_backupPrefix}full_$timestamp$_backupExtension';
       final backupPath = '$_localBackupPath/$backupFileName';
 
@@ -153,7 +155,8 @@ class BackupService {
 
       // Sort by modification time and get latest
       backupFiles.sort(
-          (a, b) => b.statSync().modified.compareTo(a.statSync().modified));
+        (a, b) => b.statSync().modified.compareTo(a.statSync().modified),
+      );
       final latestBackup = backupFiles.first;
 
       final content = await latestBackup.readAsString();
@@ -186,7 +189,8 @@ class BackupService {
 
       // Sort by modification time and get latest
       backupFiles.sort(
-          (a, b) => b.statSync().modified.compareTo(a.statSync().modified));
+        (a, b) => b.statSync().modified.compareTo(a.statSync().modified),
+      );
 
       return backupFiles.first.path;
     } catch (e) {
@@ -211,7 +215,8 @@ class BackupService {
 
       // Sort by modification time
       backupFiles.sort(
-          (a, b) => b.statSync().modified.compareTo(a.statSync().modified));
+        (a, b) => b.statSync().modified.compareTo(a.statSync().modified),
+      );
 
       // Delete old backups
       if (backupFiles.length > _maxLocalBackups) {
@@ -285,8 +290,9 @@ class BackupService {
     bool uploadToCloud = true,
   }) async {
     try {
-      final timestamp =
-          DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now());
+      final timestamp = DateFormat(
+        'yyyy-MM-dd-HH-mm-ss',
+      ).format(DateTime.now());
       final backupFileName =
           '$_backupPrefix${businessId}_$timestamp$_backupExtension';
       final backupPath = '$_localBackupPath/$backupFileName';
@@ -348,12 +354,15 @@ class BackupService {
 
   /// Verify backup integrity before restore
   Future<BackupVerificationResult> verifyBackupIntegrity(
-      String backupPath) async {
+    String backupPath,
+  ) async {
     try {
       final backupFile = File(backupPath);
       if (!backupFile.existsSync()) {
         return BackupVerificationResult(
-            isValid: false, error: 'Backup file not found');
+          isValid: false,
+          error: 'Backup file not found',
+        );
       }
 
       final metadataPath = '$backupPath.meta';
@@ -374,7 +383,9 @@ class BackupService {
       final size = await backupFile.length();
       if (size == 0) {
         return BackupVerificationResult(
-            isValid: false, error: 'Backup file is empty');
+          isValid: false,
+          error: 'Backup file is empty',
+        );
       }
 
       return BackupVerificationResult(
@@ -401,9 +412,11 @@ class BackupService {
       final backupFiles = backupDir
           .listSync()
           .whereType<File>()
-          .where((file) =>
-              file.path.contains(businessId) &&
-              file.path.endsWith(_backupExtension))
+          .where(
+            (file) =>
+                file.path.contains(businessId) &&
+                file.path.endsWith(_backupExtension),
+          )
           .toList();
 
       final backups = <BusinessBackupInfo>[];
@@ -419,13 +432,15 @@ class BackupService {
           } catch (_) {}
         }
 
-        backups.add(BusinessBackupInfo(
-          path: file.path,
-          businessId: businessId,
-          timestamp: file.statSync().modified,
-          sizeBytes: file.lengthSync(),
-          checksum: metadata?['checksum'],
-        ));
+        backups.add(
+          BusinessBackupInfo(
+            path: file.path,
+            businessId: businessId,
+            timestamp: file.statSync().modified,
+            sizeBytes: file.lengthSync(),
+            checksum: metadata?['checksum'],
+          ),
+        );
       }
 
       backups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -450,8 +465,10 @@ class BackupService {
     }
   }
 
-  Future<void> _cleanupBusinessBackups(String businessId,
-      {int maxBackups = 7}) async {
+  Future<void> _cleanupBusinessBackups(
+    String businessId, {
+    int maxBackups = 7,
+  }) async {
     try {
       final backups = await getBusinessBackups(businessId);
 
@@ -467,7 +484,8 @@ class BackupService {
           }
         }
         debugPrint(
-            '[BackupService] Cleaned up ${backups.length - maxBackups} old backups');
+          '[BackupService] Cleaned up ${backups.length - maxBackups} old backups',
+        );
       }
     } catch (e) {
       debugPrint('[BackupService._cleanupBusinessBackups] error: $e');

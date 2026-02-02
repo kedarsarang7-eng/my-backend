@@ -20,8 +20,9 @@ class DesktopRootShell extends ConsumerWidget {
     // Listen to navigation state ONLY for the sidebar selection ID
     // We use select to only rebuild if the screen ID changes, though
     // the sidebar itself handles internal state well too.
-    final currentScreen =
-        ref.watch(navigationControllerProvider.select((s) => s.currentScreen));
+    final currentScreen = ref.watch(
+      navigationControllerProvider.select((s) => s.currentScreen),
+    );
     final controller = ref.read(navigationControllerProvider.notifier);
 
     return Scaffold(

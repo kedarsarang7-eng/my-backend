@@ -18,12 +18,7 @@ class MockUser {
   final String? email;
   final String? phoneNumber;
 
-  MockUser({
-    required this.uid,
-    this.displayName,
-    this.email,
-    this.phoneNumber,
-  });
+  MockUser({required this.uid, this.displayName, this.email, this.phoneNumber});
 }
 
 class MockAuthState {
@@ -42,10 +37,11 @@ class MockSessionManager {
   String? _userName;
   bool _isLoggedIn = false;
 
-  void login(
-      {required String userId,
-      required String userRole,
-      required String userName}) {
+  void login({
+    required String userId,
+    required String userRole,
+    required String userName,
+  }) {
     _userId = userId;
     _userRole = userRole;
     _userName = userName;
@@ -82,11 +78,11 @@ class MockFirestoreUserData {
   });
 
   Map<String, dynamic> toMap() => {
-        'role': role,
-        'name': name,
-        'phone': phone,
-        'createdAt': createdAt?.toIso8601String(),
-      };
+    'role': role,
+    'name': name,
+    'phone': phone,
+    'createdAt': createdAt?.toIso8601String(),
+  };
 }
 
 void main() {
@@ -230,8 +226,9 @@ void main() {
       expect(find.text('Owner Dashboard'), findsOneWidget);
     });
 
-    testWidgets('customer should navigate to customer dashboard',
-        (tester) async {
+    testWidgets('customer should navigate to customer dashboard', (
+      tester,
+    ) async {
       final widget = getDestinationWidget('customer');
 
       await tester.pumpWidget(MaterialApp(home: widget));
@@ -334,11 +331,7 @@ void main() {
 
   group('Phone Verification Flow Tests', () {
     test('valid phone number format', () {
-      final phoneNumbers = [
-        '+919876543210',
-        '+911234567890',
-        '+912223334444',
-      ];
+      final phoneNumbers = ['+919876543210', '+911234567890', '+912223334444'];
 
       for (final phone in phoneNumbers) {
         final isValid = phone.startsWith('+91') && phone.length == 13;

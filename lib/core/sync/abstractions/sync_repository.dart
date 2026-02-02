@@ -15,12 +15,18 @@ abstract class SyncRepository {
   Future<void> markInProgress(String operationId);
 
   /// Mark item as Synced and update local entities
-  Future<void> markSynced(String operationId,
-      {required String collection, required String docId});
+  Future<void> markSynced(
+    String operationId, {
+    required String collection,
+    required String docId,
+  });
 
   /// Mark item as Failed (Retryable) with backoff
   Future<void> markFailed(
-      String operationId, String error, int currentRetryCount);
+    String operationId,
+    String error,
+    int currentRetryCount,
+  );
 
   /// Move item to Dead Letter Queue (Fatal)
   Future<void> moveToDeadLetter(SyncQueueItem item, String reason);

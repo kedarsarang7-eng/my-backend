@@ -282,8 +282,8 @@ class CustomerPanelPdfService {
             color: isRed
                 ? PdfColors.red
                 : isGreen
-                    ? const PdfColor.fromInt(0xFF2E7D32)
-                    : PdfColors.black,
+                ? const PdfColor.fromInt(0xFF2E7D32)
+                : PdfColors.black,
           ),
         ),
       ],

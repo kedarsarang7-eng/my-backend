@@ -21,14 +21,17 @@ class ServiceJobRepository {
         '${today.year.toString().substring(2)}${today.month.toString().padLeft(2, '0')}';
 
     // Count existing jobs this month
-    final count = await (_db.selectOnly(_db.serviceJobs)
-          ..addColumns([_db.serviceJobs.id.count()])
-          ..where(_db.serviceJobs.userId.equals(userId) &
-              _db.serviceJobs.createdAt.isBiggerOrEqualValue(
-                DateTime(today.year, today.month, 1),
-              )))
-        .map((row) => row.read(_db.serviceJobs.id.count()) ?? 0)
-        .getSingle();
+    final count =
+        await (_db.selectOnly(_db.serviceJobs)
+              ..addColumns([_db.serviceJobs.id.count()])
+              ..where(
+                _db.serviceJobs.userId.equals(userId) &
+                    _db.serviceJobs.createdAt.isBiggerOrEqualValue(
+                      DateTime(today.year, today.month, 1),
+                    ),
+              ))
+            .map((row) => row.read(_db.serviceJobs.id.count()) ?? 0)
+            .getSingle();
 
     final nextNumber = (count + 1).toString().padLeft(4, '0');
     return '$prefix-$datePrefix-$nextNumber';
@@ -39,7 +42,9 @@ class ServiceJobRepository {
     final id = job.id.isEmpty ? const Uuid().v4() : job.id;
     final now = DateTime.now();
 
-    await _db.into(_db.serviceJobs).insert(
+    await _db
+        .into(_db.serviceJobs)
+        .insert(
           ServiceJobsCompanion.insert(
             id: id,
             userId: job.userId,
@@ -55,14 +60,16 @@ class ServiceJobRepository {
             imeiOrSerial: Value(job.imeiOrSerial),
             color: Value(job.color),
             accessories: Value(
-                job.accessories.isNotEmpty ? job.accessories.join(', ') : null),
+              job.accessories.isNotEmpty ? job.accessories.join(', ') : null,
+            ),
             deviceConditionNotes: Value(job.deviceConditionNotes),
-            devicePhotosJson: Value(job.devicePhotos.isNotEmpty
-                ? job.devicePhotos.join(',')
-                : null),
+            devicePhotosJson: Value(
+              job.devicePhotos.isNotEmpty ? job.devicePhotos.join(',') : null,
+            ),
             problemDescription: job.problemDescription,
-            symptomsJson:
-                Value(job.symptoms.isNotEmpty ? job.symptoms.join(', ') : null),
+            symptomsJson: Value(
+              job.symptoms.isNotEmpty ? job.symptoms.join(', ') : null,
+            ),
             isUnderWarranty: Value(job.isUnderWarranty),
             originalBillId: Value(job.originalBillId),
             imeiSerialId: Value(job.imeiSerialId),
@@ -107,9 +114,9 @@ class ServiceJobRepository {
 
   /// Get a service job by ID
   Future<ServiceJob?> getServiceJobById(String id) async {
-    final entity = await (_db.select(_db.serviceJobs)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final entity = await (_db.select(
+      _db.serviceJobs,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
 
     if (entity == null) return null;
     return _entityToModel(entity);
@@ -117,54 +124,68 @@ class ServiceJobRepository {
 
   /// Get all service jobs for a user
   Future<List<ServiceJob>> getAllServiceJobs(String userId) async {
-    final entities = await (_db.select(_db.serviceJobs)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
-          ..orderBy([(t) => OrderingTerm.desc(t.receivedAt)]))
-        .get();
+    final entities =
+        await (_db.select(_db.serviceJobs)
+              ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())
+              ..orderBy([(t) => OrderingTerm.desc(t.receivedAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get active service jobs (not delivered/cancelled)
   Future<List<ServiceJob>> getActiveServiceJobs(String userId) async {
-    final entities = await (_db.select(_db.serviceJobs)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.status.isNotIn(['DELIVERED', 'CANCELLED']))
-          ..orderBy([
-            (t) => OrderingTerm.asc(t.priority),
-            (t) => OrderingTerm.asc(t.expectedDelivery),
-          ]))
-        .get();
+    final entities =
+        await (_db.select(_db.serviceJobs)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.deletedAt.isNull() &
+                    t.status.isNotIn(['DELIVERED', 'CANCELLED']),
+              )
+              ..orderBy([
+                (t) => OrderingTerm.asc(t.priority),
+                (t) => OrderingTerm.asc(t.expectedDelivery),
+              ]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get jobs by status
   Future<List<ServiceJob>> getServiceJobsByStatus(
-      String userId, ServiceJobStatus status) async {
-    final entities = await (_db.select(_db.serviceJobs)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.status.equals(status.value))
-          ..orderBy([(t) => OrderingTerm.desc(t.receivedAt)]))
-        .get();
+    String userId,
+    ServiceJobStatus status,
+  ) async {
+    final entities =
+        await (_db.select(_db.serviceJobs)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.deletedAt.isNull() &
+                    t.status.equals(status.value),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.receivedAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
 
   /// Get jobs for a customer
   Future<List<ServiceJob>> getServiceJobsForCustomer(
-      String userId, String customerId) async {
-    final entities = await (_db.select(_db.serviceJobs)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.customerId.equals(customerId) &
-              t.deletedAt.isNull())
-          ..orderBy([(t) => OrderingTerm.desc(t.receivedAt)]))
-        .get();
+    String userId,
+    String customerId,
+  ) async {
+    final entities =
+        await (_db.select(_db.serviceJobs)
+              ..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.customerId.equals(customerId) &
+                    t.deletedAt.isNull(),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.receivedAt)]))
+            .get();
 
     return entities.map(_entityToModel).toList();
   }
@@ -191,7 +212,9 @@ class ServiceJobRepository {
       );
 
       // Add status history entry
-      await _db.into(_db.serviceJobStatusHistory).insert(
+      await _db
+          .into(_db.serviceJobStatusHistory)
+          .insert(
             ServiceJobStatusHistoryCompanion.insert(
               id: const Uuid().v4(),
               serviceJobId: id,
@@ -208,8 +231,9 @@ class ServiceJobRepository {
 
   /// Update service job
   Future<void> updateServiceJob(ServiceJob job) async {
-    await (_db.update(_db.serviceJobs)..where((t) => t.id.equals(job.id)))
-        .write(
+    await (_db.update(
+      _db.serviceJobs,
+    )..where((t) => t.id.equals(job.id))).write(
       ServiceJobsCompanion(
         customerName: Value(job.customerName),
         customerPhone: Value(job.customerPhone),
@@ -336,10 +360,12 @@ class ServiceJobRepository {
   /// Watch active service jobs
   Stream<List<ServiceJob>> watchActiveServiceJobs(String userId) {
     return (_db.select(_db.serviceJobs)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.status.isNotIn(['DELIVERED', 'CANCELLED']))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.deletedAt.isNull() &
+                t.status.isNotIn(['DELIVERED', 'CANCELLED']),
+          )
           ..orderBy([
             (t) => OrderingTerm.asc(t.priority),
             (t) => OrderingTerm.asc(t.expectedDelivery),
@@ -350,9 +376,9 @@ class ServiceJobRepository {
 
   /// Get job counts by status
   Future<Map<ServiceJobStatus, int>> getJobCountsByStatus(String userId) async {
-    final entities = await (_db.select(_db.serviceJobs)
-          ..where((t) => t.userId.equals(userId) & t.deletedAt.isNull()))
-        .get();
+    final entities = await (_db.select(
+      _db.serviceJobs,
+    )..where((t) => t.userId.equals(userId) & t.deletedAt.isNull())).get();
 
     final counts = <ServiceJobStatus, int>{};
     for (final status in ServiceJobStatus.values) {
@@ -385,15 +411,17 @@ class ServiceJobRepository {
       color: entity.color,
       accessories:
           entity.accessories?.split(', ').where((s) => s.isNotEmpty).toList() ??
-              [],
+          [],
       deviceConditionNotes: entity.deviceConditionNotes,
-      devicePhotos: entity.devicePhotosJson
+      devicePhotos:
+          entity.devicePhotosJson
               ?.split(',')
               .where((s) => s.isNotEmpty)
               .toList() ??
           [],
       problemDescription: entity.problemDescription,
-      symptoms: entity.symptomsJson
+      symptoms:
+          entity.symptomsJson
               ?.split(', ')
               .where((s) => s.isNotEmpty)
               .toList() ??

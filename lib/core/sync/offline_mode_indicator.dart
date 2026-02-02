@@ -53,8 +53,9 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
     final result = await Connectivity().checkConnectivity();
     _updateConnectivity(result);
 
-    _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen(_updateConnectivity);
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
+      _updateConnectivity,
+    );
   }
 
   void _updateConnectivity(List<ConnectivityResult> result) {
@@ -65,8 +66,9 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
 
   void _subscribeSyncStatus() {
     try {
-      _syncSubscription =
-          SyncManager.instance.syncStatusStream.listen((metrics) {
+      _syncSubscription = SyncManager.instance.syncStatusStream.listen((
+        metrics,
+      ) {
         setState(() {
           _pendingCount = metrics.pendingCount + metrics.inProgressCount;
         });
@@ -97,11 +99,7 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
           ],
         ),
         if (widget.showFloatingBadge && (_pendingCount > 0 || !_isOnline))
-          Positioned(
-            right: 16,
-            bottom: 80,
-            child: _buildFloatingBadge(),
-          ),
+          Positioned(right: 16, bottom: 80, child: _buildFloatingBadge()),
       ],
     );
   }
@@ -112,10 +110,7 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.orange.shade700,
-            Colors.orange.shade600,
-          ],
+          colors: [Colors.orange.shade700, Colors.orange.shade600],
         ),
       ),
       child: SafeArea(
@@ -126,8 +121,11 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
               animation: _pulseController,
               builder: (context, child) => Opacity(
                 opacity: 0.5 + (_pulseController.value * 0.5),
-                child:
-                    const Icon(Icons.cloud_off, color: Colors.white, size: 18),
+                child: const Icon(
+                  Icons.cloud_off,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
             ),
             const SizedBox(width: 8),
@@ -169,10 +167,7 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.blue.shade600,
-            Colors.blue.shade500,
-          ],
+          colors: [Colors.blue.shade600, Colors.blue.shade500],
         ),
       ),
       child: SafeArea(
@@ -184,8 +179,9 @@ class _OfflineModeIndicatorState extends State<OfflineModeIndicator>
               height: 14,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor:
-                    AlwaysStoppedAnimation(Colors.white.withOpacity(0.9)),
+                valueColor: AlwaysStoppedAnimation(
+                  Colors.white.withOpacity(0.9),
+                ),
               ),
             ),
             const SizedBox(width: 8),
@@ -263,16 +259,18 @@ class _SyncStatusBadgeState extends State<SyncStatusBadge> {
       _isOnline = !result.contains(ConnectivityResult.none);
     });
 
-    _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen((result) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      result,
+    ) {
       setState(() {
         _isOnline = !result.contains(ConnectivityResult.none);
       });
     });
 
     try {
-      _syncSubscription =
-          SyncManager.instance.syncStatusStream.listen((metrics) {
+      _syncSubscription = SyncManager.instance.syncStatusStream.listen((
+        metrics,
+      ) {
         setState(() {
           _pendingCount = metrics.pendingCount + metrics.inProgressCount;
         });

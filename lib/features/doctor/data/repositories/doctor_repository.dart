@@ -10,16 +10,16 @@ class DoctorRepository {
   final AppDatabase _db;
   final SyncManager _syncManager;
 
-  DoctorRepository({
-    required AppDatabase db,
-    required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  DoctorRepository({required AppDatabase db, required SyncManager syncManager})
+    : _db = db,
+      _syncManager = syncManager;
 
   /// Create or Update Profile
   Future<void> saveProfile(DoctorProfileModel profile) async {
     try {
-      await _db.into(_db.doctorProfiles).insert(
+      await _db
+          .into(_db.doctorProfiles)
+          .insert(
             DoctorProfilesCompanion.insert(
               id: profile.id,
               vendorId: profile.vendorId,
@@ -34,26 +34,32 @@ class DoctorRepository {
           );
 
       // Sync
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: profile.vendorId,
-        operationType: SyncOperationType.update, // Upsert is effectively update
-        targetCollection: 'doctor_profiles',
-        documentId: profile.id,
-        payload: profile.toMap(),
-        priority: 1,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: profile.vendorId,
+          operationType:
+              SyncOperationType.update, // Upsert is effectively update
+          targetCollection: 'doctor_profiles',
+          documentId: profile.id,
+          payload: profile.toMap(),
+          priority: 1,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to save doctor profile');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to save doctor profile',
+      );
       rethrow;
     }
   }
 
   /// Get Profile by Vendor ID (User ID)
   Future<DoctorProfileModel?> getProfileByVendorId(String vendorId) async {
-    final row = await (_db.select(_db.doctorProfiles)
-          ..where((t) => t.vendorId.equals(vendorId)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.doctorProfiles,
+    )..where((t) => t.vendorId.equals(vendorId))).getSingleOrNull();
     if (row == null) return null;
     return _mapToModel(row);
   }
@@ -80,14 +86,18 @@ class DoctorRepository {
   /// Link Patient to Doctor
   Future<void> linkPatient(String patientId, String doctorId) async {
     // Check if link exists
-    final exists = await (_db.select(_db.patientDoctorLinks)
-          ..where((t) =>
-              t.patientId.equals(patientId) & t.doctorId.equals(doctorId)))
-        .getSingleOrNull();
+    final exists =
+        await (_db.select(_db.patientDoctorLinks)..where(
+              (t) =>
+                  t.patientId.equals(patientId) & t.doctorId.equals(doctorId),
+            ))
+            .getSingleOrNull();
 
     if (exists != null) return; // Already linked
 
-    await _db.into(_db.patientDoctorLinks).insert(
+    await _db
+        .into(_db.patientDoctorLinks)
+        .insert(
           PatientDoctorLinksCompanion.insert(
             id: '${patientId}_$doctorId', // Composite ID or random UUID
             patientId: patientId,

@@ -72,11 +72,7 @@ void main() {
     testWidgets('should render with child', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ModernCard(
-              child: const Text('Card Content'),
-            ),
-          ),
+          home: Scaffold(body: ModernCard(child: const Text('Card Content'))),
         ),
       );
 
@@ -167,10 +163,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: FuturisticButton(
-              label: 'Click Me',
-              onPressed: () {},
-            ),
+            body: FuturisticButton(label: 'Click Me', onPressed: () {}),
           ),
         ),
       );
@@ -285,11 +278,7 @@ void main() {
     testWidgets('should render with title', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ModernListTile(
-              title: 'List Tile Title',
-            ),
-          ),
+          home: Scaffold(body: ModernListTile(title: 'List Tile Title')),
         ),
       );
 
@@ -316,10 +305,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ModernListTile(
-              leadingIcon: Icons.person,
-              title: 'User',
-            ),
+            body: ModernListTile(leadingIcon: Icons.person, title: 'User'),
           ),
         ),
       );
@@ -351,11 +337,7 @@ void main() {
   group('AnimatedLoadingWidget Tests', () {
     testWidgets('should render without message', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: AnimatedLoadingWidget(),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: AnimatedLoadingWidget())),
       );
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -365,9 +347,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: AnimatedLoadingWidget(
-              message: 'Loading data...',
-            ),
+            body: AnimatedLoadingWidget(message: 'Loading data...'),
           ),
         ),
       );

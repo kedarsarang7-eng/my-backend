@@ -33,7 +33,10 @@ class _DocumentScannerScreenState extends ConsumerState<DocumentScannerScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 3, vsync: this, initialIndex: widget.initialTabIndex);
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialTabIndex,
+    );
     _tabController.addListener(() => setState(() {}));
   }
 
@@ -47,8 +50,9 @@ class _DocumentScannerScreenState extends ConsumerState<DocumentScannerScreen>
     final session = ref.read(documentSessionProvider);
     final imagePaths = session.pages;
     if (imagePaths.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("No documents to process")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("No documents to process")));
       return;
     }
 
@@ -64,16 +68,18 @@ class _DocumentScannerScreenState extends ConsumerState<DocumentScannerScreen>
 
       // Map to PurchaseOrder
       final purchaseItems = result.items
-          .map((e) => PurchaseItem(
-                id: const Uuid().v4(),
-                productId: null,
-                productName: e.name,
-                quantity: e.quantity,
-                unit: 'kg', // Default
-                costPrice: e.price,
-                taxRate: 0,
-                totalAmount: e.amount,
-              ))
+          .map(
+            (e) => PurchaseItem(
+              id: const Uuid().v4(),
+              productId: null,
+              productName: e.name,
+              quantity: e.quantity,
+              unit: 'kg', // Default
+              costPrice: e.price,
+              taxRate: 0,
+              totalAmount: e.amount,
+            ),
+          )
           .toList();
 
       final purchaseOrder = PurchaseOrder(
@@ -98,8 +104,9 @@ class _DocumentScannerScreenState extends ConsumerState<DocumentScannerScreen>
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Processing failed: $e")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Processing failed: $e")));
     } finally {
       if (mounted) setState(() => _isProcessing = false);
     }
@@ -115,14 +122,19 @@ class _DocumentScannerScreenState extends ConsumerState<DocumentScannerScreen>
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.white,
       appBar: AppBar(
-        title: Text("Scan & Edit",
-            style: GoogleFonts.outfit(
-                color: isDark ? Colors.white : Colors.black)),
+        title: Text(
+          "Scan & Edit",
+          style: GoogleFonts.outfit(
+            color: isDark ? Colors.white : Colors.black,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: isDark ? Colors.white : Colors.black),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark ? Colors.white : Colors.black,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         bottom: TabBar(
@@ -145,20 +157,29 @@ class _DocumentScannerScreenState extends ConsumerState<DocumentScannerScreen>
               physics:
                   const NeverScrollableScrollPhysics(), // Prevent swipe to avoid conflict with gesture editors
               children: [
-                ImageCaptureView(onImageCaptured: (file) {
-                  ref.read(documentSessionProvider.notifier).addPage(file.path);
-                  _tabController.animateTo(2); // Auto go to Edit
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Image captured!")));
-                }),
-                GalleryImportView(onImagesImported: (files) {
-                  for (var f in files) {
-                    ref.read(documentSessionProvider.notifier).addPage(f.path);
-                  }
-                  if (files.isNotEmpty) {
+                ImageCaptureView(
+                  onImageCaptured: (file) {
+                    ref
+                        .read(documentSessionProvider.notifier)
+                        .addPage(file.path);
                     _tabController.animateTo(2); // Auto go to Edit
-                  }
-                }),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Image captured!")),
+                    );
+                  },
+                ),
+                GalleryImportView(
+                  onImagesImported: (files) {
+                    for (var f in files) {
+                      ref
+                          .read(documentSessionProvider.notifier)
+                          .addPage(f.path);
+                    }
+                    if (files.isNotEmpty) {
+                      _tabController.animateTo(2); // Auto go to Edit
+                    }
+                  },
+                ),
                 const EditorView(),
               ],
             ),

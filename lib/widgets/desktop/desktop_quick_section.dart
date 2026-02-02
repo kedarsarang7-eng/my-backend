@@ -45,10 +45,7 @@ class DesktopQuickSection extends ConsumerWidget {
                   color: config.primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
-                  config.emoji,
-                  style: const TextStyle(fontSize: 20),
-                ),
+                child: Text(config.emoji, style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -93,7 +90,8 @@ class DesktopQuickSection extends ConsumerWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => const BillCreationScreenV2()),
+                    builder: (_) => const BillCreationScreenV2(),
+                  ),
                 ),
               ),
               _buildQuickAction(
@@ -109,7 +107,9 @@ class DesktopQuickSection extends ConsumerWidget {
 
               // 2. INVENTORY (Gated)
               if (FeatureResolver.canAccess(
-                  typeName, BusinessCapability.useStockManagement)) ...[
+                typeName,
+                BusinessCapability.useStockManagement,
+              )) ...[
                 const SizedBox(height: 16),
                 _buildSectionLabel('INVENTORY'),
                 _buildQuickAction(
@@ -141,8 +141,9 @@ class DesktopQuickSection extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) =>
-                              TableManagementScreen(vendorId: vendorId)),
+                        builder: (_) =>
+                            TableManagementScreen(vendorId: vendorId),
+                      ),
                     );
                   },
                 ),
@@ -196,7 +197,8 @@ class DesktopQuickSection extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const CreateServiceJobScreen()),
+                        builder: (_) => const CreateServiceJobScreen(),
+                      ),
                     );
                   },
                 ),
@@ -209,7 +211,8 @@ class DesktopQuickSection extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const ServiceJobListScreen()),
+                        builder: (_) => const ServiceJobListScreen(),
+                      ),
                     );
                   },
                 ),

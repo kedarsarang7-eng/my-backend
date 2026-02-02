@@ -33,14 +33,14 @@ class Discrepancy {
   bool get hasDiscrepancy => variance > 0.01; // Allow 1 paisa tolerance
 
   Map<String, dynamic> toMap() => {
-        'type': type,
-        'entityId': entityId,
-        'entityName': entityName,
-        'expectedValue': expectedValue,
-        'actualValue': actualValue,
-        'variance': variance,
-        'details': details,
-      };
+    'type': type,
+    'entityId': entityId,
+    'entityName': entityName,
+    'expectedValue': expectedValue,
+    'actualValue': actualValue,
+    'variance': variance,
+    'details': details,
+  };
 }
 
 /// Reconciliation summary for dashboard display
@@ -56,9 +56,10 @@ class ReconciliationReport {
     required this.customerLedgerIssues,
     required this.stockIssues,
     this.trialBalanceVariance,
-  }) : totalIssues = customerLedgerIssues.length +
-            stockIssues.length +
-            (trialBalanceVariance?.hasDiscrepancy == true ? 1 : 0);
+  }) : totalIssues =
+           customerLedgerIssues.length +
+           stockIssues.length +
+           (trialBalanceVariance?.hasDiscrepancy == true ? 1 : 0);
 
   bool get hasIssues => totalIssues > 0;
 }
@@ -92,22 +93,25 @@ class ReconciliationService {
   ///
   /// Formula: totalDues should equal SUM(grandTotal - paidAmount) for all bills
   Future<List<Discrepancy>> checkCustomerLedgerDiscrepancies(
-      String userId) async {
+    String userId,
+  ) async {
     final discrepancies = <Discrepancy>[];
 
     // Get all customers
-    final customers = await (db.select(db.customers)
-          ..where((c) => c.userId.equals(userId)))
-        .get();
+    final customers = await (db.select(
+      db.customers,
+    )..where((c) => c.userId.equals(userId))).get();
 
     for (final customer in customers) {
       // Get sum of unpaid amounts from bills
-      final bills = await (db.select(db.bills)
-            ..where((b) =>
-                b.userId.equals(userId) &
-                b.customerId.equals(customer.id) &
-                b.deletedAt.isNull()))
-          .get();
+      final bills =
+          await (db.select(db.bills)..where(
+                (b) =>
+                    b.userId.equals(userId) &
+                    b.customerId.equals(customer.id) &
+                    b.deletedAt.isNull(),
+              ))
+              .get();
 
       double sumUnpaid = 0;
       for (final bill in bills) {
@@ -117,16 +121,18 @@ class ReconciliationService {
       // Compare with customer.totalDues
       final variance = (customer.totalDues - sumUnpaid).abs();
       if (variance > 0.01) {
-        discrepancies.add(Discrepancy(
-          type: 'CUSTOMER_LEDGER',
-          entityId: customer.id,
-          entityName: customer.name,
-          expectedValue: sumUnpaid,
-          actualValue: customer.totalDues,
-          details:
-              'Customer ledger shows ₹${customer.totalDues.toStringAsFixed(2)} dues, '
-              'but sum of unpaid bills is ₹${sumUnpaid.toStringAsFixed(2)}',
-        ));
+        discrepancies.add(
+          Discrepancy(
+            type: 'CUSTOMER_LEDGER',
+            entityId: customer.id,
+            entityName: customer.name,
+            expectedValue: sumUnpaid,
+            actualValue: customer.totalDues,
+            details:
+                'Customer ledger shows ₹${customer.totalDues.toStringAsFixed(2)} dues, '
+                'but sum of unpaid bills is ₹${sumUnpaid.toStringAsFixed(2)}',
+          ),
+        );
       }
     }
 
@@ -140,15 +146,15 @@ class ReconciliationService {
     final discrepancies = <Discrepancy>[];
 
     // Get all products
-    final products = await (db.select(db.products)
-          ..where((p) => p.userId.equals(userId)))
-        .get();
+    final products = await (db.select(
+      db.products,
+    )..where((p) => p.userId.equals(userId))).get();
 
     for (final product in products) {
       // Get sum of stock movements
-      final movements = await (db.select(db.stockMovements)
-            ..where((m) => m.productId.equals(product.id)))
-          .get();
+      final movements = await (db.select(
+        db.stockMovements,
+      )..where((m) => m.productId.equals(product.id))).get();
 
       double netMovement = 0;
       for (final m in movements) {
@@ -162,16 +168,18 @@ class ReconciliationService {
       // Compare with product.stockQuantity
       final variance = (product.stockQuantity - netMovement).abs();
       if (variance > 0.01) {
-        discrepancies.add(Discrepancy(
-          type: 'STOCK',
-          entityId: product.id,
-          entityName: product.name,
-          expectedValue: netMovement,
-          actualValue: product.stockQuantity,
-          details:
-              'Product stock shows ${product.stockQuantity.toStringAsFixed(2)}, '
-              'but net movements total ${netMovement.toStringAsFixed(2)}',
-        ));
+        discrepancies.add(
+          Discrepancy(
+            type: 'STOCK',
+            entityId: product.id,
+            entityName: product.name,
+            expectedValue: netMovement,
+            actualValue: product.stockQuantity,
+            details:
+                'Product stock shows ${product.stockQuantity.toStringAsFixed(2)}, '
+                'but net movements total ${netMovement.toStringAsFixed(2)}',
+          ),
+        );
       }
     }
 
@@ -183,9 +191,9 @@ class ReconciliationService {
   /// If they don't match, there's a fundamental accounting error
   Future<Discrepancy?> checkTrialBalanceVariance(String userId) async {
     // Get all journal entries
-    final entries = await (db.select(db.journalEntries)
-          ..where((j) => j.userId.equals(userId)))
-        .get();
+    final entries = await (db.select(
+      db.journalEntries,
+    )..where((j) => j.userId.equals(userId))).get();
 
     double totalDebits = 0;
     double totalCredits = 0;

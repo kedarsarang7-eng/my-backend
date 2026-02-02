@@ -84,9 +84,13 @@ class DictationService {
         }
 
         await _recorder.start(
-            const RecordConfig(
-                encoder: AudioEncoder.wav, sampleRate: 16000, numChannels: 1),
-            path: path);
+          const RecordConfig(
+            encoder: AudioEncoder.wav,
+            sampleRate: 16000,
+            numChannels: 1,
+          ),
+          path: path,
+        );
 
         _isRecording = true;
         _statusController.add("Listening...");
@@ -106,8 +110,10 @@ class DictationService {
     }
   }
 
-  Future<void> _startLocalListening(
-      {String? language, Duration? timeout}) async {
+  Future<void> _startLocalListening({
+    String? language,
+    Duration? timeout,
+  }) async {
     try {
       bool available = await _localSpeech.initialize(
         onError: (val) => debugPrint('STT Error: $val'),
@@ -172,8 +178,13 @@ class DictationService {
 
       if (kIsWeb) {
         final resp = await http.get(Uri.parse(filePath));
-        request.files.add(http.MultipartFile.fromBytes('file', resp.bodyBytes,
-            filename: 'dictation.wav'));
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'file',
+            resp.bodyBytes,
+            filename: 'dictation.wav',
+          ),
+        );
       } else {
         request.files.add(await http.MultipartFile.fromPath('file', filePath));
       }

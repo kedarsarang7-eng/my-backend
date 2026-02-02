@@ -16,8 +16,8 @@ class StockTransactionRepository {
   StockTransactionRepository({
     required FirebaseFirestore firestore,
     required SyncManager syncManager,
-  })  : _firestore = firestore,
-        _syncManager = syncManager;
+  }) : _firestore = firestore,
+       _syncManager = syncManager;
 
   /// Log a stock transaction (APPEND-ONLY)
   Future<String> logTransaction(StockTransaction txn) async {
@@ -29,13 +29,15 @@ class StockTransactionRepository {
       return txn.txnId;
     } catch (e) {
       // Queue for later sync if offline
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: txn.vendorId,
-        operationType: SyncOperationType.create,
-        targetCollection: _collectionName,
-        documentId: txn.txnId,
-        payload: txn.toMap(),
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: txn.vendorId,
+          operationType: SyncOperationType.create,
+          targetCollection: _collectionName,
+          documentId: txn.txnId,
+          payload: txn.toMap(),
+        ),
+      );
       return txn.txnId;
     }
   }
@@ -116,8 +118,10 @@ class StockTransactionRepository {
           .map((doc) => StockTransaction.fromMap(doc.id, doc.data()))
           .toList();
     } catch (e) {
-      ErrorHandler.handle(e,
-          userMessage: 'Failed to get transactions for item');
+      ErrorHandler.handle(
+        e,
+        userMessage: 'Failed to get transactions for item',
+      );
       return [];
     }
   }
@@ -135,16 +139,22 @@ class StockTransactionRepository {
           .where('vendorId', isEqualTo: vendorId);
 
       if (startDate != null) {
-        query = query.where('createdAt',
-            isGreaterThanOrEqualTo: startDate.toIso8601String());
+        query = query.where(
+          'createdAt',
+          isGreaterThanOrEqualTo: startDate.toIso8601String(),
+        );
       }
       if (endDate != null) {
-        query = query.where('createdAt',
-            isLessThanOrEqualTo: endDate.toIso8601String());
+        query = query.where(
+          'createdAt',
+          isLessThanOrEqualTo: endDate.toIso8601String(),
+        );
       }
 
-      final result =
-          await query.orderBy('createdAt', descending: true).limit(limit).get();
+      final result = await query
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
 
       return result.docs
           .map((doc) => StockTransaction.fromMap(doc.id, doc.data()))
@@ -166,8 +176,10 @@ class StockTransactionRepository {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => StockTransaction.fromMap(doc.id, doc.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((doc) => StockTransaction.fromMap(doc.id, doc.data()))
+              .toList(),
+        );
   }
 }

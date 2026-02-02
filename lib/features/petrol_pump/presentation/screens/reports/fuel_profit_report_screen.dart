@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../../core/di/service_locator.dart';
 import '../../../services/fuel_service.dart';
 import '../../../models/fuel_type.dart';
@@ -41,8 +41,11 @@ class _FuelProfitReportScreenState extends State<FuelProfitReportScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.local_gas_station_outlined,
-                      size: 64, color: Colors.grey),
+                  Icon(
+                    Icons.local_gas_station_outlined,
+                    size: 64,
+                    color: Colors.grey,
+                  ),
                   SizedBox(height: 16),
                   Text('No fuel types configured'),
                   SizedBox(height: 8),
@@ -102,10 +105,7 @@ class _FuelProfitReportScreenState extends State<FuelProfitReportScreen> {
               // Fuel-wise breakdown
               const Text(
                 'Fuel-wise Analysis',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
 
@@ -118,7 +118,11 @@ class _FuelProfitReportScreenState extends State<FuelProfitReportScreen> {
   }
 
   Widget _buildSummaryItem(
-      String label, String value, IconData icon, Color color) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Column(
       children: [
         Icon(icon, color: color, size: 28),
@@ -185,8 +189,10 @@ class _FuelProfitReportScreenState extends State<FuelProfitReportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+        ),
         Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );

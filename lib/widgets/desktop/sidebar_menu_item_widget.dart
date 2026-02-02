@@ -43,8 +43,8 @@ class SidebarMenuItemWidget extends StatelessWidget {
               final effectiveColor = isSelected
                   ? section.accentColor!.withOpacity(0.1)
                   : (isHovered
-                      ? Colors.white.withOpacity(0.05)
-                      : Colors.transparent);
+                        ? Colors.white.withOpacity(0.05)
+                        : Colors.transparent);
 
               final borderColor = isSelected
                   ? section.accentColor!.withOpacity(0.3)
@@ -60,8 +60,10 @@ class SidebarMenuItemWidget extends StatelessWidget {
 
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: effectiveColor,
                   borderRadius: BorderRadius.circular(8),
@@ -69,11 +71,7 @@ class SidebarMenuItemWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      item.icon,
-                      size: 18,
-                      color: iconColor,
-                    ),
+                    Icon(item.icon, size: 18, color: iconColor),
                     if (isFullMode) ...[
                       const SizedBox(width: 10),
                       Expanded(
@@ -81,8 +79,9 @@ class SidebarMenuItemWidget extends StatelessWidget {
                           item.label,
                           style: TextStyle(
                             fontSize: 13,
-                            fontWeight:
-                                isSelected ? FontWeight.w600 : FontWeight.w400,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                             color: textColor,
                           ),
                           overflow: TextOverflow.ellipsis,

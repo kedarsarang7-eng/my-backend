@@ -118,13 +118,19 @@ class _ProductPerformanceScreenState
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(color: Colors.white12),
                               ),
-                              child: const Icon(Icons.inventory_2_outlined,
-                                  size: 16, color: Colors.white54),
+                              child: const Icon(
+                                Icons.inventory_2_outlined,
+                                size: 16,
+                                color: Colors.white54,
+                              ),
                             ),
                             const SizedBox(width: 8),
-                            Text(p['name'] ?? '',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              p['name'] ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -144,8 +150,9 @@ class _ProductPerformanceScreenState
                         widgetBuilder: (p) => Text(
                           '₹${(p['revenue'] as double).toStringAsFixed(0)}',
                           style: const TextStyle(
-                              color: FuturisticColors.success,
-                              fontWeight: FontWeight.bold),
+                            color: FuturisticColors.success,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       EnterpriseTableColumn(
@@ -156,18 +163,22 @@ class _ProductPerformanceScreenState
                           final margin = (p['margin'] as double? ?? 0);
                           return Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: margin > 15
                                   ? Colors.green.withOpacity(0.1)
                                   : Colors.red.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: Text('$margin%',
-                                style: TextStyle(
-                                    color:
-                                        margin > 15 ? Colors.green : Colors.red,
-                                    fontWeight: FontWeight.bold)),
+                            child: Text(
+                              '$margin%',
+                              style: TextStyle(
+                                color: margin > 15 ? Colors.green : Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           );
                         },
                       ),

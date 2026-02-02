@@ -52,64 +52,70 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
     }
 
     // 1. Sales (Bills)
-    _subs.add(sl<BillsRepository>().watchAll(userId: ownerId).listen((bills) {
-      if (mounted) {
-        setState(() {
-          _allBills = bills;
-          _isLoading = false; // Set loading to false after first data stream
-        });
-      }
-    }));
+    _subs.add(
+      sl<BillsRepository>().watchAll(userId: ownerId).listen((bills) {
+        if (mounted) {
+          setState(() {
+            _allBills = bills;
+            _isLoading = false; // Set loading to false after first data stream
+          });
+        }
+      }),
+    );
 
     // 2. Purchases
     _subs.add(
-        sl<PurchaseRepository>().watchAll(userId: ownerId).listen((orders) {
-      if (mounted) {
-        // Map PurchaseOrder to PurchaseBill for internal calculation
-        final bills = orders.map((order) {
-          return PurchaseBill(
-            id: order.id,
-            billNumber: order.invoiceNumber ?? '',
-            supplierId: order.vendorId ?? '',
-            supplierName: order.vendorName ?? 'Unknown',
-            date: order.purchaseDate,
-            items: [],
-            grandTotal: order.totalAmount,
-            paidAmount: order.paidAmount,
-            status: order.status,
-            paymentMode: order.paymentMode ?? 'Cash',
-            notes: order.notes ?? '',
-            ownerId: order.userId,
-          );
-        }).toList();
+      sl<PurchaseRepository>().watchAll(userId: ownerId).listen((orders) {
+        if (mounted) {
+          // Map PurchaseOrder to PurchaseBill for internal calculation
+          final bills = orders.map((order) {
+            return PurchaseBill(
+              id: order.id,
+              billNumber: order.invoiceNumber ?? '',
+              supplierId: order.vendorId ?? '',
+              supplierName: order.vendorName ?? 'Unknown',
+              date: order.purchaseDate,
+              items: [],
+              grandTotal: order.totalAmount,
+              paidAmount: order.paidAmount,
+              status: order.status,
+              paymentMode: order.paymentMode ?? 'Cash',
+              notes: order.notes ?? '',
+              ownerId: order.userId,
+            );
+          }).toList();
 
-        setState(() {
-          _purchaseBills = bills;
-        });
-      }
-    }));
+          setState(() {
+            _purchaseBills = bills;
+          });
+        }
+      }),
+    );
 
     // 3. Expenses
     _subs.add(
-        sl<ExpensesRepository>().watchAll(userId: ownerId).listen((expenses) {
-      if (mounted) {
-        // Map ExpenseModel to Expense for internal calculation
-        final mappedExpenses = expenses
-            .map((e) => Expense(
+      sl<ExpensesRepository>().watchAll(userId: ownerId).listen((expenses) {
+        if (mounted) {
+          // Map ExpenseModel to Expense for internal calculation
+          final mappedExpenses = expenses
+              .map(
+                (e) => Expense(
                   id: e.id,
                   category: e.category,
                   description: e.description,
                   amount: e.amount,
                   date: e.date,
                   ownerId: e.ownerId,
-                ))
-            .toList();
+                ),
+              )
+              .toList();
 
-        setState(() {
-          _expenses = mappedExpenses;
-        });
-      }
-    }));
+          setState(() {
+            _expenses = mappedExpenses;
+          });
+        }
+      }),
+    );
   }
 
   @override
@@ -124,8 +130,11 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
     DateTime start, end;
 
     if (_period == 'Daily') {
-      start =
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+      start = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+      );
       end = start.add(const Duration(days: 1));
     } else {
       start = DateTime(_selectedDate.year, _selectedDate.month);
@@ -195,10 +204,11 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
           tooltip: 'Select Date',
           onPressed: () async {
             final date = await showDatePicker(
-                context: context,
-                initialDate: _selectedDate,
-                firstDate: DateTime(2020),
-                lastDate: DateTime.now());
+              context: context,
+              initialDate: _selectedDate,
+              firstDate: DateTime(2020),
+              lastDate: DateTime.now(),
+            );
             if (date != null) setState(() => _selectedDate = date);
           },
         ),
@@ -206,84 +216,99 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
       child: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : (data.totalSales == 0 &&
-                  data.totalPurchases == 0 &&
-                  data.totalExpenses == 0)
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.pie_chart_outline_rounded,
-                          size: 80,
-                          color:
-                              isDark ? Colors.white24 : Colors.grey.shade300),
-                      const SizedBox(height: 16),
-                      Text("No profit data available",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: isDark ? Colors.white60 : Colors.grey)),
-                      const SizedBox(height: 8),
-                      Text("Start making sales to see analysis.",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: isDark
-                                  ? Colors.white38
-                                  : Colors.grey.shade400)),
-                    ],
+                data.totalPurchases == 0 &&
+                data.totalExpenses == 0)
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.pie_chart_outline_rounded,
+                    size: 80,
+                    color: isDark ? Colors.white24 : Colors.grey.shade300,
                   ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
+                  const SizedBox(height: 16),
+                  Text(
+                    "No profit data available",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: isDark ? Colors.white60 : Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Start making sales to see analysis.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isDark ? Colors.white38 : Colors.grey.shade400,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Period Selector Label
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      _period == 'Daily'
+                          ? DateFormat('MMMM d, yyyy').format(_selectedDate)
+                          : DateFormat('MMMM yyyy').format(_selectedDate),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
+                  ),
+
+                  // Net Profit Card
+                  _buildNetProfitCard(data, isDark),
+                  const SizedBox(height: 20),
+
+                  // Breakdown
+                  Row(
                     children: [
-                      // Period Selector Label
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Text(
-                          _period == 'Daily'
-                              ? DateFormat('MMMM d, yyyy').format(_selectedDate)
-                              : DateFormat('MMMM yyyy').format(_selectedDate),
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white70 : Colors.black54),
+                      Expanded(
+                        child: _buildStatCard(
+                          "Total Sales",
+                          data.totalSales,
+                          FuturisticColors.success,
+                          isDark,
                         ),
                       ),
-
-                      // Net Profit Card
-                      _buildNetProfitCard(data, isDark),
-                      const SizedBox(height: 20),
-
-                      // Breakdown
-                      Row(
-                        children: [
-                          Expanded(
-                              child: _buildStatCard(
-                                  "Total Sales",
-                                  data.totalSales,
-                                  FuturisticColors.success,
-                                  isDark)),
-                          const SizedBox(width: 12),
-                          Expanded(
-                              child: _buildStatCard("Purchases",
-                                  data.totalPurchases, Colors.orange, isDark)),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: _buildStatCard(
-                                  "Expenses",
-                                  data.totalExpenses,
-                                  Colors.redAccent,
-                                  isDark)),
-                          const SizedBox(width: 12),
-                          Expanded(child: Container()), // Spacer
-                        ],
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildStatCard(
+                          "Purchases",
+                          data.totalPurchases,
+                          Colors.orange,
+                          isDark,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          "Expenses",
+                          data.totalExpenses,
+                          Colors.redAccent,
+                          isDark,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(child: Container()), // Spacer
+                    ],
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -298,16 +323,18 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
       opacity: 0.2,
       child: Column(
         children: [
-          Text("Net Profit",
-              style:
-                  TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
+          Text(
+            "Net Profit",
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+          ),
           const SizedBox(height: 8),
           Text(
             "₹ ${profit.toStringAsFixed(2)}",
             style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: isLoss ? Colors.redAccent : Colors.teal),
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+              color: isLoss ? Colors.redAccent : Colors.teal,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
@@ -321,13 +348,14 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
             child: Text(
               isLoss ? "Loss Detected" : "Healthy Profit",
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isLoss
-                      ? FuturisticColors.error
-                      : FuturisticColors.success,
-                  fontSize: 12),
+                fontWeight: FontWeight.bold,
+                color: isLoss
+                    ? FuturisticColors.error
+                    : FuturisticColors.success,
+                fontSize: 12,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -343,23 +371,28 @@ class _PnlScreenState extends ConsumerState<PnlScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: color.withOpacity(0.1), shape: BoxShape.circle),
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
             child: Icon(Icons.attach_money, color: color, size: 20),
           ),
           const SizedBox(height: 12),
           Text(
             title,
             style: TextStyle(
-                color: isDark ? Colors.white60 : Colors.grey, fontSize: 12),
+              color: isDark ? Colors.white60 : Colors.grey,
+              fontSize: 12,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             "₹${value.toStringAsFixed(0)}",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: isDark ? Colors.white : Colors.black87),
-          )
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
         ],
       ),
     );

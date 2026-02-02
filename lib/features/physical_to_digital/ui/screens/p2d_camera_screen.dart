@@ -200,10 +200,7 @@ class _P2DCameraScreenState extends State<P2DCameraScreen>
             ),
 
           // Scan overlay
-          ScanOverlay(
-            corners: _detectedCorners,
-            isStable: _isDocumentStable,
-          ),
+          ScanOverlay(corners: _detectedCorners, isStable: _isDocumentStable),
 
           // Top status bar
           Positioned(
@@ -270,19 +267,28 @@ class _P2DCameraScreenState extends State<P2DCameraScreen>
                               height: 200,
                               child: Column(
                                 children: [
-                                  const Text('Camera Settings',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
+                                  const Text(
+                                    'Camera Settings',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   const SizedBox(height: 16),
                                   ListTile(
-                                    leading: const Icon(Icons.grid_on,
-                                        color: Colors.white),
-                                    title: const Text('Show Grid',
-                                        style: TextStyle(color: Colors.white)),
-                                    trailing:
-                                        Switch(value: false, onChanged: (v) {}),
+                                    leading: const Icon(
+                                      Icons.grid_on,
+                                      color: Colors.white,
+                                    ),
+                                    title: const Text(
+                                      'Show Grid',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    trailing: Switch(
+                                      value: false,
+                                      onChanged: (v) {},
+                                    ),
                                   ),
                                 ],
                               ),

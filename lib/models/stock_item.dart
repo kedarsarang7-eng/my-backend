@@ -1,7 +1,4 @@
-enum ProductType {
-  goods,
-  service,
-}
+enum ProductType { goods, service }
 
 class StockItem {
   String id;
@@ -20,7 +17,7 @@ class StockItem {
   String ownerId;
   ProductType type; // New: Distinguish Goods vs Services
   final Map<String, dynamic>
-      metadata; // Flexible container for Business-Specific Fields
+  metadata; // Flexible container for Business-Specific Fields
 
   // --- Helpers for Type-Specific Data ---
   String? get batchNumber => metadata['batchNumber'];

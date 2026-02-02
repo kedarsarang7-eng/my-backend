@@ -43,8 +43,9 @@ class LocalStorageService {
       await _webService!.init();
       _initialized = _webService!.isReady;
       developer.log(
-          'LocalStorageService: Web mode - IndexedDB ${_initialized ? "ready" : "failed"}',
-          name: 'LocalStorageService');
+        'LocalStorageService: Web mode - IndexedDB ${_initialized ? "ready" : "failed"}',
+        name: 'LocalStorageService',
+      );
       return;
     }
 
@@ -61,33 +62,51 @@ class LocalStorageService {
       final keyString = await secureStorage.read(key: 'hive_encryption_key');
       late final Uint8List encryptionKey;
       if (keyString == null) {
-        final generated =
-            List<int>.generate(32, (_) => Random.secure().nextInt(256));
+        final generated = List<int>.generate(
+          32,
+          (_) => Random.secure().nextInt(256),
+        );
         await secureStorage.write(
-            key: 'hive_encryption_key', value: base64UrlEncode(generated));
+          key: 'hive_encryption_key',
+          value: base64UrlEncode(generated),
+        );
         encryptionKey = Uint8List.fromList(generated);
       } else {
         encryptionKey = base64Url.decode(keyString);
       }
 
       // Open encrypted boxes
-      _customersBox = await Hive.openBox<Map>(customersBox,
-          encryptionCipher: HiveAesCipher(encryptionKey));
-      _billsBox = await Hive.openBox<Map>(billsBox,
-          encryptionCipher: HiveAesCipher(encryptionKey));
-      _paymentsBox = await Hive.openBox<Map>(paymentsBox,
-          encryptionCipher: HiveAesCipher(encryptionKey));
-      _syncStatusBox = await Hive.openBox<Map>(syncStatusBox,
-          encryptionCipher: HiveAesCipher(encryptionKey));
-      _customerRequestsBox = await Hive.openBox<Map>(customerRequestsBox,
-          encryptionCipher: HiveAesCipher(encryptionKey));
+      _customersBox = await Hive.openBox<Map>(
+        customersBox,
+        encryptionCipher: HiveAesCipher(encryptionKey),
+      );
+      _billsBox = await Hive.openBox<Map>(
+        billsBox,
+        encryptionCipher: HiveAesCipher(encryptionKey),
+      );
+      _paymentsBox = await Hive.openBox<Map>(
+        paymentsBox,
+        encryptionCipher: HiveAesCipher(encryptionKey),
+      );
+      _syncStatusBox = await Hive.openBox<Map>(
+        syncStatusBox,
+        encryptionCipher: HiveAesCipher(encryptionKey),
+      );
+      _customerRequestsBox = await Hive.openBox<Map>(
+        customerRequestsBox,
+        encryptionCipher: HiveAesCipher(encryptionKey),
+      );
 
       _initialized = true;
-      developer.log('LocalStorageService initialized successfully',
-          name: 'LocalStorageService');
+      developer.log(
+        'LocalStorageService initialized successfully',
+        name: 'LocalStorageService',
+      );
     } catch (e) {
-      developer.log('Error initializing LocalStorageService: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error initializing LocalStorageService: $e',
+        name: 'LocalStorageService',
+      );
       _initialized = false;
     }
   }
@@ -134,8 +153,10 @@ class LocalStorageService {
       }
       return customers;
     } catch (e) {
-      developer.log('Error getting all customers: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting all customers: $e',
+        name: 'LocalStorageService',
+      );
       return [];
     }
   }
@@ -169,8 +190,10 @@ class LocalStorageService {
       if (map == null) return null;
       return Customer.fromMap(phone, Map<String, dynamic>.from(map));
     } catch (e) {
-      developer.log('Error getting customer by phone: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting customer by phone: $e',
+        name: 'LocalStorageService',
+      );
       return null;
     }
   }
@@ -221,8 +244,10 @@ class LocalStorageService {
       bills.sort((a, b) => b.date.compareTo(a.date));
       return bills;
     } catch (e) {
-      developer.log('Error getting bills for customer: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting bills for customer: $e',
+        name: 'LocalStorageService',
+      );
       return [];
     }
   }
@@ -328,8 +353,10 @@ class LocalStorageService {
       payments.sort((a, b) => b.date.compareTo(a.date));
       return payments;
     } catch (e) {
-      developer.log('Error getting payments for bill: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting payments for bill: $e',
+        name: 'LocalStorageService',
+      );
       return [];
     }
   }
@@ -350,8 +377,10 @@ class LocalStorageService {
       payments.sort((a, b) => b.date.compareTo(a.date));
       return payments;
     } catch (e) {
-      developer.log('Error getting payments for customer: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting payments for customer: $e',
+        name: 'LocalStorageService',
+      );
       return [];
     }
   }
@@ -370,8 +399,10 @@ class LocalStorageService {
       payments.sort((a, b) => b.date.compareTo(a.date));
       return payments;
     } catch (e) {
-      developer.log('Error getting all payments: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting all payments: $e',
+        name: 'LocalStorageService',
+      );
       return [];
     }
   }
@@ -390,7 +421,10 @@ class LocalStorageService {
 
   /// Save sync status for tracking what's synced and what's pending
   Future<void> setSyncStatus(
-      String dataType, String itemId, bool synced) async {
+    String dataType,
+    String itemId,
+    bool synced,
+  ) async {
     if (!_initialized) return;
     try {
       final key = '${dataType}_$itemId';
@@ -401,8 +435,10 @@ class LocalStorageService {
         'lastSync': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      developer.log('Error setting sync status: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error setting sync status: $e',
+        name: 'LocalStorageService',
+      );
     }
   }
 
@@ -414,8 +450,10 @@ class LocalStorageService {
       final map = _syncStatusBox.get(key);
       return (map?['synced'] as bool?) ?? false;
     } catch (e) {
-      developer.log('Error getting sync status: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting sync status: $e',
+        name: 'LocalStorageService',
+      );
       return false;
     }
   }
@@ -433,8 +471,10 @@ class LocalStorageService {
       }
       return unsynced;
     } catch (e) {
-      developer.log('Error getting unsynced items: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting unsynced items: $e',
+        name: 'LocalStorageService',
+      );
       return [];
     }
   }
@@ -449,8 +489,10 @@ class LocalStorageService {
         await _syncStatusBox.putAt(i, map);
       }
     } catch (e) {
-      developer.log('Error marking all as synced: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error marking all as synced: $e',
+        name: 'LocalStorageService',
+      );
     }
   }
 
@@ -460,8 +502,10 @@ class LocalStorageService {
     try {
       await _syncStatusBox.clear();
     } catch (e) {
-      developer.log('Error clearing sync status: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error clearing sync status: $e',
+        name: 'LocalStorageService',
+      );
     }
   }
 
@@ -483,8 +527,10 @@ class LocalStorageService {
       }
       return total;
     } catch (e) {
-      developer.log('Error calculating total dues: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error calculating total dues: $e',
+        name: 'LocalStorageService',
+      );
       return 0;
     }
   }
@@ -503,8 +549,10 @@ class LocalStorageService {
       }
       return total;
     } catch (e) {
-      developer.log('Error calculating total bill amount: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error calculating total bill amount: $e',
+        name: 'LocalStorageService',
+      );
       return 0;
     }
   }
@@ -523,8 +571,10 @@ class LocalStorageService {
       }
       return total;
     } catch (e) {
-      developer.log('Error calculating total payment amount: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error calculating total payment amount: $e',
+        name: 'LocalStorageService',
+      );
       return 0;
     }
   }
@@ -582,8 +632,10 @@ class LocalStorageService {
         'syncStatus': _syncStatusBox.length,
       };
     } catch (e) {
-      developer.log('Error getting database size: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting database size: $e',
+        name: 'LocalStorageService',
+      );
       return {'customers': 0, 'bills': 0, 'payments': 0, 'syncStatus': 0};
     }
   }
@@ -592,13 +644,17 @@ class LocalStorageService {
 
   /// Save customer request draft
   Future<void> saveRequestDraft(
-      String customerId, Map<String, dynamic> requestData) async {
+    String customerId,
+    Map<String, dynamic> requestData,
+  ) async {
     if (!_initialized) return;
     try {
       await _customerRequestsBox.put('${customerId}_draft', requestData);
     } catch (e) {
-      developer.log('Error saving request draft: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error saving request draft: $e',
+        name: 'LocalStorageService',
+      );
     }
   }
 
@@ -610,8 +666,10 @@ class LocalStorageService {
       if (map == null) return null;
       return Map<String, dynamic>.from(map);
     } catch (e) {
-      developer.log('Error getting request draft: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error getting request draft: $e',
+        name: 'LocalStorageService',
+      );
       return null;
     }
   }
@@ -622,8 +680,10 @@ class LocalStorageService {
     try {
       await _customerRequestsBox.delete('${customerId}_draft');
     } catch (e) {
-      developer.log('Error deleting request draft: $e',
-          name: 'LocalStorageService');
+      developer.log(
+        'Error deleting request draft: $e',
+        name: 'LocalStorageService',
+      );
     }
   }
 }

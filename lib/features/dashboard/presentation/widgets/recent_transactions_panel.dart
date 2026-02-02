@@ -34,17 +34,19 @@ class RecentTransactionsPanel extends StatelessWidget {
               Text(
                 'Recent Transactions',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: FuturisticColors.textPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: FuturisticColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               TextButton(
                 onPressed: () {
                   // Optional: Navigate to full list via callback or route if available
                   // For now, assuming parent might handle or user navigates via Sidebar
                 },
-                child: const Text('View All',
-                    style: TextStyle(color: FuturisticColors.accent1)),
+                child: const Text(
+                  'View All',
+                  style: TextStyle(color: FuturisticColors.accent1),
+                ),
               ),
             ],
           ),
@@ -61,23 +63,29 @@ class RecentTransactionsPanel extends StatelessWidget {
                 }
                 if (snapshot.hasError) {
                   return Center(
-                      child: Text('Error: ${snapshot.error}',
-                          style:
-                              const TextStyle(color: FuturisticColors.error)));
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: FuturisticColors.error),
+                    ),
+                  );
                 }
 
                 final bills = snapshot.data ?? [];
                 if (bills.isEmpty) {
                   return const Center(
-                      child: Text('No transactions yet',
-                          style: TextStyle(
-                              color: FuturisticColors.textSecondary)));
+                    child: Text(
+                      'No transactions yet',
+                      style: TextStyle(color: FuturisticColors.textSecondary),
+                    ),
+                  );
                 }
 
                 return ListView.separated(
                   itemCount: bills.length,
                   separatorBuilder: (context, index) => const Divider(
-                      color: FuturisticColors.surface, height: 16),
+                    color: FuturisticColors.surface,
+                    height: 16,
+                  ),
                   itemBuilder: (context, index) {
                     final bill = bills[index];
                     return _buildTransactionItem(context, bill);
@@ -122,9 +130,7 @@ class RecentTransactionsPanel extends StatelessWidget {
 
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => BillDetailScreen(bill: billModel),
-          ),
+          MaterialPageRoute(builder: (_) => BillDetailScreen(bill: billModel)),
         );
       },
       child: Row(
@@ -136,15 +142,17 @@ class RecentTransactionsPanel extends StatelessWidget {
             decoration: BoxDecoration(
               color: FuturisticColors.surface,
               borderRadius: BorderRadius.circular(8),
-              border:
-                  Border.all(color: FuturisticColors.divider.withOpacity(0.1)),
+              border: Border.all(
+                color: FuturisticColors.divider.withOpacity(0.1),
+              ),
             ),
             child: Center(
               child: Text(
                 hasCustomer ? customerName[0].toUpperCase() : '?',
                 style: const TextStyle(
-                    color: FuturisticColors.textPrimary,
-                    fontWeight: FontWeight.bold),
+                  color: FuturisticColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -158,15 +166,18 @@ class RecentTransactionsPanel extends StatelessWidget {
                 Text(
                   hasCustomer ? customerName : 'Walk-in Customer',
                   style: const TextStyle(
-                      color: FuturisticColors.textPrimary,
-                      fontWeight: FontWeight.w500),
+                    color: FuturisticColors.textPrimary,
+                    fontWeight: FontWeight.w500,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   DateFormat('MMM d, h:mm a').format(bill.createdAt),
                   style: const TextStyle(
-                      color: FuturisticColors.textSecondary, fontSize: 10),
+                    color: FuturisticColors.textSecondary,
+                    fontSize: 10,
+                  ),
                 ),
               ],
             ),
@@ -179,8 +190,9 @@ class RecentTransactionsPanel extends StatelessWidget {
               Text(
                 NumberFormat.currency(symbol: '₹').format(bill.grandTotal),
                 style: const TextStyle(
-                    color: FuturisticColors.textPrimary,
-                    fontWeight: FontWeight.bold),
+                  color: FuturisticColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -191,9 +203,10 @@ class RecentTransactionsPanel extends StatelessWidget {
                 child: Text(
                   statusText,
                   style: TextStyle(
-                      color: statusColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold),
+                    color: statusColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

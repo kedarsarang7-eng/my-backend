@@ -18,9 +18,9 @@ class CreditNetworkRepository {
     final phoneHash = CreditScoreCalculator.hashPhone(phone);
 
     // Check local DB
-    final localProfile = await (_db.select(_db.creditProfiles)
-          ..where((t) => t.customerPhoneHash.equals(phoneHash)))
-        .getSingleOrNull();
+    final localProfile = await (_db.select(
+      _db.creditProfiles,
+    )..where((t) => t.customerPhoneHash.equals(phoneHash))).getSingleOrNull();
 
     if (localProfile != null) {
       // Check if cache is stale (e.g., > 24 hours)
@@ -36,7 +36,9 @@ class CreditNetworkRepository {
 
     if (remoteProfile != null) {
       // Cache it
-      await _db.into(_db.creditProfiles).insert(
+      await _db
+          .into(_db.creditProfiles)
+          .insert(
             CreditProfilesCompanion(
               customerPhoneHash: Value(phoneHash),
               trustScore: Value(remoteProfile.trustScore),
@@ -61,11 +63,14 @@ class CreditNetworkRepository {
     final current = await getCreditProfile(phone);
     final newDefaults = (current?.totalDefaults ?? 0) + 1;
     final newScore = CreditScoreCalculator.calculate(
-        totalDefaults: newDefaults,
-        maxOverdueDays: 0, // Unknown/Irrelevant for this action
-        onTimePaymentsCount: 0);
+      totalDefaults: newDefaults,
+      maxOverdueDays: 0, // Unknown/Irrelevant for this action
+      onTimePaymentsCount: 0,
+    );
 
-    await _db.into(_db.creditProfiles).insert(
+    await _db
+        .into(_db.creditProfiles)
+        .insert(
           CreditProfilesCompanion(
             customerPhoneHash: Value(phoneHash),
             trustScore: Value(newScore),
@@ -84,13 +89,17 @@ class CreditNetworkRepository {
 
   /// Queue sync job for credit profile update (non-blocking)
   Future<void> _queueCreditProfileSync(
-      String phoneHash, int trustScore, int totalDefaults) async {
+    String phoneHash,
+    int trustScore,
+    int totalDefaults,
+  ) async {
     try {
       // Note: SyncManager should be accessed via service locator in production
       // This is a placeholder that logs the sync intent
       // Actual implementation: SyncManager.instance.enqueue(SyncQueueItem.create(...))
       debugPrint(
-          '[CreditNetwork] Sync queued: hash=$phoneHash, score=$trustScore, defaults=$totalDefaults');
+        '[CreditNetwork] Sync queued: hash=$phoneHash, score=$trustScore, defaults=$totalDefaults',
+      );
     } catch (e) {
       // Non-blocking - credit sync failure shouldn't affect main flow
       debugPrint('[CreditNetwork] Sync queue error: $e');

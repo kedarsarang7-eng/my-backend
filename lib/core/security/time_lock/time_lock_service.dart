@@ -124,20 +124,20 @@ class PendingAction {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'businessId': businessId,
-        'requestedBy': requestedBy,
-        'requestDeviceId': requestDeviceId,
-        'actionType': actionType,
-        'actionDetails': actionDetails,
-        'requestedAt': requestedAt.toIso8601String(),
-        'readyAt': readyAt.toIso8601String(),
-        'expiresAt': expiresAt.toIso8601String(),
-        'status': status.name,
-        'confirmedBy': confirmedBy,
-        'confirmDeviceId': confirmDeviceId,
-        'confirmedAt': confirmedAt?.toIso8601String(),
-      };
+    'id': id,
+    'businessId': businessId,
+    'requestedBy': requestedBy,
+    'requestDeviceId': requestDeviceId,
+    'actionType': actionType,
+    'actionDetails': actionDetails,
+    'requestedAt': requestedAt.toIso8601String(),
+    'readyAt': readyAt.toIso8601String(),
+    'expiresAt': expiresAt.toIso8601String(),
+    'status': status.name,
+    'confirmedBy': confirmedBy,
+    'confirmDeviceId': confirmDeviceId,
+    'confirmedAt': confirmedAt?.toIso8601String(),
+  };
 
   factory PendingAction.fromMap(Map<String, dynamic> map) {
     return PendingAction(
@@ -186,9 +186,9 @@ class TimeLockService {
     FirebaseFirestore? firestore,
     required TrustedDeviceService deviceService,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _deviceService = deviceService,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _deviceService = deviceService,
+       _auditRepository = auditRepository;
 
   /// Check if action requires time lock
   bool requiresTimeLock(String actionType) {
@@ -215,7 +215,8 @@ class TimeLockService {
 
     if (!deviceValidation.isValid) {
       throw TimeLockException(
-          'Cannot request time-locked action: ${deviceValidation.reason}');
+        'Cannot request time-locked action: ${deviceValidation.reason}',
+      );
     }
 
     final fingerprint = await _deviceService.getCurrentFingerprint();
@@ -253,8 +254,10 @@ class TimeLockService {
       }),
     );
 
-    debugPrint('TimeLockService: Action $actionType requested. '
-        'Ready in ${coolingPeriod.inMinutes} minutes.');
+    debugPrint(
+      'TimeLockService: Action $actionType requested. '
+      'Ready in ${coolingPeriod.inMinutes} minutes.',
+    );
 
     return action;
   }
@@ -265,8 +268,10 @@ class TimeLockService {
     required String confirmedBy,
   }) async {
     // Get pending action
-    final doc =
-        await _firestore.collection('pending_actions').doc(actionId).get();
+    final doc = await _firestore
+        .collection('pending_actions')
+        .doc(actionId)
+        .get();
 
     if (!doc.exists) {
       throw TimeLockException('Pending action not found');
@@ -289,20 +294,23 @@ class TimeLockService {
     if (action.isPending) {
       final remaining = action.timeUntilReady;
       throw TimeLockException(
-          'Cooling period not complete. Wait ${remaining.inMinutes} more minutes.');
+        'Cooling period not complete. Wait ${remaining.inMinutes} more minutes.',
+      );
     }
 
     // Validate device - MUST be same device that requested
     final fingerprint = await _deviceService.getCurrentFingerprint();
     if (fingerprint.fingerprintHash != action.requestDeviceId) {
       throw TimeLockException(
-          'Confirmation must be from the same device that requested the action');
+        'Confirmation must be from the same device that requested the action',
+      );
     }
 
     // Validate user
     if (confirmedBy != action.requestedBy) {
       throw TimeLockException(
-          'Confirmation must be by the same user who requested');
+        'Confirmation must be by the same user who requested',
+      );
     }
 
     // Update action
@@ -335,8 +343,10 @@ class TimeLockService {
     required String actionId,
     required String cancelledBy,
   }) async {
-    final doc =
-        await _firestore.collection('pending_actions').doc(actionId).get();
+    final doc = await _firestore
+        .collection('pending_actions')
+        .doc(actionId)
+        .get();
 
     if (!doc.exists) return;
 

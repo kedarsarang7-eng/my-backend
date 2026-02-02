@@ -25,12 +25,15 @@ void main() {
     });
 
     test('BusinessTypeRegistry config works correctly', () {
-      final pharmacyConfig =
-          BusinessTypeRegistry.getConfig(BusinessType.pharmacy);
-      final electronicsConfig =
-          BusinessTypeRegistry.getConfig(BusinessType.electronics);
-      final clothingConfig =
-          BusinessTypeRegistry.getConfig(BusinessType.clothing);
+      final pharmacyConfig = BusinessTypeRegistry.getConfig(
+        BusinessType.pharmacy,
+      );
+      final electronicsConfig = BusinessTypeRegistry.getConfig(
+        BusinessType.electronics,
+      );
+      final clothingConfig = BusinessTypeRegistry.getConfig(
+        BusinessType.clothing,
+      );
 
       // Pharmacy requires batch number
       expect(pharmacyConfig.isRequired(ItemField.batchNo), isTrue);

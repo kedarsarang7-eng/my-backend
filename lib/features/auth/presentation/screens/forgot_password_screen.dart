@@ -33,9 +33,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOut),
-    );
+    _fadeAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
@@ -128,10 +129,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
-                  colors: [
-                    Colors.blue.withOpacity(0.3),
-                    Colors.transparent,
-                  ],
+                  colors: [Colors.blue.withOpacity(0.3), Colors.transparent],
                 ),
               ),
             ),
@@ -145,10 +143,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
-                  colors: [
-                    Colors.purple.withOpacity(0.25),
-                    Colors.transparent,
-                  ],
+                  colors: [Colors.purple.withOpacity(0.25), Colors.transparent],
                 ),
               ),
             ),
@@ -242,9 +237,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
-                  ),
+                  border: Border.all(color: Colors.white.withOpacity(0.2)),
                 ),
                 child: TextFormField(
                   controller: _emailController,
@@ -384,11 +377,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    size: 64,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.check, size: 64, color: Colors.white),
                 ),
               );
             },
@@ -424,10 +413,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         Text(
           'Check your spam folder if you don\'t see it.',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.white.withOpacity(0.4),
-          ),
+          style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.4)),
         ),
 
         const SizedBox(height: 48),

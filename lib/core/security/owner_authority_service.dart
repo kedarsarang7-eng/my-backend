@@ -36,17 +36,11 @@ class OwnerAuthorityResult {
   });
 
   factory OwnerAuthorityResult.authorized({List<String>? warnings}) {
-    return OwnerAuthorityResult._(
-      isAuthorized: true,
-      warnings: warnings ?? [],
-    );
+    return OwnerAuthorityResult._(isAuthorized: true, warnings: warnings ?? []);
   }
 
   factory OwnerAuthorityResult.blocked(String reason) {
-    return OwnerAuthorityResult._(
-      isAuthorized: false,
-      blockedReason: reason,
-    );
+    return OwnerAuthorityResult._(isAuthorized: false, blockedReason: reason);
   }
 
   factory OwnerAuthorityResult.requiresTimeLock(String pendingId) {
@@ -92,13 +86,13 @@ class OwnerAuthorityService {
     required DualControlService dualControlService,
     required SafeModeService safeModeService,
     required AuditRepository auditRepository,
-  })  : _pinService = pinService,
-        _deviceService = deviceService,
-        _sessionService = sessionService,
-        _timeLockService = timeLockService,
-        _dualControlService = dualControlService,
-        _safeModeService = safeModeService,
-        _auditRepository = auditRepository;
+  }) : _pinService = pinService,
+       _deviceService = deviceService,
+       _sessionService = sessionService,
+       _timeLockService = timeLockService,
+       _dualControlService = dualControlService,
+       _safeModeService = safeModeService,
+       _auditRepository = auditRepository;
 
   /// Authorize an owner action - The Central Check.
   ///
@@ -151,13 +145,15 @@ class OwnerAuthorityService {
         'Device: ${deviceResult.reason}',
       );
       return OwnerAuthorityResult.blocked(
-          deviceResult.reason ?? 'Device not authorized');
+        deviceResult.reason ?? 'Device not authorized',
+      );
     }
 
     if (deviceResult.isInCoolingPeriod) {
       await _logUnauthorized(ownerId, actionType, 'Device in cooling period');
       return OwnerAuthorityResult.blocked(
-          'Device is in 7-day cooling period. Critical actions not allowed.');
+        'Device is in 7-day cooling period. Critical actions not allowed.',
+      );
     }
 
     // =========================================
@@ -167,15 +163,20 @@ class OwnerAuthorityService {
     if (session == null) {
       await _logUnauthorized(ownerId, actionType, 'No active session');
       return OwnerAuthorityResult.blocked(
-          'No active session. Please log in again.');
+        'No active session. Please log in again.',
+      );
     }
 
     if (!_sessionService.isCriticalActionAllowed()) {
       final reason = _sessionService.getRestrictionReason();
       await _logUnauthorized(
-          ownerId, actionType, 'Session restricted: $reason');
+        ownerId,
+        actionType,
+        'Session restricted: $reason',
+      );
       return OwnerAuthorityResult.blocked(
-          reason ?? 'Session restrictions active');
+        reason ?? 'Session restrictions active',
+      );
     }
 
     // =========================================
@@ -185,8 +186,9 @@ class OwnerAuthorityService {
     if (safeModeState.isActive) {
       await _logUnauthorized(ownerId, actionType, 'Safe mode active');
       return OwnerAuthorityResult.blocked(
-          'System is in safe mode: ${safeModeState.triggerReason}. '
-          'Only viewing allowed.');
+        'System is in safe mode: ${safeModeState.triggerReason}. '
+        'Only viewing allowed.',
+      );
     }
 
     // =========================================
@@ -194,8 +196,9 @@ class OwnerAuthorityService {
     // =========================================
     if (_dualControlService.requiresDualControl(actionType)) {
       // Check for existing approved request
-      final pendingRequests =
-          await _dualControlService.getPendingRequests(businessId);
+      final pendingRequests = await _dualControlService.getPendingRequests(
+        businessId,
+      );
       final existingRequest = pendingRequests
           .where((r) => r.actionType == actionType && r.isComplete)
           .firstOrNull;
@@ -217,12 +220,15 @@ class OwnerAuthorityService {
     // =========================================
     if (_timeLockService.requiresTimeLock(actionType)) {
       // Check for confirmed pending action
-      final pendingActions =
-          await _timeLockService.getPendingActions(businessId);
+      final pendingActions = await _timeLockService.getPendingActions(
+        businessId,
+      );
       final confirmedAction = pendingActions
-          .where((a) =>
-              a.actionType == actionType &&
-              a.status == PendingActionStatus.confirmed)
+          .where(
+            (a) =>
+                a.actionType == actionType &&
+                a.status == PendingActionStatus.confirmed,
+          )
           .firstOrNull;
 
       if (confirmedAction == null) {

@@ -146,13 +146,16 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
               controller: _invoiceSearchController,
               decoration: InputDecoration(
                 hintText: "Enter Original Invoice #",
-                hintStyle:
-                    GoogleFonts.inter(color: FuturisticColors.textSecondary),
+                hintStyle: GoogleFonts.inter(
+                  color: FuturisticColors.textSecondary,
+                ),
                 border: InputBorder.none,
                 isDense: true,
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.search,
-                      color: FuturisticColors.textSecondary),
+                  icon: const Icon(
+                    Icons.search,
+                    color: FuturisticColors.textSecondary,
+                  ),
                   onPressed: _searchInvoice,
                 ),
               ),
@@ -179,8 +182,11 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.remove_shopping_cart_outlined,
-            size: 64, color: accent.withOpacity(0.2)),
+        Icon(
+          Icons.remove_shopping_cart_outlined,
+          size: 64,
+          color: accent.withOpacity(0.2),
+        ),
         const SizedBox(height: 16),
         Text(
           "Start Return Process",
@@ -204,7 +210,7 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
             foregroundColor: accent,
           ),
           onPressed: _showManualReturnSheet,
-        )
+        ),
       ],
     );
   }
@@ -213,17 +219,19 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
     // Mock items from the "found" invoice
     final mockItems = [
       const billing.BillItem(
-          productId: 'p1',
-          name: 'Premium T-Shirt',
-          quantity: 2,
-          rate: 499,
-          amount: 998),
+        productId: 'p1',
+        name: 'Premium T-Shirt',
+        quantity: 2,
+        rate: 499,
+        amount: 998,
+      ),
       const billing.BillItem(
-          productId: 'p2',
-          name: 'Denim Jeans',
-          quantity: 1,
-          rate: 1299,
-          amount: 1299),
+        productId: 'p2',
+        name: 'Denim Jeans',
+        quantity: 1,
+        rate: 1299,
+        amount: 1299,
+      ),
     ];
 
     return Column(
@@ -232,34 +240,45 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Items in Invoice #$_originalInvoiceNumber",
-                style: GoogleFonts.inter(
-                    color: Colors.white70, fontWeight: FontWeight.bold)),
+            Text(
+              "Items in Invoice #$_originalInvoiceNumber",
+              style: GoogleFonts.inter(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextButton(
               onPressed: _showManualReturnSheet,
               child: const Text("Item not listed?"),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 12),
-        ...mockItems.map((item) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(item.name,
-                  style: GoogleFonts.inter(color: Colors.white)),
-              subtitle: Text("Qty: ${item.quantity}  Rate: ₹${item.rate}",
-                  style: GoogleFonts.inter(color: Colors.white54)),
-              trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: accent.withOpacity(0.2),
-                    foregroundColor: accent),
-                onPressed: () {
-                  setState(() {
-                    _returnItems.add(item);
-                  });
-                },
-                child: const Text("Return"),
+        ...mockItems.map(
+          (item) => ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              item.name,
+              style: GoogleFonts.inter(color: Colors.white),
+            ),
+            subtitle: Text(
+              "Qty: ${item.quantity}  Rate: ₹${item.rate}",
+              style: GoogleFonts.inter(color: Colors.white54),
+            ),
+            trailing: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accent.withOpacity(0.2),
+                foregroundColor: accent,
               ),
-            )),
+              onPressed: () {
+                setState(() {
+                  _returnItems.add(item);
+                });
+              },
+              child: const Text("Return"),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -332,13 +351,18 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.name,
-                        style: GoogleFonts.inter(
-                            color: FuturisticColors.textPrimary)),
+                    Text(
+                      item.name,
+                      style: GoogleFonts.inter(
+                        color: FuturisticColors.textPrimary,
+                      ),
+                    ),
                     Text(
                       "Return Qty: ${item.quantity} @ ₹${item.rate}",
                       style: GoogleFonts.inter(
-                          color: FuturisticColors.textSecondary, fontSize: 12),
+                        color: FuturisticColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -353,7 +377,7 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
               IconButton(
                 icon: const Icon(Icons.close, size: 16, color: Colors.grey),
                 onPressed: () => setState(() => _returnItems.removeAt(index)),
-              )
+              ),
             ],
           ),
         );
@@ -373,19 +397,25 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Refund Total",
-                  style: GoogleFonts.outfit(
-                      color: FuturisticColors.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-              Text("₹${_totalRefundAmount.toStringAsFixed(2)}",
-                  style: GoogleFonts.outfit(
-                      color: accent,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      shadows: [
-                        Shadow(color: accent.withOpacity(0.5), blurRadius: 10)
-                      ])),
+              Text(
+                "Refund Total",
+                style: GoogleFonts.outfit(
+                  color: FuturisticColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "₹${_totalRefundAmount.toStringAsFixed(2)}",
+                style: GoogleFonts.outfit(
+                  color: accent,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  shadows: [
+                    Shadow(color: accent.withOpacity(0.5), blurRadius: 10),
+                  ],
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -395,10 +425,9 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                gradient: LinearGradient(colors: [
-                  accent.withOpacity(0.8),
-                  accent.withOpacity(0.4),
-                ]),
+                gradient: LinearGradient(
+                  colors: [accent.withOpacity(0.8), accent.withOpacity(0.4)],
+                ),
                 boxShadow: FuturisticColors.neonShadow(accent),
               ),
               child: ElevatedButton(
@@ -406,7 +435,8 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
                 onPressed: _returnItems.isEmpty ? null : _processCreditNote,
                 child: _isLoading
@@ -429,7 +459,7 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
                       ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -443,28 +473,32 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
       builder: (context) => ProductSearchSheet(
         onProductSelected: (product) {
           setState(() {
-            _returnItems.add(billing.BillItem(
-              productId: product.id,
-              name: product.name,
-              quantity: 1,
-              rate: product.sellingPrice,
-              amount: product.sellingPrice, // Initial amount for qty 1
-              unit: product.unit,
-              // gstRate: product.gstRate, // If available in product model
-            ));
+            _returnItems.add(
+              billing.BillItem(
+                productId: product.id,
+                name: product.name,
+                quantity: 1,
+                rate: product.sellingPrice,
+                amount: product.sellingPrice, // Initial amount for qty 1
+                unit: product.unit,
+                // gstRate: product.gstRate, // If available in product model
+              ),
+            );
           });
         },
         onManualEntry: () {
           // Add a generic manual item if not found in catalog
           setState(() {
-            _returnItems.add(const billing.BillItem(
-              productId: 'manual_return',
-              name: 'Manual Return Item',
-              quantity: 1,
-              rate: 0,
-              amount: 0,
-              unit: 'pcs',
-            ));
+            _returnItems.add(
+              const billing.BillItem(
+                productId: 'manual_return',
+                name: 'Manual Return Item',
+                quantity: 1,
+                rate: 0,
+                amount: 0,
+                unit: 'pcs',
+              ),
+            );
           });
         },
       ),
@@ -496,18 +530,21 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
         // Auto-show items from bill for selection
         _showBillItemsSelection(bill);
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Invoice Found!")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Invoice Found!")));
       } else {
         // Try searching by invoice number if ID failed
         // Note: Repository currently supports getById. Search might be needed if by invoice number.
         // For now, assume ID or exact match.
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Invoice not found")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Invoice not found")));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error searching invoice: $e")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error searching invoice: $e")));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -527,41 +564,53 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Select Items to Return',
-                style: GoogleFonts.outfit(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+            Text(
+              'Select Items to Return',
+              style: GoogleFonts.outfit(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             Flexible(
               child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: bill.items.length,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     const Divider(color: Colors.white10),
                 itemBuilder: (context, index) {
                   final item = bill.items[index];
                   // item is model.BillItem (from models/bill.dart)
                   return ListTile(
-                    title: Text(item.productName,
-                        style: const TextStyle(color: Colors.white)),
-                    subtitle: Text('Qty: ${item.qty} • ₹${item.total}',
-                        style: const TextStyle(color: Colors.white70)),
+                    title: Text(
+                      item.productName,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      'Qty: ${item.qty} • ₹${item.total}',
+                      style: const TextStyle(color: Colors.white70),
+                    ),
                     trailing: ElevatedButton(
                       onPressed: () {
-                        setState(() => _returnItems.add(billing.BillItem(
+                        setState(
+                          () => _returnItems.add(
+                            billing.BillItem(
                               productId: item.productId,
                               name: item.productName,
                               quantity: item.qty,
                               rate: item.price,
                               amount: item.total, // or item.qty * item.price
                               unit: item.unit,
-                            )));
+                            ),
+                          ),
+                        );
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            FuturisticColors.error.withOpacity(0.2),
+                        backgroundColor: FuturisticColors.error.withOpacity(
+                          0.2,
+                        ),
                         foregroundColor: FuturisticColors.error,
                       ),
                       child: const Text('Return'),
@@ -587,13 +636,15 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
 
       // Convert BillItem to map for repository
       final returnItemsMap = _returnItems
-          .map((item) => {
-                'itemId': item.productId,
-                'itemName': item.name,
-                'quantity': item.quantity,
-                'rate': item.rate,
-                'amount': item.quantity * item.rate,
-              })
+          .map(
+            (item) => {
+              'itemId': item.productId,
+              'itemName': item.name,
+              'quantity': item.quantity,
+              'rate': item.rate,
+              'amount': item.quantity * item.rate,
+            },
+          )
           .toList();
 
       final result = await revenueRepo.addReturnInward(
@@ -601,26 +652,30 @@ class _CreditNoteScreenState extends ConsumerState<CreditNoteScreen> {
         customerId: _customer?.id ?? '',
         items: returnItemsMap,
         totalReturnAmount: _totalRefundAmount,
-        billId:
-            _originalInvoiceNumber.isNotEmpty ? _originalInvoiceNumber : null,
+        billId: _originalInvoiceNumber.isNotEmpty
+            ? _originalInvoiceNumber
+            : null,
         billNumber: _invoiceSearchController.text,
         reason: 'Customer Return',
       );
 
       if (result.isSuccess) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Credit Note Generated Successfully")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Credit Note Generated Successfully")),
+          );
           Navigator.pop(context);
         }
       } else {
         throw Exception(
-            result.errorMessage ?? 'Failed to generate credit note');
+          result.errorMessage ?? 'Failed to generate credit note',
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error processing return: $e")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error processing return: $e")));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

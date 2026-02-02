@@ -11,12 +11,13 @@ class OtpScreenFixed extends StatefulWidget {
   final String? phone;
   final int? resendToken;
 
-  const OtpScreenFixed(
-      {required this.verificationId,
-      this.redirectRoute,
-      this.phone,
-      this.resendToken,
-      super.key});
+  const OtpScreenFixed({
+    required this.verificationId,
+    this.redirectRoute,
+    this.phone,
+    this.resendToken,
+    super.key,
+  });
 
   @override
   State<OtpScreenFixed> createState() => _OtpScreenFixedState();
@@ -64,8 +65,11 @@ class _OtpScreenFixedState extends State<OtpScreenFixed> {
   Future<void> _resendOtp() async {
     if (!_canResend) return;
     if (widget.phone == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Phone number not available to resend OTP')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Phone number not available to resend OTP'),
+        ),
+      );
       return;
     }
 
@@ -85,16 +89,18 @@ class _OtpScreenFixedState extends State<OtpScreenFixed> {
         onCodeSent: (verificationId, token) {
           if (mounted) {
             setState(() => isLoading = false);
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('OTP resent')));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('OTP resent')));
             _startResendTimer();
           }
         },
         onError: (e) {
           if (mounted) {
             setState(() => isLoading = false);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Resend error: ${e.message ?? e.code}')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Resend error: ${e.message ?? e.code}')),
+            );
           }
         },
       );
@@ -102,15 +108,17 @@ class _OtpScreenFixedState extends State<OtpScreenFixed> {
       if (mounted) {
         setState(() => isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Resend failed: ${e.toString()}')));
+          SnackBar(content: Text('Resend failed: ${e.toString()}')),
+        );
       }
     }
   }
 
   Future<void> verifyOTP() async {
     if (otpController.text.isEmpty || otpController.text.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Enter valid 6-digit OTP")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Enter valid 6-digit OTP")));
       return;
     }
 
@@ -130,13 +138,17 @@ class _OtpScreenFixedState extends State<OtpScreenFixed> {
       if (mounted) {
         setState(() => isLoading = false);
         Navigator.pushNamedAndRemoveUntil(
-            context, '/auth_wrapper', (route) => false);
+          context,
+          '/auth_wrapper',
+          (route) => false,
+        );
       }
     } catch (e) {
       if (mounted) {
         setState(() => isLoading = false);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
       }
     }
   }
@@ -162,7 +174,9 @@ class _OtpScreenFixedState extends State<OtpScreenFixed> {
               maxLength: 6,
               textAlign: TextAlign.center,
               decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: '000000'),
+                border: OutlineInputBorder(),
+                hintText: '000000',
+              ),
             ),
             const SizedBox(height: 12),
             ElevatedButton(
@@ -175,13 +189,16 @@ class _OtpScreenFixedState extends State<OtpScreenFixed> {
             Center(
               child: Column(
                 children: [
-                  Text(_canResend
-                      ? "Didn't receive OTP?"
-                      : 'Resend in $_secondsRemaining s'),
+                  Text(
+                    _canResend
+                        ? "Didn't receive OTP?"
+                        : 'Resend in $_secondsRemaining s',
+                  ),
                   const SizedBox(height: 8),
                   TextButton(
-                      onPressed: (_canResend && !isLoading) ? _resendOtp : null,
-                      child: const Text('Resend OTP')),
+                    onPressed: (_canResend && !isLoading) ? _resendOtp : null,
+                    child: const Text('Resend OTP'),
+                  ),
                 ],
               ),
             ),

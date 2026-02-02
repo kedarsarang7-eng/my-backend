@@ -23,13 +23,15 @@ class AlertService {
     if (productsResult.data != null) {
       for (final product in productsResult.data!) {
         if (product.isLowStock) {
-          alerts.add(Alert(
-            id: const Uuid().v4(),
-            type: AlertType.lowStock,
-            message:
-                'Low Stock: ${product.name} (${product.stockQuantity} ${product.unit} remaining)',
-            createdAt: DateTime.now(),
-          ));
+          alerts.add(
+            Alert(
+              id: const Uuid().v4(),
+              type: AlertType.lowStock,
+              message:
+                  'Low Stock: ${product.name} (${product.stockQuantity} ${product.unit} remaining)',
+              createdAt: DateTime.now(),
+            ),
+          );
         }
       }
     }
@@ -79,22 +81,26 @@ class AlertService {
 
             if (info.expiryDate.isBefore(now)) {
               // 🔴 EXPIRED - Critical alert
-              alerts.add(Alert(
-                id: const Uuid().v4(),
-                type: AlertType.expiry,
-                message:
-                    '⚠️ EXPIRED: ${info.productName}${info.batchNo != null ? " (Batch: ${info.batchNo})" : ""} - Expired: ${_formatDate(info.expiryDate)}',
-                createdAt: DateTime.now(),
-              ));
+              alerts.add(
+                Alert(
+                  id: const Uuid().v4(),
+                  type: AlertType.expiry,
+                  message:
+                      '⚠️ EXPIRED: ${info.productName}${info.batchNo != null ? " (Batch: ${info.batchNo})" : ""} - Expired: ${_formatDate(info.expiryDate)}',
+                  createdAt: DateTime.now(),
+                ),
+              );
             } else if (info.expiryDate.isBefore(warningDate)) {
               // 🟡 NEAR EXPIRY - Warning alert
-              alerts.add(Alert(
-                id: const Uuid().v4(),
-                type: AlertType.expiry,
-                message:
-                    '⏰ Expiring Soon: ${info.productName}${info.batchNo != null ? " (Batch: ${info.batchNo})" : ""} - Expires: ${_formatDate(info.expiryDate)}',
-                createdAt: DateTime.now(),
-              ));
+              alerts.add(
+                Alert(
+                  id: const Uuid().v4(),
+                  type: AlertType.expiry,
+                  message:
+                      '⏰ Expiring Soon: ${info.productName}${info.batchNo != null ? " (Batch: ${info.batchNo})" : ""} - Expires: ${_formatDate(info.expiryDate)}',
+                  createdAt: DateTime.now(),
+                ),
+              );
             }
           }
         }
@@ -119,13 +125,15 @@ class AlertService {
       final recentBills = bills.take(3);
       for (final bill in recentBills) {
         if (bill.totalAmount > (avg * 3) && avg > 100) {
-          alerts.add(Alert(
-            id: const Uuid().v4(),
-            type: AlertType.abnormalBill,
-            message:
-                'Abnormal Bill Detected: ₹${bill.totalAmount} (Avg: ₹${avg.toStringAsFixed(0)})',
-            createdAt: bill.date,
-          ));
+          alerts.add(
+            Alert(
+              id: const Uuid().v4(),
+              type: AlertType.abnormalBill,
+              message:
+                  'Abnormal Bill Detected: ₹${bill.totalAmount} (Avg: ₹${avg.toStringAsFixed(0)})',
+              createdAt: bill.date,
+            ),
+          );
         }
       }
     });

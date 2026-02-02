@@ -20,10 +20,10 @@ class MockPeriodLockService extends Mock implements PeriodLockService {
 
   @override
   Future<DateTime?> getLockDate() => super.noSuchMethod(
-        Invocation.method(#getLockDate, []),
-        returnValue: Future.value(DateTime(2020, 12, 31)),
-        returnValueForMissingStub: Future.value(DateTime(2020, 12, 31)),
-      );
+    Invocation.method(#getLockDate, []),
+    returnValue: Future.value(DateTime(2020, 12, 31)),
+    returnValueForMissingStub: Future.value(DateTime(2020, 12, 31)),
+  );
 
   @override
   Future<void> closePeriod(DateTime? newLockDate, String? userId) async {}
@@ -39,13 +39,15 @@ void main() {
     mockPeriodLockService = MockPeriodLockService();
 
     // Stub getActiveShift to return a dummy shift
-    when(mockShiftService.getActiveShift()).thenAnswer((_) async => Shift(
-          shiftId: 'dummyShiftId',
-          shiftName: 'Morning',
-          ownerId: 'owner1',
-          startTime: DateTime.now().subtract(const Duration(hours: 1)),
-          status: ShiftStatus.open,
-        ));
+    when(mockShiftService.getActiveShift()).thenAnswer(
+      (_) async => Shift(
+        shiftId: 'dummyShiftId',
+        shiftName: 'Morning',
+        ownerId: 'owner1',
+        startTime: DateTime.now().subtract(const Duration(hours: 1)),
+        status: ShiftStatus.open,
+      ),
+    );
 
     billingService = PetrolPumpBillingService(
       shiftService: mockShiftService,

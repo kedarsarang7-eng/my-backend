@@ -69,10 +69,12 @@ class GstSettingsModel {
       registrationDate: map['registrationDate'] != null
           ? DateTime.tryParse(map['registrationDate'])
           : null,
-      createdAt:
-          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt:
-          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+        map['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        map['updatedAt'] ?? DateTime.now().toIso8601String(),
+      ),
       isSynced: map['isSynced'] ?? false,
     );
   }

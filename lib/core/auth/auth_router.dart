@@ -72,7 +72,8 @@ class _AuthRouterState extends State<AuthRouter> {
         _setTarget(CustomerHomeScreen(customerId: session.userId ?? ''));
       } else if (session.isPatient) {
         debugPrint(
-            '[AuthRouter] User is PATIENT, routing to PatientHomeScreen');
+          '[AuthRouter] User is PATIENT, routing to PatientHomeScreen',
+        );
         _setTarget(const PatientHomeScreen());
       } else {
         // Unknown role → clear and show selection
@@ -101,9 +102,7 @@ class _AuthRouterState extends State<AuthRouter> {
       return const Scaffold(
         backgroundColor: Color(0xFF0B0D1F),
         body: Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFF00D4FF),
-          ),
+          child: CircularProgressIndicator(color: Color(0xFF00D4FF)),
         ),
       );
     }
@@ -155,10 +154,7 @@ class _AccessDeniedScreen extends StatelessWidget {
   final String message;
   final VoidCallback onBack;
 
-  const _AccessDeniedScreen({
-    required this.message,
-    required this.onBack,
-  });
+  const _AccessDeniedScreen({required this.message, required this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -168,11 +164,7 @@ class _AccessDeniedScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.lock_outline,
-              size: 64,
-              color: Colors.orange,
-            ),
+            const Icon(Icons.lock_outline, size: 64, color: Colors.orange),
             const SizedBox(height: 16),
             Text(
               message,
@@ -180,10 +172,7 @@ class _AccessDeniedScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: onBack,
-              child: const Text('Go Back'),
-            ),
+            ElevatedButton(onPressed: onBack, child: const Text('Go Back')),
           ],
         ),
       ),

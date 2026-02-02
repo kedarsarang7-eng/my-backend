@@ -5,11 +5,7 @@ class IrnResponseModel {
   final IrnData? data;
   final ErrorDetails? error;
 
-  IrnResponseModel({
-    required this.status,
-    this.data,
-    this.error,
-  });
+  IrnResponseModel({required this.status, this.data, this.error});
 
   bool get isSuccess => status == '1';
 

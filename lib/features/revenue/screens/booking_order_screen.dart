@@ -44,8 +44,9 @@ class _BookingOrderScreenState extends ConsumerState<BookingOrderScreen>
     final ownerId = sl<SessionManager>().ownerId ?? '';
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: const Text('Booking Orders'),
         backgroundColor: Colors.transparent,
@@ -85,7 +86,7 @@ class _BookingOrderScreenState extends ConsumerState<BookingOrderScreen>
             statuses: [
               BookingStatus.delivered,
               BookingStatus.converted,
-              BookingStatus.cancelled
+              BookingStatus.cancelled,
             ],
             isDark: isDark,
             onStatusChange: _handleStatusChange,
@@ -103,7 +104,9 @@ class _BookingOrderScreenState extends ConsumerState<BookingOrderScreen>
   }
 
   Future<void> _handleStatusChange(
-      String bookingId, BookingStatus newStatus) async {
+    String bookingId,
+    BookingStatus newStatus,
+  ) async {
     final ownerId = sl<SessionManager>().ownerId!;
     try {
       await _revenueService.updateBookingStatus(ownerId, bookingId, newStatus);
@@ -145,9 +148,7 @@ class _BookingOrderScreenState extends ConsumerState<BookingOrderScreen>
   void _showAddBookingSheet(BuildContext context, String ownerId, bool isDark) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => _AddBookingScreen(ownerId: ownerId),
-      ),
+      MaterialPageRoute(builder: (_) => _AddBookingScreen(ownerId: ownerId)),
     );
   }
 }
@@ -176,8 +177,9 @@ class _BookingListView extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final bookings =
-            snapshot.data!.where((b) => statuses.contains(b.status)).toList();
+        final bookings = snapshot.data!
+            .where((b) => statuses.contains(b.status))
+            .toList();
 
         if (bookings.isEmpty) {
           return Center(
@@ -249,13 +251,17 @@ class _BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMM yyyy');
-    final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
-    final isOverdue = booking.deliveryDate.isBefore(DateTime.now()) &&
+    final currencyFormat = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
+    final isOverdue =
+        booking.deliveryDate.isBefore(DateTime.now()) &&
         ![
           BookingStatus.delivered,
           BookingStatus.cancelled,
-          BookingStatus.converted
+          BookingStatus.converted,
         ].contains(booking.status);
 
     return GlassCard(
@@ -274,8 +280,11 @@ class _BookingCard extends StatelessWidget {
                       color: _getStatusColor().withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(Icons.event_note,
-                        color: _getStatusColor(), size: 20),
+                    child: Icon(
+                      Icons.event_note,
+                      color: _getStatusColor(),
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(
@@ -300,8 +309,10 @@ class _BookingCard extends StatelessWidget {
                 ],
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _getStatusColor().withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
@@ -340,8 +351,10 @@ class _BookingCard extends StatelessWidget {
               if (isOverdue) ...[
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(4),
@@ -349,9 +362,10 @@ class _BookingCard extends StatelessWidget {
                   child: const Text(
                     'OVERDUE',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -360,24 +374,30 @@ class _BookingCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           // Items Preview
-          ...booking.items.take(2).map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${item.itemName} x ${item.quantity.toStringAsFixed(0)}',
-                      style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black45),
-                    ),
-                    Text(
-                      currencyFormat.format(item.amount),
-                      style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black45),
-                    ),
-                  ],
+          ...booking.items
+              .take(2)
+              .map(
+                (item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${item.itemName} x ${item.quantity.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          color: isDark ? Colors.white54 : Colors.black45,
+                        ),
+                      ),
+                      Text(
+                        currencyFormat.format(item.amount),
+                        style: TextStyle(
+                          color: isDark ? Colors.white54 : Colors.black45,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )),
+              ),
           if (booking.items.length > 2)
             Text(
               '+ ${booking.items.length - 2} more items',
@@ -519,8 +539,9 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
     final isDark = theme.isDark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: const Text('New Booking'),
         backgroundColor: Colors.transparent,
@@ -552,7 +573,8 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                       labelText: 'Customer Name *',
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     validator: (val) =>
                         val?.isEmpty == true ? 'Required' : null,
@@ -565,7 +587,8 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                       labelText: 'Phone Number',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -576,7 +599,8 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                       labelText: 'Delivery Address',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ],
@@ -614,8 +638,9 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                             ),
                           ),
                           Text(
-                            DateFormat('EEEE, dd MMM yyyy')
-                                .format(_deliveryDate),
+                            DateFormat(
+                              'EEEE, dd MMM yyyy',
+                            ).format(_deliveryDate),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -661,11 +686,16 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                       child: Center(
                         child: Column(
                           children: [
-                            Icon(Icons.inventory_2,
-                                size: 48, color: Colors.grey),
+                            Icon(
+                              Icons.inventory_2,
+                              size: 48,
+                              color: Colors.grey,
+                            ),
                             const SizedBox(height: 8),
-                            Text('No items added',
-                                style: TextStyle(color: Colors.grey)),
+                            Text(
+                              'No items added',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ],
                         ),
                       ),
@@ -678,12 +708,14 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                         title: Text(
                           item.itemName,
                           style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black87),
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
                         ),
                         subtitle: Text(
                           '${item.quantity.toStringAsFixed(0)} ${item.unit} × ₹${item.rate.toStringAsFixed(0)}',
                           style: TextStyle(
-                              color: isDark ? Colors.white54 : Colors.black45),
+                            color: isDark ? Colors.white54 : Colors.black45,
+                          ),
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -696,8 +728,11 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete,
-                                  color: Colors.red, size: 20),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 20,
+                              ),
                               onPressed: () =>
                                   setState(() => _items.removeAt(index)),
                             ),
@@ -730,8 +765,10 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Total Amount',
-                                style: TextStyle(color: Colors.grey)),
+                            Text(
+                              'Total Amount',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                             Text(
                               '₹${_totalAmount.toStringAsFixed(0)}',
                               style: TextStyle(
@@ -753,7 +790,8 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                             labelText: 'Advance Paid',
                             prefixText: '₹ ',
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -769,8 +807,10 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Balance Due',
-                            style: TextStyle(color: Colors.orange)),
+                        Text(
+                          'Balance Due',
+                          style: TextStyle(color: Colors.orange),
+                        ),
                         Text(
                           '₹${_balanceAmount.toStringAsFixed(0)}',
                           style: TextStyle(
@@ -795,7 +835,8 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                 decoration: InputDecoration(
                   labelText: 'Notes (optional)',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
@@ -805,13 +846,15 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
             SizedBox(
               height: 56,
               child: ElevatedButton(
-                onPressed:
-                    _items.isNotEmpty && !_isSaving ? _saveBooking : null,
+                onPressed: _items.isNotEmpty && !_isSaving
+                    ? _saveBooking
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
                 child: _isSaving
                     ? CircularProgressIndicator(color: Colors.white)
@@ -820,8 +863,10 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
                         children: [
                           Icon(Icons.check),
                           const SizedBox(width: 8),
-                          Text('Create Booking',
-                              style: TextStyle(fontSize: 18)),
+                          Text(
+                            'Create Booking',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ],
                       ),
               ),
@@ -882,13 +927,15 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
               final rate = double.tryParse(rateController.text) ?? 0;
               if (nameController.text.isNotEmpty && qty > 0 && rate > 0) {
                 setState(() {
-                  _items.add(BookingItem(
-                    itemId: DateTime.now().millisecondsSinceEpoch.toString(),
-                    itemName: nameController.text,
-                    quantity: qty,
-                    rate: rate,
-                    amount: qty * rate,
-                  ));
+                  _items.add(
+                    BookingItem(
+                      itemId: DateTime.now().millisecondsSinceEpoch.toString(),
+                      itemName: nameController.text,
+                      quantity: qty,
+                      rate: rate,
+                      amount: qty * rate,
+                    ),
+                  );
                 });
                 Navigator.pop(ctx);
               }
@@ -903,9 +950,9 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
   Future<void> _saveBooking() async {
     if (!_formKey.currentState!.validate()) return;
     if (_items.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Add at least one item')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Add at least one item')));
       return;
     }
 
@@ -936,7 +983,9 @@ class _AddBookingScreenState extends ConsumerState<_AddBookingScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Booking created!'), backgroundColor: Colors.green),
+            content: Text('Booking created!'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.pop(context, true);
       }

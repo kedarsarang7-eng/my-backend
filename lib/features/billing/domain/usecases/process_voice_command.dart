@@ -64,7 +64,7 @@ class ProcessVoiceCommand implements UseCase<List<BillItem>, String> {
         'piece',
         'pcs',
         'dozen',
-        'dz'
+        'dz',
       ];
 
       for (final u in units) {
@@ -87,14 +87,16 @@ class ProcessVoiceCommand implements UseCase<List<BillItem>, String> {
         final matchedProduct = exactMatch ?? products.firstOrNull;
 
         if (matchedProduct != null) {
-          billItems.add(BillItem(
-            productId: matchedProduct.id,
-            name: matchedProduct.name,
-            quantity: qty,
-            rate: matchedProduct.sellingPrice,
-            amount: qty * matchedProduct.sellingPrice,
-            unit: matchedProduct.unit,
-          ));
+          billItems.add(
+            BillItem(
+              productId: matchedProduct.id,
+              name: matchedProduct.name,
+              quantity: qty,
+              rate: matchedProduct.sellingPrice,
+              amount: qty * matchedProduct.sellingPrice,
+              unit: matchedProduct.unit,
+            ),
+          );
         } else {
           // Fallback if search returned items but logic filtered them out (unlikely)
           _addRawItem(billItems, productName, qty, unit);
@@ -109,14 +111,16 @@ class ProcessVoiceCommand implements UseCase<List<BillItem>, String> {
   }
 
   void _addRawItem(List<BillItem> items, String name, double qty, String unit) {
-    items.add(BillItem(
-      productId: '',
-      name: name,
-      quantity: qty,
-      rate: 0,
-      amount: 0,
-      unit: unit,
-    ));
+    items.add(
+      BillItem(
+        productId: '',
+        name: name,
+        quantity: qty,
+        rate: 0,
+        amount: 0,
+        unit: unit,
+      ),
+    );
   }
 
   String _convertNumberWords(String input) {

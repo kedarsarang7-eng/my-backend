@@ -49,8 +49,9 @@ class _MedicalRecordsScreenState extends ConsumerState<MedicalRecordsScreen> {
 
           Expanded(
             child: StreamBuilder<List<PrescriptionModel>>(
-              stream: sl<PrescriptionRepository>()
-                  .watchPrescriptionsForPatient(patientId),
+              stream: sl<PrescriptionRepository>().watchPrescriptionsForPatient(
+                patientId,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -58,8 +59,11 @@ class _MedicalRecordsScreenState extends ConsumerState<MedicalRecordsScreen> {
 
                 if (snapshot.hasError) {
                   return Center(
-                      child: Text('Error: ${snapshot.error}',
-                          style: const TextStyle(color: Colors.red)));
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
                 }
 
                 final records = snapshot.data ?? [];
@@ -69,11 +73,16 @@ class _MedicalRecordsScreenState extends ConsumerState<MedicalRecordsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.folder_off,
-                            size: 64, color: Colors.white.withOpacity(0.3)),
+                        Icon(
+                          Icons.folder_off,
+                          size: 64,
+                          color: Colors.white.withOpacity(0.3),
+                        ),
                         const SizedBox(height: 16),
-                        const Text('No medical records found',
-                            style: TextStyle(color: Colors.grey)),
+                        const Text(
+                          'No medical records found',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
@@ -127,8 +136,10 @@ class _MedicalRecordsScreenState extends ConsumerState<MedicalRecordsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text('Dr. ID: ${record.doctorId.substring(0, 6)}...',
-                style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(
+              'Dr. ID: ${record.doctorId.substring(0, 6)}...',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
             if (record.advice != null && record.advice!.isNotEmpty)
               Text(
                 'Advice: ${record.advice}',
@@ -144,58 +155,84 @@ class _MedicalRecordsScreenState extends ConsumerState<MedicalRecordsScreen> {
             decoration: BoxDecoration(
               color: Colors.black12,
               border: Border(
-                  top: BorderSide(color: Colors.white.withOpacity(0.05))),
+                top: BorderSide(color: Colors.white.withOpacity(0.05)),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('MEDICINES',
-                    style: TextStyle(
-                        color: Colors.grey, fontSize: 10, letterSpacing: 1.2)),
+                const Text(
+                  'MEDICINES',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10,
+                    letterSpacing: 1.2,
+                  ),
+                ),
                 const SizedBox(height: 12),
-                ...record.items.map((item) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.medication_liquid,
-                              size: 16, color: Colors.orange),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(item.medicineName,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                                Text(
-                                  '${item.dosage ?? ''} • ${item.frequency ?? ''} • ${item.duration ?? ''}',
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 12),
+                ...record.items.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.medication_liquid,
+                          size: 16,
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.medicineName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                if (item.instructions != null)
-                                  Text('${item.instructions}',
-                                      style: TextStyle(
-                                          color: FuturisticColors.accent2,
-                                          fontSize: 11)),
-                              ],
-                            ),
+                              ),
+                              Text(
+                                '${item.dosage ?? ''} • ${item.frequency ?? ''} • ${item.duration ?? ''}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              if (item.instructions != null)
+                                Text(
+                                  '${item.instructions}',
+                                  style: TextStyle(
+                                    color: FuturisticColors.accent2,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 if (record.advice != null) ...[
-                  const Text('ADVICE',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 10,
-                          letterSpacing: 1.2)),
+                  const Text(
+                    'ADVICE',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 10,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
                   const SizedBox(height: 6),
-                  Text(record.advice!,
-                      style: const TextStyle(
-                          color: Colors.white70, fontStyle: FontStyle.italic)),
-                ]
+                  Text(
+                    record.advice!,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

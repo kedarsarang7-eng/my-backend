@@ -33,7 +33,8 @@ class InsightsService {
         return Right(result.data!);
       } else {
         return Left(
-            CacheFailure(result.errorMessage ?? "Failed to fetch summary"));
+          CacheFailure(result.errorMessage ?? "Failed to fetch summary"),
+        );
       }
     } catch (e) {
       return Left(CacheFailure(e.toString()));
@@ -50,8 +51,9 @@ class InsightsService {
       if (result.isSuccess && result.data != null) {
         return Right(result.data!);
       } else {
-        return Left(CacheFailure(
-            result.errorMessage ?? "Failed to fetch stock status"));
+        return Left(
+          CacheFailure(result.errorMessage ?? "Failed to fetch stock status"),
+        );
       }
     } catch (e) {
       return Left(CacheFailure(e.toString()));
@@ -69,7 +71,8 @@ class InsightsService {
         return Right(result.data!);
       } else {
         return Left(
-            CacheFailure(result.errorMessage ?? "Failed to fetch performance"));
+          CacheFailure(result.errorMessage ?? "Failed to fetch performance"),
+        );
       }
     } catch (e) {
       return Left(CacheFailure(e.toString()));
@@ -87,7 +90,8 @@ class InsightsService {
         return Right(result.data!);
       } else {
         return Left(
-            CacheFailure(result.errorMessage ?? "Failed to fetch stats"));
+          CacheFailure(result.errorMessage ?? "Failed to fetch stats"),
+        );
       }
     } catch (e) {
       return Left(CacheFailure(e.toString()));
@@ -105,8 +109,8 @@ class InsightsService {
 
       // Try Online AI
       try {
-        final token =
-            await _sessionManager.firebaseUser?.getIdToken(); // Or FirebaseAuth
+        final token = await _sessionManager.firebaseUser
+            ?.getIdToken(); // Or FirebaseAuth
         if (token == null) throw Exception("No auth token");
 
         final response = await http.post(
@@ -115,8 +119,10 @@ class InsightsService {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(
-              {"owner_uid": ownerId, "date": DateTime.now().toIso8601String()}),
+          body: jsonEncode({
+            "owner_uid": ownerId,
+            "date": DateTime.now().toIso8601String(),
+          }),
         );
 
         if (response.statusCode == 200) {

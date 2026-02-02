@@ -86,7 +86,8 @@ class TranslationService {
       // Check if already downloaded
       if (await isModelDownloaded(languageCode)) {
         debugPrint(
-            'TranslationService: Model already downloaded: $languageCode');
+          'TranslationService: Model already downloaded: $languageCode',
+        );
         return true;
       }
 
@@ -133,7 +134,8 @@ class TranslationService {
 
     if (sourceLanguage == null || targetLanguage == null) {
       debugPrint(
-          'TranslationService: Unsupported language pair: $sourceCode -> $targetCode');
+        'TranslationService: Unsupported language pair: $sourceCode -> $targetCode',
+      );
       return null;
     }
 
@@ -222,11 +224,13 @@ class TranslationService {
     final results = <TranslationResult>[];
 
     for (final text in texts) {
-      final result = await translate(TranslationRequest(
-        text: text,
-        sourceLanguage: sourceLanguage,
-        targetLanguage: targetLanguage,
-      ));
+      final result = await translate(
+        TranslationRequest(
+          text: text,
+          sourceLanguage: sourceLanguage,
+          targetLanguage: targetLanguage,
+        ),
+      );
       results.add(result);
     }
 

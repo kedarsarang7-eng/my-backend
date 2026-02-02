@@ -43,7 +43,10 @@ class _AvatarSelectorWidgetState extends State<AvatarSelectorWidget>
       if (initialIndex == -1) initialIndex = 0;
     }
     _tabController = TabController(
-        length: _categories.length, vsync: this, initialIndex: initialIndex);
+      length: _categories.length,
+      vsync: this,
+      initialIndex: initialIndex,
+    );
   }
 
   @override
@@ -94,10 +97,9 @@ class _AvatarSelectorWidgetState extends State<AvatarSelectorWidget>
 
                   return GestureDetector(
                     onTap: () {
-                      widget.onSelected(AvatarData(
-                        avatarId: def.id,
-                        category: def.category,
-                      ));
+                      widget.onSelected(
+                        AvatarData(avatarId: def.id, category: def.category),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -107,7 +109,9 @@ class _AvatarSelectorWidgetState extends State<AvatarSelectorWidget>
                         borderRadius: BorderRadius.circular(12),
                         border: isSelected
                             ? Border.all(
-                                color: const Color(0xFF1E3A8A), width: 2)
+                                color: const Color(0xFF1E3A8A),
+                                width: 2,
+                              )
                             : Border.all(color: Colors.grey.shade200),
                       ),
                       child: Column(

@@ -28,18 +28,18 @@ class PurchaseBillItem {
   });
 
   Map<String, dynamic> toMap() => {
-        'itemId': itemId,
-        'itemName': itemName,
-        'qty': qty,
-        'rate': rate,
-        'total': total,
-        'unit': unit,
-        'gstRate': gstRate,
-        'discount': discount,
-        'cgst': cgst,
-        'sgst': sgst,
-        'igst': igst,
-      };
+    'itemId': itemId,
+    'itemName': itemName,
+    'qty': qty,
+    'rate': rate,
+    'total': total,
+    'unit': unit,
+    'gstRate': gstRate,
+    'discount': discount,
+    'cgst': cgst,
+    'sgst': sgst,
+    'igst': igst,
+  };
 
   factory PurchaseBillItem.fromMap(Map<String, dynamic> m) {
     return PurchaseBillItem(
@@ -101,23 +101,23 @@ class PurchaseBill {
       (grandTotal - paidAmount).clamp(0, double.infinity);
 
   Map<String, dynamic> toMap() => {
-        'billNumber': billNumber,
-        'supplierId': supplierId,
-        'supplierName': supplierName,
-        'supplierPhone': supplierPhone,
-        'date': date.toIso8601String(),
-        'dueDate': dueDate?.toIso8601String(),
-        'items': items.map((e) => e.toMap()).toList(),
-        'subtotal': subtotal,
-        'totalTax': totalTax,
-        'grandTotal': grandTotal,
-        'paidAmount': paidAmount,
-        'status': status,
-        'paymentMode': paymentMode,
-        'notes': notes,
-        'attachmentUrl': attachmentUrl,
-        'ownerId': ownerId,
-      };
+    'billNumber': billNumber,
+    'supplierId': supplierId,
+    'supplierName': supplierName,
+    'supplierPhone': supplierPhone,
+    'date': date.toIso8601String(),
+    'dueDate': dueDate?.toIso8601String(),
+    'items': items.map((e) => e.toMap()).toList(),
+    'subtotal': subtotal,
+    'totalTax': totalTax,
+    'grandTotal': grandTotal,
+    'paidAmount': paidAmount,
+    'status': status,
+    'paymentMode': paymentMode,
+    'notes': notes,
+    'attachmentUrl': attachmentUrl,
+    'ownerId': ownerId,
+  };
 
   factory PurchaseBill.fromMap(String id, Map<String, dynamic> m) {
     return PurchaseBill(
@@ -130,7 +130,8 @@ class PurchaseBill {
       dueDate: m['dueDate'] != null
           ? DateTime.tryParse(m['dueDate'].toString())
           : null,
-      items: (m['items'] as List?)
+      items:
+          (m['items'] as List?)
               ?.map((e) => PurchaseBillItem.fromMap(e))
               .toList() ??
           [],

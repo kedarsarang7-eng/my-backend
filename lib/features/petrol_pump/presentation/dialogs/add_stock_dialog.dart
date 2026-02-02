@@ -120,8 +120,9 @@ class _AddStockDialogState extends State<AddStockDialog> {
               // Quantity input
               TextFormField(
                 controller: _quantityController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Quantity (Litres)',
                   hintText: 'Enter quantity to add',
@@ -148,8 +149,9 @@ class _AddStockDialogState extends State<AddStockDialog> {
               // Purchase price input
               TextFormField(
                 controller: _priceController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Purchase Price per Litre (Optional)',
                   hintText: 'Enter price',

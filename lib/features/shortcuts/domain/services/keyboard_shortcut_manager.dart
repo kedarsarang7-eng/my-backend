@@ -14,10 +14,15 @@ class KeyboardShortcutManager {
   }
 
   /// Check if a key binding is already used by another shortcut
-  bool hasDuplicateConflict(String keyBinding,
-      List<UserShortcutConfig> existingShortcuts, String currentId) {
-    return existingShortcuts.any((s) =>
-        s.id != currentId && s.keyboardBinding == keyBinding && s.isEnabled);
+  bool hasDuplicateConflict(
+    String keyBinding,
+    List<UserShortcutConfig> existingShortcuts,
+    String currentId,
+  ) {
+    return existingShortcuts.any(
+      (s) =>
+          s.id != currentId && s.keyboardBinding == keyBinding && s.isEnabled,
+    );
   }
 
   /// Get active bindings map for quick lookup

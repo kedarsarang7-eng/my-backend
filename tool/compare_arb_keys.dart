@@ -14,10 +14,9 @@ void main() {
   print('English keys: ${enKeys.length}\n');
 
   final dir = Directory('lib/l10n');
-  final files = dir
-      .listSync()
-      .whereType<File>()
-      .where((f) => f.path.endsWith('.arb') && !f.path.endsWith('app_en.arb'));
+  final files = dir.listSync().whereType<File>().where(
+    (f) => f.path.endsWith('.arb') && !f.path.endsWith('app_en.arb'),
+  );
 
   for (final file in files) {
     final Map<String, dynamic> json = jsonDecode(file.readAsStringSync());
@@ -33,7 +32,8 @@ void main() {
       print('❌ $lang mismatch');
       if (missing.isNotEmpty) {
         print(
-            '   Missing (${missing.length}): ${missing.take(5).join(', ')}...');
+          '   Missing (${missing.length}): ${missing.take(5).join(', ')}...',
+        );
       }
       if (extra.isNotEmpty) {
         print('   Extra (${extra.length}): ${extra.take(5).join(', ')}...');

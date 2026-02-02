@@ -45,10 +45,7 @@ class EmptyStateWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: FuturisticColors.surface.withOpacity(0.5),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: color.withOpacity(0.15),
-              width: 1,
-            ),
+            border: Border.all(color: color.withOpacity(0.15), width: 1),
             boxShadow: [
               BoxShadow(
                 color: color.withOpacity(0.05),
@@ -67,10 +64,7 @@ class EmptyStateWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: color.withOpacity(0.2),
-                    width: 1,
-                  ),
+                  border: Border.all(color: color.withOpacity(0.2), width: 1),
                   boxShadow: [
                     BoxShadow(
                       color: color.withOpacity(0.2),
@@ -79,11 +73,7 @@ class EmptyStateWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(
-                  icon,
-                  size: 36,
-                  color: color,
-                ),
+                child: Icon(icon, size: 36, color: color),
               ),
 
               const SizedBox(height: 24),
@@ -172,11 +162,7 @@ class CompactEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 48,
-              color: accentColor.withOpacity(0.4),
-            ),
+            Icon(icon, size: 48, color: accentColor.withOpacity(0.4)),
             const SizedBox(height: 16),
             Text(
               message,
@@ -190,8 +176,11 @@ class CompactEmptyState extends StatelessWidget {
               const SizedBox(height: 16),
               TextButton.icon(
                 onPressed: onAction,
-                icon: Icon(Icons.add,
-                    size: 18, color: FuturisticColors.premiumBlue),
+                icon: Icon(
+                  Icons.add,
+                  size: 18,
+                  color: FuturisticColors.premiumBlue,
+                ),
                 label: Text(
                   actionLabel!,
                   style: TextStyle(

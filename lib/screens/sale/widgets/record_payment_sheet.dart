@@ -102,8 +102,11 @@ class _RecordPaymentSheetState extends ConsumerState<RecordPaymentSheet> {
             // Header
             Row(
               children: [
-                Icon(Icons.payments_rounded,
-                    color: Colors.green.shade600, size: 28),
+                Icon(
+                  Icons.payments_rounded,
+                  color: Colors.green.shade600,
+                  size: 28,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -128,8 +131,10 @@ class _RecordPaymentSheetState extends ConsumerState<RecordPaymentSheet> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close,
-                      color: isDark ? Colors.white54 : Colors.grey),
+                  icon: Icon(
+                    Icons.close,
+                    color: isDark ? Colors.white54 : Colors.grey,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -169,8 +174,9 @@ class _RecordPaymentSheetState extends ConsumerState<RecordPaymentSheet> {
             // Amount Field
             TextField(
               controller: _amountController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               autofocus: true,
               style: TextStyle(
                 fontSize: 24,
@@ -190,8 +196,10 @@ class _RecordPaymentSheetState extends ConsumerState<RecordPaymentSheet> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide:
-                      BorderSide(color: Colors.green.shade600, width: 2),
+                  borderSide: BorderSide(
+                    color: Colors.green.shade600,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -249,7 +257,9 @@ class _RecordPaymentSheetState extends ConsumerState<RecordPaymentSheet> {
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Icon(Icons.check_circle, color: Colors.white),
                 label: Text(

@@ -23,145 +23,147 @@ part 'app_database.g.dart';
 // DATABASE CLASS
 // ============================================================================
 
-@DriftDatabase(tables: [
-  SyncQueue,
-  Bills,
-  BillItems,
-  Customers,
-  Products,
-  Payments,
-  PaymentTransactions, // NEW: Dynamic QR Audit
-  DeliveryChallans, // NEW: Delivery Challan
-  Expenses,
-  FileUploads,
-  OcrTasks,
-  VoiceTasks,
-  SchemaVersions,
-  Checksums,
-  AuditLogs,
-  ConflictLog, // NEW: Conflict audit trail
-  DeadLetterQueue,
-  BankAccounts,
-  BankTransactions,
-  Vendors,
-  PurchaseOrders,
-  PurchaseItems,
-  // Customer Dashboard Tables
-  CustomerConnections,
-  CustomerLedger,
-  CustomerNotifications,
-  // Customer-Shop QR Linking (Multi-Tenant Isolation)
-  CustomerProfiles, // Shop-scoped customer profiles
-  ShopLinks, // Customer-shop associations
-  UdharPeople,
-  UdharTransactions,
-  // Duplicate UdharTransactions removed
-  Shops,
-  Receipts,
-  ReturnInwards,
-  Proformas,
-  Bookings,
-  Dispatches,
-  Users,
-  // GST Compliance Tables
-  GstSettings,
-  GstInvoiceDetails,
-  HsnMaster,
-  // Accounting Tables
-  JournalEntries,
-  AccountingPeriods,
-  LedgerAccounts,
-  DayBook,
-  // Reminder Tables
-  ReminderSettings,
-  ReminderLogs,
-  PeriodLocks,
-  StockMovements, // Phase 8: Golden Rule Inventory
-  // Phase 12: e-Invoice & e-Way Bill
-  EInvoices,
-  EWayBills,
-  // Phase 12: Marketing & CRM
-  MarketingCampaigns,
-  CampaignLogs,
-  MessageTemplates,
-  // AI
-  CustomerBehaviors,
-  // Phase 12: Staff Management
-  StaffMembers,
-  StaffAttendance,
-  SalaryRecords,
-  // Phase 13: Credit Network
-  CreditProfiles,
-  // Phase 14: Restaurant / Hotel Food Ordering
-  FoodCategories,
-  FoodMenuItems,
-  RestaurantTables,
-  RestaurantQrCodes,
-  FoodOrders,
-  FoodOrderItems,
-  RestaurantBills,
-  // Phase 15: Invoice Number Safety
-  InvoiceCounters,
-  // Phase 16: Mobile/Computer Shop - Service Jobs & IMEI Tracking
-  IMEISerials,
-  ServiceJobs,
-  ServiceJobParts,
-  ServiceJobStatusHistory,
-  ProductVariants,
-  Exchanges,
-  // Phase 20: Security & Fraud Prevention
-  SecuritySettingsTable,
-  CashClosings,
-  FraudAlerts,
-  UserSessions,
-  // Phase 22: Doctor Prescriptions
-  Prescriptions,
-  Visits,
-  Patients,
-  // Phase 23: Pharmacy Compliance (Audit Fix)
-  ProductBatches,
+@DriftDatabase(
+  tables: [
+    SyncQueue,
+    Bills,
+    BillItems,
+    Customers,
+    Products,
+    Payments,
+    PaymentTransactions, // NEW: Dynamic QR Audit
+    DeliveryChallans, // NEW: Delivery Challan
+    Expenses,
+    FileUploads,
+    OcrTasks,
+    VoiceTasks,
+    SchemaVersions,
+    Checksums,
+    AuditLogs,
+    ConflictLog, // NEW: Conflict audit trail
+    DeadLetterQueue,
+    BankAccounts,
+    BankTransactions,
+    Vendors,
+    PurchaseOrders,
+    PurchaseItems,
+    // Customer Dashboard Tables
+    CustomerConnections,
+    CustomerLedger,
+    CustomerNotifications,
+    // Customer-Shop QR Linking (Multi-Tenant Isolation)
+    CustomerProfiles, // Shop-scoped customer profiles
+    ShopLinks, // Customer-shop associations
+    UdharPeople,
+    UdharTransactions,
+    // Duplicate UdharTransactions removed
+    Shops,
+    Receipts,
+    ReturnInwards,
+    Proformas,
+    Bookings,
+    Dispatches,
+    Users,
+    // GST Compliance Tables
+    GstSettings,
+    GstInvoiceDetails,
+    HsnMaster,
+    // Accounting Tables
+    JournalEntries,
+    AccountingPeriods,
+    LedgerAccounts,
+    DayBook,
+    // Reminder Tables
+    ReminderSettings,
+    ReminderLogs,
+    PeriodLocks,
+    StockMovements, // Phase 8: Golden Rule Inventory
+    // Phase 12: e-Invoice & e-Way Bill
+    EInvoices,
+    EWayBills,
+    // Phase 12: Marketing & CRM
+    MarketingCampaigns,
+    CampaignLogs,
+    MessageTemplates,
+    // AI
+    CustomerBehaviors,
+    // Phase 12: Staff Management
+    StaffMembers,
+    StaffAttendance,
+    SalaryRecords,
+    // Phase 13: Credit Network
+    CreditProfiles,
+    // Phase 14: Restaurant / Hotel Food Ordering
+    FoodCategories,
+    FoodMenuItems,
+    RestaurantTables,
+    RestaurantQrCodes,
+    FoodOrders,
+    FoodOrderItems,
+    RestaurantBills,
+    // Phase 15: Invoice Number Safety
+    InvoiceCounters,
+    // Phase 16: Mobile/Computer Shop - Service Jobs & IMEI Tracking
+    IMEISerials,
+    ServiceJobs,
+    ServiceJobParts,
+    ServiceJobStatusHistory,
+    ProductVariants,
+    Exchanges,
+    // Phase 20: Security & Fraud Prevention
+    SecuritySettingsTable,
+    CashClosings,
+    FraudAlerts,
+    UserSessions,
+    // Phase 22: Doctor Prescriptions
+    Prescriptions,
+    Visits,
+    Patients,
+    // Phase 23: Pharmacy Compliance (Audit Fix)
+    ProductBatches,
 
-  LockOverrideLogs,
-  // Phase 30: Shortcut Panel
-  ShortcutDefinitions,
-  UserShortcuts,
-  // Phase 31: Manufacturing Module
-  BillOfMaterials,
-  ProductionEntries,
-  // Phase 32: Recurring Billing
-  Subscriptions,
-  CustomerItemRequests,
-  // Phase 35: Doctor / Clinic Module
-  Patients,
-  DoctorProfiles,
-  PatientDoctorLinks,
-  Appointments,
-  // Prescriptions is already registered for v24, checking if we need re-declaration or extend
-  // Assuming Prescriptions table definition in tables.dart was UPDATED to include more fields or used as is.
-  // Ideally we should double check if Prescriptions was already in the list.
-  // Looking at line 116: Prescriptions IS ALREADY REGISTERED.
-  // We need to add others:
-  MedicalRecords,
-  PrescriptionItems,
-  LabReports,
-  MedicalTemplates, // Added
-  Farmers,
-  CommissionLedger,
-  // Petrol Pump Tables
-  Shifts,
-  Tanks,
-  Nozzles,
-  Dispensers,
-  // Phase 12+: Enhanced Staff Management
-  StaffNozzleAssignments,
-  StaffSalesDetails,
-  StaffCashSettlements,
-  // Phase 38: Petrol Pump - Additional Tables
-  CashDeposits,
-  LubeStock,
-  DensityRecords,
-  LicenseCache,
-])
+    LockOverrideLogs,
+    // Phase 30: Shortcut Panel
+    ShortcutDefinitions,
+    UserShortcuts,
+    // Phase 31: Manufacturing Module
+    BillOfMaterials,
+    ProductionEntries,
+    // Phase 32: Recurring Billing
+    Subscriptions,
+    CustomerItemRequests,
+    // Phase 35: Doctor / Clinic Module
+    Patients,
+    DoctorProfiles,
+    PatientDoctorLinks,
+    Appointments,
+    // Prescriptions is already registered for v24, checking if we need re-declaration or extend
+    // Assuming Prescriptions table definition in tables.dart was UPDATED to include more fields or used as is.
+    // Ideally we should double check if Prescriptions was already in the list.
+    // Looking at line 116: Prescriptions IS ALREADY REGISTERED.
+    // We need to add others:
+    MedicalRecords,
+    PrescriptionItems,
+    LabReports,
+    MedicalTemplates, // Added
+    Farmers,
+    CommissionLedger,
+    // Petrol Pump Tables
+    Shifts,
+    Tanks,
+    Nozzles,
+    Dispensers,
+    // Phase 12+: Enhanced Staff Management
+    StaffNozzleAssignments,
+    StaffSalesDetails,
+    StaffCashSettlements,
+    // Phase 38: Petrol Pump - Additional Tables
+    CashDeposits,
+    LubeStock,
+    DensityRecords,
+    LicenseCache,
+  ],
+)
 class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
   // Singleton instance
   static AppDatabase? _instance;
@@ -177,302 +179,307 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (Migrator m) async {
-          await m.createAll();
-          debugPrint('AppDatabase: Created all tables');
-        },
-        onUpgrade: (Migrator m, int from, int to) async {
-          debugPrint('AppDatabase: Migrating from $from to $to');
+    onCreate: (Migrator m) async {
+      await m.createAll();
+      debugPrint('AppDatabase: Created all tables');
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      debugPrint('AppDatabase: Migrating from $from to $to');
 
-          if (from < 4) {
-            // Migration to version 4: Add new columns to bills table
-            await m.addColumn(bills, bills.cashPaid);
-            await m.addColumn(bills, bills.onlinePaid);
-            await m.addColumn(bills, bills.businessType);
-            await m.addColumn(bills, bills.serviceCharge);
-          }
+      if (from < 4) {
+        // Migration to version 4: Add new columns to bills table
+        await m.addColumn(bills, bills.cashPaid);
+        await m.addColumn(bills, bills.onlinePaid);
+        await m.addColumn(bills, bills.businessType);
+        await m.addColumn(bills, bills.serviceCharge);
+      }
 
-          if (from < 5) {
-            // Migration to version 5: Add deviceId columns and ConflictLog table
-            await m.addColumn(syncQueue, syncQueue.deviceId);
-            await m.addColumn(bills, bills.deviceId);
-            await m.addColumn(customers, customers.deviceId);
-            await m.addColumn(products, products.deviceId);
-            await m.createTable(conflictLog);
-          }
-          if (from < 6) {
-            // Migration to version 6: Add Shops table
-            await m.createTable(shops);
-          }
-          if (from < 7) {
-            // Migration to version 7: Add Revenue tables
-            await m.createTable(receipts);
-            await m.createTable(returnInwards);
-            await m.createTable(proformas);
-            await m.createTable(bookings);
-            await m.createTable(dispatches);
-          }
-          if (from < 8) {
-            // Migration to version 8: Add Users table and Onboarding columns
-            await m.createTable(users);
-            await m.addColumn(shops, shops.businessType);
-            await m.addColumn(shops, shops.appLanguage);
-            await m.addColumn(shops, shops.onboardingCompleted);
-          }
-          if (from < 9) {
-            // Migration to version 9: Add ifsc column to bank_accounts
-            await m.addColumn(
-                bankAccounts, bankAccounts.ifsc as GeneratedColumn);
-          }
-          if (from < 10) {
-            // Migration to version 10: GST, Accounting, and Reminder modules
-            // GST Tables
-            await m.createTable(gstSettings);
-            await m.createTable(gstInvoiceDetails);
-            await m.createTable(hsnMaster);
-            // Accounting Tables
-            await m.createTable(journalEntries);
-            await m.createTable(accountingPeriods);
-            await m.createTable(ledgerAccounts);
-            // Reminder Tables
-            await m.createTable(reminderSettings);
-            await m.createTable(reminderLogs);
-            // Add GST columns to existing tables
-            await m.addColumn(products, products.hsnCode);
-            await m.addColumn(products, products.cgstRate);
-            await m.addColumn(products, products.sgstRate);
-            await m.addColumn(products, products.igstRate);
-            await m.addColumn(billItems, billItems.hsnCode);
-            await m.addColumn(billItems, billItems.cgstRate);
-            await m.addColumn(billItems, billItems.cgstAmount);
-            await m.addColumn(billItems, billItems.sgstRate);
-            await m.addColumn(billItems, billItems.sgstAmount);
-            await m.addColumn(billItems, billItems.igstRate);
-            await m.addColumn(billItems, billItems.igstAmount);
-            await m.addColumn(customers, customers.stateCode);
-            await m.addColumn(customers, customers.creditPeriodDays);
-            await m.addColumn(customers, customers.creditLimit);
-            await m.addColumn(customers, customers.optInSmsReminders);
-            await m.addColumn(customers, customers.optInWhatsAppReminders);
-          }
-          if (from < 11) {
-            // Migration to version 11: Stock Automation
-            await m.createTable(stockMovements);
-          }
-          if (from < 12) {
-            // Migration to version 12: e-Invoice, Marketing, Staff Management
-            // e-Invoice Tables
-            await m.createTable(eInvoices);
-            await m.createTable(eWayBills);
-            // Marketing Tables
-            await m.createTable(marketingCampaigns);
-            await m.createTable(campaignLogs);
-            await m.createTable(messageTemplates);
-            // Staff Management Tables
-            await m.createTable(staffMembers);
-            await m.createTable(staffAttendance);
-            await m.createTable(salaryRecords);
-          }
-          if (from < 15) {
-            // Migration to version 15: Restaurant / Hotel Food Ordering System
-            await m.createTable(foodCategories);
-            await m.createTable(foodMenuItems);
-            await m.createTable(restaurantTables);
-            await m.createTable(restaurantQrCodes);
-            await m.createTable(foodOrders);
-            await m.createTable(foodOrderItems);
-            await m.createTable(restaurantBills);
-          }
-          if (from < 16) {
-            // Migration to version 16: Invoice Counter for collision-free invoice numbers
-            await m.createTable(invoiceCounters);
-          }
-          if (from < 17) {
-            // Migration to version 17: Delivery Challan
-            await m.createTable(deliveryChallans);
-            await m.addColumn(bills, bills.deliveryChallanId);
-          }
-          if (from < 18) {
-            // Migration to version 18: Mobile/Computer Shop - Service Jobs & IMEI Tracking
-            await m.createTable(iMEISerials);
-            await m.createTable(serviceJobs);
-            await m.createTable(serviceJobParts);
-            await m.createTable(serviceJobStatusHistory);
-            await m.createTable(productVariants);
-            await m.createTable(productVariants);
-            await m.createTable(exchanges);
-          }
-          if (from < 19) {
-            // Migration to version 19: Fraud Prevention
-            // 1. Audit Log Hash Chaining
-            await m.addColumn(auditLogs, auditLogs.previousHash);
-            await m.addColumn(auditLogs, auditLogs.currentHash);
-            // 2. Bill Locking
-            await m.addColumn(bills, bills.printCount);
-          }
-          if (from < 20) {
-            // Migration to version 20: Security & Fraud Prevention Tables
-            await m.createTable(securitySettingsTable);
-            await m.createTable(cashClosings);
-            await m.createTable(fraudAlerts);
-            await m.createTable(userSessions);
-          }
-          if (from < 21) {
-            // Migration to version 21: Customer Master Tab Enhancement
-            await m.addColumn(customers, customers.customerType);
-            await m.addColumn(customers, customers.openingBalance);
-            await m.addColumn(customers, customers.priceLevel);
-            await m.addColumn(customers, customers.gstPreference);
-            await m.addColumn(customers, customers.isBlocked);
-            await m.addColumn(customers, customers.blockReason);
-            await m.addColumn(customers, customers.lastTransactionDate);
-          }
-          if (from < 22) {
-            // Migration to version 22: Customer-Shop QR Linking System
-            // 1. Create shop-scoped customer profiles table
-            await m.createTable(customerProfiles);
-            // 2. Create customer-shop links table
-            await m.createTable(shopLinks);
-            // 3. Add customerProfileId to bills for linked customer billing
-            await m.addColumn(bills, bills.customerProfileId);
-          }
-          if (from < 23) {
-            // Migration to version 23: Add altBarcodes to Products
-            await m.addColumn(
-                products, products.altBarcodes as GeneratedColumn);
-          }
-          if (from < 24) {
-            await m.createTable(prescriptions);
-            await m.addColumn(bills, bills.prescriptionId);
-          }
-          if (from < 25) {
-            // Migration to version 25: Add drugSchedule to Products & BillItems
-            await m.addColumn(
-                products, products.drugSchedule as GeneratedColumn);
-            await m.addColumn(
-                billItems, billItems.drugSchedule as GeneratedColumn);
-          }
-          if (from < 26) {
-            // Migration to version 26: Enhanced Sync Queue (Sync Engine 2.0)
-            await m.addColumn(
-                syncQueue, syncQueue.payloadHash as GeneratedColumn);
-            await m.addColumn(
-                syncQueue, syncQueue.dependencyGroup as GeneratedColumn);
-            await m.addColumn(syncQueue, syncQueue.ownerId as GeneratedColumn);
+      if (from < 5) {
+        // Migration to version 5: Add deviceId columns and ConflictLog table
+        await m.addColumn(syncQueue, syncQueue.deviceId);
+        await m.addColumn(bills, bills.deviceId);
+        await m.addColumn(customers, customers.deviceId);
+        await m.addColumn(products, products.deviceId);
+        await m.createTable(conflictLog);
+      }
+      if (from < 6) {
+        // Migration to version 6: Add Shops table
+        await m.createTable(shops);
+      }
+      if (from < 7) {
+        // Migration to version 7: Add Revenue tables
+        await m.createTable(receipts);
+        await m.createTable(returnInwards);
+        await m.createTable(proformas);
+        await m.createTable(bookings);
+        await m.createTable(dispatches);
+      }
+      if (from < 8) {
+        // Migration to version 8: Add Users table and Onboarding columns
+        await m.createTable(users);
+        await m.addColumn(shops, shops.businessType);
+        await m.addColumn(shops, shops.appLanguage);
+        await m.addColumn(shops, shops.onboardingCompleted);
+      }
+      if (from < 9) {
+        // Migration to version 9: Add ifsc column to bank_accounts
+        await m.addColumn(bankAccounts, bankAccounts.ifsc as GeneratedColumn);
+      }
+      if (from < 10) {
+        // Migration to version 10: GST, Accounting, and Reminder modules
+        // GST Tables
+        await m.createTable(gstSettings);
+        await m.createTable(gstInvoiceDetails);
+        await m.createTable(hsnMaster);
+        // Accounting Tables
+        await m.createTable(journalEntries);
+        await m.createTable(accountingPeriods);
+        await m.createTable(ledgerAccounts);
+        // Reminder Tables
+        await m.createTable(reminderSettings);
+        await m.createTable(reminderLogs);
+        // Add GST columns to existing tables
+        await m.addColumn(products, products.hsnCode);
+        await m.addColumn(products, products.cgstRate);
+        await m.addColumn(products, products.sgstRate);
+        await m.addColumn(products, products.igstRate);
+        await m.addColumn(billItems, billItems.hsnCode);
+        await m.addColumn(billItems, billItems.cgstRate);
+        await m.addColumn(billItems, billItems.cgstAmount);
+        await m.addColumn(billItems, billItems.sgstRate);
+        await m.addColumn(billItems, billItems.sgstAmount);
+        await m.addColumn(billItems, billItems.igstRate);
+        await m.addColumn(billItems, billItems.igstAmount);
+        await m.addColumn(customers, customers.stateCode);
+        await m.addColumn(customers, customers.creditPeriodDays);
+        await m.addColumn(customers, customers.creditLimit);
+        await m.addColumn(customers, customers.optInSmsReminders);
+        await m.addColumn(customers, customers.optInWhatsAppReminders);
+      }
+      if (from < 11) {
+        // Migration to version 11: Stock Automation
+        await m.createTable(stockMovements);
+      }
+      if (from < 12) {
+        // Migration to version 12: e-Invoice, Marketing, Staff Management
+        // e-Invoice Tables
+        await m.createTable(eInvoices);
+        await m.createTable(eWayBills);
+        // Marketing Tables
+        await m.createTable(marketingCampaigns);
+        await m.createTable(campaignLogs);
+        await m.createTable(messageTemplates);
+        // Staff Management Tables
+        await m.createTable(staffMembers);
+        await m.createTable(staffAttendance);
+        await m.createTable(salaryRecords);
+      }
+      if (from < 15) {
+        // Migration to version 15: Restaurant / Hotel Food Ordering System
+        await m.createTable(foodCategories);
+        await m.createTable(foodMenuItems);
+        await m.createTable(restaurantTables);
+        await m.createTable(restaurantQrCodes);
+        await m.createTable(foodOrders);
+        await m.createTable(foodOrderItems);
+        await m.createTable(restaurantBills);
+      }
+      if (from < 16) {
+        // Migration to version 16: Invoice Counter for collision-free invoice numbers
+        await m.createTable(invoiceCounters);
+      }
+      if (from < 17) {
+        // Migration to version 17: Delivery Challan
+        await m.createTable(deliveryChallans);
+        await m.addColumn(bills, bills.deliveryChallanId);
+      }
+      if (from < 18) {
+        // Migration to version 18: Mobile/Computer Shop - Service Jobs & IMEI Tracking
+        await m.createTable(iMEISerials);
+        await m.createTable(serviceJobs);
+        await m.createTable(serviceJobParts);
+        await m.createTable(serviceJobStatusHistory);
+        await m.createTable(productVariants);
+        await m.createTable(productVariants);
+        await m.createTable(exchanges);
+      }
+      if (from < 19) {
+        // Migration to version 19: Fraud Prevention
+        // 1. Audit Log Hash Chaining
+        await m.addColumn(auditLogs, auditLogs.previousHash);
+        await m.addColumn(auditLogs, auditLogs.currentHash);
+        // 2. Bill Locking
+        await m.addColumn(bills, bills.printCount);
+      }
+      if (from < 20) {
+        // Migration to version 20: Security & Fraud Prevention Tables
+        await m.createTable(securitySettingsTable);
+        await m.createTable(cashClosings);
+        await m.createTable(fraudAlerts);
+        await m.createTable(userSessions);
+      }
+      if (from < 21) {
+        // Migration to version 21: Customer Master Tab Enhancement
+        await m.addColumn(customers, customers.customerType);
+        await m.addColumn(customers, customers.openingBalance);
+        await m.addColumn(customers, customers.priceLevel);
+        await m.addColumn(customers, customers.gstPreference);
+        await m.addColumn(customers, customers.isBlocked);
+        await m.addColumn(customers, customers.blockReason);
+        await m.addColumn(customers, customers.lastTransactionDate);
+      }
+      if (from < 22) {
+        // Migration to version 22: Customer-Shop QR Linking System
+        // 1. Create shop-scoped customer profiles table
+        await m.createTable(customerProfiles);
+        // 2. Create customer-shop links table
+        await m.createTable(shopLinks);
+        // 3. Add customerProfileId to bills for linked customer billing
+        await m.addColumn(bills, bills.customerProfileId);
+      }
+      if (from < 23) {
+        // Migration to version 23: Add altBarcodes to Products
+        await m.addColumn(products, products.altBarcodes as GeneratedColumn);
+      }
+      if (from < 24) {
+        await m.createTable(prescriptions);
+        await m.addColumn(bills, bills.prescriptionId);
+      }
+      if (from < 25) {
+        // Migration to version 25: Add drugSchedule to Products & BillItems
+        await m.addColumn(products, products.drugSchedule as GeneratedColumn);
+        await m.addColumn(billItems, billItems.drugSchedule as GeneratedColumn);
+      }
+      if (from < 26) {
+        // Migration to version 26: Enhanced Sync Queue (Sync Engine 2.0)
+        await m.addColumn(syncQueue, syncQueue.payloadHash as GeneratedColumn);
+        await m.addColumn(
+          syncQueue,
+          syncQueue.dependencyGroup as GeneratedColumn,
+        );
+        await m.addColumn(syncQueue, syncQueue.ownerId as GeneratedColumn);
 
-            // Backfill ownerId from userId (Best effort for pending items)
-            await customStatement(
-                'UPDATE sync_queue SET owner_id = user_id WHERE owner_id = "UNKNOWN"');
-          }
-          if (from < 27) {
-            // Migration to version 27: Pharmacy Compliance Upgrade
-            await m.createTable(productBatches);
-            await m.createTable(lockOverrideLogs);
-            await m.addColumn(stockMovements, stockMovements.batchId);
+        // Backfill ownerId from userId (Best effort for pending items)
+        await customStatement(
+          'UPDATE sync_queue SET owner_id = user_id WHERE owner_id = "UNKNOWN"',
+        );
+      }
+      if (from < 27) {
+        // Migration to version 27: Pharmacy Compliance Upgrade
+        await m.createTable(productBatches);
+        await m.createTable(lockOverrideLogs);
+        await m.addColumn(stockMovements, stockMovements.batchId);
 
-            // Backfill batch info in PurchaseItems
-            await m.addColumn(purchaseItems, purchaseItems.batchNumber);
-            await m.addColumn(purchaseItems, purchaseItems.expiryDate);
+        // Backfill batch info in PurchaseItems
+        await m.addColumn(purchaseItems, purchaseItems.batchNumber);
+        await m.addColumn(purchaseItems, purchaseItems.expiryDate);
 
-            // Re-create stockMovements if needed for batchId, but addColumn is enough for SQLite
-          }
-          if (from < 28) {
-            // Migration to version 28: Business Data Isolation & Inventory Rules
-            await m.addColumn(bills, bills.businessId);
-            await m.addColumn(shops, shops.allowNegativeStock);
-          }
-          if (from < 29) {
-            // Migration to version 29: HIS Module (Patients, Visits)
-            // Re-creating patients if not exists, though v29 says it did.
-            // But we are adding refined Patients table now in v35 possibly replacing or extending?
-            // The task implies we are adding NEW tables. If Patients existed in v29, we should check if we need to DROP and CREATE or just use it.
-            // Since we defined `PatientEntity` in `tables.dart`, drift needs it.
-            // Let's assume standard behavior: creation if not exists.
-            await m.createTable(patients);
-            await m.createTable(visits);
-          }
-          if (from < 30) {
-            // Migration to version 30: Shortcut Panel
-            await m.createTable(shortcutDefinitions);
-            await m.createTable(userShortcuts);
-          }
-          if (from < 31) {
-            // Migration to version 31: Manufacturing Module
-            await m.createTable(billOfMaterials);
-            await m.createTable(productionEntries);
-          }
-          if (from < 32) {
-            // Migration to version 32: Recurring Billing
-            await m.createTable(subscriptions);
-          }
-          if (from < 33) {
-            await m.addColumn(
-                customers, customers.linkStatus as GeneratedColumn);
-          }
-          if (from < 34) {
-            // Migration to version 34: Customer Item Requests
-            await m.createTable(customerItemRequests);
-          }
-          if (from < 35) {
-            // Migration to version 35: Doctor / Clinic Module
-            // Patients might have been created in v29, but let's ensure schema match or re-create if needed.
-            // For safety in this environment, we'll try to create tables.
-            // If they exist, we might need manual handling, but standard practice here is `createTable` which implies `IF NOT EXISTS` usually or we rely on Drift handling.
-            // However, Drift's `createTable` throws if exists.
-            // We'll proceed with creating the NEW tables.
-            await m.createTable(doctorProfiles);
-            await m.createTable(patientDoctorLinks);
-            await m.createTable(appointments);
-            await m.createTable(medicalRecords);
-            await m.createTable(prescriptionItems);
-            await m.createTable(labReports);
-            // Patients, Prescriptions, Visits might already exist from v29/v24.
-            // We should allow them to remain or safely update them.
-            // For now, we assume they are compatible or this is a fresh setup for this module.
-            // For now, we assume they are compatible or this is a fresh setup for this module.
-          }
-          if (from < 36) {
-            // Migration to version 36: Garment Variants & Vegetable Broker
-            await m.addColumn(products, products.groupId);
-            await m.addColumn(products, products.variantAttributes);
-            await m.createTable(farmers);
-            await m.createTable(commissionLedger);
-          }
-          if (from < 37) {
-            // Migration to version 37: Enhanced Staff Management (Petrol Pump)
-            await m.createTable(staffNozzleAssignments);
-            await m.createTable(staffSalesDetails);
-            await m.createTable(staffCashSettlements);
+        // Re-create stockMovements if needed for batchId, but addColumn is enough for SQLite
+      }
+      if (from < 28) {
+        // Migration to version 28: Business Data Isolation & Inventory Rules
+        await m.addColumn(bills, bills.businessId);
+        await m.addColumn(shops, shops.allowNegativeStock);
+      }
+      if (from < 29) {
+        // Migration to version 29: HIS Module (Patients, Visits)
+        // Re-creating patients if not exists, though v29 says it did.
+        // But we are adding refined Patients table now in v35 possibly replacing or extending?
+        // The task implies we are adding NEW tables. If Patients existed in v29, we should check if we need to DROP and CREATE or just use it.
+        // Since we defined `PatientEntity` in `tables.dart`, drift needs it.
+        // Let's assume standard behavior: creation if not exists.
+        await m.createTable(patients);
+        await m.createTable(visits);
+      }
+      if (from < 30) {
+        // Migration to version 30: Shortcut Panel
+        await m.createTable(shortcutDefinitions);
+        await m.createTable(userShortcuts);
+      }
+      if (from < 31) {
+        // Migration to version 31: Manufacturing Module
+        await m.createTable(billOfMaterials);
+        await m.createTable(productionEntries);
+      }
+      if (from < 32) {
+        // Migration to version 32: Recurring Billing
+        await m.createTable(subscriptions);
+      }
+      if (from < 33) {
+        await m.addColumn(customers, customers.linkStatus as GeneratedColumn);
+      }
+      if (from < 34) {
+        // Migration to version 34: Customer Item Requests
+        await m.createTable(customerItemRequests);
+      }
+      if (from < 35) {
+        // Migration to version 35: Doctor / Clinic Module
+        // Patients might have been created in v29, but let's ensure schema match or re-create if needed.
+        // For safety in this environment, we'll try to create tables.
+        // If they exist, we might need manual handling, but standard practice here is `createTable` which implies `IF NOT EXISTS` usually or we rely on Drift handling.
+        // However, Drift's `createTable` throws if exists.
+        // We'll proceed with creating the NEW tables.
+        await m.createTable(doctorProfiles);
+        await m.createTable(patientDoctorLinks);
+        await m.createTable(appointments);
+        await m.createTable(medicalRecords);
+        await m.createTable(prescriptionItems);
+        await m.createTable(labReports);
+        // Patients, Prescriptions, Visits might already exist from v29/v24.
+        // We should allow them to remain or safely update them.
+        // For now, we assume they are compatible or this is a fresh setup for this module.
+        // For now, we assume they are compatible or this is a fresh setup for this module.
+      }
+      if (from < 36) {
+        // Migration to version 36: Garment Variants & Vegetable Broker
+        await m.addColumn(products, products.groupId);
+        await m.addColumn(products, products.variantAttributes);
+        await m.createTable(farmers);
+        await m.createTable(commissionLedger);
+      }
+      if (from < 37) {
+        // Migration to version 37: Enhanced Staff Management (Petrol Pump)
+        await m.createTable(staffNozzleAssignments);
+        await m.createTable(staffSalesDetails);
+        await m.createTable(staffCashSettlements);
 
-            // Add columns to existing tables
-            await m.addColumn(staffMembers, staffMembers.pumpId);
-            await m.addColumn(staffAttendance, staffAttendance.method);
-            await m.addColumn(bills, bills.attendantId);
-          }
-          if (from < 38) {
-            // Migration to version 38: Petrol Pump Audit - Additional Tables
-            await m.createTable(cashDeposits);
-            await m.createTable(lubeStock);
-            await m.createTable(densityRecords);
-            await m.createTable(dayBook);
+        // Add columns to existing tables
+        await m.addColumn(staffMembers, staffMembers.pumpId);
+        await m.addColumn(staffAttendance, staffAttendance.method);
+        await m.addColumn(bills, bills.attendantId);
+      }
+      if (from < 38) {
+        // Migration to version 38: Petrol Pump Audit - Additional Tables
+        await m.createTable(cashDeposits);
+        await m.createTable(lubeStock);
+        await m.createTable(densityRecords);
+        await m.createTable(dayBook);
 
-            // Add calibration fields to dispensers
-            await m.addColumn(
-                dispensers, dispensers.lastCalibrationDate as GeneratedColumn);
-            await m.addColumn(
-                dispensers, dispensers.nextCalibrationDate as GeneratedColumn);
-            await m.addColumn(dispensers,
-                dispensers.calibrationIntervalDays as GeneratedColumn);
-            await m.addColumn(dispensers,
-                dispensers.calibrationCertificateNumber as GeneratedColumn);
-          }
-        },
-        beforeOpen: (details) async {
-          // Enable foreign keys
-          await customStatement('PRAGMA foreign_keys = ON');
-          debugPrint('AppDatabase: Opened (version: ${details.versionNow})');
-        },
-      );
+        // Add calibration fields to dispensers
+        await m.addColumn(
+          dispensers,
+          dispensers.lastCalibrationDate as GeneratedColumn,
+        );
+        await m.addColumn(
+          dispensers,
+          dispensers.nextCalibrationDate as GeneratedColumn,
+        );
+        await m.addColumn(
+          dispensers,
+          dispensers.calibrationIntervalDays as GeneratedColumn,
+        );
+        await m.addColumn(
+          dispensers,
+          dispensers.calibrationCertificateNumber as GeneratedColumn,
+        );
+      }
+    },
+    beforeOpen: (details) async {
+      // Enable foreign keys
+      await customStatement('PRAGMA foreign_keys = ON');
+      debugPrint('AppDatabase: Opened (version: ${details.versionNow})');
+    },
+  );
 
   // ============================================================================
   // SYNC QUEUE OPERATIONS
@@ -510,33 +517,35 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   @override
   Future<void> updateSyncQueueItem(SyncQueueItem item) {
-    return (update(syncQueue)
-          ..where((t) => t.operationId.equals(item.operationId)))
-        .write(SyncQueueCompanion(
-      status: Value(item.status.value),
-      retryCount: Value(item.retryCount),
-      lastError: Value(item.lastError),
-      lastAttemptAt: Value(item.lastAttemptAt),
-      syncedAt: Value(item.syncedAt),
-    ));
+    return (update(
+      syncQueue,
+    )..where((t) => t.operationId.equals(item.operationId))).write(
+      SyncQueueCompanion(
+        status: Value(item.status.value),
+        retryCount: Value(item.retryCount),
+        lastError: Value(item.lastError),
+        lastAttemptAt: Value(item.lastAttemptAt),
+        syncedAt: Value(item.syncedAt),
+      ),
+    );
   }
 
   @override
   Future<void> deleteSyncQueueItem(String operationId) {
-    return (delete(syncQueue)..where((t) => t.operationId.equals(operationId)))
-        .go();
+    return (delete(
+      syncQueue,
+    )..where((t) => t.operationId.equals(operationId))).go();
   }
 
   @override
   Future<List<SyncQueueItem>> getPendingSyncItems() async {
-    final rows = await (select(syncQueue)
-          ..where((t) => t.status.isIn([
-                'PENDING',
-                'RETRY',
-                'IN_PROGRESS'
-              ])) // Include IN_PROGRESS to resume
-          ..orderBy([(t) => OrderingTerm.asc(t.priority)]))
-        .get();
+    final rows =
+        await (select(syncQueue)
+              ..where(
+                (t) => t.status.isIn(['PENDING', 'RETRY', 'IN_PROGRESS']),
+              ) // Include IN_PROGRESS to resume
+              ..orderBy([(t) => OrderingTerm.asc(t.priority)]))
+            .get();
 
     return rows.map((row) {
       return SyncQueueItem(
@@ -602,9 +611,7 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
         break;
       case 'returnInwards':
         await (update(returnInwards)..where((t) => t.id.equals(documentId)))
-            .write(
-          const ReturnInwardsCompanion(isSynced: Value(true)),
-        );
+            .write(const ReturnInwardsCompanion(isSynced: Value(true)));
         break;
       case 'proformas':
         await (update(proformas)..where((t) => t.id.equals(documentId))).write(
@@ -686,15 +693,17 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
   }
 
   Future<void> updateSyncQueueEntry(SyncQueueEntry entry) {
-    return (update(syncQueue)
-          ..where((t) => t.operationId.equals(entry.operationId)))
-        .write(SyncQueueCompanion(
-      status: Value(entry.status),
-      retryCount: Value(entry.retryCount),
-      lastError: Value(entry.lastError),
-      lastAttemptAt: Value(entry.lastAttemptAt),
-      syncedAt: Value(entry.syncedAt),
-    ));
+    return (update(
+      syncQueue,
+    )..where((t) => t.operationId.equals(entry.operationId))).write(
+      SyncQueueCompanion(
+        status: Value(entry.status),
+        retryCount: Value(entry.retryCount),
+        lastError: Value(entry.lastError),
+        lastAttemptAt: Value(entry.lastAttemptAt),
+        syncedAt: Value(entry.syncedAt),
+      ),
+    );
   }
 
   Future<List<SyncQueueEntry>> getPendingSyncEntries() {
@@ -705,8 +714,9 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
   }
 
   Future<void> deleteSyncQueueEntry(String operationId) {
-    return (delete(syncQueue)..where((t) => t.operationId.equals(operationId)))
-        .go();
+    return (delete(
+      syncQueue,
+    )..where((t) => t.operationId.equals(operationId))).go();
   }
 
   Stream<List<SyncQueueEntry>> watchPendingSyncEntries() {
@@ -793,20 +803,24 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   Future<List<CustomerEntity>> getAllCustomers(String userId) {
     return (select(customers)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.deletedAt.isNull() &
+                t.isActive.equals(true),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.name)]))
         .get();
   }
 
   Stream<List<CustomerEntity>> watchAllCustomers(String userId) {
     return (select(customers)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.deletedAt.isNull() &
+                t.isActive.equals(true),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.name)]))
         .watch();
   }
@@ -847,61 +861,77 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   Future<List<ProductEntity>> getAllProducts(String userId) {
     return (select(products)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.deletedAt.isNull() &
+                t.isActive.equals(true),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.name)]))
         .get();
   }
 
   Stream<List<ProductEntity>> watchAllProducts(String userId) {
     return (select(products)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.deletedAt.isNull() &
+                t.isActive.equals(true),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.name)]))
         .watch();
   }
 
   Future<List<ProductEntity>> getLowStockProducts(String userId) {
     return (select(products)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true))
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.deletedAt.isNull() &
+                t.isActive.equals(true),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.stockQuantity)]))
         .get()
-        .then((list) =>
-            list.where((p) => p.stockQuantity <= p.lowStockThreshold).toList());
+        .then(
+          (list) => list
+              .where((p) => p.stockQuantity <= p.lowStockThreshold)
+              .toList(),
+        );
   }
 
   Future<List<ProductEntity>> getDeadStockProducts(
-      String userId, DateTime cutoffDate) async {
+    String userId,
+    DateTime cutoffDate,
+  ) async {
     // 1. Get all active products with stock > 0 created before cutoff
-    final candidateProducts = await (select(products)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true) &
-              t.stockQuantity.isBiggerThanValue(0) &
-              t.createdAt.isSmallerThanValue(cutoffDate)))
-        .get();
+    final candidateProducts =
+        await (select(products)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.deletedAt.isNull() &
+                  t.isActive.equals(true) &
+                  t.stockQuantity.isBiggerThanValue(0) &
+                  t.createdAt.isSmallerThanValue(cutoffDate),
+            ))
+            .get();
 
     if (candidateProducts.isEmpty) return [];
 
     // 2. Find products sold AFTER the cutoff date
     // We strictly link to bills to ensure we look at valid sales for this user
-    final query = select(billItems).join([
-      innerJoin(bills, bills.id.equalsExp(billItems.billId)),
-    ])
-      ..where(bills.userId.equals(userId) &
-          bills.createdAt.isBiggerOrEqualValue(cutoffDate) &
-          bills.status.isNotIn(['DRAFT', 'CANCELLED']));
+    final query =
+        select(
+          billItems,
+        ).join([innerJoin(bills, bills.id.equalsExp(billItems.billId))])..where(
+          bills.userId.equals(userId) &
+              bills.createdAt.isBiggerOrEqualValue(cutoffDate) &
+              bills.status.isNotIn(['DRAFT', 'CANCELLED']),
+        );
 
-    final activeProductIds =
-        await query.map((row) => row.readTable(billItems).productId).get();
+    final activeProductIds = await query
+        .map((row) => row.readTable(billItems).productId)
+        .get();
     final activeIdsSet = activeProductIds.toSet();
 
     // 3. Filter candidates: Keep those NOT in the active set
@@ -913,13 +943,17 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
   /// Get sales history for velocity calculation
   /// Returns Map&lt;ProductId, TotalQuantitySold&gt;
   Future<Map<String, double>> getProductSalesHistory(
-      String userId, DateTime cutoffDate) async {
-    final query = select(billItems).join([
-      innerJoin(bills, bills.id.equalsExp(billItems.billId)),
-    ])
-      ..where(bills.userId.equals(userId) &
-          bills.createdAt.isBiggerOrEqualValue(cutoffDate) &
-          bills.status.isNotIn(['DRAFT', 'CANCELLED']));
+    String userId,
+    DateTime cutoffDate,
+  ) async {
+    final query =
+        select(
+          billItems,
+        ).join([innerJoin(bills, bills.id.equalsExp(billItems.billId))])..where(
+          bills.userId.equals(userId) &
+              bills.createdAt.isBiggerOrEqualValue(cutoffDate) &
+              bills.status.isNotIn(['DRAFT', 'CANCELLED']),
+        );
 
     final rows = await query.get();
 
@@ -954,8 +988,11 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
         .get();
   }
 
-  Future<List<PaymentEntity>> getAllPayments(String userId,
-      {DateTime? fromDate, DateTime? toDate}) {
+  Future<List<PaymentEntity>> getAllPayments(
+    String userId, {
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) {
     var query = select(payments)..where((t) => t.userId.equals(userId));
     if (fromDate != null) {
       query = query..where((t) => t.paymentDate.isBiggerOrEqualValue(fromDate));
@@ -974,8 +1011,11 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
     return into(expenses).insert(expense, mode: InsertMode.insertOrReplace);
   }
 
-  Future<List<ExpenseEntity>> getAllExpenses(String userId,
-      {DateTime? fromDate, DateTime? toDate}) {
+  Future<List<ExpenseEntity>> getAllExpenses(
+    String userId, {
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) {
     var query = select(expenses)..where((t) => t.userId.equals(userId));
     if (fromDate != null) {
       query = query..where((t) => t.expenseDate.isBiggerOrEqualValue(fromDate));
@@ -1025,17 +1065,19 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
     String? deviceId,
     String? appVersion,
   }) {
-    return into(auditLogs).insert(AuditLogsCompanion.insert(
-      userId: userId,
-      targetTableName: targetTableName,
-      recordId: recordId,
-      action: action,
-      oldValueJson: Value(oldValueJson),
-      newValueJson: Value(newValueJson),
-      timestamp: DateTime.now(),
-      deviceId: Value(deviceId),
-      appVersion: Value(appVersion),
-    ));
+    return into(auditLogs).insert(
+      AuditLogsCompanion.insert(
+        userId: userId,
+        targetTableName: targetTableName,
+        recordId: recordId,
+        action: action,
+        oldValueJson: Value(oldValueJson),
+        newValueJson: Value(newValueJson),
+        timestamp: DateTime.now(),
+        deviceId: Value(deviceId),
+        appVersion: Value(appVersion),
+      ),
+    );
   }
 
   // ============================================================================
@@ -1048,64 +1090,87 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
     final thisMonth = DateTime(now.year, now.month, 1);
 
     // Today's sales
-    final todayBills = await (select(bills)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.createdAt.isBiggerOrEqualValue(today) &
-              t.status.isNotIn(['DRAFT', 'CANCELLED'])))
-        .get();
-    final todaySales =
-        todayBills.fold<double>(0, (sum, b) => sum + b.grandTotal);
-    final todayCollections =
-        todayBills.fold<double>(0, (sum, b) => sum + b.paidAmount);
+    final todayBills =
+        await (select(bills)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.createdAt.isBiggerOrEqualValue(today) &
+                  t.status.isNotIn(['DRAFT', 'CANCELLED']),
+            ))
+            .get();
+    final todaySales = todayBills.fold<double>(
+      0,
+      (sum, b) => sum + b.grandTotal,
+    );
+    final todayCollections = todayBills.fold<double>(
+      0,
+      (sum, b) => sum + b.paidAmount,
+    );
 
     // Monthly sales
-    final monthBills = await (select(bills)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.createdAt.isBiggerOrEqualValue(thisMonth) &
-              t.status.isNotIn(['DRAFT', 'CANCELLED'])))
-        .get();
-    final monthlySales =
-        monthBills.fold<double>(0, (sum, b) => sum + b.grandTotal);
-    final monthlyCollections =
-        monthBills.fold<double>(0, (sum, b) => sum + b.paidAmount);
+    final monthBills =
+        await (select(bills)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.createdAt.isBiggerOrEqualValue(thisMonth) &
+                  t.status.isNotIn(['DRAFT', 'CANCELLED']),
+            ))
+            .get();
+    final monthlySales = monthBills.fold<double>(
+      0,
+      (sum, b) => sum + b.grandTotal,
+    );
+    final monthlyCollections = monthBills.fold<double>(
+      0,
+      (sum, b) => sum + b.paidAmount,
+    );
 
     // Total dues
-    final allBills = await (select(bills)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.status.isNotIn(['DRAFT', 'CANCELLED', 'PAID'])))
-        .get();
+    final allBills =
+        await (select(bills)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.deletedAt.isNull() &
+                  t.status.isNotIn(['DRAFT', 'CANCELLED', 'PAID']),
+            ))
+            .get();
     final totalDues = allBills.fold<double>(
-        0, (sum, b) => sum + (b.grandTotal - b.paidAmount));
+      0,
+      (sum, b) => sum + (b.grandTotal - b.paidAmount),
+    );
 
     // Customer count
-    final customerCount = await (select(customers)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.deletedAt.isNull() &
-              t.isActive.equals(true)))
-        .get()
-        .then((list) => list.length);
+    final customerCount =
+        await (select(customers)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.deletedAt.isNull() &
+                  t.isActive.equals(true),
+            ))
+            .get()
+            .then((list) => list.length);
 
     // Low stock count
     final lowStockProducts = await getLowStockProducts(userId);
 
     // Pending sync count
-    final pendingSync =
-        await getPendingSyncEntries().then((list) => list.length);
+    final pendingSync = await getPendingSyncEntries().then(
+      (list) => list.length,
+    );
 
     // Monthly purchases
-    final monthPurchases = await (select(purchaseOrders)
-          ..where((t) =>
-              t.userId.equals(userId) &
-              t.purchaseDate.isBiggerOrEqualValue(thisMonth) &
-              t.status.isNotIn(['CANCELLED'])))
-        .get();
-    final monthlyPurchaseAmount =
-        monthPurchases.fold<double>(0, (sum, p) => sum + p.totalAmount);
+    final monthPurchases =
+        await (select(purchaseOrders)..where(
+              (t) =>
+                  t.userId.equals(userId) &
+                  t.purchaseDate.isBiggerOrEqualValue(thisMonth) &
+                  t.status.isNotIn(['CANCELLED']),
+            ))
+            .get();
+    final monthlyPurchaseAmount = monthPurchases.fold<double>(
+      0,
+      (sum, p) => sum + p.totalAmount,
+    );
 
     return {
       'todaySales': todaySales,
@@ -1131,13 +1196,15 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
     // Join Bills, BillItems, and Products to calc profit
     // Profit = Sum(Item.qty * (Item.unitPrice - Product.costPrice))
 
-    final query = select(billItems).join([
-      innerJoin(bills, bills.id.equalsExp(billItems.billId)),
-      innerJoin(products, products.id.equalsExp(billItems.productId)),
-    ])
-      ..where(bills.userId.equals(userId) &
-          bills.createdAt.isBiggerOrEqualValue(today) &
-          bills.status.isNotIn(['DRAFT', 'CANCELLED']));
+    final query =
+        select(billItems).join([
+          innerJoin(bills, bills.id.equalsExp(billItems.billId)),
+          innerJoin(products, products.id.equalsExp(billItems.productId)),
+        ])..where(
+          bills.userId.equals(userId) &
+              bills.createdAt.isBiggerOrEqualValue(today) &
+              bills.status.isNotIn(['DRAFT', 'CANCELLED']),
+        );
 
     final rows = await query.map((row) {
       final item = row.readTable(billItems);
@@ -1157,12 +1224,14 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
   /// Get count of items sold today
   /// Returns total quantity of all items in today's bills
   Future<int?> getTodayItemsSoldCount(String userId, DateTime today) async {
-    final query = select(billItems).join([
-      innerJoin(bills, bills.id.equalsExp(billItems.billId)),
-    ])
-      ..where(bills.userId.equals(userId) &
-          bills.createdAt.isBiggerOrEqualValue(today) &
-          bills.status.isNotIn(['DRAFT', 'CANCELLED']));
+    final query =
+        select(
+          billItems,
+        ).join([innerJoin(bills, bills.id.equalsExp(billItems.billId))])..where(
+          bills.userId.equals(userId) &
+              bills.createdAt.isBiggerOrEqualValue(today) &
+              bills.status.isNotIn(['DRAFT', 'CANCELLED']),
+        );
 
     final rows = await query.map((row) {
       final item = row.readTable(billItems);
@@ -1178,21 +1247,19 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
   Future<Map<String, dynamic>> performHealthCheck(String userId) async {
     try {
       // Count records
-      final billCount = await (select(bills)
-            ..where((t) => t.userId.equals(userId)))
-          .get()
-          .then((l) => l.length);
-      final customerCount = await (select(customers)
-            ..where((t) => t.userId.equals(userId)))
-          .get()
-          .then((l) => l.length);
-      final productCount = await (select(products)
-            ..where((t) => t.userId.equals(userId)))
-          .get()
-          .then((l) => l.length);
+      final billCount = await (select(
+        bills,
+      )..where((t) => t.userId.equals(userId))).get().then((l) => l.length);
+      final customerCount = await (select(
+        customers,
+      )..where((t) => t.userId.equals(userId))).get().then((l) => l.length);
+      final productCount = await (select(
+        products,
+      )..where((t) => t.userId.equals(userId))).get().then((l) => l.length);
       final pendingSync = await getPendingSyncEntries().then((l) => l.length);
-      final deadLetters =
-          await getUnresolvedDeadLetters(userId).then((l) => l.length);
+      final deadLetters = await getUnresolvedDeadLetters(
+        userId,
+      ).then((l) => l.length);
 
       return {
         'healthy': deadLetters == 0 && pendingSync < 100,
@@ -1227,7 +1294,9 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   /// Update a bill record with server data after conflict resolution
   Future<void> updateBillFromServer(
-      String id, Map<String, dynamic> serverData) async {
+    String id,
+    Map<String, dynamic> serverData,
+  ) async {
     await (update(bills)..where((t) => t.id.equals(id))).write(
       BillsCompanion(
         customerName: Value(serverData['customerName'] ?? ''),
@@ -1247,7 +1316,9 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   /// Update a customer record with server data after conflict resolution
   Future<void> updateCustomerFromServer(
-      String id, Map<String, dynamic> serverData) async {
+    String id,
+    Map<String, dynamic> serverData,
+  ) async {
     await (update(customers)..where((t) => t.id.equals(id))).write(
       CustomersCompanion(
         name: Value(serverData['name'] ?? ''),
@@ -1255,8 +1326,9 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
         email: Value(serverData['email']),
         address: Value(serverData['address']),
         gstin: Value(serverData['gstin']),
-        totalBilled:
-            Value((serverData['totalBilled'] as num?)?.toDouble() ?? 0),
+        totalBilled: Value(
+          (serverData['totalBilled'] as num?)?.toDouble() ?? 0,
+        ),
         totalPaid: Value((serverData['totalPaid'] as num?)?.toDouble() ?? 0),
         totalDues: Value((serverData['totalDues'] as num?)?.toDouble() ?? 0),
         isSynced: const Value(true),
@@ -1268,7 +1340,9 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
 
   /// Update a product record with server data after conflict resolution
   Future<void> updateProductFromServer(
-      String id, Map<String, dynamic> serverData) async {
+    String id,
+    Map<String, dynamic> serverData,
+  ) async {
     await (update(products)..where((t) => t.id.equals(id))).write(
       ProductsCompanion(
         name: Value(serverData['name'] ?? ''),
@@ -1278,8 +1352,9 @@ class AppDatabase extends _$AppDatabase implements SyncQueueLocalOperations {
         costPrice: Value((serverData['costPrice'] as num?)?.toDouble() ?? 0),
         stockQuantity: Value((serverData['quantity'] as num?)?.toDouble() ?? 0),
         unit: Value(serverData['unit'] ?? 'pcs'),
-        lowStockThreshold:
-            Value((serverData['lowStockThreshold'] as num?)?.toDouble() ?? 10),
+        lowStockThreshold: Value(
+          (serverData['lowStockThreshold'] as num?)?.toDouble() ?? 10,
+        ),
         isSynced: const Value(true),
         updatedAt: Value(DateTime.now()),
       ),

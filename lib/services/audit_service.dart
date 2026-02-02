@@ -76,7 +76,10 @@ class AuditService {
   }
 
   Future<void> logInvoiceDeletion(
-      String userId, String billId, String reason) async {
+    String userId,
+    String billId,
+    String reason,
+  ) async {
     try {
       final deviceId = await _getDeviceId();
       final appVersion = await _getAppVersion();
@@ -117,7 +120,7 @@ class AuditService {
         newValueJson: jsonEncode({
           'severity': severity,
           'message': message,
-          if (details != null) 'details': details,
+          'details': ?details,
         }),
         deviceId: deviceId,
         appVersion: appVersion,
@@ -213,10 +216,7 @@ class AuditService {
           'amount': amount,
           'status': 'ACTIVE',
         }),
-        newValueJson: jsonEncode({
-          'status': 'VOID',
-          'reason': reason,
-        }),
+        newValueJson: jsonEncode({'status': 'VOID', 'reason': reason}),
         deviceId: deviceId,
         appVersion: appVersion,
       );
@@ -257,7 +257,11 @@ class AuditService {
   // ============================================
 
   Future<void> logIrnGeneration(
-      String userId, String billId, String irn, String status) async {
+    String userId,
+    String billId,
+    String irn,
+    String status,
+  ) async {
     try {
       final deviceId = await _getDeviceId();
       final appVersion = await _getAppVersion();
@@ -267,10 +271,7 @@ class AuditService {
         targetTableName: 'e_invoices',
         recordId: billId,
         action: 'IRN_GENERATE',
-        newValueJson: jsonEncode({
-          'irn': irn,
-          'status': status,
-        }),
+        newValueJson: jsonEncode({'irn': irn, 'status': status}),
         deviceId: deviceId,
         appVersion: appVersion,
       );
@@ -295,10 +296,7 @@ class AuditService {
         targetTableName: 'e_invoices',
         recordId: billId,
         action: 'IRN_CANCEL',
-        oldValueJson: jsonEncode({
-          'irn': irn,
-          'status': 'ACTIVE',
-        }),
+        oldValueJson: jsonEncode({'irn': irn, 'status': 'ACTIVE'}),
         newValueJson: jsonEncode({
           'irn': irn,
           'status': 'CANCELLED',

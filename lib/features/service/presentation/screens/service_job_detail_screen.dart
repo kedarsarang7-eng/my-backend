@@ -69,16 +69,24 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
             itemBuilder: (context) => [
               if (_job.status == ServiceJobStatus.received)
                 const PopupMenuItem(
-                    value: 'diagnose', child: Text('Add Diagnosis')),
+                  value: 'diagnose',
+                  child: Text('Add Diagnosis'),
+                ),
               if (_job.status == ServiceJobStatus.diagnosed)
                 const PopupMenuItem(
-                    value: 'estimate', child: Text('Add Estimate')),
+                  value: 'estimate',
+                  child: Text('Add Estimate'),
+                ),
               if (_job.status == ServiceJobStatus.inProgress)
                 const PopupMenuItem(
-                    value: 'complete', child: Text('Mark Complete')),
+                  value: 'complete',
+                  child: Text('Mark Complete'),
+                ),
               if (_job.status == ServiceJobStatus.ready)
                 const PopupMenuItem(
-                    value: 'deliver', child: Text('Mark Delivered')),
+                  value: 'deliver',
+                  child: Text('Mark Delivered'),
+                ),
               if (_job.isActive)
                 const PopupMenuItem(value: 'cancel', child: Text('Cancel Job')),
               if (_job.status == ServiceJobStatus.completed ||
@@ -86,7 +94,9 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
                   _job.status == ServiceJobStatus.delivered)
                 if (_job.billId == null)
                   const PopupMenuItem(
-                      value: 'invoice', child: Text('Generate Invoice')),
+                    value: 'invoice',
+                    child: Text('Generate Invoice'),
+                  ),
             ],
           ),
         ],
@@ -103,16 +113,20 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
                 children: [
                   Icon(Icons.circle, color: statusColor, size: 16),
                   const SizedBox(width: 12),
-                  Text(_job.status.displayName,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: statusColor)),
+                  Text(
+                    _job.status.displayName,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: statusColor,
+                    ),
+                  ),
                   const Spacer(),
                   if (_job.isUnderWarranty)
                     Chip(
-                        label: const Text('WARRANTY'),
-                        backgroundColor: Colors.green.withOpacity(0.2)),
+                      label: const Text('WARRANTY'),
+                      backgroundColor: Colors.green.withOpacity(0.2),
+                    ),
                 ],
               ),
             ),
@@ -142,11 +156,15 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
             if (_job.symptoms.isNotEmpty) ...[
               const SizedBox(height: 8),
               Wrap(
-                  spacing: 8,
-                  children: _job.symptoms
-                      .map((s) => Chip(
-                          label: Text(s, style: const TextStyle(fontSize: 12))))
-                      .toList()),
+                spacing: 8,
+                children: _job.symptoms
+                    .map(
+                      (s) => Chip(
+                        label: Text(s, style: const TextStyle(fontSize: 12)),
+                      ),
+                    )
+                    .toList(),
+              ),
             ],
           ]),
 
@@ -158,19 +176,30 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
           if (_job.grandTotal > 0)
             _buildSection('Cost', Icons.attach_money, [
               _buildInfoRow(
-                  'Labor', _currencyFormat.format(_job.actualLaborCost)),
+                'Labor',
+                _currencyFormat.format(_job.actualLaborCost),
+              ),
               _buildInfoRow(
-                  'Parts', _currencyFormat.format(_job.actualPartsCost)),
+                'Parts',
+                _currencyFormat.format(_job.actualPartsCost),
+              ),
               if (_job.discountAmount > 0)
-                _buildInfoRow('Discount',
-                    '-${_currencyFormat.format(_job.discountAmount)}'),
+                _buildInfoRow(
+                  'Discount',
+                  '-${_currencyFormat.format(_job.discountAmount)}',
+                ),
               const Divider(),
-              _buildInfoRow('Total', _currencyFormat.format(_job.grandTotal),
-                  bold: true),
+              _buildInfoRow(
+                'Total',
+                _currencyFormat.format(_job.grandTotal),
+                bold: true,
+              ),
               _buildInfoRow('Paid', _currencyFormat.format(_job.amountPaid)),
               _buildInfoRow(
-                  'Balance', _currencyFormat.format(_job.balanceAmount),
-                  color: _job.balanceAmount > 0 ? Colors.red : Colors.green),
+                'Balance',
+                _currencyFormat.format(_job.balanceAmount),
+                color: _job.balanceAmount > 0 ? Colors.red : Colors.green,
+              ),
             ]),
 
           // Timeline
@@ -178,7 +207,9 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
             _buildInfoRow('Received', _dateFormat.format(_job.receivedAt)),
             if (_job.expectedDelivery != null)
               _buildInfoRow(
-                  'Expected', _dateFormat.format(_job.expectedDelivery!)),
+                'Expected',
+                _dateFormat.format(_job.expectedDelivery!),
+              ),
             if (_job.completedAt != null)
               _buildInfoRow('Completed', _dateFormat.format(_job.completedAt!)),
             if (_job.deliveredAt != null)
@@ -225,11 +256,16 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Icon(icon, size: 18, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            ]),
+            Row(
+              children: [
+                Icon(icon, size: 18, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
             ...children,
           ],
@@ -238,17 +274,25 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value,
-      {bool bold = false, Color? color}) {
+  Widget _buildInfoRow(
+    String label,
+    String value, {
+    bool bold = false,
+    Color? color,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(color: Colors.grey[600])),
-          Text(value,
-              style: TextStyle(
-                  fontWeight: bold ? FontWeight.bold : null, color: color)),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.bold : null,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
@@ -257,16 +301,20 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
   void _handleMenuAction(String action) async {
     switch (action) {
       case 'diagnose':
-        final diagnosis =
-            await _showInputDialog('Add Diagnosis', 'What is the problem?');
+        final diagnosis = await _showInputDialog(
+          'Add Diagnosis',
+          'What is the problem?',
+        );
         if (diagnosis != null && diagnosis.isNotEmpty) {
           await _service.addDiagnosis(_job.id, diagnosis);
           _refreshJob();
         }
         break;
       case 'complete':
-        final workDone =
-            await _showInputDialog('Work Done', 'Describe the work completed');
+        final workDone = await _showInputDialog(
+          'Work Done',
+          'Describe the work completed',
+        );
         if (workDone != null) {
           await _service.completeJob(
             jobId: _job.id,
@@ -283,7 +331,9 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
         break;
       case 'cancel':
         final reason = await _showInputDialog(
-            'Cancel Reason', 'Why is this job being cancelled?');
+          'Cancel Reason',
+          'Why is this job being cancelled?',
+        );
         if (reason != null) {
           await _service.cancelJob(_job.id, reason);
           _refreshJob();
@@ -300,30 +350,34 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
 
     // Add Labor
     if (_job.actualLaborCost > 0) {
-      items.add(BillItem(
-        productId: 'LABOR', // Special ID for labor
-        productName: 'Service Labor Charge',
-        qty: 1,
-        price: _job.actualLaborCost,
-        unit: 'job',
-        gstRate: 18.0, // Standard service tax
-        cgst: _job.actualLaborCost * 0.09,
-        sgst: _job.actualLaborCost * 0.09,
-      ));
+      items.add(
+        BillItem(
+          productId: 'LABOR', // Special ID for labor
+          productName: 'Service Labor Charge',
+          qty: 1,
+          price: _job.actualLaborCost,
+          unit: 'job',
+          gstRate: 18.0, // Standard service tax
+          cgst: _job.actualLaborCost * 0.09,
+          sgst: _job.actualLaborCost * 0.09,
+        ),
+      );
     }
 
     // Add Parts
     for (final part in _job.partsUsed) {
-      items.add(BillItem(
-        productId: part.productId ?? '',
-        productName: part.partName,
-        qty: part.quantity,
-        price: part.unitCost,
-        unit: part.unit,
-        gstRate: 18.0, // Default to 18 if unknown, ideally fetch from product
-        cgst: (part.unitCost * part.quantity) * 0.09,
-        sgst: (part.unitCost * part.quantity) * 0.09,
-      ));
+      items.add(
+        BillItem(
+          productId: part.productId ?? '',
+          productName: part.partName,
+          qty: part.quantity,
+          price: part.unitCost,
+          unit: part.unit,
+          gstRate: 18.0, // Default to 18 if unknown, ideally fetch from product
+          cgst: (part.unitCost * part.quantity) * 0.09,
+          sgst: (part.unitCost * part.quantity) * 0.09,
+        ),
+      );
     }
 
     Navigator.push(
@@ -347,16 +401,19 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
       builder: (context) => AlertDialog(
         title: Text(title),
         content: TextField(
-            controller: controller,
-            decoration: InputDecoration(hintText: hint),
-            maxLines: 3),
+          controller: controller,
+          decoration: InputDecoration(hintText: hint),
+          maxLines: 3,
+        ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
-              onPressed: () => Navigator.pop(context, controller.text),
-              child: const Text('Save')),
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Save'),
+          ),
         ],
       ),
     );
@@ -371,26 +428,31 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Update Status',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Update Status',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: ServiceJobStatus.values
-                  .where((s) =>
-                      s != ServiceJobStatus.cancelled &&
-                      s != ServiceJobStatus.delivered)
-                  .map((status) => ActionChip(
-                        label: Text(status.displayName),
-                        backgroundColor:
-                            _getStatusColor(status).withOpacity(0.2),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await _service.updateStatus(_job.id, status);
-                          _refreshJob();
-                        },
-                      ))
+                  .where(
+                    (s) =>
+                        s != ServiceJobStatus.cancelled &&
+                        s != ServiceJobStatus.delivered,
+                  )
+                  .map(
+                    (status) => ActionChip(
+                      label: Text(status.displayName),
+                      backgroundColor: _getStatusColor(status).withOpacity(0.2),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        await _service.updateStatus(_job.id, status);
+                        _refreshJob();
+                      },
+                    ),
+                  )
                   .toList(),
             ),
           ],
@@ -409,13 +471,15 @@ class _ServiceJobDetailScreenState extends State<ServiceJobDetailScreen> {
           controller: controller,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-              hintText:
-                  'Amount (Balance: ${_currencyFormat.format(_job.balanceAmount)})'),
+            hintText:
+                'Amount (Balance: ${_currencyFormat.format(_job.balanceAmount)})',
+          ),
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () async {
               final amount = double.tryParse(controller.text) ?? 0;

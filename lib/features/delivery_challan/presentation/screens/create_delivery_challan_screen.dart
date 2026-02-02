@@ -48,10 +48,12 @@ class _CreateDeliveryChallanScreenState
     final userId = session.ownerId ?? '';
 
     // Load customers and products
-    final customersResult =
-        await sl<CustomersRepository>().getAll(userId: userId);
-    final productsResult =
-        await sl<ProductsRepository>().getAll(userId: userId);
+    final customersResult = await sl<CustomersRepository>().getAll(
+      userId: userId,
+    );
+    final productsResult = await sl<ProductsRepository>().getAll(
+      userId: userId,
+    );
 
     setState(() {
       _customers = customersResult.data ?? [];
@@ -70,9 +72,7 @@ class _CreateDeliveryChallanScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Delivery Challan'),
-      ),
+      appBar: AppBar(title: const Text('New Delivery Challan')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Form(
@@ -92,9 +92,13 @@ class _CreateDeliveryChallanScreenState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Items',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Items',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       TextButton.icon(
                         onPressed: _showAddItemDialog,
                         icon: const Icon(Icons.add),
@@ -109,7 +113,8 @@ class _CreateDeliveryChallanScreenState
                     const Padding(
                       padding: EdgeInsets.all(32.0),
                       child: Center(
-                          child: Text('No items added. Add items to proceed.')),
+                        child: Text('No items added. Add items to proceed.'),
+                      ),
                     )
                   else
                     ..._items.map((item) => _buildItemTile(item)),
@@ -141,10 +146,7 @@ class _CreateDeliveryChallanScreenState
         prefixIcon: Icon(Icons.person),
       ),
       items: _customers
-          .map((c) => DropdownMenuItem(
-                value: c,
-                child: Text(c.name),
-              ))
+          .map((c) => DropdownMenuItem(value: c, child: Text(c.name)))
           .toList(),
       onChanged: (val) => setState(() => _selectedCustomer = val),
       validator: (val) => val == null ? 'Required' : null,
@@ -176,8 +178,9 @@ class _CreateDeliveryChallanScreenState
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.calendar_today),
                       ),
-                      child:
-                          Text(DateFormat('dd MMM yyyy').format(_challanDate)),
+                      child: Text(
+                        DateFormat('dd MMM yyyy').format(_challanDate),
+                      ),
                     ),
                   ),
                 ),
@@ -190,10 +193,7 @@ class _CreateDeliveryChallanScreenState
                       border: OutlineInputBorder(),
                     ),
                     items: ['Road', 'Rail', 'Air', 'Ship']
-                        .map((m) => DropdownMenuItem(
-                              value: m,
-                              child: Text(m),
-                            ))
+                        .map((m) => DropdownMenuItem(value: m, child: Text(m)))
                         .toList(),
                     onChanged: (val) => setState(() => _transportMode = val!),
                   ),
@@ -231,8 +231,10 @@ class _CreateDeliveryChallanScreenState
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('₹${item.totalAmount.toStringAsFixed(2)}',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            '₹${item.totalAmount.toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           IconButton(
             icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: () {
@@ -265,10 +267,12 @@ class _CreateDeliveryChallanScreenState
                   isExpanded: true,
                   decoration: const InputDecoration(labelText: 'Product'),
                   items: _products
-                      .map((p) => DropdownMenuItem<Product>(
-                            value: p,
-                            child: Text(p.name),
-                          ))
+                      .map(
+                        (p) => DropdownMenuItem<Product>(
+                          value: p,
+                          child: Text(p.name),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) {
                     setDialogState(() {
@@ -291,8 +295,9 @@ class _CreateDeliveryChallanScreenState
             ),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Cancel')),
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel'),
+              ),
               ElevatedButton(
                 onPressed: () {
                   if (selectedProduct != null &&
@@ -365,9 +370,9 @@ class _CreateDeliveryChallanScreenState
     if (challan != null && mounted) {
       Navigator.pop(context); // Go back to list
     } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to save challan')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to save challan')));
     }
   }
 }

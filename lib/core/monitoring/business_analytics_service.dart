@@ -103,9 +103,9 @@ class BusinessAnalyticsService {
         'bill_id': billId,
         'amount': amount,
         'payment_status': paymentStatus,
-        if (customerId != null) 'customer_id': customerId,
-        if (businessId != null) 'business_id': businessId,
-        if (itemCount != null) 'item_count': itemCount,
+        'customer_id': ?customerId,
+        'business_id': ?businessId,
+        'item_count': ?itemCount,
         'currency': 'INR',
       },
     );
@@ -126,8 +126,8 @@ class BusinessAnalyticsService {
         'original_amount': originalAmount,
         'new_amount': newAmount,
         'amount_change': newAmount - originalAmount,
-        if (reason != null) 'reason': reason,
-        if (updatedBy != null) 'updated_by': updatedBy,
+        'reason': ?reason,
+        'updated_by': ?updatedBy,
       },
     );
   }
@@ -144,8 +144,8 @@ class BusinessAnalyticsService {
       parameters: {
         'bill_id': billId,
         'amount': amount,
-        if (reason != null) 'reason': reason,
-        if (cancelledBy != null) 'cancelled_by': cancelledBy,
+        'reason': ?reason,
+        'cancelled_by': ?cancelledBy,
       },
     );
   }
@@ -167,11 +167,11 @@ class BusinessAnalyticsService {
     _trackEvent(
       BusinessEventType.paymentFailed,
       parameters: {
-        if (customerId != null) 'customer_id': customerId,
+        'customer_id': ?customerId,
         'amount': amount,
         'error': error.length > 100 ? error.substring(0, 100) : error,
-        if (paymentMethod != null) 'payment_method': paymentMethod,
-        if (billId != null) 'bill_id': billId,
+        'payment_method': ?paymentMethod,
+        'bill_id': ?billId,
         'currency': 'INR',
       },
       isError: true,
@@ -191,7 +191,7 @@ class BusinessAnalyticsService {
         'customer_id': customerId,
         'amount': amount,
         'payment_method': paymentMethod,
-        if (billId != null) 'bill_id': billId,
+        'bill_id': ?billId,
         'currency': 'INR',
       },
     );
@@ -214,7 +214,7 @@ class BusinessAnalyticsService {
         'entity_type': entityType,
         'entity_id': entityId,
         'resolution': resolution,
-        if (conflictDetails != null) 'conflict_details': conflictDetails,
+        'conflict_details': ?conflictDetails,
       },
       isWarning: true,
     );
@@ -239,8 +239,8 @@ class BusinessAnalyticsService {
         'fix_type': fixType,
         'entity_count': entityIds.length,
         'entity_ids': entityIds.take(10).join(','), // Limit for logging
-        if (description != null) 'description': description,
-        if (correctedAmount != null) 'corrected_amount': correctedAmount,
+        'description': ?description,
+        'corrected_amount': ?correctedAmount,
       },
       isWarning: true,
     );
@@ -251,16 +251,10 @@ class BusinessAnalyticsService {
   // ============================================================================
 
   /// Track customer creation
-  void trackCustomerCreated({
-    required String customerId,
-    String? businessId,
-  }) {
+  void trackCustomerCreated({required String customerId, String? businessId}) {
     _trackEvent(
       BusinessEventType.customerCreated,
-      parameters: {
-        'customer_id': customerId,
-        if (businessId != null) 'business_id': businessId,
-      },
+      parameters: {'customer_id': customerId, 'business_id': ?businessId},
     );
   }
 
@@ -326,8 +320,8 @@ class BusinessAnalyticsService {
       BusinessEventType.sessionStarted,
       parameters: {
         'user_id': userId.length > 8 ? '${userId.substring(0, 8)}...' : userId,
-        if (businessId != null) 'business_id': businessId,
-        if (deviceType != null) 'device_type': deviceType,
+        'business_id': ?businessId,
+        'device_type': ?deviceType,
       },
     );
   }
@@ -344,7 +338,7 @@ class BusinessAnalyticsService {
       parameters: {
         'error_type': errorType,
         'message': message.length > 200 ? message.substring(0, 200) : message,
-        if (context != null) 'context': context,
+        'context': ?context,
       },
       isError: true,
     );
@@ -387,8 +381,10 @@ class BusinessAnalyticsService {
     }
 
     // Send to Firebase Analytics (non-blocking)
-    _monitoring.trackEvent(eventName,
-        parameters: _sanitizeParameters(parameters));
+    _monitoring.trackEvent(
+      eventName,
+      parameters: _sanitizeParameters(parameters),
+    );
 
     // Send critical events to Crashlytics for dashboard visibility
     if ((isError || isWarning) && !kDebugMode) {
@@ -402,8 +398,9 @@ class BusinessAnalyticsService {
     final sanitized = <String, dynamic>{};
 
     for (final entry in params.entries) {
-      final key =
-          entry.key.length > 40 ? entry.key.substring(0, 40) : entry.key;
+      final key = entry.key.length > 40
+          ? entry.key.substring(0, 40)
+          : entry.key;
 
       var value = entry.value;
 
@@ -426,8 +423,10 @@ class BusinessAnalyticsService {
   /// Send event to Crashlytics custom keys
   void _sendToCrashlytics(String eventName, Map<String, dynamic> params) {
     try {
-      FirebaseCrashlytics.instance
-          .setCustomKey('last_business_event', eventName);
+      FirebaseCrashlytics.instance.setCustomKey(
+        'last_business_event',
+        eventName,
+      );
       FirebaseCrashlytics.instance.setCustomKey(
         'last_event_time',
         DateTime.now().toIso8601String(),
@@ -453,11 +452,13 @@ class BusinessAnalyticsService {
   List<Map<String, dynamic>> getRecentEvents({int limit = 20}) {
     return _eventBuffer.reversed
         .take(limit)
-        .map((e) => {
-              'event': e.type.eventName,
-              'timestamp': e.timestamp.toIso8601String(),
-              'parameters': e.parameters,
-            })
+        .map(
+          (e) => {
+            'event': e.type.eventName,
+            'timestamp': e.timestamp.toIso8601String(),
+            'parameters': e.parameters,
+          },
+        )
         .toList();
   }
 

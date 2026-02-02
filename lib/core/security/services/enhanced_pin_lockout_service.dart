@@ -79,13 +79,13 @@ class LockoutCheckResult {
   bool get isClear => status == LockoutStatus.clear;
 
   Map<String, dynamic> toJson() => {
-        'status': status.name,
-        'failedAttempts': failedAttempts,
-        'attemptsRemaining': attemptsRemaining,
-        'cooldownSeconds': cooldownRemaining?.inSeconds,
-        'message': message,
-        'lockedUntil': lockedUntil?.toIso8601String(),
-      };
+    'status': status.name,
+    'failedAttempts': failedAttempts,
+    'attemptsRemaining': attemptsRemaining,
+    'cooldownSeconds': cooldownRemaining?.inSeconds,
+    'message': message,
+    'lockedUntil': lockedUntil?.toIso8601String(),
+  };
 }
 
 /// Enhanced PIN Lockout Service with progressive lockout and persistence
@@ -94,7 +94,7 @@ class EnhancedPinLockoutService {
   static const String _storagePrefix = 'pin_lockout_';
 
   EnhancedPinLockoutService({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+    : _storage = storage ?? const FlutterSecureStorage();
 
   /// Check lockout status before allowing PIN entry
   Future<LockoutCheckResult> checkLockoutStatus({
@@ -111,8 +111,9 @@ class EnhancedPinLockoutService {
 
     // Check for auto-reset (24 hours since last attempt)
     if (data.lastAttemptAt != null) {
-      final timeSinceLastAttempt =
-          DateTime.now().difference(data.lastAttemptAt!);
+      final timeSinceLastAttempt = DateTime.now().difference(
+        data.lastAttemptAt!,
+      );
       if (timeSinceLastAttempt > ProgressiveLockoutConfig.autoResetDuration) {
         // Reset all lockout data
         await resetLockout(businessId);
@@ -154,7 +155,8 @@ class EnhancedPinLockoutService {
     return LockoutCheckResult(
       status: LockoutStatus.clear,
       failedAttempts: data.failedAttempts,
-      attemptsRemaining: ProgressiveLockoutConfig.attemptThresholds.first -
+      attemptsRemaining:
+          ProgressiveLockoutConfig.attemptThresholds.first -
           data.failedAttempts,
     );
   }
@@ -172,9 +174,11 @@ class EnhancedPinLockoutService {
     DateTime? lockedUntil;
 
     if (thresholdIndex >= 0) {
-      final lockoutDuration = ProgressiveLockoutConfig.lockoutDurations[
-          thresholdIndex.clamp(
-              0, ProgressiveLockoutConfig.lockoutDurations.length - 1)];
+      final lockoutDuration =
+          ProgressiveLockoutConfig.lockoutDurations[thresholdIndex.clamp(
+            0,
+            ProgressiveLockoutConfig.lockoutDurations.length - 1,
+          )];
       lockedUntil = DateTime.now().add(lockoutDuration);
     }
 
@@ -190,7 +194,8 @@ class EnhancedPinLockoutService {
     );
 
     debugPrint(
-        '[EnhancedPinLockout] Failed attempt #$newAttempts for $businessId');
+      '[EnhancedPinLockout] Failed attempt #$newAttempts for $businessId',
+    );
 
     // Return updated status
     return checkLockoutStatus(businessId: businessId, deviceId: deviceId);
@@ -203,7 +208,8 @@ class EnhancedPinLockoutService {
   }) async {
     await resetLockout(businessId);
     debugPrint(
-        '[EnhancedPinLockout] PIN verified successfully for $businessId');
+      '[EnhancedPinLockout] PIN verified successfully for $businessId',
+    );
   }
 
   /// Reset lockout for a business
@@ -260,7 +266,9 @@ class EnhancedPinLockoutService {
   }
 
   Future<void> _updateLockoutData(
-      String businessId, _PinLockoutData data) async {
+    String businessId,
+    _PinLockoutData data,
+  ) async {
     try {
       await _storage.write(
         key: '$_storagePrefix$businessId',
@@ -272,9 +280,11 @@ class EnhancedPinLockoutService {
   }
 
   int _getThresholdIndex(int attempts) {
-    for (var i = 0;
-        i < ProgressiveLockoutConfig.attemptThresholds.length;
-        i++) {
+    for (
+      var i = 0;
+      i < ProgressiveLockoutConfig.attemptThresholds.length;
+      i++
+    ) {
       if (attempts >= ProgressiveLockoutConfig.attemptThresholds[i]) {
         continue;
       }
@@ -331,11 +341,11 @@ class _PinLockoutData {
   }
 
   Map<String, dynamic> toJson() => {
-        'failedAttempts': failedAttempts,
-        'lockedUntil': lockedUntil?.toIso8601String(),
-        'lastAttemptAt': lastAttemptAt?.toIso8601String(),
-        'deviceId': deviceId,
-      };
+    'failedAttempts': failedAttempts,
+    'lockedUntil': lockedUntil?.toIso8601String(),
+    'lastAttemptAt': lastAttemptAt?.toIso8601String(),
+    'deviceId': deviceId,
+  };
 
   _PinLockoutData copyWith({
     int? failedAttempts,

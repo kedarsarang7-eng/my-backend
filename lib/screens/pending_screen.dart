@@ -60,9 +60,11 @@ class _PendingScreenState extends State<PendingScreen> {
     final lower = query.toLowerCase();
     setState(() {
       _filteredCustomers = _customers
-          .where((c) =>
-              c.name.toLowerCase().contains(lower) ||
-              (c.phone != null && c.phone!.contains(query)))
+          .where(
+            (c) =>
+                c.name.toLowerCase().contains(lower) ||
+                (c.phone != null && c.phone!.contains(query)),
+          )
           .toList();
     });
   }
@@ -109,8 +111,9 @@ class _PendingScreenState extends State<PendingScreen> {
                 icon: Icons.download_rounded,
                 onPressed: () {
                   // Export Report
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Exporting report to PDF...')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Exporting report to PDF...')),
+                  );
                 },
               ),
             ],
@@ -156,12 +159,15 @@ class _PendingScreenState extends State<PendingScreen> {
                     flex: 1,
                     builder: (c) => Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: FuturisticColors.error.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: FuturisticColors.error.withOpacity(0.5)),
+                          color: FuturisticColors.error.withOpacity(0.5),
+                        ),
                       ),
                       child: const Text(
                         'OVERDUE',
@@ -200,9 +206,13 @@ class _PendingScreenState extends State<PendingScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Customer Details',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Customer Details',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.pop(context),
@@ -219,12 +229,17 @@ class _PendingScreenState extends State<PendingScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text(_selectedCustomer!.name,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
-                Text(_selectedCustomer!.phone ?? 'No Phone',
-                    style:
-                        const TextStyle(color: FuturisticColors.textSecondary)),
+                Text(
+                  _selectedCustomer!.name,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  _selectedCustomer!.phone ?? 'No Phone',
+                  style: const TextStyle(color: FuturisticColors.textSecondary),
+                ),
               ],
             ),
           ),
@@ -233,15 +248,20 @@ class _PendingScreenState extends State<PendingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDetailRow('Total Outstanding',
-                    '₹${_selectedCustomer!.totalDues.toStringAsFixed(2)}',
-                    isHighlight: true),
+                _buildDetailRow(
+                  'Total Outstanding',
+                  '₹${_selectedCustomer!.totalDues.toStringAsFixed(2)}',
+                  isHighlight: true,
+                ),
                 const SizedBox(height: 24),
-                const Text('Quick Actions',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: FuturisticColors.textSecondary)),
+                const Text(
+                  'Quick Actions',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: FuturisticColors.textSecondary,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 FuturisticButton.primary(
                   label: 'Send Payment Reminder',
@@ -249,30 +269,39 @@ class _PendingScreenState extends State<PendingScreen> {
                   onPressed: () {
                     // Integrated WhatsApp Simulation
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('WhatsApp Reminder Sent!')));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('WhatsApp Reminder Sent!')),
+                    );
                   },
                 ),
                 const SizedBox(height: 12),
                 FuturisticButton.secondary(
-                    label: 'Settle Balance',
-                    icon: Icons.payments_outlined,
-                    onPressed: () {
-                      // Navigate to settlement simulation
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Opening Settlement Flow...')));
-                    }),
+                  label: 'Settle Balance',
+                  icon: Icons.payments_outlined,
+                  onPressed: () {
+                    // Navigate to settlement simulation
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Opening Settlement Flow...'),
+                      ),
+                    );
+                  },
+                ),
                 const SizedBox(height: 12),
                 FuturisticButton.secondary(
-                    label: 'View Full Ledger',
-                    icon: Icons.history_edu,
-                    onPressed: () {
-                      // Navigate to ledger simulation
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Opening Customer Ledger...')));
-                    }),
+                  label: 'View Full Ledger',
+                  icon: Icons.history_edu,
+                  onPressed: () {
+                    // Navigate to ledger simulation
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Opening Customer Ledger...'),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -281,22 +310,32 @@ class _PendingScreenState extends State<PendingScreen> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value,
-      {bool isHighlight = false}) {
+  Widget _buildDetailRow(
+    String label,
+    String value, {
+    bool isHighlight = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(
-                color: FuturisticColors.textSecondary, fontSize: 12)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: FuturisticColors.textSecondary,
+            fontSize: 12,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(value,
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: isHighlight
-                    ? FuturisticColors.error
-                    : FuturisticColors.textPrimary)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: isHighlight
+                ? FuturisticColors.error
+                : FuturisticColors.textPrimary,
+          ),
+        ),
       ],
     );
   }

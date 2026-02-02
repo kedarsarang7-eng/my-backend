@@ -122,8 +122,9 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   height: 16,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color:
-                        isFilled ? Colors.blue : Colors.grey.withOpacity(0.3),
+                    color: isFilled
+                        ? Colors.blue
+                        : Colors.grey.withOpacity(0.3),
                     border: isFilled ? null : Border.all(color: Colors.grey),
                   ),
                 );
@@ -186,7 +187,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
-                )
+                ),
               ],
             ),
             child: isBackspace

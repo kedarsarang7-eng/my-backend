@@ -98,20 +98,20 @@ class LedgerEntry {
   bool get isCredit => entryType == LedgerEntryType.credit;
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'customerId': customerId,
-        'vendorId': vendorId,
-        'entryType': entryTypeString,
-        'amount': amount,
-        'runningBalance': runningBalance,
-        'referenceType': referenceType,
-        'referenceId': referenceId,
-        'referenceNumber': referenceNumber,
-        'description': description,
-        'notes': notes,
-        'entryDate': entryDate.toIso8601String(),
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'customerId': customerId,
+    'vendorId': vendorId,
+    'entryType': entryTypeString,
+    'amount': amount,
+    'runningBalance': runningBalance,
+    'referenceType': referenceType,
+    'referenceId': referenceId,
+    'referenceNumber': referenceNumber,
+    'description': description,
+    'notes': notes,
+    'entryDate': entryDate.toIso8601String(),
+    'createdAt': createdAt.toIso8601String(),
+  };
 }
 
 /// Monthly ledger summary
@@ -147,7 +147,7 @@ class MonthlyLedgerSummary {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return '${months[month - 1]} $year';
   }
@@ -229,15 +229,17 @@ class CustomerLedgerRepository {
       final id = const Uuid().v4();
 
       // Get current balance
-      final lastEntry = await (database.select(database.customerLedger)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.vendorId.equals(vendorId))
-            ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
-            ..limit(1))
-          .getSingleOrNull();
+      final lastEntry =
+          await (database.select(database.customerLedger)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.vendorId.equals(vendorId))
+                ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
+                ..limit(1))
+              .getSingleOrNull();
 
       final currentBalance = lastEntry?.runningBalance ?? 0;
-      final newBalance = entryType == LedgerEntryType.debit ||
+      final newBalance =
+          entryType == LedgerEntryType.debit ||
               entryType == LedgerEntryType.opening
           ? currentBalance + amount
           : currentBalance - amount;
@@ -261,31 +263,33 @@ class CustomerLedgerRepository {
       await database.into(database.customerLedger).insert(entity);
 
       // Queue for sync
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: customerId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'customer_ledger',
-        documentId: id,
-        payload: {
-          'id': id,
-          'customerId': customerId,
-          'vendorId': vendorId,
-          'entryType': entryType.name.toUpperCase(),
-          'amount': amount,
-          'runningBalance': newBalance,
-          'referenceType': referenceType,
-          'referenceId': referenceId,
-          'referenceNumber': referenceNumber,
-          'description': description,
-          'notes': notes,
-          'entryDate': (entryDate ?? now).toIso8601String(),
-          'createdAt': now.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: customerId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'customer_ledger',
+          documentId: id,
+          payload: {
+            'id': id,
+            'customerId': customerId,
+            'vendorId': vendorId,
+            'entryType': entryType.name.toUpperCase(),
+            'amount': amount,
+            'runningBalance': newBalance,
+            'referenceType': referenceType,
+            'referenceId': referenceId,
+            'referenceNumber': referenceNumber,
+            'description': description,
+            'notes': notes,
+            'entryDate': (entryDate ?? now).toIso8601String(),
+            'createdAt': now.toIso8601String(),
+          },
+        ),
+      );
 
-      final result = await (database.select(database.customerLedger)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final result = await (database.select(
+        database.customerLedger,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return LedgerEntry.fromEntity(result);
     }, 'addLedgerEntry');
@@ -301,12 +305,13 @@ class CustomerLedgerRepository {
     required String vendorId,
   }) async {
     return errorHandler.runSafe(() async {
-      final lastEntry = await (database.select(database.customerLedger)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.vendorId.equals(vendorId))
-            ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
-            ..limit(1))
-          .getSingleOrNull();
+      final lastEntry =
+          await (database.select(database.customerLedger)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.vendorId.equals(vendorId))
+                ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
+                ..limit(1))
+              .getSingleOrNull();
 
       return lastEntry?.runningBalance ?? 0;
     }, 'getCurrentBalance');
@@ -324,23 +329,25 @@ class CustomerLedgerRepository {
       final endDate = DateTime(year, month + 1, 0, 23, 59, 59);
 
       // Get opening balance (last entry before this month)
-      final openingEntry = await (database.select(database.customerLedger)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.vendorId.equals(vendorId))
-            ..where((t) => t.entryDate.isSmallerThanValue(startDate))
-            ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
-            ..limit(1))
-          .getSingleOrNull();
+      final openingEntry =
+          await (database.select(database.customerLedger)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.vendorId.equals(vendorId))
+                ..where((t) => t.entryDate.isSmallerThanValue(startDate))
+                ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
+                ..limit(1))
+              .getSingleOrNull();
 
       final openingBalance = openingEntry?.runningBalance ?? 0;
 
       // Get entries for this month
-      final monthEntries = await (database.select(database.customerLedger)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.vendorId.equals(vendorId))
-            ..where((t) => t.entryDate.isBiggerOrEqualValue(startDate))
-            ..where((t) => t.entryDate.isSmallerOrEqualValue(endDate)))
-          .get();
+      final monthEntries =
+          await (database.select(database.customerLedger)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.vendorId.equals(vendorId))
+                ..where((t) => t.entryDate.isBiggerOrEqualValue(startDate))
+                ..where((t) => t.entryDate.isSmallerOrEqualValue(endDate)))
+              .get();
 
       double totalDebit = 0;
       double totalCredit = 0;
@@ -373,8 +380,9 @@ class CustomerLedgerRepository {
 // ============================================================================
 
 /// Provider for CustomerLedgerRepository
-final customerLedgerRepositoryProvider =
-    Provider<CustomerLedgerRepository>((ref) {
+final customerLedgerRepositoryProvider = Provider<CustomerLedgerRepository>((
+  ref,
+) {
   return CustomerLedgerRepository(
     database: AppDatabase.instance,
     syncManager: sl<SyncManager>(),
@@ -383,11 +391,14 @@ final customerLedgerRepositoryProvider =
 });
 
 /// Provider for ledger entries
-final customerLedgerEntriesProvider = StreamProvider.family<List<LedgerEntry>,
-    ({String customerId, String vendorId})>((ref, params) {
-  final repo = ref.watch(customerLedgerRepositoryProvider);
-  return repo.watchLedgerEntries(
-    customerId: params.customerId,
-    vendorId: params.vendorId,
-  );
-});
+final customerLedgerEntriesProvider =
+    StreamProvider.family<
+      List<LedgerEntry>,
+      ({String customerId, String vendorId})
+    >((ref, params) {
+      final repo = ref.watch(customerLedgerRepositoryProvider);
+      return repo.watchLedgerEntries(
+        customerId: params.customerId,
+        vendorId: params.vendorId,
+      );
+    });

@@ -47,11 +47,7 @@ extension ExchangeStatusExtension on ExchangeStatus {
 }
 
 /// Payment status for exchange
-enum ExchangePaymentStatus {
-  pending,
-  paid,
-  partial,
-}
+enum ExchangePaymentStatus { pending, paid, partial }
 
 extension ExchangePaymentStatusExtension on ExchangePaymentStatus {
   String get value {
@@ -184,8 +180,10 @@ class Exchange {
     double additionalDiscount = 0,
   }) {
     final priceDiff = newDevicePrice - oldDeviceValue;
-    final amountToPay =
-        (priceDiff - additionalDiscount).clamp(0.0, double.infinity);
+    final amountToPay = (priceDiff - additionalDiscount).clamp(
+      0.0,
+      double.infinity,
+    );
     return {
       'exchangeValue': oldDeviceValue,
       'priceDifference': priceDiff,
@@ -256,7 +254,8 @@ class Exchange {
       additionalDiscount: (map['additionalDiscount'] ?? 0).toDouble(),
       amountToPay: (map['amountToPay'] ?? 0).toDouble(),
       paymentStatus: ExchangePaymentStatusExtension.fromString(
-          map['paymentStatus'] ?? 'PENDING'),
+        map['paymentStatus'] ?? 'PENDING',
+      ),
       amountPaid: (map['amountPaid'] ?? 0).toDouble(),
       paymentMode: map['paymentMode'],
       billId: map['billId'],

@@ -1,9 +1,5 @@
 /// Salary Status
-enum SalaryStatus {
-  pending,
-  paid,
-  partial,
-}
+enum SalaryStatus { pending, paid, partial }
 
 /// Salary Record Model
 class SalaryModel {
@@ -165,7 +161,7 @@ extension SalaryCalculations on SalaryModel {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     return '${months[month]} $year';
   }

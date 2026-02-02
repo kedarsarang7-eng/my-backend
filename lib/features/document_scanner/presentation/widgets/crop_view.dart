@@ -57,10 +57,12 @@ class _CropViewState extends State<CropView> {
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           setState(() {
-                            double nx = (pt.dx * constraints.maxWidth +
+                            double nx =
+                                (pt.dx * constraints.maxWidth +
                                     details.delta.dx) /
                                 constraints.maxWidth;
-                            double ny = (pt.dy * constraints.maxHeight +
+                            double ny =
+                                (pt.dy * constraints.maxHeight +
                                     details.delta.dy) /
                                 constraints.maxHeight;
                             // Clamp
@@ -78,8 +80,11 @@ class _CropViewState extends State<CropView> {
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
-                          child: const Icon(Icons.crop_free,
-                              size: 20, color: Colors.white),
+                          child: const Icon(
+                            Icons.crop_free,
+                            size: 20,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     );
@@ -109,20 +114,23 @@ class _CropViewState extends State<CropView> {
                     ];
                   });
                 },
-                child: const Text("Reset",
-                    style: TextStyle(color: Colors.white60)),
+                child: const Text(
+                  "Reset",
+                  style: TextStyle(color: Colors.white60),
+                ),
               ),
               ElevatedButton.icon(
                 icon: const Icon(Icons.check),
                 label: const Text("Confirm Crop"),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan,
-                    foregroundColor: Colors.black),
+                  backgroundColor: Colors.cyan,
+                  foregroundColor: Colors.black,
+                ),
                 onPressed: () => widget.onCropConfirmed(_corners),
-              )
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

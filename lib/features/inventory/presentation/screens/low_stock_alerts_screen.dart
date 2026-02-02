@@ -48,8 +48,10 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
       // Filter low stock and out of stock
       // Using lowStockThreshold from Product model
       _lowStockProducts = products
-          .where((p) =>
-              p.stockQuantity <= p.lowStockThreshold || p.stockQuantity <= 0)
+          .where(
+            (p) =>
+                p.stockQuantity <= p.lowStockThreshold || p.stockQuantity <= 0,
+          )
           .toList();
 
       // Sort by urgency (out of stock first, then by how far below limit)
@@ -105,12 +107,12 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
             child: DropdownButton<String>(
               value: _filter,
               dropdownColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-              style: TextStyle(
-                color: isDark ? Colors.white : Colors.black87,
-              ),
-              items: ['All', 'Out of Stock', 'Low Stock']
-                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                  .toList(),
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+              items: [
+                'All',
+                'Out of Stock',
+                'Low Stock',
+              ].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
               onChanged: (value) => setState(() => _filter = value ?? 'All'),
             ),
           ),
@@ -135,8 +137,9 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
   // Header removed as DesktopContentContainer handles it
 
   Widget _buildSummary(bool isDark) {
-    final outOfStock =
-        _lowStockProducts.where((p) => p.stockQuantity <= 0).length;
+    final outOfStock = _lowStockProducts
+        .where((p) => p.stockQuantity <= 0)
+        .length;
     final lowStock = _lowStockProducts.where((p) => p.stockQuantity > 0).length;
 
     return Container(
@@ -145,20 +148,36 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
       child: Row(
         children: [
           _buildSummaryChip(
-              'Out of Stock', '$outOfStock', const Color(0xFFEF4444), isDark),
+            'Out of Stock',
+            '$outOfStock',
+            const Color(0xFFEF4444),
+            isDark,
+          ),
           const SizedBox(width: 12),
           _buildSummaryChip(
-              'Low Stock', '$lowStock', const Color(0xFFF59E0B), isDark),
+            'Low Stock',
+            '$lowStock',
+            const Color(0xFFF59E0B),
+            isDark,
+          ),
           const SizedBox(width: 12),
-          _buildSummaryChip('Total Items', '${_lowStockProducts.length}',
-              const Color(0xFF06B6D4), isDark),
+          _buildSummaryChip(
+            'Total Items',
+            '${_lowStockProducts.length}',
+            const Color(0xFF06B6D4),
+            isDark,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSummaryChip(
-      String label, String value, Color color, bool isDark) {
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -202,8 +221,11 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
                 color: const Color(0xFF10B981).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle,
-                  size: 40, color: Color(0xFF10B981)),
+              child: const Icon(
+                Icons.check_circle,
+                size: 40,
+                color: Color(0xFF10B981),
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -237,8 +259,10 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
   Widget _buildProductCard(Product product, bool isDark) {
     final isOutOfStock = product.stockQuantity <= 0;
     final stockPercent = product.lowStockThreshold > 0
-        ? (product.stockQuantity / product.lowStockThreshold * 100)
-            .clamp(0.0, 100.0)
+        ? (product.stockQuantity / product.lowStockThreshold * 100).clamp(
+            0.0,
+            100.0,
+          )
         : 0.0;
 
     return Container(
@@ -261,10 +285,11 @@ class _LowStockAlertsScreenState extends ConsumerState<LowStockAlertsScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: (isOutOfStock
-                        ? const Color(0xFFEF4444)
-                        : const Color(0xFFF59E0B))
-                    .withOpacity(0.1),
+                color:
+                    (isOutOfStock
+                            ? const Color(0xFFEF4444)
+                            : const Color(0xFFF59E0B))
+                        .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(

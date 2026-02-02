@@ -64,8 +64,11 @@ class _AlertsPanelState extends State<AlertsPanel> {
                   color: FuturisticColors.warning.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.notifications_active,
-                    color: FuturisticColors.warning, size: 20),
+                child: const Icon(
+                  Icons.notifications_active,
+                  color: FuturisticColors.warning,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Column(
@@ -74,9 +77,9 @@ class _AlertsPanelState extends State<AlertsPanel> {
                   Text(
                     'Action Required',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: FuturisticColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: FuturisticColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -85,14 +88,18 @@ class _AlertsPanelState extends State<AlertsPanel> {
           const SizedBox(height: 16),
           if (_isLoading)
             const Center(
-                child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator()))
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
+              ),
+            )
           else if (_lowStockItems.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Text('No urgent alerts. Good job!',
-                  style: TextStyle(color: FuturisticColors.textSecondary)),
+              child: Text(
+                'No urgent alerts. Good job!',
+                style: TextStyle(color: FuturisticColors.textSecondary),
+              ),
             )
           else
             Column(
@@ -143,8 +150,9 @@ class _AlertsPanelState extends State<AlertsPanel> {
                 Text(
                   product.name,
                   style: const TextStyle(
-                      color: FuturisticColors.textPrimary,
-                      fontWeight: FontWeight.w500),
+                    color: FuturisticColors.textPrimary,
+                    fontWeight: FontWeight.w500,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -157,18 +165,23 @@ class _AlertsPanelState extends State<AlertsPanel> {
               Text(
                 '${product.stockQuantity.toInt()} left',
                 style: const TextStyle(
-                    color: FuturisticColors.textSecondary, fontSize: 12),
+                  color: FuturisticColors.textSecondary,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 4),
               InkWell(
                 onTap: () {
                   // Navigate to restock
                 },
-                child: const Text('Restock',
-                    style: TextStyle(
-                        color: FuturisticColors.accent1,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Restock',
+                  style: TextStyle(
+                    color: FuturisticColors.accent1,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),

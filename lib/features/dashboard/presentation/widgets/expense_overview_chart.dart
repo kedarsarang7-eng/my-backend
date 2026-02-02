@@ -31,11 +31,8 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
       if (userId == null) return;
 
       final now = DateTime.now();
-      final result =
-          await sl<DashboardAnalyticsRepository>().getExpenseBreakdown(
-        userId: userId,
-        monthDate: now,
-      );
+      final result = await sl<DashboardAnalyticsRepository>()
+          .getExpenseBreakdown(userId: userId, monthDate: now);
 
       if (mounted) {
         setState(() {
@@ -83,7 +80,7 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
           fontWeight: FontWeight.bold,
           color: Colors.white,
           shadows: [
-            BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 2)
+            BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 2),
           ],
         ),
       );
@@ -114,9 +111,9 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
               Text(
                 'Expense Overview',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: FuturisticColors.textPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: FuturisticColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -125,9 +122,13 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
                   borderRadius: BorderRadius.circular(4),
                   border: Border.all(color: FuturisticColors.divider),
                 ),
-                child: const Text('This Month',
-                    style: TextStyle(
-                        color: FuturisticColors.textSecondary, fontSize: 10)),
+                child: const Text(
+                  'This Month',
+                  style: TextStyle(
+                    color: FuturisticColors.textSecondary,
+                    fontSize: 10,
+                  ),
+                ),
               ),
             ],
           ),
@@ -135,10 +136,13 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
             const Expanded(child: Center(child: CircularProgressIndicator()))
           else if (_data.isEmpty)
             const Expanded(
-                child: Center(
-                    child: Text('No expenses recorded this month',
-                        style:
-                            TextStyle(color: FuturisticColors.textSecondary))))
+              child: Center(
+                child: Text(
+                  'No expenses recorded this month',
+                  style: TextStyle(color: FuturisticColors.textSecondary),
+                ),
+              ),
+            )
           else
             Expanded(
               child: Row(
@@ -154,17 +158,19 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
                             pieTouchData: PieTouchData(
                               touchCallback:
                                   (FlTouchEvent event, pieTouchResponse) {
-                                setState(() {
-                                  if (!event.isInterestedForInteractions ||
-                                      pieTouchResponse == null ||
-                                      pieTouchResponse.touchedSection == null) {
-                                    _touchedIndex = -1;
-                                    return;
-                                  }
-                                  _touchedIndex = pieTouchResponse
-                                      .touchedSection!.touchedSectionIndex;
-                                });
-                              },
+                                    setState(() {
+                                      if (!event.isInterestedForInteractions ||
+                                          pieTouchResponse == null ||
+                                          pieTouchResponse.touchedSection ==
+                                              null) {
+                                        _touchedIndex = -1;
+                                        return;
+                                      }
+                                      _touchedIndex = pieTouchResponse
+                                          .touchedSection!
+                                          .touchedSectionIndex;
+                                    });
+                                  },
                             ),
                             borderData: FlBorderData(show: false),
                             sectionsSpace: 2,
@@ -176,17 +182,22 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Total',
-                                style: TextStyle(
-                                    color: FuturisticColors.textSecondary,
-                                    fontSize: 10)),
+                            const Text(
+                              'Total',
+                              style: TextStyle(
+                                color: FuturisticColors.textSecondary,
+                                fontSize: 10,
+                              ),
+                            ),
                             Text(
-                              NumberFormat.compactCurrency(symbol: '₹')
-                                  .format(totalExpense),
+                              NumberFormat.compactCurrency(
+                                symbol: '₹',
+                              ).format(totalExpense),
                               style: const TextStyle(
-                                  color: FuturisticColors.textPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
+                                color: FuturisticColors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                             ),
                           ],
                         ),
@@ -202,7 +213,7 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemCount: sortedEntries.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final entry = sortedEntries[index];
                         final List<Color> colors = [
@@ -217,17 +228,21 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
                         return Row(
                           children: [
                             Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                    color: color, shape: BoxShape.circle)),
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: color,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 entry.key,
                                 style: const TextStyle(
-                                    color: FuturisticColors.textSecondary,
-                                    fontSize: 12),
+                                  color: FuturisticColors.textSecondary,
+                                  fontSize: 12,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -235,9 +250,10 @@ class _ExpenseOverviewChartState extends State<ExpenseOverviewChart> {
                             Text(
                               NumberFormat.compact().format(entry.value),
                               style: const TextStyle(
-                                  color: FuturisticColors.textPrimary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold),
+                                color: FuturisticColors.textPrimary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         );

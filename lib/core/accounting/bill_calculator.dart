@@ -23,9 +23,13 @@ class BillCalculator {
 
     // Sum totals from calculated items (Source of Truth)
     final totalTax = safeItems.fold(
-        Decimal.zero, (sum, i) => sum + Decimal.parse(i.taxAmount.toString()));
+      Decimal.zero,
+      (sum, i) => sum + Decimal.parse(i.taxAmount.toString()),
+    );
     final grandTotal = safeItems.fold(
-        Decimal.zero, (sum, i) => sum + Decimal.parse(i.total.toString()));
+      Decimal.zero,
+      (sum, i) => sum + Decimal.parse(i.total.toString()),
+    );
 
     // Apply Bill Level Discount
     final billDiscount = Decimal.parse(bill.discountApplied.toString());
@@ -59,12 +63,13 @@ class BillCalculator {
 
     // 2. Taxable Value
     final taxableValue = baseAmount - discount;
-    final safeTaxable =
-        taxableValue < Decimal.zero ? Decimal.zero : taxableValue;
+    final safeTaxable = taxableValue < Decimal.zero
+        ? Decimal.zero
+        : taxableValue;
 
     // 3. Tax Calculation
-    final taxAmount =
-        (safeTaxable * gstPercent / Decimal.fromInt(100)).toDecimal();
+    final taxAmount = (safeTaxable * gstPercent / Decimal.fromInt(100))
+        .toDecimal();
 
     // Round Tax Amount to 2 decimals for final addition
     final newTotalTax = _roundTo2(taxAmount);

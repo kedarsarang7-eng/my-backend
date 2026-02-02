@@ -29,8 +29,8 @@ enum LicenseGuardState {
 /// Provider for license validation state
 final licenseGuardProvider =
     StateNotifierProvider<LicenseGuardNotifier, AsyncValue<LicenseGuardState>>(
-  (ref) => LicenseGuardNotifier(),
-);
+      (ref) => LicenseGuardNotifier(),
+    );
 
 /// License guard state notifier
 class LicenseGuardNotifier
@@ -41,7 +41,7 @@ class LicenseGuardNotifier
     state = const AsyncValue.loading();
 
     try {
-      final licenseService = getIt<LicenseService>();
+      final licenseService = sl<LicenseService>();
       final result = await licenseService.validateLicense(
         requiredBusinessType: businessType,
       );
@@ -57,8 +57,9 @@ class LicenseGuardNotifier
             state = const AsyncValue.data(LicenseGuardState.expired);
             break;
           case LicenseStatus.businessTypeMismatch:
-            state =
-                const AsyncValue.data(LicenseGuardState.businessTypeMismatch);
+            state = const AsyncValue.data(
+              LicenseGuardState.businessTypeMismatch,
+            );
             break;
           case LicenseStatus.deviceMismatch:
             state = const AsyncValue.data(LicenseGuardState.deviceMismatch);
@@ -83,7 +84,7 @@ class LicenseGuard extends ConsumerStatefulWidget {
   final Widget child;
   final Widget? loadingWidget;
   final Widget Function(LicenseGuardState state, VoidCallback retry)?
-      errorBuilder;
+  errorBuilder;
 
   const LicenseGuard({
     super.key,
@@ -124,7 +125,10 @@ class _LicenseGuardState extends ConsumerState<LicenseGuard> {
       error: (error, _) => widget.errorBuilder != null
           ? widget.errorBuilder!(LicenseGuardState.error, _retry)
           : _buildErrorScreen(
-              context, LicenseGuardState.error, error.toString()),
+              context,
+              LicenseGuardState.error,
+              error.toString(),
+            ),
       data: (guardState) {
         if (guardState == LicenseGuardState.valid) {
           return widget.child;
@@ -150,10 +154,7 @@ class _LicenseGuardState extends ConsumerState<LicenseGuard> {
             SizedBox(height: 24),
             Text(
               'Validating License...',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -185,11 +186,7 @@ class _LicenseGuardState extends ConsumerState<LicenseGuard> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      icon,
-                      size: 80,
-                      color: Colors.red.shade400,
-                    ),
+                    Icon(icon, size: 80, color: Colors.red.shade400),
                     const SizedBox(height: 24),
                     Text(
                       title,
@@ -202,10 +199,7 @@ class _LicenseGuardState extends ConsumerState<LicenseGuard> {
                     const SizedBox(height: 12),
                     Text(
                       message,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
@@ -376,7 +370,7 @@ class _LicenseGuardState extends ConsumerState<LicenseGuard> {
     );
 
     try {
-      final licenseService = getIt<LicenseService>();
+      final licenseService = sl<LicenseService>();
       final result = await licenseService.activateLicense(
         licenseKey: licenseKey,
         businessType: widget.businessType,
@@ -401,10 +395,7 @@ class _LicenseGuardState extends ConsumerState<LicenseGuard> {
       if (context.mounted) Navigator.pop(context); // Close loading
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -453,7 +444,7 @@ class ModuleGuard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: getIt<LicenseService>().isModuleEnabled(moduleCode),
+      future: sl<LicenseService>().isModuleEnabled(moduleCode),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -479,18 +470,11 @@ class ModuleGuard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.lock_outline,
-                size: 64,
-                color: Colors.grey[400],
-              ),
+              Icon(Icons.lock_outline, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
               const Text(
                 'Module Not Available',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(

@@ -33,8 +33,9 @@ class GlassPanel extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow:
-            glowColor != null ? [kP2DNeonGlow(glowColor!, blur: 20)] : null,
+        boxShadow: glowColor != null
+            ? [kP2DNeonGlow(glowColor!, blur: 20)]
+            : null,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -45,10 +46,7 @@ class GlassPanel extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(opacity),
               borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(
-                color: kP2DGlassBorder,
-                width: 1,
-              ),
+              border: Border.all(color: kP2DGlassBorder, width: 1),
             ),
             child: child,
           ),

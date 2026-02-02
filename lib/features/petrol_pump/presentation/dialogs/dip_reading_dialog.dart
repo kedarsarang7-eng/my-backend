@@ -102,8 +102,9 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
               // Dip reading input
               TextFormField(
                 controller: _dipQuantityController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Measured Dip Quantity',
                   hintText: 'Enter actual stock level',
@@ -136,15 +137,15 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
                     color: _variance < 0
                         ? FuturisticColors.error.withOpacity(0.1)
                         : _variance > 0
-                            ? FuturisticColors.success.withOpacity(0.1)
-                            : Colors.grey.withOpacity(0.1),
+                        ? FuturisticColors.success.withOpacity(0.1)
+                        : Colors.grey.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: _variance < 0
                           ? FuturisticColors.error.withOpacity(0.3)
                           : _variance > 0
-                              ? FuturisticColors.success.withOpacity(0.3)
-                              : Colors.grey.withOpacity(0.3),
+                          ? FuturisticColors.success.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.3),
                     ),
                   ),
                   child: Row(
@@ -153,13 +154,13 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
                         _variance < 0
                             ? Icons.trending_down
                             : _variance > 0
-                                ? Icons.trending_up
-                                : Icons.check_circle,
+                            ? Icons.trending_up
+                            : Icons.check_circle,
                         color: _variance < 0
                             ? FuturisticColors.error
                             : _variance > 0
-                                ? FuturisticColors.success
-                                : Colors.grey,
+                            ? FuturisticColors.success
+                            : Colors.grey,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -170,15 +171,15 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
                               _variance < 0
                                   ? 'Stock Loss'
                                   : _variance > 0
-                                      ? 'Stock Gain'
-                                      : 'No Variance',
+                                  ? 'Stock Gain'
+                                  : 'No Variance',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: _variance < 0
                                     ? FuturisticColors.error
                                     : _variance > 0
-                                        ? FuturisticColors.success
-                                        : Colors.grey,
+                                    ? FuturisticColors.success
+                                    : Colors.grey,
                               ),
                             ),
                             Text(
@@ -189,8 +190,8 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
                                 color: _variance < 0
                                     ? FuturisticColors.error
                                     : _variance > 0
-                                        ? FuturisticColors.success
-                                        : Colors.grey.shade700,
+                                    ? FuturisticColors.success
+                                    : Colors.grey.shade700,
                               ),
                             ),
                           ],
@@ -257,14 +258,15 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
         final varianceText = _variance < 0
             ? 'Loss: ${_variance.abs().toStringAsFixed(2)} L'
             : _variance > 0
-                ? 'Gain: ${_variance.toStringAsFixed(2)} L'
-                : 'No variance';
+            ? 'Gain: ${_variance.toStringAsFixed(2)} L'
+            : 'No variance';
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Dip reading recorded. $varianceText'),
-            backgroundColor:
-                _variance < 0 ? Colors.orange : FuturisticColors.success,
+            backgroundColor: _variance < 0
+                ? Colors.orange
+                : FuturisticColors.success,
           ),
         );
         Navigator.pop(context, true);
@@ -273,8 +275,9 @@ class _DipReadingDialogState extends State<DipReadingDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error: \$e'),
-              backgroundColor: FuturisticColors.error),
+            content: Text('Error: \$e'),
+            backgroundColor: FuturisticColors.error,
+          ),
         );
       }
     } finally {

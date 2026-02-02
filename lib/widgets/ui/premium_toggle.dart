@@ -60,9 +60,10 @@ class _PremiumToggleState extends State<PremiumToggle>
       reverseCurve: Curves.easeInOut,
     );
 
-    _glowAnimation = Tween<double>(begin: 0, end: 8).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _glowAnimation = Tween<double>(
+      begin: 0,
+      end: 8,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -156,8 +157,9 @@ class _PremiumToggleState extends State<PremiumToggle>
                       boxShadow: widget.value
                           ? [
                               BoxShadow(
-                                color: activeColor
-                                    .withOpacity(_isHovered ? 0.4 : 0.25),
+                                color: activeColor.withOpacity(
+                                  _isHovered ? 0.4 : 0.25,
+                                ),
                                 blurRadius: _isHovered ? 12 : 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -167,7 +169,8 @@ class _PremiumToggleState extends State<PremiumToggle>
                     child: Stack(
                       children: [
                         Positioned(
-                          left: trackPadding +
+                          left:
+                              trackPadding +
                               (_positionAnimation.value * travelDistance),
                           top: trackPadding,
                           child: Container(
@@ -184,8 +187,9 @@ class _PremiumToggleState extends State<PremiumToggle>
                                 ),
                                 if (widget.value)
                                   BoxShadow(
-                                    color: activeColor
-                                        .withOpacity(_isHovered ? 0.6 : 0.4),
+                                    color: activeColor.withOpacity(
+                                      _isHovered ? 0.6 : 0.4,
+                                    ),
                                     blurRadius: _glowAnimation.value,
                                     spreadRadius: _isHovered ? 2 : 0,
                                   ),

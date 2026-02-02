@@ -29,7 +29,7 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
     'top',
     'bottom',
     'shoes',
-    'acc'
+    'acc',
   ];
 
   @override
@@ -93,9 +93,12 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
                 ? const SizedBox(
                     width: 16,
                     height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2))
-                : const Text('SAVE',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text(
+                    'SAVE',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
           ),
         ],
       ),
@@ -130,10 +133,12 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
               unselectedLabelColor: Colors.grey[600],
               indicatorSize: TabBarIndicatorSize.label,
               tabs: _categories
-                  .map((cat) => Tab(
-                        text: AvatarConfig.categoryLabels[cat] ??
-                            cat.toUpperCase(),
-                      ))
+                  .map(
+                    (cat) => Tab(
+                      text:
+                          AvatarConfig.categoryLabels[cat] ?? cat.toUpperCase(),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -215,7 +220,8 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
         onSelect = (val) => ref
             .read(avatarEditorProvider.notifier)
             .updateAvatar(
-                currentData.copyWith(facialHair: val == 'none' ? '' : val));
+              currentData.copyWith(facialHair: val == 'none' ? '' : val),
+            );
         break;
       case 'glasses':
         options = AvatarConfig.glasses;
@@ -223,7 +229,8 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
         onSelect = (val) => ref
             .read(avatarEditorProvider.notifier)
             .updateAvatar(
-                currentData.copyWith(glasses: val == 'none' ? '' : val));
+              currentData.copyWith(glasses: val == 'none' ? '' : val),
+            );
         break;
       case 'top':
         options = AvatarConfig.tops;
@@ -251,8 +258,9 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
         selectedValue = currentData.outfitAccessories ?? 'none';
         onSelect = (val) => ref
             .read(avatarEditorProvider.notifier)
-            .updateAvatar(currentData.copyWith(
-                outfitAccessories: val == 'none' ? '' : val));
+            .updateAvatar(
+              currentData.copyWith(outfitAccessories: val == 'none' ? '' : val),
+            );
         break;
       default:
         options = [];
@@ -270,15 +278,17 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
       itemCount: options.length,
       itemBuilder: (context, index) {
         final option = options[index];
-        final isSelected = selectedValue == option ||
+        final isSelected =
+            selectedValue == option ||
             (selectedValue == '' && option == 'none');
 
         return GestureDetector(
           onTap: () => onSelect(option),
           child: Container(
             decoration: BoxDecoration(
-              color:
-                  isSelected ? Colors.blue.withOpacity(0.1) : Colors.grey[100],
+              color: isSelected
+                  ? Colors.blue.withOpacity(0.1)
+                  : Colors.grey[100],
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected ? Colors.blue : Colors.transparent,
@@ -292,7 +302,9 @@ class _AvatarEditorScreenState extends ConsumerState<AvatarEditorScreen>
                 // For now, we use a placeholder icon or text
                 if (category == 'skin')
                   CircleAvatar(
-                      backgroundColor: _getSkinColor(option), radius: 24)
+                    backgroundColor: _getSkinColor(option),
+                    radius: 24,
+                  )
                 else
                   Icon(Icons.checkroom, color: Colors.grey[700], size: 32),
 

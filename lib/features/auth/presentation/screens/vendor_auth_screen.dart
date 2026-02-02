@@ -85,8 +85,10 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
     final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final random = math.Random();
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final random4 =
-        List.generate(4, (_) => chars[random.nextInt(chars.length)]).join();
+    final random4 = List.generate(
+      4,
+      (_) => chars[random.nextInt(chars.length)],
+    ).join();
     return 'DX-VND-$timestamp-$random4';
   }
 
@@ -111,7 +113,8 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
       if (errorStr.contains('firebase-app-check-token-is-invalid') ||
           errorStr.contains('app-check')) {
         _showError(
-            'Security verification failed. Please restart the app and try again.');
+          'Security verification failed. Please restart the app and try again.',
+        );
         debugPrint('App Check Error: $e');
       } else {
         _showError(errorStr.replaceAll('Exception: ', ''));
@@ -170,8 +173,8 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
       session.isOwner
           ? 'vendor'
           : session.isCustomer
-              ? 'customer'
-              : null,
+          ? 'customer'
+          : null,
     );
 
     if (validationResult == RoleValidationResult.mismatch) {
@@ -190,8 +193,9 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
     // SUCCESS: Clear intent and navigate to AuthGate for role-based routing
     await authIntent.clearIntent();
     if (!mounted) return;
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/auth_gate', (route) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil('/auth_gate', (route) => false);
   }
 
   Future<void> _handleSignup() async {
@@ -209,11 +213,11 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
     await authIntent.setVendorIntent();
 
     // Create Firebase Auth user
-    final userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    final userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
     final user = userCredential.user!;
     debugPrint('VendorAuth: Firebase user created: ${user.uid}');
 
@@ -242,37 +246,40 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
   void _navigateToDashboard() {
     debugPrint('VendorAuth: Navigating to AuthGate...');
     // Show quick success message
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.white),
-          const SizedBox(width: 12),
-          Text("Login successful!", style: GoogleFonts.outfit()),
-        ],
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text("Login successful!", style: GoogleFonts.outfit()),
+          ],
+        ),
+        backgroundColor: const Color(0xFF00FF88).withOpacity(0.9),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
-      backgroundColor: const Color(0xFF00FF88).withOpacity(0.9),
-      behavior: SnackBarBehavior.floating,
-      duration: const Duration(seconds: 2),
-    ));
+    );
 
     // Check for security upgrade
     _checkSecurityUpgrade().then((_) {
       if (!mounted) return;
       // Navigate to AuthGate - let it handle role-based routing
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/auth_gate',
-        (route) => false,
-      );
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/auth_gate', (route) => false);
     });
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message, style: GoogleFonts.outfit(color: Colors.white)),
-      backgroundColor: Colors.red.withOpacity(0.9),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: GoogleFonts.outfit(color: Colors.white)),
+        backgroundColor: Colors.red.withOpacity(0.9),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   @override
@@ -394,11 +401,7 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                 ),
               ),
             ),
-          Icon(
-            Icons.menu,
-            color: Colors.white.withOpacity(0.7),
-            size: 28,
-          ),
+          Icon(Icons.menu, color: Colors.white.withOpacity(0.7), size: 28),
         ],
       ),
     );
@@ -410,10 +413,7 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white.withOpacity(0.05),
-        border: Border.all(
-          color: _primaryCyan.withOpacity(0.3),
-          width: 1,
-        ),
+        border: Border.all(color: _primaryCyan.withOpacity(0.3), width: 1),
       ),
       child: Form(
         key: _formKey,
@@ -471,8 +471,11 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                   _passwordController.text.length < 8)
                 Row(
                   children: [
-                    Icon(Icons.error_outline,
-                        color: Colors.orange.shade400, size: 14),
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.orange.shade400,
+                      size: 14,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       "Password must be at least 8 characters",
@@ -493,7 +496,8 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                 isPassword: true,
                 obscure: _obscureConfirmPassword,
                 onVisToggle: () => setState(
-                    () => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                ),
               ),
               const SizedBox(height: 8),
               // Password match hint
@@ -501,8 +505,11 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                   _confirmPasswordController.text != _passwordController.text)
                 Row(
                   children: [
-                    Icon(Icons.error_outline,
-                        color: Colors.orange.shade400, size: 14),
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.orange.shade400,
+                      size: 14,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       "Passwords do not match",
@@ -538,16 +545,18 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                   final session = sl<SessionManager>();
                   await session.refreshSession();
                   if (mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/auth_gate', (r) => false);
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/auth_gate', (r) => false);
                   }
                 },
                 onPinSuccess: () async {
                   final session = sl<SessionManager>();
                   await session.refreshSession();
                   if (mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/auth_gate', (r) => false);
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/auth_gate', (r) => false);
                   }
                 },
               ),
@@ -648,8 +657,9 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
         onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: Colors.white.withOpacity(0.3)),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           backgroundColor: Colors.white.withOpacity(0.05),
         ),
         child: _isGoogleLoading
@@ -657,7 +667,9 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white),
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -707,8 +719,11 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
           ),
           child: Row(
             children: [
-              Icon(Icons.badge_outlined,
-                  color: _primaryCyan.withOpacity(0.7), size: 20),
+              Icon(
+                Icons.badge_outlined,
+                color: _primaryCyan.withOpacity(0.7),
+                size: 20,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -780,8 +795,11 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.black.withOpacity(0.3),
-            prefixIcon:
-                Icon(icon, color: _primaryCyan.withOpacity(0.7), size: 20),
+            prefixIcon: Icon(
+              icon,
+              color: _primaryCyan.withOpacity(0.7),
+              size: 20,
+            ),
             prefixText: prefixText,
             prefixStyle: GoogleFonts.outfit(color: Colors.white70),
             suffixIcon: isPassword
@@ -794,9 +812,12 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                     onPressed: onVisToggle,
                   )
                 : (controller.text.isNotEmpty
-                    ? Icon(Icons.check_circle,
-                        color: _primaryCyan.withOpacity(0.7), size: 20)
-                    : null),
+                      ? Icon(
+                          Icons.check_circle,
+                          color: _primaryCyan.withOpacity(0.7),
+                          size: 20,
+                        )
+                      : null),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
@@ -809,8 +830,10 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: _primaryCyan.withOpacity(0.5)),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 16,
+            ),
           ),
         ),
       ],
@@ -827,8 +850,9 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           padding: EdgeInsets.zero,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: Ink(
           decoration: BoxDecoration(
@@ -850,7 +874,9 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
-                        color: Colors.white, strokeWidth: 2),
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
                   )
                 : Text(
                     _isLogin ? "Login" : "Create Account",
@@ -908,9 +934,8 @@ class _VendorAuthScreenState extends State<VendorAuthScreen>
         await showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => SecurityUpgradePrompt(
-            onDismiss: () => Navigator.pop(context),
-          ),
+          builder: (context) =>
+              SecurityUpgradePrompt(onDismiss: () => Navigator.pop(context)),
         );
       }
     }
@@ -1016,8 +1041,9 @@ class _GlowRingPainter extends CustomPainter {
     );
 
     final paint = Paint()
-      ..shader =
-          gradient.createShader(Rect.fromCircle(center: center, radius: radius))
+      ..shader = gradient.createShader(
+        Rect.fromCircle(center: center, radius: radius),
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
@@ -1039,11 +1065,7 @@ class _SpaceBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0B0D1F),
-            Color(0xFF0F1B3D),
-            Color(0xFF0B0D1F),
-          ],
+          colors: [Color(0xFF0B0D1F), Color(0xFF0F1B3D), Color(0xFF0B0D1F)],
         ),
       ),
       child: Stack(
@@ -1058,8 +1080,9 @@ class _SpaceBackground extends StatelessWidget {
                 height: random.nextDouble() * 2 + 1,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      Colors.white.withOpacity(random.nextDouble() * 0.5 + 0.2),
+                  color: Colors.white.withOpacity(
+                    random.nextDouble() * 0.5 + 0.2,
+                  ),
                 ),
               ),
             );
@@ -1237,8 +1260,10 @@ class _SuccessScreenState extends State<_SuccessScreen>
                 // Bottom message
                 Container(
                   margin: const EdgeInsets.all(24),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white.withOpacity(0.05),
@@ -1247,8 +1272,11 @@ class _SuccessScreenState extends State<_SuccessScreen>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.check,
-                          color: const Color(0xFF00FF88), size: 20),
+                      Icon(
+                        Icons.check,
+                        color: const Color(0xFF00FF88),
+                        size: 20,
+                      ),
                       const SizedBox(width: 10),
                       Text(
                         widget.subMessage,

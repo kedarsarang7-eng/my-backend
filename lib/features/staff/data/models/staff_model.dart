@@ -10,18 +10,10 @@ enum StaffRole {
 }
 
 /// Employment Type
-enum EmploymentType {
-  fullTime,
-  partTime,
-  contract,
-}
+enum EmploymentType { fullTime, partTime, contract }
 
 /// Salary Type
-enum SalaryType {
-  monthly,
-  daily,
-  hourly,
-}
+enum SalaryType { monthly, daily, hourly }
 
 /// Staff Member Model
 class StaffModel {

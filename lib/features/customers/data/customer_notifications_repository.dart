@@ -209,19 +209,22 @@ class CustomerNotificationsRepository {
     query.orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
     query.limit(100);
 
-    return query.watch().map((entities) => entities
-        .map(CustomerNotification.fromEntity)
-        .where((n) => !n.isExpired)
-        .toList());
+    return query.watch().map(
+      (entities) => entities
+          .map(CustomerNotification.fromEntity)
+          .where((n) => !n.isExpired)
+          .toList(),
+    );
   }
 
   /// Get unread count
   Future<RepositoryResult<int>> getUnreadCount(String customerId) async {
     return errorHandler.runSafe(() async {
-      final count = await (database.select(database.customerNotifications)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.isRead.equals(false)))
-          .get();
+      final count =
+          await (database.select(database.customerNotifications)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.isRead.equals(false)))
+              .get();
 
       return count.length;
     }, 'getUnreadCount');
@@ -241,12 +244,14 @@ class CustomerNotificationsRepository {
     return errorHandler.runSafe(() async {
       final now = DateTime.now();
 
-      await (database.update(database.customerNotifications)
-            ..where((t) => t.id.equals(notificationId)))
-          .write(CustomerNotificationsCompanion(
-        isRead: const Value(true),
-        readAt: Value(now),
-      ));
+      await (database.update(
+        database.customerNotifications,
+      )..where((t) => t.id.equals(notificationId))).write(
+        CustomerNotificationsCompanion(
+          isRead: const Value(true),
+          readAt: Value(now),
+        ),
+      );
 
       return true;
     }, 'markAsRead');
@@ -257,13 +262,16 @@ class CustomerNotificationsRepository {
     return errorHandler.runSafe(() async {
       final now = DateTime.now();
 
-      final updated = await (database.update(database.customerNotifications)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.isRead.equals(false)))
-          .write(CustomerNotificationsCompanion(
-        isRead: const Value(true),
-        readAt: Value(now),
-      ));
+      final updated =
+          await (database.update(database.customerNotifications)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.isRead.equals(false)))
+              .write(
+                CustomerNotificationsCompanion(
+                  isRead: const Value(true),
+                  readAt: Value(now),
+                ),
+              );
 
       return updated;
     }, 'markAllAsRead');
@@ -304,31 +312,33 @@ class CustomerNotificationsRepository {
       await database.into(database.customerNotifications).insert(entity);
 
       // Queue for sync (to trigger push notification on server)
-      await syncManager.enqueue(SyncQueueItem.create(
-        userId: vendorId ?? customerId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'customer_notifications',
-        documentId: id,
-        payload: {
-          'id': id,
-          'customerId': customerId,
-          'vendorId': vendorId,
-          'notificationType': _getNotificationTypeString(notificationType),
-          'title': title,
-          'body': body,
-          'imageUrl': imageUrl,
-          'data': data,
-          'actionType': actionType,
-          'actionId': actionId,
-          'isRead': false,
-          'createdAt': now.toIso8601String(),
-          'expiresAt': expiresAt?.toIso8601String(),
-        },
-      ));
+      await syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: vendorId ?? customerId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'customer_notifications',
+          documentId: id,
+          payload: {
+            'id': id,
+            'customerId': customerId,
+            'vendorId': vendorId,
+            'notificationType': _getNotificationTypeString(notificationType),
+            'title': title,
+            'body': body,
+            'imageUrl': imageUrl,
+            'data': data,
+            'actionType': actionType,
+            'actionId': actionId,
+            'isRead': false,
+            'createdAt': now.toIso8601String(),
+            'expiresAt': expiresAt?.toIso8601String(),
+          },
+        ),
+      );
 
-      final result = await (database.select(database.customerNotifications)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final result = await (database.select(
+        database.customerNotifications,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       return CustomerNotification.fromEntity(result);
     }, 'createNotification');
@@ -359,11 +369,12 @@ class CustomerNotificationsRepository {
     return errorHandler.runSafe(() async {
       final cutoff = DateTime.now().subtract(Duration(days: daysOld));
 
-      final deleted = await (database.delete(database.customerNotifications)
-            ..where((t) => t.customerId.equals(customerId))
-            ..where((t) => t.createdAt.isSmallerThanValue(cutoff))
-            ..where((t) => t.isRead.equals(true)))
-          .go();
+      final deleted =
+          await (database.delete(database.customerNotifications)
+                ..where((t) => t.customerId.equals(customerId))
+                ..where((t) => t.createdAt.isSmallerThanValue(cutoff))
+                ..where((t) => t.isRead.equals(true)))
+              .go();
 
       return deleted;
     }, 'deleteOldNotifications');
@@ -377,24 +388,26 @@ class CustomerNotificationsRepository {
 /// Provider for CustomerNotificationsRepository
 final customerNotificationsRepositoryProvider =
     Provider<CustomerNotificationsRepository>((ref) {
-  return CustomerNotificationsRepository(
-    database: AppDatabase.instance,
-    syncManager: sl<SyncManager>(),
-    errorHandler: sl<ErrorHandler>(),
-  );
-});
+      return CustomerNotificationsRepository(
+        database: AppDatabase.instance,
+        syncManager: sl<SyncManager>(),
+        errorHandler: sl<ErrorHandler>(),
+      );
+    });
 
 /// Provider for notifications list
 final customerNotificationsProvider =
-    StreamProvider.family<List<CustomerNotification>, String>(
-        (ref, customerId) {
-  final repo = ref.watch(customerNotificationsRepositoryProvider);
-  return repo.watchNotifications(customerId);
-});
+    StreamProvider.family<List<CustomerNotification>, String>((
+      ref,
+      customerId,
+    ) {
+      final repo = ref.watch(customerNotificationsRepositoryProvider);
+      return repo.watchNotifications(customerId);
+    });
 
 /// Provider for unread count
 final customerUnreadNotificationsCountProvider =
     StreamProvider.family<int, String>((ref, customerId) {
-  final repo = ref.watch(customerNotificationsRepositoryProvider);
-  return repo.watchUnreadCount(customerId);
-});
+      final repo = ref.watch(customerNotificationsRepositoryProvider);
+      return repo.watchUnreadCount(customerId);
+    });

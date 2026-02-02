@@ -57,8 +57,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Text("Biometric App Lock Enabled"),
-                  backgroundColor: Colors.green),
+                content: Text("Biometric App Lock Enabled"),
+                backgroundColor: Colors.green,
+              ),
             );
           }
         } else {
@@ -66,8 +67,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Text("Authentication Failed"),
-                  backgroundColor: Colors.red),
+                content: Text("Authentication Failed"),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         }
@@ -111,23 +113,31 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                     ),
                     subtitle: Text(
                       "Require fingerprint/face ID to open app",
-                      style:
-                          GoogleFonts.outfit(color: Colors.grey, fontSize: 13),
+                      style: GoogleFonts.outfit(
+                        color: Colors.grey,
+                        fontSize: 13,
+                      ),
                     ),
                     secondary: const Icon(Icons.fingerprint),
                     activeColor: Theme.of(context).colorScheme.primary,
                   )
                 else
                   ListTile(
-                    title: Text("Biometrics Unavailable",
-                        style: GoogleFonts.outfit(color: Colors.grey)),
-                    subtitle: Text("Device does not support biometrics",
-                        style: GoogleFonts.outfit(fontSize: 12)),
+                    title: Text(
+                      "Biometrics Unavailable",
+                      style: GoogleFonts.outfit(color: Colors.grey),
+                    ),
+                    subtitle: Text(
+                      "Device does not support biometrics",
+                      style: GoogleFonts.outfit(fontSize: 12),
+                    ),
                     leading: const Icon(Icons.fingerprint, color: Colors.grey),
                   ),
                 ListTile(
-                  title: Text("PIN Code",
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.w500)),
+                  title: Text(
+                    "PIN Code",
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.w500),
+                  ),
                   subtitle: Text(
                     _pinEnabled ? "PIN is set" : "Setup 4-digit PIN",
                     style: GoogleFonts.outfit(color: Colors.grey, fontSize: 13),
@@ -140,9 +150,12 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => PinSetupScreen(onSuccess: () {
-                                _loadSettings();
-                              })),
+                        builder: (_) => PinSetupScreen(
+                          onSuccess: () {
+                            _loadSettings();
+                          },
+                        ),
+                      ),
                     );
                     _loadSettings(); // Reload after return as well
                   },
@@ -160,7 +173,8 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                       builder: (context) => AlertDialog(
                         title: const Text("Change Password"),
                         content: const Text(
-                            "To change your password, please sign out and use the 'Forgot Password' option on the login screen."),
+                          "To change your password, please sign out and use the 'Forgot Password' option on the login screen.",
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
@@ -173,8 +187,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.delete_forever, color: Colors.red),
-                  title: Text("Delete Account",
-                      style: GoogleFonts.outfit(color: Colors.red)),
+                  title: Text(
+                    "Delete Account",
+                    style: GoogleFonts.outfit(color: Colors.red),
+                  ),
                   onTap: () {
                     showDialog(
                       context: context,

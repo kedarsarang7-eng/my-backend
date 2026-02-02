@@ -35,7 +35,7 @@ class DocumentSessionNotifier extends Notifier<DocumentSessionState> {
     state = state.copyWith(
       pages: [
         for (final page in state.pages)
-          if (page.id == updatedPage.id) updatedPage else page
+          if (page.id == updatedPage.id) updatedPage else page,
       ],
     );
   }
@@ -57,4 +57,5 @@ class DocumentSessionNotifier extends Notifier<DocumentSessionState> {
 
 final documentSessionProvider =
     NotifierProvider<DocumentSessionNotifier, DocumentSessionState>(
-        DocumentSessionNotifier.new);
+      DocumentSessionNotifier.new,
+    );

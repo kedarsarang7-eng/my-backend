@@ -40,15 +40,15 @@ class StockTransaction {
   }
 
   Map<String, dynamic> toMap() => {
-        'vendorId': vendorId,
-        'itemId': itemId,
-        'deltaQty': deltaQty,
-        'reason': reason.name,
-        'referenceId': referenceId,
-        'description': description,
-        'createdAt': createdAt.toIso8601String(),
-        'createdBy': createdBy,
-      };
+    'vendorId': vendorId,
+    'itemId': itemId,
+    'deltaQty': deltaQty,
+    'reason': reason.name,
+    'referenceId': referenceId,
+    'description': description,
+    'createdAt': createdAt.toIso8601String(),
+    'createdBy': createdBy,
+  };
 
   /// Create a SALE transaction (stock out)
   factory StockTransaction.sale({

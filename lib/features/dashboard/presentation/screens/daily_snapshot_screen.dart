@@ -82,17 +82,20 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
               children: [
                 // Today's Summary Card
                 _buildTodaySummaryCard(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
                 const SizedBox(height: 24),
 
                 // Comparison Cards
                 _buildComparisonSection(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
                 const SizedBox(height: 24),
 
                 // Weekly Trend
                 _buildWeeklyTrend(
-                    Theme.of(context).brightness == Brightness.dark),
+                  Theme.of(context).brightness == Brightness.dark,
+                ),
               ],
             ),
     );
@@ -123,8 +126,10 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: snapshot.isProfitable
                         ? const Color(0xFF10B981).withOpacity(0.1)
@@ -164,38 +169,46 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
             Row(
               children: [
                 Expanded(
-                    child: _buildMainMetric(
-                        'Total Sales',
-                        '₹${_formatAmount(snapshot.totalSales)}',
-                        Icons.trending_up,
-                        const Color(0xFF10B981),
-                        isDark)),
+                  child: _buildMainMetric(
+                    'Total Sales',
+                    '₹${_formatAmount(snapshot.totalSales)}',
+                    Icons.trending_up,
+                    const Color(0xFF10B981),
+                    isDark,
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
-                    child: _buildMainMetric(
-                        'Collections',
-                        '₹${_formatAmount(snapshot.totalReceipts)}',
-                        Icons.payments,
-                        const Color(0xFF06B6D4),
-                        isDark)),
+                  child: _buildMainMetric(
+                    'Collections',
+                    '₹${_formatAmount(snapshot.totalReceipts)}',
+                    Icons.payments,
+                    const Color(0xFF06B6D4),
+                    isDark,
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
-                    child: _buildMainMetric(
-                        'Expenses',
-                        '₹${_formatAmount(snapshot.totalExpenses)}',
-                        Icons.receipt_long,
-                        const Color(0xFFEF4444),
-                        isDark)),
+                  child: _buildMainMetric(
+                    'Expenses',
+                    '₹${_formatAmount(snapshot.totalExpenses)}',
+                    Icons.receipt_long,
+                    const Color(0xFFEF4444),
+                    isDark,
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
-                    child: _buildMainMetric(
-                        'Net Cash Flow',
-                        '₹${_formatAmount(snapshot.netCashFlow)}',
-                        Icons.account_balance_wallet,
-                        snapshot.netCashFlow >= 0
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFEF4444),
-                        isDark)),
+                  child: _buildMainMetric(
+                    'Net Cash Flow',
+                    '₹${_formatAmount(snapshot.netCashFlow)}',
+                    Icons.account_balance_wallet,
+                    snapshot.netCashFlow >= 0
+                        ? const Color(0xFF10B981)
+                        : const Color(0xFFEF4444),
+                    isDark,
+                  ),
+                ),
               ],
             ),
 
@@ -206,13 +219,25 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildSecondaryMetric(
-                    'Invoices', '${snapshot.invoiceCount}', isDark),
+                  'Invoices',
+                  '${snapshot.invoiceCount}',
+                  isDark,
+                ),
                 _buildSecondaryMetric(
-                    'Customers', '${snapshot.customerCount}', isDark),
-                _buildSecondaryMetric('Avg Invoice',
-                    '₹${snapshot.avgInvoiceValue.toStringAsFixed(0)}', isDark),
-                _buildSecondaryMetric('Outstanding Added',
-                    '₹${snapshot.outstandingAdded.toStringAsFixed(0)}', isDark),
+                  'Customers',
+                  '${snapshot.customerCount}',
+                  isDark,
+                ),
+                _buildSecondaryMetric(
+                  'Avg Invoice',
+                  '₹${snapshot.avgInvoiceValue.toStringAsFixed(0)}',
+                  isDark,
+                ),
+                _buildSecondaryMetric(
+                  'Outstanding Added',
+                  '₹${snapshot.outstandingAdded.toStringAsFixed(0)}',
+                  isDark,
+                ),
               ],
             ),
           ],
@@ -222,15 +247,18 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
   }
 
   Widget _buildMainMetric(
-      String label, String value, IconData icon, Color color, bool isDark) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-        ),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,17 +330,32 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
         Row(
           children: [
             Expanded(
-                child: _buildComparisonCard(
-                    'Sales', salesChange, salesChangePercent, isDark)),
+              child: _buildComparisonCard(
+                'Sales',
+                salesChange,
+                salesChangePercent,
+                isDark,
+              ),
+            ),
             const SizedBox(width: 16),
             Expanded(
-                child: _buildComparisonCard(
-                    'Collections', receiptsChange, null, isDark)),
+              child: _buildComparisonCard(
+                'Collections',
+                receiptsChange,
+                null,
+                isDark,
+              ),
+            ),
             const SizedBox(width: 16),
             Expanded(
-                child: _buildComparisonCard(
-                    'Invoices', invoiceChange.toDouble(), null, isDark,
-                    isCount: true)),
+              child: _buildComparisonCard(
+                'Invoices',
+                invoiceChange.toDouble(),
+                null,
+                isDark,
+                isCount: true,
+              ),
+            ),
           ],
         ),
       ],
@@ -320,11 +363,16 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
   }
 
   Widget _buildComparisonCard(
-      String label, double change, double? percent, bool isDark,
-      {bool isCount = false}) {
+    String label,
+    double change,
+    double? percent,
+    bool isDark, {
+    bool isCount = false,
+  }) {
     final isPositive = change >= 0;
-    final color =
-        isPositive ? const Color(0xFF10B981) : const Color(0xFFEF4444);
+    final color = isPositive
+        ? const Color(0xFF10B981)
+        : const Color(0xFFEF4444);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -370,10 +418,7 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
             const SizedBox(height: 4),
             Text(
               '${percent >= 0 ? '+' : ''}${percent.toStringAsFixed(1)}%',
-              style: TextStyle(
-                fontSize: 12,
-                color: color,
-              ),
+              style: TextStyle(fontSize: 12, color: color),
             ),
           ],
         ],
@@ -409,7 +454,8 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
                   child: Text(
                     'No data available',
                     style: TextStyle(
-                        color: isDark ? Colors.white60 : Colors.grey[600]),
+                      color: isDark ? Colors.white60 : Colors.grey[600],
+                    ),
                   ),
                 )
               : Row(
@@ -433,10 +479,11 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
                             Text(
                               '₹${_formatAmount(snapshot.totalSales)}',
                               style: TextStyle(
-                                  fontSize: 10,
-                                  color: isDark
-                                      ? Colors.white60
-                                      : Colors.grey[600]),
+                                fontSize: 10,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey[600],
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Container(
@@ -457,10 +504,11 @@ class _DailySnapshotScreenState extends ConsumerState<DailySnapshotScreen> {
                             Text(
                               _getDayLabel(index),
                               style: TextStyle(
-                                  fontSize: 10,
-                                  color: isDark
-                                      ? Colors.white60
-                                      : Colors.grey[600]),
+                                fontSize: 10,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey[600],
+                              ),
                             ),
                           ],
                         ),

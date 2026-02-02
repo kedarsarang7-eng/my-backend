@@ -35,15 +35,15 @@ class PrescriptionItemModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'prescriptionId': prescriptionId,
-        'medicineName': medicineName,
-        'productId': productId,
-        'dosage': dosage,
-        'frequency': frequency,
-        'duration': duration,
-        'instructions': instructions,
-      };
+    'id': id,
+    'prescriptionId': prescriptionId,
+    'medicineName': medicineName,
+    'productId': productId,
+    'dosage': dosage,
+    'frequency': frequency,
+    'duration': duration,
+    'instructions': instructions,
+  };
 }
 
 class PrescriptionModel {
@@ -77,7 +77,8 @@ class PrescriptionModel {
       visitId: map['visitId'] ?? '',
       date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
       advice: map['advice'],
-      items: (map['items'] as List<dynamic>?)
+      items:
+          (map['items'] as List<dynamic>?)
               ?.map((e) => PrescriptionItemModel.fromMap(e))
               .toList() ??
           [],
@@ -87,26 +88,28 @@ class PrescriptionModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'doctorId': doctorId,
-        'patientId': patientId,
-        'visitId': visitId,
-        'date': date.toIso8601String(),
-        'advice': advice,
-        'items': items.map((e) => e.toMap()).toList(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'doctorId': doctorId,
+    'patientId': patientId,
+    'visitId': visitId,
+    'date': date.toIso8601String(),
+    'advice': advice,
+    'items': items.map((e) => e.toMap()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   // Helper for generic 'medicinesJson' column if needed
-  String get medicinesJson => jsonEncode(items.map((e) {
-        // Map to simplified structure for JSON if schema expects that, or full map
-        return {
-          'name': e.medicineName,
-          'dosage': e.dosage,
-          'frequency': e.frequency,
-          'duration': e.duration,
-          'instructions': e.instructions,
-        };
-      }).toList());
+  String get medicinesJson => jsonEncode(
+    items.map((e) {
+      // Map to simplified structure for JSON if schema expects that, or full map
+      return {
+        'name': e.medicineName,
+        'dosage': e.dosage,
+        'frequency': e.frequency,
+        'duration': e.duration,
+        'instructions': e.instructions,
+      };
+    }).toList(),
+  );
 }

@@ -70,9 +70,11 @@ class ConnectionService {
         .collection('requests')
         .where('status', isEqualTo: 'pending')
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => ConnectionRequest.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((d) => ConnectionRequest.fromMap(d.id, d.data()))
+              .toList(),
+        );
   }
 
   /// Accept a customer's connection request
@@ -121,9 +123,9 @@ class ConnectionService {
         .collection('requests')
         .doc(requestId)
         .update({
-      'status': 'rejected',
-      'respondedAt': FieldValue.serverTimestamp(),
-    });
+          'status': 'rejected',
+          'respondedAt': FieldValue.serverTimestamp(),
+        });
   }
 
   // --- CUSTOMER METHODS ---
@@ -192,7 +194,10 @@ class ConnectionService {
 
   /// Add a temporary watch record to my own profile to track this request
   Future<void> _addToMyWatchlist(
-      String vendorId, String customerId, String requestId) async {
+    String vendorId,
+    String customerId,
+    String requestId,
+  ) async {
     final user = _auth.currentUser;
     if (user == null) return;
 
@@ -202,11 +207,11 @@ class ConnectionService {
         .collection('pending_connections')
         .doc(requestId)
         .set({
-      'vendorId': vendorId,
-      'customerId': customerId,
-      'requestId': requestId,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+          'vendorId': vendorId,
+          'customerId': customerId,
+          'requestId': requestId,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
   }
 
   /// Check Status of my pending connections and move to 'connected' if accepted
@@ -249,11 +254,11 @@ class ConnectionService {
             .collection('connections')
             .doc(vendorId)
             .set({
-          'vendorId': vendorId,
-          'customerId': customerId,
-          'linkedAt': FieldValue.serverTimestamp(),
-          'shopName': 'Shop #$vendorId', // Ideally fetch shop name
-        });
+              'vendorId': vendorId,
+              'customerId': customerId,
+              'linkedAt': FieldValue.serverTimestamp(),
+              'shopName': 'Shop #$vendorId', // Ideally fetch shop name
+            });
 
         // Remove pending watch
         await doc.reference.delete();
@@ -273,8 +278,10 @@ class ConnectionService {
         .doc(user.uid)
         .collection('connections')
         .snapshots()
-        .map((snap) =>
-            snap.docs.map((d) => ConnectedShop.fromMap(d.data())).toList());
+        .map(
+          (snap) =>
+              snap.docs.map((d) => ConnectedShop.fromMap(d.data())).toList(),
+        );
   }
 
   /// Stream live shop details (Name, Logo) from the official Owners collection
@@ -313,8 +320,10 @@ class ConnectionService {
     final results = <Map<String, dynamic>>[];
 
     // 1. Exact match ownerID
-    final byId =
-        await _db.collection('owners').where('ownerId', isEqualTo: query).get();
+    final byId = await _db
+        .collection('owners')
+        .where('ownerId', isEqualTo: query)
+        .get();
     for (var doc in byId.docs) {
       results.add({'id': doc.id, ...doc.data()});
     }
@@ -352,9 +361,13 @@ class ConnectionService {
     // For now we just remove from our local list.
 
     // Also remove from legacy customers list if needed (backwards compat)
-    await _db.collection('customers').doc(user.uid).update({
-      'linkedShopIds': FieldValue.arrayRemove([vendorId])
-    }).onError((e, s) => null); // Ignore error if doc doesn't exist
+    await _db
+        .collection('customers')
+        .doc(user.uid)
+        .update({
+          'linkedShopIds': FieldValue.arrayRemove([vendorId]),
+        })
+        .onError((e, s) => null); // Ignore error if doc doesn't exist
   }
 
   /// Verify a 6-digit link request code (Legacy/Remote Flow)
@@ -452,10 +465,11 @@ class ConnectedShop {
   final String customerId;
   final String shopName;
 
-  ConnectedShop(
-      {required this.vendorId,
-      required this.customerId,
-      required this.shopName});
+  ConnectedShop({
+    required this.vendorId,
+    required this.customerId,
+    required this.shopName,
+  });
 
   factory ConnectedShop.fromMap(Map<String, dynamic> map) {
     return ConnectedShop(

@@ -14,23 +14,31 @@ class JournalEntryService {
   final AccountingRepository _repo;
 
   JournalEntryService({AccountingRepository? repo})
-      : _repo = repo ?? AccountingRepository();
+    : _repo = repo ?? AccountingRepository();
 
   Future<List<JournalEntryModel>> getEntriesBySource(
-      String sourceType, String sourceId) async {
+    String sourceType,
+    String sourceId,
+  ) async {
     return _repo.getJournalEntriesBySource(sourceType, sourceId);
   }
 
   /// Get day book entries by date range (Strict Ledger Order)
   Stream<List<JournalEntryModel>> watchEntriesByDateRange(
-      String userId, DateTime start, DateTime end,
-      {bool includeSystemEntries = true}) {
+    String userId,
+    DateTime start,
+    DateTime end, {
+    bool includeSystemEntries = true,
+  }) {
     return _repo.watchDayBookEntries(userId, start, end).map((entries) {
       if (includeSystemEntries) return entries;
       // Filter out purely system/reconcilation entries if requested
       return entries
-          .where((e) =>
-              e.classification != AccountingEntryClassification.systemGenerated)
+          .where(
+            (e) =>
+                e.classification !=
+                AccountingEntryClassification.systemGenerated,
+          )
           .toList();
     });
   }
@@ -61,8 +69,11 @@ class JournalEntryService {
     final entries = <JournalEntryLine>[];
 
     // Get/create customer ledger
-    final customerLedger =
-        await _repo.getOrCreateCustomerLedger(userId, customerId, customerName);
+    final customerLedger = await _repo.getOrCreateCustomerLedger(
+      userId,
+      customerId,
+      customerName,
+    );
 
     // Get system ledgers
     final ledgers = await _repo.getAllLedgerAccounts(userId);
@@ -73,68 +84,82 @@ class JournalEntryService {
     final discountLedger = _findSystemLedger(ledgers, 'Discount Allowed');
 
     // Debit: Customer (total amount)
-    entries.add(JournalEntryLine(
-      ledgerId: customerLedger.id,
-      ledgerName: customerLedger.name,
-      debit: totalAmount,
-      description: 'Invoice $invoiceNumber',
-    ));
+    entries.add(
+      JournalEntryLine(
+        ledgerId: customerLedger.id,
+        ledgerName: customerLedger.name,
+        debit: totalAmount,
+        description: 'Invoice $invoiceNumber',
+      ),
+    );
 
     // Credit: Sales (taxable amount)
     if (salesLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: salesLedger.id,
-        ledgerName: salesLedger.name,
-        credit: taxableAmount,
-        description: 'Sales',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: salesLedger.id,
+          ledgerName: salesLedger.name,
+          credit: taxableAmount,
+          description: 'Sales',
+        ),
+      );
     }
 
     // Credit: CGST Payable
     if (cgstAmount > 0 && cgstLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: cgstLedger.id,
-        ledgerName: cgstLedger.name,
-        credit: cgstAmount,
-        description: 'CGST Output',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: cgstLedger.id,
+          ledgerName: cgstLedger.name,
+          credit: cgstAmount,
+          description: 'CGST Output',
+        ),
+      );
     }
 
     // Credit: SGST Payable
     if (sgstAmount > 0 && sgstLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: sgstLedger.id,
-        ledgerName: sgstLedger.name,
-        credit: sgstAmount,
-        description: 'SGST Output',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: sgstLedger.id,
+          ledgerName: sgstLedger.name,
+          credit: sgstAmount,
+          description: 'SGST Output',
+        ),
+      );
     }
 
     // Credit: IGST Payable
     if (igstAmount > 0 && igstLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: igstLedger.id,
-        ledgerName: igstLedger.name,
-        credit: igstAmount,
-        description: 'IGST Output',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: igstLedger.id,
+          ledgerName: igstLedger.name,
+          credit: igstAmount,
+          description: 'IGST Output',
+        ),
+      );
     }
 
     // Debit: Discount (if any) - reduces total
     if (discountAmount > 0 && discountLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: discountLedger.id,
-        ledgerName: discountLedger.name,
-        debit: discountAmount,
-        description: 'Discount Allowed',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: discountLedger.id,
+          ledgerName: discountLedger.name,
+          debit: discountAmount,
+          description: 'Discount Allowed',
+        ),
+      );
     }
 
     final totalDebit = entries.fold<double>(0, (sum, e) => sum + e.debit);
     final totalCredit = entries.fold<double>(0, (sum, e) => sum + e.credit);
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.sales);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.sales,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -181,8 +206,11 @@ class JournalEntryService {
     final entries = <JournalEntryLine>[];
 
     // Get/create vendor ledger
-    final vendorLedger =
-        await _repo.getOrCreateVendorLedger(userId, vendorId, vendorName);
+    final vendorLedger = await _repo.getOrCreateVendorLedger(
+      userId,
+      vendorId,
+      vendorName,
+    );
 
     // Get system ledgers
     final ledgers = await _repo.getAllLedgerAccounts(userId);
@@ -193,57 +221,69 @@ class JournalEntryService {
 
     // Debit: Purchase (taxable amount)
     if (purchaseLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: purchaseLedger.id,
-        ledgerName: purchaseLedger.name,
-        debit: taxableAmount,
-        description: 'Purchase',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: purchaseLedger.id,
+          ledgerName: purchaseLedger.name,
+          debit: taxableAmount,
+          description: 'Purchase',
+        ),
+      );
     }
 
     // Debit: CGST Receivable (input credit)
     if (cgstAmount > 0 && cgstLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: cgstLedger.id,
-        ledgerName: cgstLedger.name,
-        debit: cgstAmount,
-        description: 'CGST Input',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: cgstLedger.id,
+          ledgerName: cgstLedger.name,
+          debit: cgstAmount,
+          description: 'CGST Input',
+        ),
+      );
     }
 
     // Debit: SGST Receivable
     if (sgstAmount > 0 && sgstLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: sgstLedger.id,
-        ledgerName: sgstLedger.name,
-        debit: sgstAmount,
-        description: 'SGST Input',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: sgstLedger.id,
+          ledgerName: sgstLedger.name,
+          debit: sgstAmount,
+          description: 'SGST Input',
+        ),
+      );
     }
 
     // Debit: IGST Receivable
     if (igstAmount > 0 && igstLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: igstLedger.id,
-        ledgerName: igstLedger.name,
-        debit: igstAmount,
-        description: 'IGST Input',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: igstLedger.id,
+          ledgerName: igstLedger.name,
+          debit: igstAmount,
+          description: 'IGST Input',
+        ),
+      );
     }
 
     // Credit: Vendor (total amount)
-    entries.add(JournalEntryLine(
-      ledgerId: vendorLedger.id,
-      ledgerName: vendorLedger.name,
-      credit: totalAmount,
-      description: 'Purchase $purchaseNumber',
-    ));
+    entries.add(
+      JournalEntryLine(
+        ledgerId: vendorLedger.id,
+        ledgerName: vendorLedger.name,
+        credit: totalAmount,
+        description: 'Purchase $purchaseNumber',
+      ),
+    );
 
     final totalDebit = entries.fold<double>(0, (sum, e) => sum + e.debit);
     final totalCredit = entries.fold<double>(0, (sum, e) => sum + e.credit);
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.purchase);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.purchase,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -286,8 +326,11 @@ class JournalEntryService {
     final entries = <JournalEntryLine>[];
 
     // Get customer ledger
-    final customerLedger =
-        await _repo.getOrCreateCustomerLedger(userId, customerId, customerName);
+    final customerLedger = await _repo.getOrCreateCustomerLedger(
+      userId,
+      customerId,
+      customerName,
+    );
 
     // Get cash/bank ledger
     final ledgers = await _repo.getAllLedgerAccounts(userId);
@@ -297,24 +340,30 @@ class JournalEntryService {
 
     // Debit: Cash/Bank
     if (cashBankLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: cashBankLedger.id,
-        ledgerName: cashBankLedger.name,
-        debit: amount,
-        description: 'Payment from $customerName',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: cashBankLedger.id,
+          ledgerName: cashBankLedger.name,
+          debit: amount,
+          description: 'Payment from $customerName',
+        ),
+      );
     }
 
     // Credit: Customer
-    entries.add(JournalEntryLine(
-      ledgerId: customerLedger.id,
-      ledgerName: customerLedger.name,
-      credit: amount,
-      description: 'Payment received',
-    ));
+    entries.add(
+      JournalEntryLine(
+        ledgerId: customerLedger.id,
+        ledgerName: customerLedger.name,
+        credit: amount,
+        description: 'Payment received',
+      ),
+    );
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.receipt);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.receipt,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -352,8 +401,11 @@ class JournalEntryService {
     final entries = <JournalEntryLine>[];
 
     // Get vendor ledger
-    final vendorLedger =
-        await _repo.getOrCreateVendorLedger(userId, vendorId, vendorName);
+    final vendorLedger = await _repo.getOrCreateVendorLedger(
+      userId,
+      vendorId,
+      vendorName,
+    );
 
     // Get cash/bank ledger
     final ledgers = await _repo.getAllLedgerAccounts(userId);
@@ -362,25 +414,31 @@ class JournalEntryService {
         : _findSystemLedger(ledgers, 'Primary Bank Account');
 
     // Debit: Vendor
-    entries.add(JournalEntryLine(
-      ledgerId: vendorLedger.id,
-      ledgerName: vendorLedger.name,
-      debit: amount,
-      description: 'Payment made',
-    ));
+    entries.add(
+      JournalEntryLine(
+        ledgerId: vendorLedger.id,
+        ledgerName: vendorLedger.name,
+        debit: amount,
+        description: 'Payment made',
+      ),
+    );
 
     // Credit: Cash/Bank
     if (cashBankLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: cashBankLedger.id,
-        ledgerName: cashBankLedger.name,
-        credit: amount,
-        description: 'Payment to $vendorName',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: cashBankLedger.id,
+          ledgerName: cashBankLedger.name,
+          credit: amount,
+          description: 'Payment to $vendorName',
+        ),
+      );
     }
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.payment);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.payment,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -433,26 +491,32 @@ class JournalEntryService {
 
     // Debit: Expense
     if (expenseLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: expenseLedger.id,
-        ledgerName: expenseLedger.name,
-        debit: amount,
-        description: description ?? expenseCategory,
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: expenseLedger.id,
+          ledgerName: expenseLedger.name,
+          debit: amount,
+          description: description ?? expenseCategory,
+        ),
+      );
     }
 
     // Credit: Cash/Bank
     if (cashBankLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: cashBankLedger.id,
-        ledgerName: cashBankLedger.name,
-        credit: amount,
-        description: 'Expense payment',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: cashBankLedger.id,
+          ledgerName: cashBankLedger.name,
+          credit: amount,
+          description: 'Expense payment',
+        ),
+      );
     }
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.payment);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.payment,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -514,7 +578,9 @@ class JournalEntryService {
         // OUT: Dr COGS
         // We might not have COGS, so use Purchase Account or create COGS
         offsetLedger = _findSystemLedger(
-            ledgers, 'Purchase Account'); // Using Purchase as COGS proxy
+          ledgers,
+          'Purchase Account',
+        ); // Using Purchase as COGS proxy
         break;
       case 'PURCHASE':
         // IN: Cr Purchase (to move from Expense to Asset)?
@@ -526,8 +592,10 @@ class JournalEntryService {
       case 'DAMAGE':
       case 'LOSS':
         // OUT: Dr Loss on Goods
-        offsetLedger =
-            _findSystemLedger(ledgers, 'Miscellaneous Expenses'); // Fallback
+        offsetLedger = _findSystemLedger(
+          ledgers,
+          'Miscellaneous Expenses',
+        ); // Fallback
         break;
       case 'OPENING_STOCK':
         // IN: Cr Capital/Opening Balance
@@ -550,36 +618,46 @@ class JournalEntryService {
 
     if (type == 'IN') {
       // Dr Stock, Cr Offset
-      entries.add(JournalEntryLine(
-        ledgerId: stockLedger.id,
-        ledgerName: stockLedger.name,
-        debit: amount,
-        description: description ?? 'Stock IN: $reason',
-      ));
-      entries.add(JournalEntryLine(
-        ledgerId: offsetLedger.id,
-        ledgerName: offsetLedger.name,
-        credit: amount,
-        description: 'Correction for Stock IN',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: stockLedger.id,
+          ledgerName: stockLedger.name,
+          debit: amount,
+          description: description ?? 'Stock IN: $reason',
+        ),
+      );
+      entries.add(
+        JournalEntryLine(
+          ledgerId: offsetLedger.id,
+          ledgerName: offsetLedger.name,
+          credit: amount,
+          description: 'Correction for Stock IN',
+        ),
+      );
     } else {
       // Dr Offset, Cr Stock
-      entries.add(JournalEntryLine(
-        ledgerId: offsetLedger.id,
-        ledgerName: offsetLedger.name,
-        debit: amount,
-        description: 'Cost/Adjustment for Stock OUT',
-      ));
-      entries.add(JournalEntryLine(
-        ledgerId: stockLedger.id,
-        ledgerName: stockLedger.name,
-        credit: amount,
-        description: description ?? 'Stock OUT: $reason',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: offsetLedger.id,
+          ledgerName: offsetLedger.name,
+          debit: amount,
+          description: 'Cost/Adjustment for Stock OUT',
+        ),
+      );
+      entries.add(
+        JournalEntryLine(
+          ledgerId: stockLedger.id,
+          ledgerName: stockLedger.name,
+          credit: amount,
+          description: description ?? 'Stock OUT: $reason',
+        ),
+      );
     }
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.journal);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.journal,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -603,10 +681,13 @@ class JournalEntryService {
   }
 
   LedgerAccountModel? _findSystemLedger(
-      List<LedgerAccountModel> ledgers, String name) {
+    List<LedgerAccountModel> ledgers,
+    String name,
+  ) {
     try {
       return ledgers.firstWhere(
-          (l) => l.name.toLowerCase() == name.toLowerCase() && l.isSystem);
+        (l) => l.name.toLowerCase() == name.toLowerCase() && l.isSystem,
+      );
     } catch (_) {
       return null;
     }
@@ -634,8 +715,11 @@ class JournalEntryService {
     final entries = <JournalEntryLine>[];
 
     // Get customer ledger
-    final customerLedger =
-        await _repo.getOrCreateCustomerLedger(userId, customerId, customerName);
+    final customerLedger = await _repo.getOrCreateCustomerLedger(
+      userId,
+      customerId,
+      customerName,
+    );
 
     // Get system ledgers
     final ledgers = await _repo.getAllLedgerAccounts(userId);
@@ -646,25 +730,31 @@ class JournalEntryService {
 
     // Debit: Sales Return (contra-revenue, reduces sales)
     if (salesReturnLedger != null) {
-      entries.add(JournalEntryLine(
-        ledgerId: salesReturnLedger.id,
-        ledgerName: salesReturnLedger.name,
-        debit: amount,
-        description: 'Sales Return $creditNoteNumber',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: salesReturnLedger.id,
+          ledgerName: salesReturnLedger.name,
+          debit: amount,
+          description: 'Sales Return $creditNoteNumber',
+        ),
+      );
     }
 
     // Credit: Customer (reduces receivable)
-    entries.add(JournalEntryLine(
-      ledgerId: customerLedger.id,
-      ledgerName: customerLedger.name,
-      credit: amount,
-      description:
-          'Credit Note $creditNoteNumber${originalBillId != null ? ' (Ref: $originalBillId)' : ''}',
-    ));
+    entries.add(
+      JournalEntryLine(
+        ledgerId: customerLedger.id,
+        ledgerName: customerLedger.name,
+        credit: amount,
+        description:
+            'Credit Note $creditNoteNumber${originalBillId != null ? ' (Ref: $originalBillId)' : ''}',
+      ),
+    );
 
-    final voucherNumber =
-        await _repo.getNextVoucherNumber(userId, VoucherType.creditNote);
+    final voucherNumber = await _repo.getNextVoucherNumber(
+      userId,
+      VoucherType.creditNote,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),
@@ -703,18 +793,22 @@ class JournalEntryService {
 
     // Swap Debit <-> Credit
     for (var line in originalEntry.entries) {
-      entries.add(JournalEntryLine(
-        ledgerId: line.ledgerId,
-        ledgerName: line.ledgerName,
-        debit: line.credit, // SWAP
-        credit: line.debit, // SWAP
-        description: 'Reversal: ${line.description ?? ""}',
-      ));
+      entries.add(
+        JournalEntryLine(
+          ledgerId: line.ledgerId,
+          ledgerName: line.ledgerName,
+          debit: line.credit, // SWAP
+          credit: line.debit, // SWAP
+          description: 'Reversal: ${line.description ?? ""}',
+        ),
+      );
     }
 
     // Get next voucher number for the same type (or use Journal)
     final voucherNumber = await _repo.getNextVoucherNumber(
-        reversedByUserId, originalEntry.voucherType);
+      reversedByUserId,
+      originalEntry.voucherType,
+    );
 
     final journalEntry = JournalEntryModel(
       id: const Uuid().v4(),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/futuristic_colors.dart';
 import '../../../../widgets/modern_ui_components.dart';
@@ -43,189 +43,213 @@ class ReportsHubScreen extends ConsumerWidget {
             children: [
               if (isPetrolPump) ...[
                 _buildSection(
-                    context,
-                    "Petrol Pump Reports",
-                    [
-                      _ReportItem(
-                        icon: Icons.local_gas_station_rounded,
-                        title: "Nozzle Sales Analysis",
-                        subtitle: "Sales by dispenser/nozzle",
-                        color: Colors.redAccent,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    const NozzleSalesReportScreen())),
+                  context,
+                  "Petrol Pump Reports",
+                  [
+                    _ReportItem(
+                      icon: Icons.local_gas_station_rounded,
+                      title: "Nozzle Sales Analysis",
+                      subtitle: "Sales by dispenser/nozzle",
+                      color: Colors.redAccent,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const NozzleSalesReportScreen(),
+                        ),
                       ),
-                      _ReportItem(
-                        icon: Icons.access_time_filled_rounded,
-                        title: "Shift Summary",
-                        subtitle: "Daily shift collections",
-                        color: Colors.blueGrey,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const ShiftReportScreen())),
+                    ),
+                    _ReportItem(
+                      icon: Icons.access_time_filled_rounded,
+                      title: "Shift Summary",
+                      subtitle: "Daily shift collections",
+                      color: Colors.blueGrey,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ShiftReportScreen(),
+                        ),
                       ),
-                      _ReportItem(
-                        icon: Icons.water_drop_rounded,
-                        title: "Tank Stock Logs",
-                        subtitle: "Orifice/Dip readings history",
-                        color: Colors.orangeAccent,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const TankStockReportScreen())),
+                    ),
+                    _ReportItem(
+                      icon: Icons.water_drop_rounded,
+                      title: "Tank Stock Logs",
+                      subtitle: "Orifice/Dip readings history",
+                      color: Colors.orangeAccent,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TankStockReportScreen(),
+                        ),
                       ),
-                      _ReportItem(
-                        icon: Icons.currency_rupee_rounded,
-                        title: "Fuel Profitability",
-                        subtitle: "Margins per fuel type",
-                        color: FuturisticColors.success,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    const FuelProfitReportScreen())),
+                    ),
+                    _ReportItem(
+                      icon: Icons.currency_rupee_rounded,
+                      title: "Fuel Profitability",
+                      subtitle: "Margins per fuel type",
+                      color: FuturisticColors.success,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const FuelProfitReportScreen(),
+                        ),
                       ),
-                    ],
-                    isDark,
-                    true), // Force desktop layout for grid
+                    ),
+                  ],
+                  isDark,
+                  true,
+                ), // Force desktop layout for grid
                 const SizedBox(height: 32),
               ],
               _buildSection(
-                  context,
-                  "Transaction Reports",
-                  [
-                    _ReportItem(
-                      icon: Icons.receipt_long_rounded,
-                      title: "Turnover Analysis",
-                      subtitle: "Detailed revenue breakdown",
-                      color: Colors.blueAccent,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const BillingReportsScreen())),
+                context,
+                "Transaction Reports",
+                [
+                  _ReportItem(
+                    icon: Icons.receipt_long_rounded,
+                    title: "Turnover Analysis",
+                    subtitle: "Detailed revenue breakdown",
+                    color: Colors.blueAccent,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const BillingReportsScreen(),
+                      ),
                     ),
-                    _ReportItem(
-                      icon: Icons.shopping_cart_rounded,
-                      title: "Procurement Log",
-                      subtitle: "Track procurement history",
-                      color: Colors.orange,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PurchaseReportScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.shopping_cart_rounded,
+                    title: "Procurement Log",
+                    subtitle: "Track procurement history",
+                    color: Colors.orange,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PurchaseReportScreen(),
+                      ),
                     ),
-                    _ReportItem(
-                      icon: Icons.history_edu_rounded,
-                      title: "Daily Activity Register",
-                      subtitle: "Chronological activity log",
-                      color: Colors.purple,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const DayBookScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.history_edu_rounded,
+                    title: "Daily Activity Register",
+                    subtitle: "Chronological activity log",
+                    color: Colors.purple,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DayBookScreen()),
                     ),
-                    _ReportItem(
-                      icon: Icons.list_alt_rounded,
-                      title: "Master Ledger History",
-                      subtitle: "Complete financial timeline",
-                      color: Colors.teal,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const AllTransactionsScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.list_alt_rounded,
+                    title: "Master Ledger History",
+                    subtitle: "Complete financial timeline",
+                    color: Colors.teal,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AllTransactionsScreen(),
+                      ),
                     ),
-                    _ReportItem(
-                      icon: Icons.inventory_rounded,
-                      title: "Product Performance",
-                      subtitle: "Sales by Item & Variant",
-                      color: Colors.teal,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) =>
-                                  const ProductSalesBreakdownScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.inventory_rounded,
+                    title: "Product Performance",
+                    subtitle: "Sales by Item & Variant",
+                    color: Colors.teal,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ProductSalesBreakdownScreen(),
+                      ),
                     ),
-                  ],
-                  isDark,
-                  true),
+                  ),
+                ],
+                isDark,
+                true,
+              ),
               const SizedBox(height: 32),
               _buildSection(
-                  context,
-                  "Financial Reports",
-                  [
-                    _ReportItem(
-                      icon: Icons.trending_up_rounded,
-                      title: "Invoice Margin View",
-                      subtitle: "Margin per transaction",
-                      color: FuturisticColors.success,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const BillWiseProfitScreen())),
+                context,
+                "Financial Reports",
+                [
+                  _ReportItem(
+                    icon: Icons.trending_up_rounded,
+                    title: "Invoice Margin View",
+                    subtitle: "Margin per transaction",
+                    color: FuturisticColors.success,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const BillWiseProfitScreen(),
+                      ),
                     ),
-                    _ReportItem(
-                      icon: Icons.pie_chart_rounded,
-                      title: "Income Statement",
-                      subtitle: "Net income analysis",
-                      color: Colors.pinkAccent,
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const PnlScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.pie_chart_rounded,
+                    title: "Income Statement",
+                    subtitle: "Net income analysis",
+                    color: Colors.pinkAccent,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PnlScreen()),
                     ),
-                    _ReportItem(
-                      icon: Icons.sync_alt_rounded,
-                      title: "Funds Flow Analysis",
-                      subtitle: "Inflow vs Outflow analysis",
-                      color: Colors.indigo,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CashflowScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.sync_alt_rounded,
+                    title: "Funds Flow Analysis",
+                    subtitle: "Inflow vs Outflow analysis",
+                    color: Colors.indigo,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CashflowScreen()),
                     ),
-                    _ReportItem(
-                      icon: Icons.account_balance_rounded,
-                      title: "Financial Position",
-                      subtitle: "Assets & Obligations",
-                      color: Colors.deepPurple,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const BalanceScreen())),
+                  ),
+                  _ReportItem(
+                    icon: Icons.account_balance_rounded,
+                    title: "Financial Position",
+                    subtitle: "Assets & Obligations",
+                    color: Colors.deepPurple,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BalanceScreen()),
                     ),
-                    _ReportItem(
-                      icon: Icons.balance_rounded,
-                      title: "Ledger Abstract",
-                      subtitle: "Account balances summary",
-                      color: Colors.brown,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) =>
-                                  const TrialBalanceScreen())), // Uses AccountingReportsScreen usually
-                    ),
-                  ],
-                  isDark,
-                  true),
+                  ),
+                  _ReportItem(
+                    icon: Icons.balance_rounded,
+                    title: "Ledger Abstract",
+                    subtitle: "Account balances summary",
+                    color: Colors.brown,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const TrialBalanceScreen(),
+                      ),
+                    ), // Uses AccountingReportsScreen usually
+                  ),
+                ],
+                isDark,
+                true,
+              ),
               const SizedBox(height: 32),
               _buildSection(
-                  context,
-                  "Tax & Compliance",
-                  [
-                    _ReportItem(
-                      icon: Icons.description_rounded,
-                      title: "GSTR-1 Reports",
-                      subtitle: "B2B, B2C, HSN Summaries",
-                      color: Colors.teal,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const TaxReportScreen())),
+                context,
+                "Tax & Compliance",
+                [
+                  _ReportItem(
+                    icon: Icons.description_rounded,
+                    title: "GSTR-1 Reports",
+                    subtitle: "B2B, B2C, HSN Summaries",
+                    color: Colors.teal,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const TaxReportScreen(),
+                      ),
                     ),
-                  ],
-                  isDark,
-                  true),
+                  ),
+                ],
+                isDark,
+                true,
+              ),
               const SizedBox(height: 40),
             ],
           ),
@@ -234,8 +258,13 @@ class ReportsHubScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title,
-      List<_ReportItem> items, bool isDark, bool isDesktop) {
+  Widget _buildSection(
+    BuildContext context,
+    String title,
+    List<_ReportItem> items,
+    bool isDark,
+    bool isDesktop,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -244,8 +273,9 @@ class ReportsHubScreen extends ConsumerWidget {
           child: Text(
             title,
             style: isDesktop
-                ? AppTypography.headlineMedium
-                    .copyWith(color: isDark ? Colors.white : Colors.black)
+                ? AppTypography.headlineMedium.copyWith(
+                    color: isDark ? Colors.white : Colors.black,
+                  )
                 : TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -274,8 +304,9 @@ class ReportsHubScreen extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: isDark ? FuturisticColors.surface : Colors.white,
                         borderRadius: BorderRadius.circular(16),
-                        border:
-                            Border.all(color: Colors.white.withOpacity(0.05)),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.05),
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -296,22 +327,24 @@ class ReportsHubScreen extends ConsumerWidget {
                                 Text(
                                   item.title,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   item.subtitle,
                                   style: const TextStyle(
-                                      color: FuturisticColors.textSecondary,
-                                      fontSize: 12),
+                                    color: FuturisticColors.textSecondary,
+                                    fontSize: 12,
+                                  ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -385,10 +418,11 @@ class _ReportItem {
   final Color color;
   final VoidCallback onTap;
 
-  _ReportItem(
-      {required this.icon,
-      required this.title,
-      required this.subtitle,
-      required this.color,
-      required this.onTap});
+  _ReportItem({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
 }

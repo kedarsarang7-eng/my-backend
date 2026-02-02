@@ -202,15 +202,16 @@ void main() {
     });
 
     test('create bill with partial payment', () {
-      final customer =
-          MockCustomer(id: 'cust-001', name: 'Customer', phone: '123');
+      final customer = MockCustomer(
+        id: 'cust-001',
+        name: 'Customer',
+        phone: '123',
+      );
       final bill = MockBill(
         id: 'bill-001',
         customerId: customer.id,
         date: DateTime.now(),
-        items: [
-          MockBillItem(id: 'i1', name: 'Item', quantity: 1, price: 1000),
-        ],
+        items: [MockBillItem(id: 'i1', name: 'Item', quantity: 1, price: 1000)],
       );
 
       // Partial payment
@@ -224,15 +225,16 @@ void main() {
     });
 
     test('create bill with full payment', () {
-      final customer =
-          MockCustomer(id: 'cust-001', name: 'Customer', phone: '123');
+      final customer = MockCustomer(
+        id: 'cust-001',
+        name: 'Customer',
+        phone: '123',
+      );
       final bill = MockBill(
         id: 'bill-001',
         customerId: customer.id,
         date: DateTime.now(),
-        items: [
-          MockBillItem(id: 'i1', name: 'Item', quantity: 1, price: 500),
-        ],
+        items: [MockBillItem(id: 'i1', name: 'Item', quantity: 1, price: 500)],
         paidAmount: 500,
         status: 'Paid',
       );
@@ -305,22 +307,26 @@ void main() {
       );
 
       // Cash payment
-      dataStore.receipts.add(MockReceipt(
-        id: 'r1',
-        customerId: customer.id,
-        amount: 300,
-        paymentMode: 'Cash',
-        date: DateTime.now(),
-      ));
+      dataStore.receipts.add(
+        MockReceipt(
+          id: 'r1',
+          customerId: customer.id,
+          amount: 300,
+          paymentMode: 'Cash',
+          date: DateTime.now(),
+        ),
+      );
 
       // UPI payment
-      dataStore.receipts.add(MockReceipt(
-        id: 'r2',
-        customerId: customer.id,
-        amount: 500,
-        paymentMode: 'UPI',
-        date: DateTime.now(),
-      ));
+      dataStore.receipts.add(
+        MockReceipt(
+          id: 'r2',
+          customerId: customer.id,
+          amount: 500,
+          paymentMode: 'UPI',
+          date: DateTime.now(),
+        ),
+      );
 
       final totalPaid = dataStore.receipts
           .where((r) => r.customerId == customer.id)
@@ -398,10 +404,16 @@ void main() {
   group('User Journey: Daily Operations', () {
     test('complete day operations: bills and payments', () {
       // Morning: Create bills
-      final customer1 =
-          MockCustomer(id: 'c1', name: 'Customer 1', phone: '111');
-      final customer2 =
-          MockCustomer(id: 'c2', name: 'Customer 2', phone: '222');
+      final customer1 = MockCustomer(
+        id: 'c1',
+        name: 'Customer 1',
+        phone: '111',
+      );
+      final customer2 = MockCustomer(
+        id: 'c2',
+        name: 'Customer 2',
+        phone: '222',
+      );
       dataStore.customers.addAll([customer1, customer2]);
 
       final bill1 = MockBill(
@@ -427,10 +439,14 @@ void main() {
       customer1.paidAmount = 500;
 
       // End of day summary
-      final totalSales =
-          dataStore.bills.fold(0.0, (sum, b) => sum + b.grandTotal);
-      final totalCollections =
-          dataStore.bills.fold(0.0, (sum, b) => sum + b.paidAmount);
+      final totalSales = dataStore.bills.fold(
+        0.0,
+        (sum, b) => sum + b.grandTotal,
+      );
+      final totalCollections = dataStore.bills.fold(
+        0.0,
+        (sum, b) => sum + b.paidAmount,
+      );
       final pendingAmount = totalSales - totalCollections;
 
       expect(totalSales, 800);
@@ -441,25 +457,33 @@ void main() {
     test('daily analytics calculation', () {
       // Create multiple bills for the day
       for (int i = 1; i <= 5; i++) {
-        dataStore.bills.add(MockBill(
-          id: 'bill-$i',
-          customerId: 'cust-$i',
-          date: DateTime.now(),
-          items: [
-            MockBillItem(
-                id: 'i$i', name: 'Item $i', quantity: 1, price: 100.0 * i)
-          ],
-          paidAmount: i.isEven ? 100.0 * i : 0,
-          status: i.isEven ? 'Paid' : 'Unpaid',
-        ));
+        dataStore.bills.add(
+          MockBill(
+            id: 'bill-$i',
+            customerId: 'cust-$i',
+            date: DateTime.now(),
+            items: [
+              MockBillItem(
+                id: 'i$i',
+                name: 'Item $i',
+                quantity: 1,
+                price: 100.0 * i,
+              ),
+            ],
+            paidAmount: i.isEven ? 100.0 * i : 0,
+            status: i.isEven ? 'Paid' : 'Unpaid',
+          ),
+        );
       }
 
       // Analytics
       final totalBills = dataStore.bills.length;
       final paidBills = dataStore.bills.where((b) => b.isPaid).length;
       final unpaidBills = dataStore.bills.where((b) => !b.isPaid).length;
-      final totalRevenue =
-          dataStore.bills.fold(0.0, (sum, b) => sum + b.grandTotal);
+      final totalRevenue = dataStore.bills.fold(
+        0.0,
+        (sum, b) => sum + b.grandTotal,
+      );
 
       expect(totalBills, 5);
       expect(paidBills, 2);
@@ -479,35 +503,43 @@ void main() {
 
       // Add bills
       for (int i = 1; i <= 3; i++) {
-        dataStore.bills.add(MockBill(
-          id: 'bill-$i',
-          customerId: customer.id,
-          date: DateTime.now().subtract(Duration(days: i)),
-          items: [
-            MockBillItem(id: 'i$i', name: 'Item', quantity: 1, price: 100)
-          ],
-        ));
+        dataStore.bills.add(
+          MockBill(
+            id: 'bill-$i',
+            customerId: customer.id,
+            date: DateTime.now().subtract(Duration(days: i)),
+            items: [
+              MockBillItem(id: 'i$i', name: 'Item', quantity: 1, price: 100),
+            ],
+          ),
+        );
       }
 
       // Add payments
       for (int i = 1; i <= 2; i++) {
-        dataStore.receipts.add(MockReceipt(
-          id: 'rcpt-$i',
-          customerId: customer.id,
-          amount: 100,
-          paymentMode: 'Cash',
-          date: DateTime.now().subtract(Duration(days: i)),
-        ));
+        dataStore.receipts.add(
+          MockReceipt(
+            id: 'rcpt-$i',
+            customerId: customer.id,
+            amount: 100,
+            paymentMode: 'Cash',
+            date: DateTime.now().subtract(Duration(days: i)),
+          ),
+        );
       }
 
       // Ledger summary
-      final customerBills =
-          dataStore.bills.where((b) => b.customerId == customer.id);
-      final customerReceipts =
-          dataStore.receipts.where((r) => r.customerId == customer.id);
+      final customerBills = dataStore.bills.where(
+        (b) => b.customerId == customer.id,
+      );
+      final customerReceipts = dataStore.receipts.where(
+        (r) => r.customerId == customer.id,
+      );
 
-      final totalBilled =
-          customerBills.fold(0.0, (sum, b) => sum + b.grandTotal);
+      final totalBilled = customerBills.fold(
+        0.0,
+        (sum, b) => sum + b.grandTotal,
+      );
       final totalPaid = customerReceipts.fold(0.0, (sum, r) => sum + r.amount);
       final balance = totalBilled - totalPaid;
 

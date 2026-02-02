@@ -11,8 +11,8 @@ class PatientService {
   PatientService({
     required PatientRepository patientRepository,
     required DoctorRepository doctorRepository,
-  })  : _patientRepository = patientRepository,
-        _doctorRepository = doctorRepository;
+  }) : _patientRepository = patientRepository,
+       _doctorRepository = doctorRepository;
 
   /// Generate a secure QR Token for a patient if not exists
   Future<String> generateQrToken(String patientId) async {
@@ -25,14 +25,17 @@ class PatientService {
       }
 
       // Generate new token
-      final token =
-          const Uuid().v4(); // Simple UUID for now, could be signed JWT
+      final token = const Uuid()
+          .v4(); // Simple UUID for now, could be signed JWT
       final updated = patient.copyWith(qrToken: token);
       await _patientRepository.updatePatient(updated);
       return token;
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to generate QR token');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to generate QR token',
+      );
       rethrow;
     }
   }
@@ -43,8 +46,11 @@ class PatientService {
     try {
       return await _patientRepository.getPatientByQrToken(qrToken);
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to scan patient QR');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to scan patient QR',
+      );
       rethrow;
     }
   }
@@ -63,8 +69,11 @@ class PatientService {
       // 2. Create Link
       await _doctorRepository.linkPatient(patientId, doctor.id);
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to link patient to doctor');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to link patient to doctor',
+      );
       rethrow;
     }
   }

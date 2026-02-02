@@ -204,10 +204,7 @@ class PinVerificationResult {
 
   /// Create a denied result
   factory PinVerificationResult.denied(PinProtectedAction action) {
-    return PinVerificationResult(
-      isAuthorized: false,
-      action: action,
-    );
+    return PinVerificationResult(isAuthorized: false, action: action);
   }
 
   /// Create an authorized result

@@ -34,66 +34,36 @@ import 'package:mockito/src/dummies.dart' as _i10;
 // ignore_for_file: invalid_use_of_internal_member
 
 class _FakeAppDatabase_0 extends _i1.SmartFake implements _i2.AppDatabase {
-  _FakeAppDatabase_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAppDatabase_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSyncManager_1 extends _i1.SmartFake implements _i3.SyncManager {
-  _FakeSyncManager_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSyncManager_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeErrorHandler_2 extends _i1.SmartFake implements _i4.ErrorHandler {
-  _FakeErrorHandler_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeErrorHandler_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeEventDispatcher_3 extends _i1.SmartFake
     implements _i5.EventDispatcher {
-  _FakeEventDispatcher_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeEventDispatcher_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeRepositoryResult_4<T> extends _i1.SmartFake
     implements _i4.RepositoryResult<T> {
-  _FakeRepositoryResult_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeRepositoryResult_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSyncHealthMetrics_5 extends _i1.SmartFake
     implements _i3.SyncHealthMetrics {
-  _FakeSyncHealthMetrics_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSyncHealthMetrics_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [BillsRepository].
@@ -105,57 +75,58 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
   }
 
   @override
-  _i2.AppDatabase get database => (super.noSuchMethod(
-        Invocation.getter(#database),
-        returnValue: _FakeAppDatabase_0(
-          this,
-          Invocation.getter(#database),
-        ),
-      ) as _i2.AppDatabase);
+  _i2.AppDatabase get database =>
+      (super.noSuchMethod(
+            Invocation.getter(#database),
+            returnValue: _FakeAppDatabase_0(this, Invocation.getter(#database)),
+          )
+          as _i2.AppDatabase);
 
   @override
-  _i3.SyncManager get syncManager => (super.noSuchMethod(
-        Invocation.getter(#syncManager),
-        returnValue: _FakeSyncManager_1(
-          this,
-          Invocation.getter(#syncManager),
-        ),
-      ) as _i3.SyncManager);
+  _i3.SyncManager get syncManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#syncManager),
+            returnValue: _FakeSyncManager_1(
+              this,
+              Invocation.getter(#syncManager),
+            ),
+          )
+          as _i3.SyncManager);
 
   @override
-  _i4.ErrorHandler get errorHandler => (super.noSuchMethod(
-        Invocation.getter(#errorHandler),
-        returnValue: _FakeErrorHandler_2(
-          this,
-          Invocation.getter(#errorHandler),
-        ),
-      ) as _i4.ErrorHandler);
+  _i4.ErrorHandler get errorHandler =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorHandler),
+            returnValue: _FakeErrorHandler_2(
+              this,
+              Invocation.getter(#errorHandler),
+            ),
+          )
+          as _i4.ErrorHandler);
 
   @override
-  _i5.EventDispatcher get eventDispatcher => (super.noSuchMethod(
-        Invocation.getter(#eventDispatcher),
-        returnValue: _FakeEventDispatcher_3(
-          this,
-          Invocation.getter(#eventDispatcher),
-        ),
-      ) as _i5.EventDispatcher);
+  _i5.EventDispatcher get eventDispatcher =>
+      (super.noSuchMethod(
+            Invocation.getter(#eventDispatcher),
+            returnValue: _FakeEventDispatcher_3(
+              this,
+              Invocation.getter(#eventDispatcher),
+            ),
+          )
+          as _i5.EventDispatcher);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i8.Bill>> createBill(_i8.Bill? bill) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createBill,
-          [bill],
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i8.Bill>>.value(
-            _FakeRepositoryResult_4<_i8.Bill>(
-          this,
-          Invocation.method(
-            #createBill,
-            [bill],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i8.Bill>>);
+            Invocation.method(#createBill, [bill]),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i8.Bill>>.value(
+              _FakeRepositoryResult_4<_i8.Bill>(
+                this,
+                Invocation.method(#createBill, [bill]),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i8.Bill>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i8.Bill>> updateBill(
@@ -165,46 +136,44 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     DateTime? expectedUpdatedAt,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateBill,
-          [bill],
-          {
-            #approverId: approverId,
-            #editReason: editReason,
-            #expectedUpdatedAt: expectedUpdatedAt,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i8.Bill>>.value(
-            _FakeRepositoryResult_4<_i8.Bill>(
-          this,
-          Invocation.method(
-            #updateBill,
-            [bill],
-            {
-              #approverId: approverId,
-              #editReason: editReason,
-              #expectedUpdatedAt: expectedUpdatedAt,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i8.Bill>>);
+            Invocation.method(
+              #updateBill,
+              [bill],
+              {
+                #approverId: approverId,
+                #editReason: editReason,
+                #expectedUpdatedAt: expectedUpdatedAt,
+              },
+            ),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i8.Bill>>.value(
+              _FakeRepositoryResult_4<_i8.Bill>(
+                this,
+                Invocation.method(
+                  #updateBill,
+                  [bill],
+                  {
+                    #approverId: approverId,
+                    #editReason: editReason,
+                    #expectedUpdatedAt: expectedUpdatedAt,
+                  },
+                ),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i8.Bill>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i8.Bill>> getById(String? id) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getById,
-          [id],
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i8.Bill>>.value(
-            _FakeRepositoryResult_4<_i8.Bill>(
-          this,
-          Invocation.method(
-            #getById,
-            [id],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i8.Bill>>);
+            Invocation.method(#getById, [id]),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i8.Bill>>.value(
+              _FakeRepositoryResult_4<_i8.Bill>(
+                this,
+                Invocation.method(#getById, [id]),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i8.Bill>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<List<_i8.Bill>>> getAll({
@@ -213,29 +182,23 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     String? businessId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAll,
-          [],
-          {
-            #userId: userId,
-            #customerId: customerId,
-            #businessId: businessId,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<List<_i8.Bill>>>.value(
-            _FakeRepositoryResult_4<List<_i8.Bill>>(
-          this,
-          Invocation.method(
-            #getAll,
-            [],
-            {
+            Invocation.method(#getAll, [], {
               #userId: userId,
               #customerId: customerId,
               #businessId: businessId,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<List<_i8.Bill>>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<List<_i8.Bill>>>.value(
+              _FakeRepositoryResult_4<List<_i8.Bill>>(
+                this,
+                Invocation.method(#getAll, [], {
+                  #userId: userId,
+                  #customerId: customerId,
+                  #businessId: businessId,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<List<_i8.Bill>>>);
 
   @override
   _i7.Stream<List<_i8.Bill>> watchAll({
@@ -244,17 +207,14 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     String? businessId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #watchAll,
-          [],
-          {
-            #userId: userId,
-            #customerId: customerId,
-            #businessId: businessId,
-          },
-        ),
-        returnValue: _i7.Stream<List<_i8.Bill>>.empty(),
-      ) as _i7.Stream<List<_i8.Bill>>);
+            Invocation.method(#watchAll, [], {
+              #userId: userId,
+              #customerId: customerId,
+              #businessId: businessId,
+            }),
+            returnValue: _i7.Stream<List<_i8.Bill>>.empty(),
+          )
+          as _i7.Stream<List<_i8.Bill>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<bool>> recordPayment({
@@ -265,33 +225,27 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     String? notes,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #recordPayment,
-          [],
-          {
-            #userId: userId,
-            #billId: billId,
-            #amount: amount,
-            #paymentMode: paymentMode,
-            #notes: notes,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
-            _FakeRepositoryResult_4<bool>(
-          this,
-          Invocation.method(
-            #recordPayment,
-            [],
-            {
+            Invocation.method(#recordPayment, [], {
               #userId: userId,
               #billId: billId,
               #amount: amount,
               #paymentMode: paymentMode,
               #notes: notes,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<bool>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
+              _FakeRepositoryResult_4<bool>(
+                this,
+                Invocation.method(#recordPayment, [], {
+                  #userId: userId,
+                  #billId: billId,
+                  #amount: amount,
+                  #paymentMode: paymentMode,
+                  #notes: notes,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<bool>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<bool>> deletePayment({
@@ -299,27 +253,21 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     required String? paymentId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deletePayment,
-          [],
-          {
-            #userId: userId,
-            #paymentId: paymentId,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
-            _FakeRepositoryResult_4<bool>(
-          this,
-          Invocation.method(
-            #deletePayment,
-            [],
-            {
+            Invocation.method(#deletePayment, [], {
               #userId: userId,
               #paymentId: paymentId,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<bool>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
+              _FakeRepositoryResult_4<bool>(
+                this,
+                Invocation.method(#deletePayment, [], {
+                  #userId: userId,
+                  #paymentId: paymentId,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<bool>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<bool>> updateBillStatus({
@@ -330,33 +278,27 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     double? onlinePaid,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateBillStatus,
-          [],
-          {
-            #billId: billId,
-            #status: status,
-            #paidAmount: paidAmount,
-            #cashPaid: cashPaid,
-            #onlinePaid: onlinePaid,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
-            _FakeRepositoryResult_4<bool>(
-          this,
-          Invocation.method(
-            #updateBillStatus,
-            [],
-            {
+            Invocation.method(#updateBillStatus, [], {
               #billId: billId,
               #status: status,
               #paidAmount: paidAmount,
               #cashPaid: cashPaid,
               #onlinePaid: onlinePaid,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<bool>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
+              _FakeRepositoryResult_4<bool>(
+                this,
+                Invocation.method(#updateBillStatus, [], {
+                  #billId: billId,
+                  #status: status,
+                  #paidAmount: paidAmount,
+                  #cashPaid: cashPaid,
+                  #onlinePaid: onlinePaid,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<bool>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<bool>> createCorrectionRequest({
@@ -366,69 +308,57 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     required double? billAmount,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createCorrectionRequest,
-          [],
-          {
-            #billId: billId,
-            #customerId: customerId,
-            #message: message,
-            #billAmount: billAmount,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
-            _FakeRepositoryResult_4<bool>(
-          this,
-          Invocation.method(
-            #createCorrectionRequest,
-            [],
-            {
+            Invocation.method(#createCorrectionRequest, [], {
               #billId: billId,
               #customerId: customerId,
               #message: message,
               #billAmount: billAmount,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<bool>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
+              _FakeRepositoryResult_4<bool>(
+                this,
+                Invocation.method(#createCorrectionRequest, [], {
+                  #billId: billId,
+                  #customerId: customerId,
+                  #message: message,
+                  #billAmount: billAmount,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<bool>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>> getTodaySummary(
-          String? userId) =>
+    String? userId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getTodaySummary,
-          [userId],
-        ),
-        returnValue:
-            _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
-                _FakeRepositoryResult_4<Map<String, dynamic>>(
-          this,
-          Invocation.method(
-            #getTodaySummary,
-            [userId],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
+            Invocation.method(#getTodaySummary, [userId]),
+            returnValue:
+                _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
+                  _FakeRepositoryResult_4<Map<String, dynamic>>(
+                    this,
+                    Invocation.method(#getTodaySummary, [userId]),
+                  ),
+                ),
+          )
+          as _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>> getPurchaseVsSaleStats(
-          String? userId) =>
+    String? userId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPurchaseVsSaleStats,
-          [userId],
-        ),
-        returnValue:
-            _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
-                _FakeRepositoryResult_4<Map<String, dynamic>>(
-          this,
-          Invocation.method(
-            #getPurchaseVsSaleStats,
-            [userId],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
+            Invocation.method(#getPurchaseVsSaleStats, [userId]),
+            returnValue:
+                _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
+                  _FakeRepositoryResult_4<Map<String, dynamic>>(
+                    this,
+                    Invocation.method(#getPurchaseVsSaleStats, [userId]),
+                  ),
+                ),
+          )
+          as _i7.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<void>> deleteBill(
@@ -436,25 +366,15 @@ class MockBillsRepository extends _i1.Mock implements _i6.BillsRepository {
     String? userId,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deleteBill,
-          [
-            billId,
-            userId,
-          ],
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<void>>.value(
-            _FakeRepositoryResult_4<void>(
-          this,
-          Invocation.method(
-            #deleteBill,
-            [
-              billId,
-              userId,
-            ],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<void>>);
+            Invocation.method(#deleteBill, [billId, userId]),
+            returnValue: _i7.Future<_i4.RepositoryResult<void>>.value(
+              _FakeRepositoryResult_4<void>(
+                this,
+                Invocation.method(#deleteBill, [billId, userId]),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<void>>);
 }
 
 /// A class which mocks [CustomersRepository].
@@ -467,40 +387,45 @@ class MockCustomersRepository extends _i1.Mock
   }
 
   @override
-  _i2.AppDatabase get database => (super.noSuchMethod(
-        Invocation.getter(#database),
-        returnValue: _FakeAppDatabase_0(
-          this,
-          Invocation.getter(#database),
-        ),
-      ) as _i2.AppDatabase);
+  _i2.AppDatabase get database =>
+      (super.noSuchMethod(
+            Invocation.getter(#database),
+            returnValue: _FakeAppDatabase_0(this, Invocation.getter(#database)),
+          )
+          as _i2.AppDatabase);
 
   @override
-  _i3.SyncManager get syncManager => (super.noSuchMethod(
-        Invocation.getter(#syncManager),
-        returnValue: _FakeSyncManager_1(
-          this,
-          Invocation.getter(#syncManager),
-        ),
-      ) as _i3.SyncManager);
+  _i3.SyncManager get syncManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#syncManager),
+            returnValue: _FakeSyncManager_1(
+              this,
+              Invocation.getter(#syncManager),
+            ),
+          )
+          as _i3.SyncManager);
 
   @override
-  _i4.ErrorHandler get errorHandler => (super.noSuchMethod(
-        Invocation.getter(#errorHandler),
-        returnValue: _FakeErrorHandler_2(
-          this,
-          Invocation.getter(#errorHandler),
-        ),
-      ) as _i4.ErrorHandler);
+  _i4.ErrorHandler get errorHandler =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorHandler),
+            returnValue: _FakeErrorHandler_2(
+              this,
+              Invocation.getter(#errorHandler),
+            ),
+          )
+          as _i4.ErrorHandler);
 
   @override
-  String get collectionName => (super.noSuchMethod(
-        Invocation.getter(#collectionName),
-        returnValue: _i10.dummyValue<String>(
-          this,
-          Invocation.getter(#collectionName),
-        ),
-      ) as String);
+  String get collectionName =>
+      (super.noSuchMethod(
+            Invocation.getter(#collectionName),
+            returnValue: _i10.dummyValue<String>(
+              this,
+              Invocation.getter(#collectionName),
+            ),
+          )
+          as String);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i9.Customer>> createCustomer({
@@ -512,100 +437,79 @@ class MockCustomersRepository extends _i1.Mock
     String? gstin,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createCustomer,
-          [],
-          {
-            #userId: userId,
-            #name: name,
-            #phone: phone,
-            #email: email,
-            #address: address,
-            #gstin: gstin,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer>>.value(
-            _FakeRepositoryResult_4<_i9.Customer>(
-          this,
-          Invocation.method(
-            #createCustomer,
-            [],
-            {
+            Invocation.method(#createCustomer, [], {
               #userId: userId,
               #name: name,
               #phone: phone,
               #email: email,
               #address: address,
               #gstin: gstin,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i9.Customer>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer>>.value(
+              _FakeRepositoryResult_4<_i9.Customer>(
+                this,
+                Invocation.method(#createCustomer, [], {
+                  #userId: userId,
+                  #name: name,
+                  #phone: phone,
+                  #email: email,
+                  #address: address,
+                  #gstin: gstin,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i9.Customer>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i9.Customer?>> getById(String? id) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getById,
-          [id],
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer?>>.value(
-            _FakeRepositoryResult_4<_i9.Customer?>(
-          this,
-          Invocation.method(
-            #getById,
-            [id],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i9.Customer?>>);
+            Invocation.method(#getById, [id]),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer?>>.value(
+              _FakeRepositoryResult_4<_i9.Customer?>(
+                this,
+                Invocation.method(#getById, [id]),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i9.Customer?>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i9.Customer?>> getByPhone(String? phone) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getByPhone,
-          [phone],
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer?>>.value(
-            _FakeRepositoryResult_4<_i9.Customer?>(
-          this,
-          Invocation.method(
-            #getByPhone,
-            [phone],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i9.Customer?>>);
+            Invocation.method(#getByPhone, [phone]),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer?>>.value(
+              _FakeRepositoryResult_4<_i9.Customer?>(
+                this,
+                Invocation.method(#getByPhone, [phone]),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i9.Customer?>>);
 
   @override
-  _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>> getAll(
-          {String? userId}) =>
+  _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>> getAll({
+    String? userId,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAll,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>.value(
-            _FakeRepositoryResult_4<List<_i9.Customer>>(
-          this,
-          Invocation.method(
-            #getAll,
-            [],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>);
+            Invocation.method(#getAll, [], {#userId: userId}),
+            returnValue:
+                _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>.value(
+                  _FakeRepositoryResult_4<List<_i9.Customer>>(
+                    this,
+                    Invocation.method(#getAll, [], {#userId: userId}),
+                  ),
+                ),
+          )
+          as _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>);
 
   @override
   _i7.Stream<List<_i9.Customer>> watchAll({String? userId}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #watchAll,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i7.Stream<List<_i9.Customer>>.empty(),
-      ) as _i7.Stream<List<_i9.Customer>>);
+            Invocation.method(#watchAll, [], {#userId: userId}),
+            returnValue: _i7.Stream<List<_i9.Customer>>.empty(),
+          )
+          as _i7.Stream<List<_i9.Customer>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i9.Customer>> updateCustomer(
@@ -613,21 +517,19 @@ class MockCustomersRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateCustomer,
-          [customer],
-          {#userId: userId},
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer>>.value(
-            _FakeRepositoryResult_4<_i9.Customer>(
-          this,
-          Invocation.method(
-            #updateCustomer,
-            [customer],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i9.Customer>>);
+            Invocation.method(#updateCustomer, [customer], {#userId: userId}),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer>>.value(
+              _FakeRepositoryResult_4<_i9.Customer>(
+                this,
+                Invocation.method(
+                  #updateCustomer,
+                  [customer],
+                  {#userId: userId},
+                ),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i9.Customer>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<bool>> deleteCustomer(
@@ -635,41 +537,33 @@ class MockCustomersRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deleteCustomer,
-          [id],
-          {#userId: userId},
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
-            _FakeRepositoryResult_4<bool>(
-          this,
-          Invocation.method(
-            #deleteCustomer,
-            [id],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<bool>>);
+            Invocation.method(#deleteCustomer, [id], {#userId: userId}),
+            returnValue: _i7.Future<_i4.RepositoryResult<bool>>.value(
+              _FakeRepositoryResult_4<bool>(
+                this,
+                Invocation.method(#deleteCustomer, [id], {#userId: userId}),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<bool>>);
 
   @override
-  _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>> getCustomersWithDues(
-          {String? userId}) =>
+  _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>> getCustomersWithDues({
+    String? userId,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getCustomersWithDues,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>.value(
-            _FakeRepositoryResult_4<List<_i9.Customer>>(
-          this,
-          Invocation.method(
-            #getCustomersWithDues,
-            [],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>);
+            Invocation.method(#getCustomersWithDues, [], {#userId: userId}),
+            returnValue:
+                _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>.value(
+                  _FakeRepositoryResult_4<List<_i9.Customer>>(
+                    this,
+                    Invocation.method(#getCustomersWithDues, [], {
+                      #userId: userId,
+                    }),
+                  ),
+                ),
+          )
+          as _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i9.Customer>> recordPayment({
@@ -678,29 +572,23 @@ class MockCustomersRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #recordPayment,
-          [],
-          {
-            #customerId: customerId,
-            #amount: amount,
-            #userId: userId,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer>>.value(
-            _FakeRepositoryResult_4<_i9.Customer>(
-          this,
-          Invocation.method(
-            #recordPayment,
-            [],
-            {
+            Invocation.method(#recordPayment, [], {
               #customerId: customerId,
               #amount: amount,
               #userId: userId,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i9.Customer>>);
+            }),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i9.Customer>>.value(
+              _FakeRepositoryResult_4<_i9.Customer>(
+                this,
+                Invocation.method(#recordPayment, [], {
+                  #customerId: customerId,
+                  #amount: amount,
+                  #userId: userId,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i9.Customer>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>> search(
@@ -709,45 +597,39 @@ class MockCustomersRepository extends _i1.Mock
     int? limit = 50,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #search,
-          [query],
-          {
-            #userId: userId,
-            #limit: limit,
-          },
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>.value(
-            _FakeRepositoryResult_4<List<_i9.Customer>>(
-          this,
-          Invocation.method(
-            #search,
-            [query],
-            {
-              #userId: userId,
-              #limit: limit,
-            },
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>);
+            Invocation.method(
+              #search,
+              [query],
+              {#userId: userId, #limit: limit},
+            ),
+            returnValue:
+                _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>.value(
+                  _FakeRepositoryResult_4<List<_i9.Customer>>(
+                    this,
+                    Invocation.method(
+                      #search,
+                      [query],
+                      {#userId: userId, #limit: limit},
+                    ),
+                  ),
+                ),
+          )
+          as _i7.Future<_i4.RepositoryResult<List<_i9.Customer>>>);
 
   @override
   _i7.Future<_i4.RepositoryResult<_i9.TrustScore>> calculateTrustScore(
-          String? customerId) =>
+    String? customerId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #calculateTrustScore,
-          [customerId],
-        ),
-        returnValue: _i7.Future<_i4.RepositoryResult<_i9.TrustScore>>.value(
-            _FakeRepositoryResult_4<_i9.TrustScore>(
-          this,
-          Invocation.method(
-            #calculateTrustScore,
-            [customerId],
-          ),
-        )),
-      ) as _i7.Future<_i4.RepositoryResult<_i9.TrustScore>>);
+            Invocation.method(#calculateTrustScore, [customerId]),
+            returnValue: _i7.Future<_i4.RepositoryResult<_i9.TrustScore>>.value(
+              _FakeRepositoryResult_4<_i9.TrustScore>(
+                this,
+                Invocation.method(#calculateTrustScore, [customerId]),
+              ),
+            ),
+          )
+          as _i7.Future<_i4.RepositoryResult<_i9.TrustScore>>);
 }
 
 /// A class which mocks [SyncManager].
@@ -759,22 +641,28 @@ class MockSyncManager extends _i1.Mock implements _i3.SyncManager {
   }
 
   @override
-  _i7.Stream<_i11.SyncConflict> get onConflict => (super.noSuchMethod(
-        Invocation.getter(#onConflict),
-        returnValue: _i7.Stream<_i11.SyncConflict>.empty(),
-      ) as _i7.Stream<_i11.SyncConflict>);
+  _i7.Stream<_i11.SyncConflict> get onConflict =>
+      (super.noSuchMethod(
+            Invocation.getter(#onConflict),
+            returnValue: _i7.Stream<_i11.SyncConflict>.empty(),
+          )
+          as _i7.Stream<_i11.SyncConflict>);
 
   @override
-  _i7.Stream<_i3.SyncHealthMetrics> get syncStatusStream => (super.noSuchMethod(
-        Invocation.getter(#syncStatusStream),
-        returnValue: _i7.Stream<_i3.SyncHealthMetrics>.empty(),
-      ) as _i7.Stream<_i3.SyncHealthMetrics>);
+  _i7.Stream<_i3.SyncHealthMetrics> get syncStatusStream =>
+      (super.noSuchMethod(
+            Invocation.getter(#syncStatusStream),
+            returnValue: _i7.Stream<_i3.SyncHealthMetrics>.empty(),
+          )
+          as _i7.Stream<_i3.SyncHealthMetrics>);
 
   @override
-  _i7.Stream<_i12.SyncResult> get syncEventStream => (super.noSuchMethod(
-        Invocation.getter(#syncEventStream),
-        returnValue: _i7.Stream<_i12.SyncResult>.empty(),
-      ) as _i7.Stream<_i12.SyncResult>);
+  _i7.Stream<_i12.SyncResult> get syncEventStream =>
+      (super.noSuchMethod(
+            Invocation.getter(#syncEventStream),
+            returnValue: _i7.Stream<_i12.SyncResult>.empty(),
+          )
+          as _i7.Stream<_i12.SyncResult>);
 
   @override
   _i7.Future<void> initialize({
@@ -784,82 +672,66 @@ class MockSyncManager extends _i1.Mock implements _i3.SyncManager {
     dynamic storage,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #initialize,
-          [],
-          {
-            #localOperations: localOperations,
-            #config: config,
-            #firestore: firestore,
-            #storage: storage,
-          },
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+            Invocation.method(#initialize, [], {
+              #localOperations: localOperations,
+              #config: config,
+              #firestore: firestore,
+              #storage: storage,
+            }),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
+          )
+          as _i7.Future<void>);
 
   @override
   void startSync() => super.noSuchMethod(
-        Invocation.method(
-          #startSync,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#startSync, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void stopSync() => super.noSuchMethod(
-        Invocation.method(
-          #stopSync,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#stopSync, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i7.Future<String> enqueue(_i13.SyncQueueItem? item) => (super.noSuchMethod(
-        Invocation.method(
-          #enqueue,
-          [item],
-        ),
-        returnValue: _i7.Future<String>.value(_i10.dummyValue<String>(
-          this,
-          Invocation.method(
-            #enqueue,
-            [item],
-          ),
-        )),
-      ) as _i7.Future<String>);
+  _i7.Future<String> enqueue(_i13.SyncQueueItem? item) =>
+      (super.noSuchMethod(
+            Invocation.method(#enqueue, [item]),
+            returnValue: _i7.Future<String>.value(
+              _i10.dummyValue<String>(
+                this,
+                Invocation.method(#enqueue, [item]),
+              ),
+            ),
+          )
+          as _i7.Future<String>);
 
   @override
   _i7.Future<List<String>> enqueueMultiStep(
-          _i13.MultiStepOperation? operation) =>
+    _i13.MultiStepOperation? operation,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #enqueueMultiStep,
-          [operation],
-        ),
-        returnValue: _i7.Future<List<String>>.value(<String>[]),
-      ) as _i7.Future<List<String>>);
+            Invocation.method(#enqueueMultiStep, [operation]),
+            returnValue: _i7.Future<List<String>>.value(<String>[]),
+          )
+          as _i7.Future<List<String>>);
 
   @override
-  _i7.Future<void> forceSyncAll() => (super.noSuchMethod(
-        Invocation.method(
-          #forceSyncAll,
-          [],
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+  _i7.Future<void> forceSyncAll() =>
+      (super.noSuchMethod(
+            Invocation.method(#forceSyncAll, []),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
+          )
+          as _i7.Future<void>);
 
   @override
   _i7.Future<void> resolveConflict(
@@ -867,40 +739,31 @@ class MockSyncManager extends _i1.Mock implements _i3.SyncManager {
     Map<String, dynamic>? resolution,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #resolveConflict,
-          [
-            conflict,
-            resolution,
-          ],
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+            Invocation.method(#resolveConflict, [conflict, resolution]),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
+          )
+          as _i7.Future<void>);
 
   @override
-  _i7.Future<void> restoreFullData(String? userId) => (super.noSuchMethod(
-        Invocation.method(
-          #restoreFullData,
-          [userId],
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+  _i7.Future<void> restoreFullData(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#restoreFullData, [userId]),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
+          )
+          as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.SyncHealthMetrics> getHealthMetrics() => (super.noSuchMethod(
-        Invocation.method(
-          #getHealthMetrics,
-          [],
-        ),
-        returnValue:
-            _i7.Future<_i3.SyncHealthMetrics>.value(_FakeSyncHealthMetrics_5(
-          this,
-          Invocation.method(
-            #getHealthMetrics,
-            [],
-          ),
-        )),
-      ) as _i7.Future<_i3.SyncHealthMetrics>);
+  _i7.Future<_i3.SyncHealthMetrics> getHealthMetrics() =>
+      (super.noSuchMethod(
+            Invocation.method(#getHealthMetrics, []),
+            returnValue: _i7.Future<_i3.SyncHealthMetrics>.value(
+              _FakeSyncHealthMetrics_5(
+                this,
+                Invocation.method(#getHealthMetrics, []),
+              ),
+            ),
+          )
+          as _i7.Future<_i3.SyncHealthMetrics>);
 }

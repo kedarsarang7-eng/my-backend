@@ -61,8 +61,9 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
         }
 
         if (csvString.isNotEmpty) {
-          List<List<dynamic>> rows =
-              const CsvToListConverter().convert(csvString);
+          List<List<dynamic>> rows = const CsvToListConverter().convert(
+            csvString,
+          );
           if (rows.isNotEmpty) {
             _headers = rows.first.map((e) => e.toString()).toList();
             _csvData = rows.skip(1).toList();
@@ -71,9 +72,9 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error reading file: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error reading file: $e")));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -106,7 +107,8 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
     if (_columnMapping['name'] == null || _columnMapping['price'] == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text("Please map at least Name and Price columns")),
+          content: Text("Please map at least Name and Price columns"),
+        ),
       );
       return;
     }
@@ -186,20 +188,23 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
 
     if (mounted) {
       showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: const Text("Import Summary"),
-                content: Text(
-                    "Successfully imported: $_successCount\nFailed: $_failCount"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(ctx);
-                        Navigator.pop(context, true); // Return true to refresh
-                      },
-                      child: const Text("Done"))
-                ],
-              ));
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Import Summary"),
+          content: Text(
+            "Successfully imported: $_successCount\nFailed: $_failCount",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                Navigator.pop(context, true); // Return true to refresh
+              },
+              child: const Text("Done"),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -221,22 +226,29 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.upload_file,
-                          size: 60, color: Colors.blue),
+                      const Icon(
+                        Icons.upload_file,
+                        size: 60,
+                        color: Colors.blue,
+                      ),
                       const SizedBox(height: 20),
-                      Text("Select a CSV file to import products",
-                          style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        "Select a CSV file to import products",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                       const SizedBox(height: 10),
                       const Text(
-                          "Supported columns: Name, Price, Stock, Unit, Cost"),
+                        "Supported columns: Name, Price, Stock, Unit, Cost",
+                      ),
                       const SizedBox(height: 30),
                       if (_isLoading)
                         const CircularProgressIndicator()
                       else
                         FuturisticButton.primary(
-                            label: "Pick CSV File",
-                            icon: Icons.folder_open,
-                            onPressed: _pickFile),
+                          label: "Pick CSV File",
+                          icon: Icons.folder_open,
+                          onPressed: _pickFile,
+                        ),
                     ],
                   ),
                 ),
@@ -249,17 +261,19 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Preview: Found ${_csvData.length} items",
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          "Preview: Found ${_csvData.length} items",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _csvData = [];
-                                _headers = [];
-                              });
-                            },
-                            child: const Text("Clear"))
+                          onPressed: () {
+                            setState(() {
+                              _csvData = [];
+                              _headers = [];
+                            });
+                          },
+                          child: const Text("Clear"),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -271,8 +285,10 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Column Mapping",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Text(
+                              "Column Mapping",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 10),
                             Wrap(
                               spacing: 20,
@@ -284,7 +300,7 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                                 _buildMappingDropdown("Unit", "unit"),
                                 _buildMappingDropdown("Cost", "cost"),
                               ],
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -303,10 +319,12 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                                 .toList(),
                             rows: _csvData.take(10).map((row) {
                               return DataRow(
-                                  cells: row
-                                      .map((cell) =>
-                                          DataCell(Text(cell.toString())))
-                                      .toList());
+                                cells: row
+                                    .map(
+                                      (cell) => DataCell(Text(cell.toString())),
+                                    )
+                                    .toList(),
+                              );
                             }).toList(),
                           ),
                         ),
@@ -318,9 +336,10 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                     // Progress
                     if (_isImporting) ...[
                       LinearProgressIndicator(
-                          value: _csvData.isEmpty
-                              ? 0
-                              : (_successCount + _failCount) / _csvData.length),
+                        value: _csvData.isEmpty
+                            ? 0
+                            : (_successCount + _failCount) / _csvData.length,
+                      ),
                       Text(_statusMessage),
                       const SizedBox(height: 20),
                     ],
@@ -335,10 +354,10 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
                         isLoading: _isImporting,
                         onPressed: _isImporting ? null : _processImport,
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
           ],
         ),
       ),
@@ -351,12 +370,18 @@ class _ImportInventoryScreenState extends ConsumerState<ImportInventoryScreen> {
       child: DropdownButtonFormField<int>(
         value: _columnMapping[key],
         decoration: InputDecoration(
-            labelText: label, border: const OutlineInputBorder()),
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
         items: List.generate(_headers.length, (index) {
           return DropdownMenuItem(
-              value: index,
-              child: Text(_headers[index],
-                  maxLines: 1, overflow: TextOverflow.ellipsis));
+            value: index,
+            child: Text(
+              _headers[index],
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
         }),
         onChanged: (val) {
           setState(() {

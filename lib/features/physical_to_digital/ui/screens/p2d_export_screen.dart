@@ -22,11 +22,7 @@ class P2DExportScreen extends StatefulWidget {
   final Uint8List imageBytes;
   final OcrResult? ocrResult;
 
-  const P2DExportScreen({
-    super.key,
-    required this.imageBytes,
-    this.ocrResult,
-  });
+  const P2DExportScreen({super.key, required this.imageBytes, this.ocrResult});
 
   @override
   State<P2DExportScreen> createState() => _P2DExportScreenState();
@@ -94,9 +90,8 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
       pw.Page(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(20),
-        build: (context) => pw.Center(
-          child: pw.Image(image, fit: pw.BoxFit.contain),
-        ),
+        build: (context) =>
+            pw.Center(child: pw.Image(image, fit: pw.BoxFit.contain)),
       ),
     );
 
@@ -140,15 +135,12 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
         pw.Page(
           pageFormat: PdfPageFormat.a4,
           margin: const pw.EdgeInsets.all(20),
-          build: (context) => pw.Center(
-            child: pw.Image(image, fit: pw.BoxFit.contain),
-          ),
+          build: (context) =>
+              pw.Center(child: pw.Image(image, fit: pw.BoxFit.contain)),
         ),
       );
 
-      await Printing.layoutPdf(
-        onLayout: (format) => pdf.save(),
-      );
+      await Printing.layoutPdf(onLayout: (format) => pdf.save());
     } catch (e) {
       debugPrint('Print error: $e');
       _showError('Failed to print');
@@ -157,19 +149,13 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
 
   void _showSuccess(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: kP2DGlowSuccess,
-      ),
+      SnackBar(content: Text(message), backgroundColor: kP2DGlowSuccess),
     );
   }
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
@@ -306,10 +292,7 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: Row(
@@ -349,10 +332,7 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [
-                    kP2DBackground,
-                    kP2DBackground.withOpacity(0),
-                  ],
+                  colors: [kP2DBackground, kP2DBackground.withOpacity(0)],
                 ),
               ),
               child: Row(
@@ -420,8 +400,9 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color:
-                isSelected ? kP2DAccentCyan.withOpacity(0.2) : kP2DGlassSurface,
+            color: isSelected
+                ? kP2DAccentCyan.withOpacity(0.2)
+                : kP2DGlassSurface,
             border: Border.all(
               color: isSelected ? kP2DAccentCyan : kP2DGlassBorder,
               width: isSelected ? 1.5 : 1,
@@ -443,8 +424,9 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
                   label,
                   style: TextStyle(
                     color: isSelected ? kP2DAccentCyan : kP2DTextSecondary,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                 ),
               ],
@@ -477,10 +459,7 @@ class _P2DExportScreenState extends State<P2DExportScreen> {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(
-              color: kP2DTextMuted,
-              fontSize: 11,
-            ),
+            style: const TextStyle(color: kP2DTextMuted, fontSize: 11),
           ),
         ],
       ),

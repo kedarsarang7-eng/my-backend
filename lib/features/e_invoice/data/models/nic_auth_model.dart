@@ -3,11 +3,7 @@ class NicAuthModel {
   final AuthData? data;
   final ErrorDetails? error;
 
-  NicAuthModel({
-    required this.status,
-    this.data,
-    this.error,
-  });
+  NicAuthModel({required this.status, this.data, this.error});
 
   bool get isSuccess => status == '1';
 

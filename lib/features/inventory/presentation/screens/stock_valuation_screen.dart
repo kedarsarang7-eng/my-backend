@@ -68,15 +68,18 @@ class _StockValuationScreenState extends ConsumerState<StockValuationScreen> {
           _totalCostValue += costValue;
           _totalSellingValue += sellValue;
 
-          valuations.add(_ProductValuation(
-            name: product.name,
-            quantity: product.stockQuantity,
-            unit: product.unit,
-            costValue: costValue,
-            sellValue: sellValue,
-            margin:
-                sellValue > 0 ? ((sellValue - costValue) / sellValue * 100) : 0,
-          ));
+          valuations.add(
+            _ProductValuation(
+              name: product.name,
+              quantity: product.stockQuantity,
+              unit: product.unit,
+              costValue: costValue,
+              sellValue: sellValue,
+              margin: sellValue > 0
+                  ? ((sellValue - costValue) / sellValue * 100)
+                  : 0,
+            ),
+          );
         }
       }
 
@@ -133,42 +136,50 @@ class _StockValuationScreenState extends ConsumerState<StockValuationScreen> {
         Row(
           children: [
             Expanded(
-                child: _buildCard(
-                    'Cost Value',
-                    '₹${_formatAmount(_totalCostValue)}',
-                    'At purchase price',
-                    const Color(0xFF06B6D4),
-                    isDark)),
+              child: _buildCard(
+                'Cost Value',
+                '₹${_formatAmount(_totalCostValue)}',
+                'At purchase price',
+                const Color(0xFF06B6D4),
+                isDark,
+              ),
+            ),
             const SizedBox(width: 16),
             Expanded(
-                child: _buildCard(
-                    'Selling Value',
-                    '₹${_formatAmount(_totalSellingValue)}',
-                    'At MRP',
-                    const Color(0xFF10B981),
-                    isDark)),
+              child: _buildCard(
+                'Selling Value',
+                '₹${_formatAmount(_totalSellingValue)}',
+                'At MRP',
+                const Color(0xFF10B981),
+                isDark,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
-                child: _buildCard(
-                    'Potential Profit',
-                    '₹${_formatAmount(_potentialProfit)}',
-                    'If sold at MRP',
-                    _potentialProfit >= 0
-                        ? const Color(0xFF10B981)
-                        : const Color(0xFFEF4444),
-                    isDark)),
+              child: _buildCard(
+                'Potential Profit',
+                '₹${_formatAmount(_potentialProfit)}',
+                'If sold at MRP',
+                _potentialProfit >= 0
+                    ? const Color(0xFF10B981)
+                    : const Color(0xFFEF4444),
+                isDark,
+              ),
+            ),
             const SizedBox(width: 16),
             Expanded(
-                child: _buildCard(
-                    'Gross Margin',
-                    '${_marginPercent.toStringAsFixed(1)}%',
-                    'Profit margin',
-                    const Color(0xFF8B5CF6),
-                    isDark)),
+              child: _buildCard(
+                'Gross Margin',
+                '${_marginPercent.toStringAsFixed(1)}%',
+                'Profit margin',
+                const Color(0xFF8B5CF6),
+                isDark,
+              ),
+            ),
           ],
         ),
       ],
@@ -176,7 +187,12 @@ class _StockValuationScreenState extends ConsumerState<StockValuationScreen> {
   }
 
   Widget _buildCard(
-      String title, String value, String subtitle, Color color, bool isDark) {
+    String title,
+    String value,
+    String subtitle,
+    Color color,
+    bool isDark,
+  ) {
     return GlassMorphism(
       blur: 10,
       opacity: 0.1,
@@ -245,21 +261,33 @@ class _StockValuationScreenState extends ConsumerState<StockValuationScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.monetization_on,
-                            size: 48, color: FuturisticColors.primary),
+                        Icon(
+                          Icons.monetization_on,
+                          size: 48,
+                          color: FuturisticColors.primary,
+                        ),
                         const SizedBox(height: 16),
-                        Text("Total Valuation",
-                            style: TextStyle(
-                                color: FuturisticColors.textSecondary)),
-                        Text("₹${_totalSellingValue.toStringAsFixed(2)}",
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: FuturisticColors.textPrimary)),
-                        Text("$_productCount items in inventory",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: FuturisticColors.textSecondary)),
+                        Text(
+                          "Total Valuation",
+                          style: TextStyle(
+                            color: FuturisticColors.textSecondary,
+                          ),
+                        ),
+                        Text(
+                          "₹${_totalSellingValue.toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: FuturisticColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          "$_productCount items in inventory",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: FuturisticColors.textSecondary,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -268,7 +296,7 @@ class _StockValuationScreenState extends ConsumerState<StockValuationScreen> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: _topProducts.length,
-                  separatorBuilder: (_, __) => Divider(
+                  separatorBuilder: (_, _) => Divider(
                     height: 1,
                     color: isDark
                         ? Colors.white.withOpacity(0.1)

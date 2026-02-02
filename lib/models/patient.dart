@@ -41,15 +41,15 @@ class Patient {
   });
 
   factory Patient.empty() => Patient(
-        id: '',
-        userId: '',
-        customerId: '',
-        name: '',
-        age: 0,
-        gender: '',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+    id: '',
+    userId: '',
+    customerId: '',
+    name: '',
+    age: 0,
+    gender: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 
   Map<String, dynamic> toMap() {
     return {

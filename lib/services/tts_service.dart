@@ -27,13 +27,14 @@ class TtsService {
         if (defaultTargetPlatform == TargetPlatform.iOS) {
           await _flutterTts.setSharedInstance(true);
           await _flutterTts.setIosAudioCategory(
-              IosTextToSpeechAudioCategory.playback,
-              [
-                IosTextToSpeechAudioCategoryOptions.allowBluetooth,
-                IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-                IosTextToSpeechAudioCategoryOptions.mixWithOthers
-              ],
-              IosTextToSpeechAudioMode.voicePrompt);
+            IosTextToSpeechAudioCategory.playback,
+            [
+              IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+              IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+              IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+            ],
+            IosTextToSpeechAudioMode.voicePrompt,
+          );
         }
       }
 
@@ -67,7 +68,8 @@ class TtsService {
     // Slightly higher pitch for female feel, slightly slower for clarity/calmness
     await _flutterTts.setPitch(1.3); // 1.0 is normal, >1.0 is higher
     await _flutterTts.setSpeechRate(
-        0.4); // 0.0 to 1.0. 0.5 is usually normal. 0.4 is slightly slower.
+      0.4,
+    ); // 0.0 to 1.0. 0.5 is usually normal. 0.4 is slightly slower.
     await _flutterTts.setVolume(1.0);
 
     await _flutterTts.awaitSpeakCompletion(true);

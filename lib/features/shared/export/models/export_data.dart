@@ -30,17 +30,17 @@ class ExportData extends Equatable {
 
   @override
   List<Object?> get props => [
-        company,
-        document,
-        party,
-        items,
-        taxSummary,
-        totals,
-        payment,
-        metadata,
-        termsAndConditions,
-        notes
-      ];
+    company,
+    document,
+    party,
+    items,
+    taxSummary,
+    totals,
+    payment,
+    metadata,
+    termsAndConditions,
+    notes,
+  ];
 }
 
 class ExportCompany extends Equatable {
@@ -63,8 +63,15 @@ class ExportCompany extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [name, address, phone, email, gstin, logoPath, signaturePath];
+  List<Object?> get props => [
+    name,
+    address,
+    phone,
+    email,
+    gstin,
+    logoPath,
+    signaturePath,
+  ];
 }
 
 class ExportDocument extends Equatable {
@@ -138,18 +145,18 @@ class ExportItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        index,
-        name,
-        description,
-        hsn,
-        quantity,
-        unit,
-        unitPrice,
-        taxRate,
-        taxAmount,
-        discountAmount,
-        totalAmount
-      ];
+    index,
+    name,
+    description,
+    hsn,
+    quantity,
+    unit,
+    unitPrice,
+    taxRate,
+    taxAmount,
+    discountAmount,
+    totalAmount,
+  ];
 }
 
 class ExportTax extends Equatable {
@@ -185,8 +192,13 @@ class ExportTotals extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [subtotal, totalTax, totalDiscount, grandTotal, roundOff];
+  List<Object?> get props => [
+    subtotal,
+    totalTax,
+    totalDiscount,
+    grandTotal,
+    roundOff,
+  ];
 }
 
 class ExportPayment extends Equatable {
@@ -205,6 +217,11 @@ class ExportPayment extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [paidAmount, dueAmount, mode, transactionId, bankName];
+  List<Object?> get props => [
+    paidAmount,
+    dueAmount,
+    mode,
+    transactionId,
+    bankName,
+  ];
 }

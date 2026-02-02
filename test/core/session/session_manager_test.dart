@@ -22,10 +22,7 @@ void main() {
 
   group('UserSession Model Tests', () {
     test('should create UserSession with required fields', () {
-      final session = UserSession(
-        odId: 'user-123',
-        role: UserRole.owner,
-      );
+      final session = UserSession(odId: 'user-123', role: UserRole.owner);
 
       expect(session.odId, 'user-123');
       expect(session.role, UserRole.owner);
@@ -63,10 +60,7 @@ void main() {
     });
 
     test('isOwner should return true only for owner role', () {
-      final ownerSession = UserSession(
-        odId: 'owner-123',
-        role: UserRole.owner,
-      );
+      final ownerSession = UserSession(odId: 'owner-123', role: UserRole.owner);
 
       final customerSession = UserSession(
         odId: 'customer-123',
@@ -84,10 +78,7 @@ void main() {
     });
 
     test('isCustomer should return true only for customer role', () {
-      final ownerSession = UserSession(
-        odId: 'owner-123',
-        role: UserRole.owner,
-      );
+      final ownerSession = UserSession(odId: 'owner-123', role: UserRole.owner);
 
       final customerSession = UserSession(
         odId: 'customer-123',
@@ -110,10 +101,7 @@ void main() {
         role: UserRole.owner,
       );
 
-      final emptyIdSession = UserSession(
-        odId: '',
-        role: UserRole.unknown,
-      );
+      final emptyIdSession = UserSession(odId: '', role: UserRole.unknown);
 
       expect(authenticatedSession.isAuthenticated, true);
       expect(emptyIdSession.isAuthenticated, false);
@@ -215,10 +203,7 @@ void main() {
 
   group('UserSession Edge Cases', () {
     test('session with special characters in odId', () {
-      final session = UserSession(
-        odId: 'user@123!#\$%',
-        role: UserRole.owner,
-      );
+      final session = UserSession(odId: 'user@123!#\$%', role: UserRole.owner);
 
       expect(session.isAuthenticated, true);
       expect(session.odId, 'user@123!#\$%');
@@ -270,10 +255,7 @@ void main() {
         'double': 3.14,
         'boolean': true,
         'list': [1, 2, 3],
-        'nested': {
-          'key': 'value',
-          'count': 10,
-        },
+        'nested': {'key': 'value', 'count': 10},
         'nullValue': null,
       };
 

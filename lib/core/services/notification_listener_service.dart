@@ -22,9 +22,9 @@ class NotificationListenerService {
     required EventDispatcher dispatcher,
     required VendorNotificationRepository notificationRepo,
     required CustomersRepository customersRepo,
-  })  : _dispatcher = dispatcher,
-        _notificationRepo = notificationRepo,
-        _customersRepo = customersRepo;
+  }) : _dispatcher = dispatcher,
+       _notificationRepo = notificationRepo,
+       _customersRepo = customersRepo;
 
   /// Initialize listeners
   void initialize() {
@@ -66,12 +66,15 @@ class NotificationListenerService {
       }
     } catch (e) {
       debugPrint(
-          'NotificationListenerService: Error handling event ${eventData.event}: $e');
+        'NotificationListenerService: Error handling event ${eventData.event}: $e',
+      );
     }
   }
 
   Future<void> _handleLowStock(
-      BusinessEventData eventData, String userId) async {
+    BusinessEventData eventData,
+    String userId,
+  ) async {
     final productName = eventData.get<String>('productName');
     final productId = eventData.get<String>('productId');
     final currentQty = eventData.get<double>('currentQty');
@@ -92,7 +95,9 @@ class NotificationListenerService {
   }
 
   Future<void> _handlePaymentReceived(
-      BusinessEventData eventData, String userId) async {
+    BusinessEventData eventData,
+    String userId,
+  ) async {
     final customerId = eventData.get<String>('customerId');
     final amount = eventData.get<double>('amount');
     final billId = eventData.get<String>('billId');

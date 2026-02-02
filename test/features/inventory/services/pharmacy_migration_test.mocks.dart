@@ -32,55 +32,30 @@ import 'package:mockito/src/dummies.dart' as _i7;
 // ignore_for_file: invalid_use_of_internal_member
 
 class _FakeAppDatabase_0 extends _i1.SmartFake implements _i2.AppDatabase {
-  _FakeAppDatabase_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAppDatabase_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSyncManager_1 extends _i1.SmartFake implements _i3.SyncManager {
-  _FakeSyncManager_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSyncManager_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeErrorHandler_2 extends _i1.SmartFake implements _i4.ErrorHandler {
-  _FakeErrorHandler_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeErrorHandler_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeEventDispatcher_3 extends _i1.SmartFake
     implements _i5.EventDispatcher {
-  _FakeEventDispatcher_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeEventDispatcher_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeRepositoryResult_4<T> extends _i1.SmartFake
     implements _i4.RepositoryResult<T> {
-  _FakeRepositoryResult_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeRepositoryResult_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ProductsRepository].
@@ -93,49 +68,56 @@ class MockProductsRepository extends _i1.Mock
   }
 
   @override
-  _i2.AppDatabase get database => (super.noSuchMethod(
-        Invocation.getter(#database),
-        returnValue: _FakeAppDatabase_0(
-          this,
-          Invocation.getter(#database),
-        ),
-      ) as _i2.AppDatabase);
+  _i2.AppDatabase get database =>
+      (super.noSuchMethod(
+            Invocation.getter(#database),
+            returnValue: _FakeAppDatabase_0(this, Invocation.getter(#database)),
+          )
+          as _i2.AppDatabase);
 
   @override
-  _i3.SyncManager get syncManager => (super.noSuchMethod(
-        Invocation.getter(#syncManager),
-        returnValue: _FakeSyncManager_1(
-          this,
-          Invocation.getter(#syncManager),
-        ),
-      ) as _i3.SyncManager);
+  _i3.SyncManager get syncManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#syncManager),
+            returnValue: _FakeSyncManager_1(
+              this,
+              Invocation.getter(#syncManager),
+            ),
+          )
+          as _i3.SyncManager);
 
   @override
-  _i4.ErrorHandler get errorHandler => (super.noSuchMethod(
-        Invocation.getter(#errorHandler),
-        returnValue: _FakeErrorHandler_2(
-          this,
-          Invocation.getter(#errorHandler),
-        ),
-      ) as _i4.ErrorHandler);
+  _i4.ErrorHandler get errorHandler =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorHandler),
+            returnValue: _FakeErrorHandler_2(
+              this,
+              Invocation.getter(#errorHandler),
+            ),
+          )
+          as _i4.ErrorHandler);
 
   @override
-  _i5.EventDispatcher get eventDispatcher => (super.noSuchMethod(
-        Invocation.getter(#eventDispatcher),
-        returnValue: _FakeEventDispatcher_3(
-          this,
-          Invocation.getter(#eventDispatcher),
-        ),
-      ) as _i5.EventDispatcher);
+  _i5.EventDispatcher get eventDispatcher =>
+      (super.noSuchMethod(
+            Invocation.getter(#eventDispatcher),
+            returnValue: _FakeEventDispatcher_3(
+              this,
+              Invocation.getter(#eventDispatcher),
+            ),
+          )
+          as _i5.EventDispatcher);
 
   @override
-  String get collectionName => (super.noSuchMethod(
-        Invocation.getter(#collectionName),
-        returnValue: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#collectionName),
-        ),
-      ) as String);
+  String get collectionName =>
+      (super.noSuchMethod(
+            Invocation.getter(#collectionName),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#collectionName),
+            ),
+          )
+          as String);
 
   @override
   _i8.Future<_i4.RepositoryResult<_i6.Product>> createProduct({
@@ -162,40 +144,7 @@ class MockProductsRepository extends _i1.Mock
     List<String>? initialImeis,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createProduct,
-          [],
-          {
-            #userId: userId,
-            #name: name,
-            #sku: sku,
-            #barcode: barcode,
-            #category: category,
-            #unit: unit,
-            #sellingPrice: sellingPrice,
-            #costPrice: costPrice,
-            #taxRate: taxRate,
-            #stockQuantity: stockQuantity,
-            #lowStockThreshold: lowStockThreshold,
-            #size: size,
-            #color: color,
-            #brand: brand,
-            #hsnCode: hsnCode,
-            #altBarcodes: altBarcodes,
-            #drugSchedule: drugSchedule,
-            #groupId: groupId,
-            #variantAttributes: variantAttributes,
-            #initialBatches: initialBatches,
-            #initialImeis: initialImeis,
-          },
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product>>.value(
-            _FakeRepositoryResult_4<_i6.Product>(
-          this,
-          Invocation.method(
-            #createProduct,
-            [],
-            {
+            Invocation.method(#createProduct, [], {
               #userId: userId,
               #name: name,
               #sku: sku,
@@ -217,69 +166,82 @@ class MockProductsRepository extends _i1.Mock
               #variantAttributes: variantAttributes,
               #initialBatches: initialBatches,
               #initialImeis: initialImeis,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<_i6.Product>>);
+            }),
+            returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product>>.value(
+              _FakeRepositoryResult_4<_i6.Product>(
+                this,
+                Invocation.method(#createProduct, [], {
+                  #userId: userId,
+                  #name: name,
+                  #sku: sku,
+                  #barcode: barcode,
+                  #category: category,
+                  #unit: unit,
+                  #sellingPrice: sellingPrice,
+                  #costPrice: costPrice,
+                  #taxRate: taxRate,
+                  #stockQuantity: stockQuantity,
+                  #lowStockThreshold: lowStockThreshold,
+                  #size: size,
+                  #color: color,
+                  #brand: brand,
+                  #hsnCode: hsnCode,
+                  #altBarcodes: altBarcodes,
+                  #drugSchedule: drugSchedule,
+                  #groupId: groupId,
+                  #variantAttributes: variantAttributes,
+                  #initialBatches: initialBatches,
+                  #initialImeis: initialImeis,
+                }),
+              ),
+            ),
+          )
+          as _i8.Future<_i4.RepositoryResult<_i6.Product>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<_i6.Product?>> getById(String? id) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getById,
-          [id],
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product?>>.value(
-            _FakeRepositoryResult_4<_i6.Product?>(
-          this,
-          Invocation.method(
-            #getById,
-            [id],
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<_i6.Product?>>);
+            Invocation.method(#getById, [id]),
+            returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product?>>.value(
+              _FakeRepositoryResult_4<_i6.Product?>(
+                this,
+                Invocation.method(#getById, [id]),
+              ),
+            ),
+          )
+          as _i8.Future<_i4.RepositoryResult<_i6.Product?>>);
 
   @override
-  _i8.Future<_i4.RepositoryResult<List<_i6.Product>>> getAll(
-          {required String? userId}) =>
+  _i8.Future<_i4.RepositoryResult<List<_i6.Product>>> getAll({
+    required String? userId,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAll,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
-            _FakeRepositoryResult_4<List<_i6.Product>>(
-          this,
-          Invocation.method(
-            #getAll,
-            [],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
+            Invocation.method(#getAll, [], {#userId: userId}),
+            returnValue:
+                _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
+                  _FakeRepositoryResult_4<List<_i6.Product>>(
+                    this,
+                    Invocation.method(#getAll, [], {#userId: userId}),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
 
   @override
   _i8.Stream<List<_i6.Product>> watchAll({required String? userId}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #watchAll,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Stream<List<_i6.Product>>.empty(),
-      ) as _i8.Stream<List<_i6.Product>>);
+            Invocation.method(#watchAll, [], {#userId: userId}),
+            returnValue: _i8.Stream<List<_i6.Product>>.empty(),
+          )
+          as _i8.Stream<List<_i6.Product>>);
 
   @override
   _i8.Stream<List<String>> watchUniqueCategories({required String? userId}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #watchUniqueCategories,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Stream<List<String>>.empty(),
-      ) as _i8.Stream<List<String>>);
+            Invocation.method(#watchUniqueCategories, [], {#userId: userId}),
+            returnValue: _i8.Stream<List<String>>.empty(),
+          )
+          as _i8.Stream<List<String>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<_i6.Product>> updateProduct(
@@ -287,21 +249,15 @@ class MockProductsRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateProduct,
-          [product],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product>>.value(
-            _FakeRepositoryResult_4<_i6.Product>(
-          this,
-          Invocation.method(
-            #updateProduct,
-            [product],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<_i6.Product>>);
+            Invocation.method(#updateProduct, [product], {#userId: userId}),
+            returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product>>.value(
+              _FakeRepositoryResult_4<_i6.Product>(
+                this,
+                Invocation.method(#updateProduct, [product], {#userId: userId}),
+              ),
+            ),
+          )
+          as _i8.Future<_i4.RepositoryResult<_i6.Product>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<bool>> deleteProduct(
@@ -309,21 +265,15 @@ class MockProductsRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deleteProduct,
-          [id],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<bool>>.value(
-            _FakeRepositoryResult_4<bool>(
-          this,
-          Invocation.method(
-            #deleteProduct,
-            [id],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<bool>>);
+            Invocation.method(#deleteProduct, [id], {#userId: userId}),
+            returnValue: _i8.Future<_i4.RepositoryResult<bool>>.value(
+              _FakeRepositoryResult_4<bool>(
+                this,
+                Invocation.method(#deleteProduct, [id], {#userId: userId}),
+              ),
+            ),
+          )
+          as _i8.Future<_i4.RepositoryResult<bool>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<_i6.Product>> adjustStock({
@@ -332,49 +282,41 @@ class MockProductsRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #adjustStock,
-          [],
-          {
-            #productId: productId,
-            #quantity: quantity,
-            #userId: userId,
-          },
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product>>.value(
-            _FakeRepositoryResult_4<_i6.Product>(
-          this,
-          Invocation.method(
-            #adjustStock,
-            [],
-            {
+            Invocation.method(#adjustStock, [], {
               #productId: productId,
               #quantity: quantity,
               #userId: userId,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<_i6.Product>>);
+            }),
+            returnValue: _i8.Future<_i4.RepositoryResult<_i6.Product>>.value(
+              _FakeRepositoryResult_4<_i6.Product>(
+                this,
+                Invocation.method(#adjustStock, [], {
+                  #productId: productId,
+                  #quantity: quantity,
+                  #userId: userId,
+                }),
+              ),
+            ),
+          )
+          as _i8.Future<_i4.RepositoryResult<_i6.Product>>);
 
   @override
-  _i8.Future<_i4.RepositoryResult<List<_i6.Product>>> getLowStockProducts(
-          {required String? userId}) =>
+  _i8.Future<_i4.RepositoryResult<List<_i6.Product>>> getLowStockProducts({
+    required String? userId,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getLowStockProducts,
-          [],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
-            _FakeRepositoryResult_4<List<_i6.Product>>(
-          this,
-          Invocation.method(
-            #getLowStockProducts,
-            [],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
+            Invocation.method(#getLowStockProducts, [], {#userId: userId}),
+            returnValue:
+                _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
+                  _FakeRepositoryResult_4<List<_i6.Product>>(
+                    this,
+                    Invocation.method(#getLowStockProducts, [], {
+                      #userId: userId,
+                    }),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<List<_i6.Product>>> getDeadStock({
@@ -382,48 +324,43 @@ class MockProductsRepository extends _i1.Mock
     required int? daysUnsold,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getDeadStock,
-          [],
-          {
-            #userId: userId,
-            #daysUnsold: daysUnsold,
-          },
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
-            _FakeRepositoryResult_4<List<_i6.Product>>(
-          this,
-          Invocation.method(
-            #getDeadStock,
-            [],
-            {
+            Invocation.method(#getDeadStock, [], {
               #userId: userId,
               #daysUnsold: daysUnsold,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
+            }),
+            returnValue:
+                _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
+                  _FakeRepositoryResult_4<List<_i6.Product>>(
+                    this,
+                    Invocation.method(#getDeadStock, [], {
+                      #userId: userId,
+                      #daysUnsold: daysUnsold,
+                    }),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<List<_i9.ReorderPrediction>>>
-      getSmartReorderSuggestions({required String? userId}) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #getSmartReorderSuggestions,
-              [],
-              {#userId: userId},
-            ),
-            returnValue: _i8.Future<
-                    _i4.RepositoryResult<List<_i9.ReorderPrediction>>>.value(
-                _FakeRepositoryResult_4<List<_i9.ReorderPrediction>>(
-              this,
-              Invocation.method(
-                #getSmartReorderSuggestions,
-                [],
-                {#userId: userId},
-              ),
-            )),
-          ) as _i8.Future<_i4.RepositoryResult<List<_i9.ReorderPrediction>>>);
+  getSmartReorderSuggestions({required String? userId}) =>
+      (super.noSuchMethod(
+            Invocation.method(#getSmartReorderSuggestions, [], {
+              #userId: userId,
+            }),
+            returnValue:
+                _i8.Future<
+                  _i4.RepositoryResult<List<_i9.ReorderPrediction>>
+                >.value(
+                  _FakeRepositoryResult_4<List<_i9.ReorderPrediction>>(
+                    this,
+                    Invocation.method(#getSmartReorderSuggestions, [], {
+                      #userId: userId,
+                    }),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i9.ReorderPrediction>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<List<_i6.Product>>> search(
@@ -431,115 +368,101 @@ class MockProductsRepository extends _i1.Mock
     required String? userId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #search,
-          [query],
-          {#userId: userId},
-        ),
-        returnValue: _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
-            _FakeRepositoryResult_4<List<_i6.Product>>(
-          this,
-          Invocation.method(
-            #search,
-            [query],
-            {#userId: userId},
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
+            Invocation.method(#search, [query], {#userId: userId}),
+            returnValue:
+                _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>.value(
+                  _FakeRepositoryResult_4<List<_i6.Product>>(
+                    this,
+                    Invocation.method(#search, [query], {#userId: userId}),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i6.Product>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>> getStockStatusSummary(
-          String? userId) =>
+    String? userId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getStockStatusSummary,
-          [userId],
-        ),
-        returnValue:
-            _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
-                _FakeRepositoryResult_4<Map<String, dynamic>>(
-          this,
-          Invocation.method(
-            #getStockStatusSummary,
-            [userId],
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
+            Invocation.method(#getStockStatusSummary, [userId]),
+            returnValue:
+                _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
+                  _FakeRepositoryResult_4<Map<String, dynamic>>(
+                    this,
+                    Invocation.method(#getStockStatusSummary, [userId]),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>> getSalesPerformance(
-          String? userId) =>
+    String? userId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getSalesPerformance,
-          [userId],
-        ),
-        returnValue:
-            _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
-                _FakeRepositoryResult_4<Map<String, dynamic>>(
-          this,
-          Invocation.method(
-            #getSalesPerformance,
-            [userId],
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
+            Invocation.method(#getSalesPerformance, [userId]),
+            returnValue:
+                _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>.value(
+                  _FakeRepositoryResult_4<Map<String, dynamic>>(
+                    this,
+                    Invocation.method(#getSalesPerformance, [userId]),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<Map<String, dynamic>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>>
-      getBatchesForProduct(String? productId) => (super.noSuchMethod(
-            Invocation.method(
-              #getBatchesForProduct,
-              [productId],
-            ),
-            returnValue: _i8.Future<
-                    _i4.RepositoryResult<List<_i2.ProductBatchEntity>>>.value(
-                _FakeRepositoryResult_4<List<_i2.ProductBatchEntity>>(
-              this,
-              Invocation.method(
-                #getBatchesForProduct,
-                [productId],
-              ),
-            )),
-          ) as _i8.Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>>);
+  getBatchesForProduct(String? productId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getBatchesForProduct, [productId]),
+            returnValue:
+                _i8.Future<
+                  _i4.RepositoryResult<List<_i2.ProductBatchEntity>>
+                >.value(
+                  _FakeRepositoryResult_4<List<_i2.ProductBatchEntity>>(
+                    this,
+                    Invocation.method(#getBatchesForProduct, [productId]),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>> getAllBatches(
-          String? userId) =>
+    String? userId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAllBatches,
-          [userId],
-        ),
-        returnValue: _i8
-            .Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>>.value(
-            _FakeRepositoryResult_4<List<_i2.ProductBatchEntity>>(
-          this,
-          Invocation.method(
-            #getAllBatches,
-            [userId],
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>>);
+            Invocation.method(#getAllBatches, [userId]),
+            returnValue:
+                _i8.Future<
+                  _i4.RepositoryResult<List<_i2.ProductBatchEntity>>
+                >.value(
+                  _FakeRepositoryResult_4<List<_i2.ProductBatchEntity>>(
+                    this,
+                    Invocation.method(#getAllBatches, [userId]),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i2.ProductBatchEntity>>>);
 
   @override
   _i8.Future<_i4.RepositoryResult<List<_i2.StockMovementEntity>>> getDamageLogs(
-          String? userId) =>
+    String? userId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getDamageLogs,
-          [userId],
-        ),
-        returnValue: _i8
-            .Future<_i4.RepositoryResult<List<_i2.StockMovementEntity>>>.value(
-            _FakeRepositoryResult_4<List<_i2.StockMovementEntity>>(
-          this,
-          Invocation.method(
-            #getDamageLogs,
-            [userId],
-          ),
-        )),
-      ) as _i8.Future<_i4.RepositoryResult<List<_i2.StockMovementEntity>>>);
+            Invocation.method(#getDamageLogs, [userId]),
+            returnValue:
+                _i8.Future<
+                  _i4.RepositoryResult<List<_i2.StockMovementEntity>>
+                >.value(
+                  _FakeRepositoryResult_4<List<_i2.StockMovementEntity>>(
+                    this,
+                    Invocation.method(#getDamageLogs, [userId]),
+                  ),
+                ),
+          )
+          as _i8.Future<_i4.RepositoryResult<List<_i2.StockMovementEntity>>>);
 }
 
 /// A class which mocks [ProductBatchRepository].
@@ -553,58 +476,46 @@ class MockProductBatchRepository extends _i1.Mock
 
   @override
   _i8.Future<List<_i2.ProductBatchEntity>> getBatchesForFefo(
-          String? productId) =>
+    String? productId,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBatchesForFefo,
-          [productId],
-        ),
-        returnValue: _i8.Future<List<_i2.ProductBatchEntity>>.value(
-            <_i2.ProductBatchEntity>[]),
-      ) as _i8.Future<List<_i2.ProductBatchEntity>>);
+            Invocation.method(#getBatchesForFefo, [productId]),
+            returnValue: _i8.Future<List<_i2.ProductBatchEntity>>.value(
+              <_i2.ProductBatchEntity>[],
+            ),
+          )
+          as _i8.Future<List<_i2.ProductBatchEntity>>);
 
   @override
   _i8.Future<List<_i2.ProductBatchEntity>> getAllBatches(String? productId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAllBatches,
-          [productId],
-        ),
-        returnValue: _i8.Future<List<_i2.ProductBatchEntity>>.value(
-            <_i2.ProductBatchEntity>[]),
-      ) as _i8.Future<List<_i2.ProductBatchEntity>>);
+            Invocation.method(#getAllBatches, [productId]),
+            returnValue: _i8.Future<List<_i2.ProductBatchEntity>>.value(
+              <_i2.ProductBatchEntity>[],
+            ),
+          )
+          as _i8.Future<List<_i2.ProductBatchEntity>>);
 
   @override
   _i8.Future<String> createBatch(_i2.ProductBatchesCompanion? batch) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createBatch,
-          [batch],
-        ),
-        returnValue: _i8.Future<String>.value(_i7.dummyValue<String>(
-          this,
-          Invocation.method(
-            #createBatch,
-            [batch],
-          ),
-        )),
-      ) as _i8.Future<String>);
+            Invocation.method(#createBatch, [batch]),
+            returnValue: _i8.Future<String>.value(
+              _i7.dummyValue<String>(
+                this,
+                Invocation.method(#createBatch, [batch]),
+              ),
+            ),
+          )
+          as _i8.Future<String>);
 
   @override
-  _i8.Future<double> updateBatchStock(
-    String? batchId,
-    double? deltaQty,
-  ) =>
+  _i8.Future<double> updateBatchStock(String? batchId, double? deltaQty) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateBatchStock,
-          [
-            batchId,
-            deltaQty,
-          ],
-        ),
-        returnValue: _i8.Future<double>.value(0.0),
-      ) as _i8.Future<double>);
+            Invocation.method(#updateBatchStock, [batchId, deltaQty]),
+            returnValue: _i8.Future<double>.value(0.0),
+          )
+          as _i8.Future<double>);
 
   @override
   _i8.Future<_i2.ProductBatchEntity?> getBatchByNumber(
@@ -612,13 +523,8 @@ class MockProductBatchRepository extends _i1.Mock
     String? batchNumber,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBatchByNumber,
-          [
-            productId,
-            batchNumber,
-          ],
-        ),
-        returnValue: _i8.Future<_i2.ProductBatchEntity?>.value(),
-      ) as _i8.Future<_i2.ProductBatchEntity?>);
+            Invocation.method(#getBatchByNumber, [productId, batchNumber]),
+            returnValue: _i8.Future<_i2.ProductBatchEntity?>.value(),
+          )
+          as _i8.Future<_i2.ProductBatchEntity?>);
 }

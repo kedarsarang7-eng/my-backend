@@ -41,20 +41,21 @@ class AnimationHelpers {
   }) {
     final fadeAnim = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-          parent: controller, curve: AnimationCurves.softDeceleration),
+        parent: controller,
+        curve: AnimationCurves.softDeceleration,
+      ),
     );
     final slideAnim =
         Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
-      CurvedAnimation(
-          parent: controller, curve: AnimationCurves.softDeceleration),
-    );
+          CurvedAnimation(
+            parent: controller,
+            curve: AnimationCurves.softDeceleration,
+          ),
+        );
 
     return FadeTransition(
       opacity: fadeAnim,
-      child: SlideTransition(
-        position: slideAnim,
-        child: child,
-      ),
+      child: SlideTransition(position: slideAnim, child: child),
     );
   }
 
@@ -77,13 +78,12 @@ class AnimationHelpers {
   }) {
     final liftAnim = Tween<double>(begin: 0, end: -6).animate(
       CurvedAnimation(
-          parent: controller, curve: AnimationCurves.softDeceleration),
+        parent: controller,
+        curve: AnimationCurves.softDeceleration,
+      ),
     );
 
-    return Transform.translate(
-      offset: Offset(0, liftAnim.value),
-      child: child,
-    );
+    return Transform.translate(offset: Offset(0, liftAnim.value), child: child);
   }
 
   /// Number count-up animation
@@ -110,13 +110,12 @@ class AnimationHelpers {
   }) {
     final colorAnim = ColorTween(begin: fromColor, end: toColor).animate(
       CurvedAnimation(
-          parent: controller, curve: AnimationCurves.softDeceleration),
+        parent: controller,
+        curve: AnimationCurves.softDeceleration,
+      ),
     );
 
-    return Container(
-      color: colorAnim.value,
-      child: child,
-    );
+    return Container(color: colorAnim.value, child: child);
   }
 
   /// Pulse glow for status badges

@@ -65,13 +65,13 @@ class AppError implements Exception {
   String toString() => message;
 
   Map<String, dynamic> toJson() => {
-        'message': message,
-        'technicalMessage': technicalMessage,
-        'severity': severity.name,
-        'category': category.name,
-        'timestamp': timestamp.toIso8601String(),
-        'context': context,
-      };
+    'message': message,
+    'technicalMessage': technicalMessage,
+    'severity': severity.name,
+    'category': category.name,
+    'timestamp': timestamp.toIso8601String(),
+    'context': context,
+  };
 }
 
 /// Result type for operations that can fail
@@ -80,18 +80,14 @@ class Result<T> {
   final AppError? error;
   final bool isSuccess;
 
-  Result.success(this.data)
-      : error = null,
-        isSuccess = true;
+  Result.success(this.data) : error = null, isSuccess = true;
 
-  Result.failure(this.error)
-      : data = null,
-        isSuccess = false;
+  Result.failure(this.error) : data = null, isSuccess = false;
 
   Result.fromException(dynamic e, StackTrace? stack, {String? userMessage})
-      : data = null,
-        error = ErrorHandler.createAppError(e, stack, userMessage: userMessage),
-        isSuccess = false;
+    : data = null,
+      error = ErrorHandler.createAppError(e, stack, userMessage: userMessage),
+      isSuccess = false;
 
   /// Execute callback based on result
   R when<R>({
@@ -124,13 +120,13 @@ class RepositoryResult<T> {
   final RepositoryErrorCategory? errorCategory;
 
   const RepositoryResult.success(this.data)
-      : success = true,
-        errorMessage = null,
-        errorCategory = null;
+    : success = true,
+      errorMessage = null,
+      errorCategory = null;
 
   const RepositoryResult.failure(this.errorMessage, [this.errorCategory])
-      : data = null,
-        success = false;
+    : data = null,
+      success = false;
 
   bool get isSuccess => success;
   bool get isFailure => !success;
@@ -211,7 +207,8 @@ class ErrorHandler {
         errorStr.contains('network') ||
         errorStr.contains('unreachable')) {
       detectedCategory = ErrorCategory.network;
-      message = userMessage ??
+      message =
+          userMessage ??
           'Network connection error. Please check your internet.';
       detectedSeverity = ErrorSeverity.medium;
     }
@@ -231,7 +228,8 @@ class ErrorHandler {
         errorStr.contains('cloud')) {
       if (errorStr.contains('unavailable') || errorStr.contains('offline')) {
         detectedCategory = ErrorCategory.network;
-        message = userMessage ??
+        message =
+            userMessage ??
             'Service temporarily unavailable. Data saved locally.';
         detectedSeverity = ErrorSeverity.low;
       } else {

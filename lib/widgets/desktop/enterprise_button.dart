@@ -92,9 +92,10 @@ class _EnterpriseButtonState extends State<EnterpriseButton>
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -168,7 +169,7 @@ class _EnterpriseButtonState extends State<EnterpriseButton>
           blurRadius: 20,
           spreadRadius: -5,
           offset: const Offset(0, 8),
-        )
+        ),
       ];
     }
 
@@ -212,10 +213,13 @@ class _EnterpriseButtonState extends State<EnterpriseButton>
               children: [
                 if (widget.isLoading) ...[
                   SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                          strokeWidth: 2, color: textColor)),
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: textColor,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                 ] else if (widget.icon != null) ...[
                   Icon(widget.icon, color: textColor, size: 20),

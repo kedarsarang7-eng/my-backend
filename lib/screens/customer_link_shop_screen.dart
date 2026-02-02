@@ -124,7 +124,8 @@ class _CustomerLinkShopScreenState extends State<CustomerLinkShopScreen>
     setState(() => _isLinking = true);
 
     try {
-      final vendorId = _foundVendor!['uid'] ??
+      final vendorId =
+          _foundVendor!['uid'] ??
           _foundVendor!['id']; // ID of the shop (vendor UID)
 
       // Use ConnectionService to link
@@ -146,25 +147,29 @@ class _CustomerLinkShopScreenState extends State<CustomerLinkShopScreen>
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.red.shade400,
-      behavior: SnackBarBehavior.floating,
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red.shade400,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.white),
-          const SizedBox(width: 12),
-          Text(message),
-        ],
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text(message),
+          ],
+        ),
+        backgroundColor: const Color(0xFF00FF88),
+        behavior: SnackBarBehavior.floating,
       ),
-      backgroundColor: const Color(0xFF00FF88),
-      behavior: SnackBarBehavior.floating,
-    ));
+    );
   }
 
   @override
@@ -232,8 +237,10 @@ class _CustomerLinkShopScreenState extends State<CustomerLinkShopScreen>
             gradient: LinearGradient(
               colors: [_primaryPurple.withOpacity(0.2), Colors.transparent],
             ),
-            border:
-                Border.all(color: _primaryPurple.withOpacity(0.4), width: 2),
+            border: Border.all(
+              color: _primaryPurple.withOpacity(0.4),
+              width: 2,
+            ),
           ),
           child: const Icon(Icons.store_rounded, color: Colors.white, size: 36),
         ),
@@ -249,10 +256,7 @@ class _CustomerLinkShopScreenState extends State<CustomerLinkShopScreen>
         const SizedBox(height: 8),
         Text(
           "Scan QR code or enter Shop Owner ID",
-          style: GoogleFonts.outfit(
-            color: Colors.white54,
-            fontSize: 14,
-          ),
+          style: GoogleFonts.outfit(color: Colors.white54, fontSize: 14),
         ),
       ],
     );
@@ -365,10 +369,7 @@ class _CustomerLinkShopScreenState extends State<CustomerLinkShopScreen>
           const SizedBox(height: 12),
           TextFormField(
             controller: _ownerIdController,
-            style: GoogleFonts.shareTechMono(
-              color: Colors.white,
-              fontSize: 14,
-            ),
+            style: GoogleFonts.shareTechMono(color: Colors.white, fontSize: 14),
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white.withOpacity(0.05),

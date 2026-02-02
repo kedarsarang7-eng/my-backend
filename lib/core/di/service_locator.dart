@@ -197,18 +197,22 @@ Future<void> initializeDependencies() async {
 
   // Dashboard Analytics Repository
   sl.registerLazySingleton<DashboardAnalyticsRepository>(
-      () => DashboardAnalyticsRepository(
-            database: sl<AppDatabase>(),
-            errorHandler: sl<ErrorHandler>(),
-          ));
+    () => DashboardAnalyticsRepository(
+      database: sl<AppDatabase>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   // Customer Enforcement Service (Credit Limit & Blocking)
   sl.registerLazySingleton<CustomerEnforcementService>(
-      () => CustomerEnforcementService(sl<CustomersRepository>()));
-  sl.registerLazySingleton<CustomerLinkService>(() => CustomerLinkService(
-        database: sl<AppDatabase>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+    () => CustomerEnforcementService(sl<CustomersRepository>()),
+  );
+  sl.registerLazySingleton<CustomerLinkService>(
+    () => CustomerLinkService(
+      database: sl<AppDatabase>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   // Local Storage Service (Deprecated - for backward compatibility)
   sl.registerLazySingleton<LocalStorageService>(() => LocalStorageService());
@@ -225,36 +229,43 @@ Future<void> initializeDependencies() async {
 
   // Device Fingerprint Service - Cross-platform device identification
   sl.registerLazySingleton<DeviceFingerprintService>(
-      () => DeviceFingerprintService());
+    () => DeviceFingerprintService(),
+  );
 
   // License Service - License validation, activation, and caching
   sl.registerLazySingleton<LicenseService>(
-      () => LicenseService(sl<AppDatabase>()));
+    () => LicenseService(sl<AppDatabase>()),
+  );
 
   // Audit System
-  sl.registerLazySingleton<AuditRepository>(() => AuditRepository(
-        database: sl<AppDatabase>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<AuditRepository>(
+    () => AuditRepository(
+      database: sl<AppDatabase>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<AuditService>(() => AuditService(
-        sl<AuditRepository>(),
-        sl<DeviceIdService>(),
-      ));
+  sl.registerLazySingleton<AuditService>(
+    () => AuditService(sl<AuditRepository>(), sl<DeviceIdService>()),
+  );
 
   // Udhar Repository
-  sl.registerLazySingleton<UdharRepository>(() => UdharRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<UdharRepository>(
+    () => UdharRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   // Session Manager (THE ONLY AUTH STATE SOURCE)
   // Replaces old SessionService completely
-  sl.registerLazySingleton<SessionManager>(() => SessionManager(
-        auth: sl<FirebaseAuth>(),
-        firestore: sl<FirebaseFirestore>(),
-      ));
+  sl.registerLazySingleton<SessionManager>(
+    () => SessionManager(
+      auth: sl<FirebaseAuth>(),
+      firestore: sl<FirebaseFirestore>(),
+    ),
+  );
 
   // Sync Queue Local Operations
   sl.registerLazySingleton<SyncQueueLocalOperations>(() => sl<AppDatabase>());
@@ -264,199 +275,247 @@ Future<void> initializeDependencies() async {
 
   // Background Sync Service (Singleton)
   sl.registerLazySingleton<BackgroundSyncService>(
-      () => BackgroundSyncService.instance);
+    () => BackgroundSyncService.instance,
+  );
 
   // Unified Notification Controller
   sl.registerLazySingleton<NotificationController>(
-      () => NotificationController());
+    () => NotificationController(),
+  );
 
   // Event Dispatcher
   sl.registerLazySingleton<EventDispatcher>(() => EventDispatcher.instance);
 
   // Notification Listener Service
   sl.registerLazySingleton<NotificationListenerService>(
-      () => NotificationListenerService(
-            dispatcher: sl<EventDispatcher>(),
-            notificationRepo: sl<VendorNotificationRepository>(),
-            customersRepo: sl<CustomersRepository>(),
-          ));
+    () => NotificationListenerService(
+      dispatcher: sl<EventDispatcher>(),
+      notificationRepo: sl<VendorNotificationRepository>(),
+      customersRepo: sl<CustomersRepository>(),
+    ),
+  );
 
   // Vendor Notification Repository
   sl.registerLazySingleton<VendorNotificationRepository>(
-      () => VendorNotificationRepository(db: sl<AppDatabase>()));
+    () => VendorNotificationRepository(db: sl<AppDatabase>()),
+  );
 
   // ============================================
   // REPOSITORIES (Single Source of Truth for UI)
   // ============================================
 
-  sl.registerLazySingleton<BillsRepository>(() => BillsRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-        accountingService: sl<acc.AccountingService>(),
-        inventoryService: sl<InventoryService>(),
-        customerRecommendationService: sl<CustomerRecommendationService>(),
-        auditService: sl<AuditService>(),
-        productBatchRepository: sl<ProductBatchRepository>(),
-        batchAllocationService: sl<BatchAllocationService>(),
-        gstRepository: sl<GstRepository>(),
-        brokerBillingService: sl<BrokerBillingService>(), // Mandi
-      ));
+  sl.registerLazySingleton<BillsRepository>(
+    () => BillsRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+      accountingService: sl<acc.AccountingService>(),
+      inventoryService: sl<InventoryService>(),
+      customerRecommendationService: sl<CustomerRecommendationService>(),
+      auditService: sl<AuditService>(),
+      productBatchRepository: sl<ProductBatchRepository>(),
+      batchAllocationService: sl<BatchAllocationService>(),
+      gstRepository: sl<GstRepository>(),
+      brokerBillingService: sl<BrokerBillingService>(), // Mandi
+    ),
+  );
 
   // Mandi: Broker Billing Service
-  sl.registerLazySingleton<BrokerBillingService>(() => BrokerBillingService(
-        sl<AppDatabase>(),
-        sl<ErrorHandler>(),
-        sl<acc.AccountingService>(),
-      ));
+  sl.registerLazySingleton<BrokerBillingService>(
+    () => BrokerBillingService(
+      sl<AppDatabase>(),
+      sl<ErrorHandler>(),
+      sl<acc.AccountingService>(),
+    ),
+  );
 
-  sl.registerLazySingleton<CustomersRepository>(() => CustomersRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<CustomersRepository>(
+    () => CustomersRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ProductsRepository>(() => ProductsRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<ProductsRepository>(
+    () => ProductsRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<RevenueRepository>(() => RevenueRepository(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<RevenueRepository>(
+    () => RevenueRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ProductBatchRepository>(() => ProductBatchRepository(
-        sl<AppDatabase>(),
-      ));
+  sl.registerLazySingleton<ProductBatchRepository>(
+    () => ProductBatchRepository(sl<AppDatabase>()),
+  );
 
-  sl.registerLazySingleton<PurchaseRepository>(() => PurchaseRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-        inventoryService: sl<InventoryService>(),
-        productBatchRepository: sl<ProductBatchRepository>(),
-      ));
+  sl.registerLazySingleton<PurchaseRepository>(
+    () => PurchaseRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+      inventoryService: sl<InventoryService>(),
+      productBatchRepository: sl<ProductBatchRepository>(),
+    ),
+  );
 
-  sl.registerLazySingleton<BankRepository>(() => BankRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<BankRepository>(
+    () => BankRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ReportsRepository>(() => ReportsRepository(
-        database: sl<AppDatabase>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<ReportsRepository>(
+    () => ReportsRepository(
+      database: sl<AppDatabase>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ExpensesRepository>(() => ExpensesRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<ExpensesRepository>(
+    () => ExpensesRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ShopRepository>(() => ShopRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<ShopRepository>(
+    () => ShopRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   // OnboardingRepository - Firestore-first onboarding persistence
-  sl.registerLazySingleton<OnboardingRepository>(() => OnboardingRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<OnboardingRepository>(
+    () => OnboardingRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<VendorsRepository>(() => VendorsRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<VendorsRepository>(
+    () => VendorsRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ConnectionRepository>(() => ConnectionRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<ConnectionRepository>(
+    () => ConnectionRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   // Customer-Shop QR Linking Repositories
   sl.registerLazySingleton<CustomerProfileRepository>(
-      () => CustomerProfileRepository(
-            database: sl<AppDatabase>(),
-            syncManager: sl<SyncManager>(),
-            errorHandler: sl<ErrorHandler>(),
-          ));
+    () => CustomerProfileRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ShopLinkRepository>(() => ShopLinkRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<ShopLinkRepository>(
+    () => ShopLinkRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<PatientsRepository>(() => PatientsRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<PatientsRepository>(
+    () => PatientsRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<VisitsRepository>(() => VisitsRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<VisitsRepository>(
+    () => VisitsRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   sl.registerLazySingleton<ClinicalPrescriptionRepository>(
-      () => ClinicalPrescriptionRepository(
-            database: sl<AppDatabase>(),
-            syncManager: sl<SyncManager>(),
-            errorHandler: sl<ErrorHandler>(),
-          ));
+    () => ClinicalPrescriptionRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   // DOCTOR / CLINIC MODULE SERVICES
-  sl.registerLazySingleton<PatientRepository>(() => PatientRepository(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<PatientRepository>(
+    () => PatientRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
-  sl.registerLazySingleton<DoctorRepository>(() => DoctorRepository(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<DoctorRepository>(
+    () =>
+        DoctorRepository(db: sl<AppDatabase>(), syncManager: sl<SyncManager>()),
+  );
 
-  sl.registerLazySingleton<AppointmentRepository>(() => AppointmentRepository(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<AppointmentRepository>(
+    () => AppointmentRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
-  sl.registerLazySingleton<PrescriptionRepository>(() => PrescriptionRepository(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<PrescriptionRepository>(
+    () => PrescriptionRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
   sl.registerLazySingleton<DoctorDashboardRepository>(
-      () => DoctorDashboardRepository(
-            sl<AppDatabase>(),
-          ));
+    () => DoctorDashboardRepository(sl<AppDatabase>()),
+  );
 
   sl.registerLazySingleton<MedicalTemplateRepository>(
-      () => MedicalTemplateRepository(
-            db: sl<AppDatabase>(),
-            syncManager: sl<SyncManager>(),
-          ));
+    () => MedicalTemplateRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
-  sl.registerLazySingleton<LabReportRepository>(() => LabReportRepository(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<LabReportRepository>(
+    () => LabReportRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
-  sl.registerLazySingleton<ClinicBillingService>(() => ClinicBillingService(
-        db: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        inventoryService: sl<InventoryService>(),
-      ));
+  sl.registerLazySingleton<ClinicBillingService>(
+    () => ClinicBillingService(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      inventoryService: sl<InventoryService>(),
+    ),
+  );
 
   // ============================================
   // NEW COMPETITIVE FEATURE REPOSITORIES
@@ -464,130 +523,159 @@ Future<void> initializeDependencies() async {
 
   // Staff Management Repository
   sl.registerLazySingleton<StaffRepository>(
-      () => StaffRepository(sl<AppDatabase>()));
+    () => StaffRepository(sl<AppDatabase>()),
+  );
 
   // Staff Payroll Service
   sl.registerLazySingleton<PayrollService>(
-      () => PayrollService(sl<StaffRepository>()));
+    () => PayrollService(sl<StaffRepository>()),
+  );
 
   // NEW Staff Service (Replaces/Enhances StaffRepository)
-  sl.registerLazySingleton<StaffService>(() => StaffService(
-        db: sl<AppDatabase>(),
-        auditRepo: sl<AuditRepository>(),
-        sessionManager: sl<SessionManager>(),
-      ));
+  sl.registerLazySingleton<StaffService>(
+    () => StaffService(
+      db: sl<AppDatabase>(),
+      auditRepo: sl<AuditRepository>(),
+      sessionManager: sl<SessionManager>(),
+    ),
+  );
 
   // Marketing/CRM Repository
   sl.registerLazySingleton<MarketingRepository>(
-      () => MarketingRepository(sl<AppDatabase>()));
+    () => MarketingRepository(sl<AppDatabase>()),
+  );
 
   // WhatsApp Service
   sl.registerLazySingleton<WhatsAppService>(() => WhatsAppService());
 
   // e-Invoice Repository
   sl.registerLazySingleton<EInvoiceRepository>(
-      () => EInvoiceRepository(sl<AppDatabase>()));
+    () => EInvoiceRepository(sl<AppDatabase>()),
+  );
 
   // e-Invoice Service
-  sl.registerLazySingleton<EInvoiceService>(() => EInvoiceService(
-        sl<EInvoiceRepository>(),
-        auditService: sl<AuditService>(),
-      ));
+  sl.registerLazySingleton<EInvoiceService>(
+    () => EInvoiceService(
+      sl<EInvoiceRepository>(),
+      auditService: sl<AuditService>(),
+    ),
+  );
 
   // e-Way Bill Service
   sl.registerLazySingleton<EWayBillService>(
-      () => EWayBillService(sl<EInvoiceRepository>()));
+    () => EWayBillService(sl<EInvoiceRepository>()),
+  );
 
   sl.registerLazySingleton<CustomerItemRequestRepository>(
-      () => CustomerItemRequestRepository(
-            db: sl<AppDatabase>(),
-            syncManager: sl<SyncManager>(),
-          ));
+    () => CustomerItemRequestRepository(
+      db: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
   sl.registerLazySingleton<VendorItemSnapshotRepository>(
-      () => VendorItemSnapshotRepository(
-            firestore: sl<FirebaseFirestore>(),
-            localStorage: sl<LocalStorageService>(),
-          ));
+    () => VendorItemSnapshotRepository(
+      firestore: sl<FirebaseFirestore>(),
+      localStorage: sl<LocalStorageService>(),
+    ),
+  );
 
   sl.registerLazySingleton<StockTransactionRepository>(
-      () => StockTransactionRepository(
-            firestore: sl<FirebaseFirestore>(),
-            syncManager: sl<SyncManager>(),
-          ));
+    () => StockTransactionRepository(
+      firestore: sl<FirebaseFirestore>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
 
-  sl.registerLazySingleton<PreOrderService>(() => PreOrderService(
-        requestRepository: sl<CustomerItemRequestRepository>(),
-        billsRepository: sl<BillsRepository>(),
-        productsRepository: sl<ProductsRepository>(),
-        stockTxnRepo: sl<StockTransactionRepository>(),
-        snapshotRepo: sl<VendorItemSnapshotRepository>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<PreOrderService>(
+    () => PreOrderService(
+      requestRepository: sl<CustomerItemRequestRepository>(),
+      billsRepository: sl<BillsRepository>(),
+      productsRepository: sl<ProductsRepository>(),
+      stockTxnRepo: sl<StockTransactionRepository>(),
+      snapshotRepo: sl<VendorItemSnapshotRepository>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
-  sl.registerLazySingleton<UserRepository>(() => UserRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-      ));
+  sl.registerLazySingleton<UserRepository>(
+    () => UserRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+    ),
+  );
 
   sl.registerLazySingleton<acc.AccountingRepository>(
-      () => acc.AccountingRepository(db: sl<AppDatabase>()));
+    () => acc.AccountingRepository(db: sl<AppDatabase>()),
+  );
 
   // Accounting Services
   // Internal service for journaling - separate from policy
   sl.registerLazySingleton<acc.JournalEntryService>(
-      () => acc.JournalEntryService(repo: sl<acc.AccountingRepository>()));
+    () => acc.JournalEntryService(repo: sl<acc.AccountingRepository>()),
+  );
 
   // Public service with locking policy
-  sl.registerLazySingleton<acc.AccountingService>(() => acc.AccountingService(
-        sl<acc.JournalEntryService>(),
-        sl<acc.LockingService>(),
-      ));
+  sl.registerLazySingleton<acc.AccountingService>(
+    () => acc.AccountingService(
+      sl<acc.JournalEntryService>(),
+      sl<acc.LockingService>(),
+    ),
+  );
 
   sl.registerLazySingleton<acc.FinancialReportsService>(
-      () => acc.FinancialReportsService(repo: sl<acc.AccountingRepository>()));
+    () => acc.FinancialReportsService(repo: sl<acc.AccountingRepository>()),
+  );
 
-  sl.registerLazySingleton<DayBookService>(() => DayBookService(
-        sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<DayBookService>(
+    () => DayBookService(sl<AppDatabase>(), syncManager: sl<SyncManager>()),
+  );
 
   sl.registerLazySingleton<acc.LockingService>(
-      () => acc.LockingService(sl<AppDatabase>()));
-  sl.registerLazySingleton<PartyLedgerService>(() => PartyLedgerService(
-        accountingRepo: sl<acc.AccountingRepository>(),
-        reportsService: sl<acc.FinancialReportsService>(),
-        db: sl<AppDatabase>(),
-      ));
+    () => acc.LockingService(sl<AppDatabase>()),
+  );
+  sl.registerLazySingleton<PartyLedgerService>(
+    () => PartyLedgerService(
+      accountingRepo: sl<acc.AccountingRepository>(),
+      reportsService: sl<acc.FinancialReportsService>(),
+      db: sl<AppDatabase>(),
+    ),
+  );
 
   // Inventory
-  sl.registerLazySingleton<InventoryService>(() => InventoryService(
-        sl<AppDatabase>(),
-        sl<acc.LockingService>(),
-        sl<acc.AccountingService>(),
-        sl<SyncManager>(),
-        sl<ProductBatchRepository>(),
-      ));
+  sl.registerLazySingleton<InventoryService>(
+    () => InventoryService(
+      sl<AppDatabase>(),
+      sl<acc.LockingService>(),
+      sl<acc.AccountingService>(),
+      sl<SyncManager>(),
+      sl<ProductBatchRepository>(),
+    ),
+  );
 
-  sl.registerLazySingleton<BatchAllocationService>(() => BatchAllocationService(
-        productBatchRepository: sl<ProductBatchRepository>(),
-      ));
+  sl.registerLazySingleton<BatchAllocationService>(
+    () => BatchAllocationService(
+      productBatchRepository: sl<ProductBatchRepository>(),
+    ),
+  );
 
   sl.registerLazySingleton<PharmacyMigrationService>(
-      () => PharmacyMigrationService(
-            sl<ProductsRepository>(),
-            sl<ProductBatchRepository>(),
-          ));
+    () => PharmacyMigrationService(
+      sl<ProductsRepository>(),
+      sl<ProductBatchRepository>(),
+    ),
+  );
 
   // Data Integrity & Crash Recovery
-  sl.registerLazySingleton<DataIntegrityService>(() => DataIntegrityService(
-        database: sl<AppDatabase>(),
-      ));
+  sl.registerLazySingleton<DataIntegrityService>(
+    () => DataIntegrityService(database: sl<AppDatabase>()),
+  );
 
   // Invoice Number Safety Service
   sl.registerLazySingleton<InvoiceNumberService>(
-      () => InvoiceNumberService(sl<AppDatabase>()));
+    () => InvoiceNumberService(sl<AppDatabase>()),
+  );
 
   // ============================================
   // PETROL PUMP SERVICES
@@ -598,19 +686,22 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<ShiftService>(() => ShiftService());
   sl.registerLazySingleton<TankService>(() => TankService());
   sl.registerLazySingleton<PetrolPumpBillingService>(
-      () => PetrolPumpBillingService());
+    () => PetrolPumpBillingService(),
+  );
   sl.registerLazySingleton<CalibrationReminderService>(
-      () => CalibrationReminderService(sl<AppDatabase>()));
+    () => CalibrationReminderService(sl<AppDatabase>()),
+  );
 
   // ============================================
   // AI / RECOMMENDATION SERVICES
   // ============================================
 
   sl.registerLazySingleton<CustomerRecommendationService>(
-      () => CustomerRecommendationService(
-            sl<AppDatabase>(),
-            sl<CustomersRepository>(),
-          ));
+    () => CustomerRecommendationService(
+      sl<AppDatabase>(),
+      sl<CustomersRepository>(),
+    ),
+  );
 
   // ============================================
   // ML KIT SERVICES
@@ -636,18 +727,21 @@ Future<void> initializeDependencies() async {
   });
 
   sl.registerLazySingleton<BarcodeScannerService>(
-      () => BarcodeScannerService());
+    () => BarcodeScannerService(),
+  );
 
   // AI Assistant
-  sl.registerLazySingleton<RecommendationService>(() => RecommendationService(
-        sl<ProductsRepository>(),
-        sl<BillsRepository>(),
-      ));
+  sl.registerLazySingleton<RecommendationService>(
+    () =>
+        RecommendationService(sl<ProductsRepository>(), sl<BillsRepository>()),
+  );
   sl.registerLazySingleton<MorningBriefingService>(
-      () => MorningBriefingService(sl<ReportsRepository>()));
+    () => MorningBriefingService(sl<ReportsRepository>()),
+  );
   sl.registerLazySingleton<VoiceIntentService>(() => VoiceIntentService());
   sl.registerLazySingleton<GSTR1Service>(
-      () => GSTR1Service(sl<BillsRepository>(), sl<CustomersRepository>()));
+    () => GSTR1Service(sl<BillsRepository>(), sl<CustomersRepository>()),
+  );
 
   // NOTE: Marketing, Staff modules already registered in "NEW COMPETITIVE FEATURE REPOSITORIES" section above
 
@@ -657,61 +751,76 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<FoodMenuRepository>(() => FoodMenuRepository());
   sl.registerLazySingleton<FoodOrderRepository>(() => FoodOrderRepository());
   sl.registerLazySingleton<RestaurantTableRepository>(
-      () => RestaurantTableRepository());
+    () => RestaurantTableRepository(),
+  );
   sl.registerLazySingleton<RestaurantBillRepository>(
-      () => RestaurantBillRepository());
+    () => RestaurantBillRepository(),
+  );
   sl.registerLazySingleton<QrCodeService>(() => QrCodeService());
-  sl.registerLazySingleton<RestaurantSyncService>(() => RestaurantSyncService(
-        menuRepo: sl<FoodMenuRepository>(),
-        orderRepo: sl<FoodOrderRepository>(),
-        tableRepo: sl<RestaurantTableRepository>(),
-        billRepo: sl<RestaurantBillRepository>(),
-        syncManager: sl<SyncManager>(),
-      ));
+  sl.registerLazySingleton<RestaurantSyncService>(
+    () => RestaurantSyncService(
+      menuRepo: sl<FoodMenuRepository>(),
+      orderRepo: sl<FoodOrderRepository>(),
+      tableRepo: sl<RestaurantTableRepository>(),
+      billRepo: sl<RestaurantBillRepository>(),
+      syncManager: sl<SyncManager>(),
+    ),
+  );
   sl.registerLazySingleton<RestaurantNotificationService>(
-      () => RestaurantNotificationService());
+    () => RestaurantNotificationService(),
+  );
   sl.registerLazySingleton<RestaurantPdfBillService>(
-      () => RestaurantPdfBillService());
+    () => RestaurantPdfBillService(),
+  );
 
   // ============================================
   // PAYMENT SERVICES
   // ============================================
   sl.registerLazySingleton<UpiPaymentService>(
-      () => UpiPaymentService(sl<AppDatabase>()));
+    () => UpiPaymentService(sl<AppDatabase>()),
+  );
 
-  sl.registerLazySingleton<PaymentRepository>(() => PaymentRepository(
-        database: sl<AppDatabase>(),
-        syncManager: sl<SyncManager>(),
-        errorHandler: sl<ErrorHandler>(),
-        auditService: sl<AuditService>(),
-      ));
+  sl.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepository(
+      database: sl<AppDatabase>(),
+      syncManager: sl<SyncManager>(),
+      errorHandler: sl<ErrorHandler>(),
+      auditService: sl<AuditService>(),
+    ),
+  );
 
   // Delivery Challan Module
   sl.registerLazySingleton<DeliveryChallanRepository>(
-      () => DeliveryChallanRepository(sl<AppDatabase>()));
+    () => DeliveryChallanRepository(sl<AppDatabase>()),
+  );
 
-  sl.registerLazySingleton<DeliveryChallanService>(() => DeliveryChallanService(
-        sl<DeliveryChallanRepository>(),
-        sl<BillsRepository>(),
-        sl<ProductsRepository>(),
-        sl<InvoiceNumberService>(),
-        sl<SessionManager>(),
-      ));
+  sl.registerLazySingleton<DeliveryChallanService>(
+    () => DeliveryChallanService(
+      sl<DeliveryChallanRepository>(),
+      sl<BillsRepository>(),
+      sl<ProductsRepository>(),
+      sl<InvoiceNumberService>(),
+      sl<SessionManager>(),
+    ),
+  );
 
   // Reports
-  sl.registerLazySingleton<TallyXmlService>(() => TallyXmlService(
-        sl<BillsRepository>(),
-        sl<PaymentRepository>(),
-        sl<CustomersRepository>(),
-        sl<GstRepository>(),
-        sl<PurchaseRepository>(),
-        sl<VendorsRepository>(),
-        sl<ShopRepository>(),
-      ));
+  sl.registerLazySingleton<TallyXmlService>(
+    () => TallyXmlService(
+      sl<BillsRepository>(),
+      sl<PaymentRepository>(),
+      sl<CustomersRepository>(),
+      sl<GstRepository>(),
+      sl<PurchaseRepository>(),
+      sl<VendorsRepository>(),
+      sl<ShopRepository>(),
+    ),
+  );
 
   // GST Module
   sl.registerLazySingleton<GstRepository>(
-      () => GstRepository(db: sl<AppDatabase>()));
+    () => GstRepository(db: sl<AppDatabase>()),
+  );
 
   // Payment Orchestrator
   sl.registerLazySingleton<PaymentOrchestrator>(() => PaymentOrchestrator());
@@ -729,7 +838,8 @@ Future<void> initializeDependencies() async {
     // Register Sync Repository and Engine if not already registered (lazy singletons)
     if (!sl.isRegistered<SyncRepository>()) {
       sl.registerLazySingleton<SyncRepository>(
-          () => DriftSyncRepository(sl<AppDatabase>()));
+        () => DriftSyncRepository(sl<AppDatabase>()),
+      );
     }
     if (!sl.isRegistered<SyncEngine>()) {
       sl.registerLazySingleton<SyncEngine>(() => SyncEngine.instance);
@@ -764,10 +874,14 @@ Future<void> initializeDependencies() async {
             ),
           );
           monitoring.info(
-              'ServiceLocator', 'SyncManager initialized (Write-Only)');
+            'ServiceLocator',
+            'SyncManager initialized (Write-Only)',
+          );
         } catch (e) {
-          monitoring.warning('ServiceLocator',
-              'SyncManager init skipped on web: ${e.toString()}');
+          monitoring.warning(
+            'ServiceLocator',
+            'SyncManager init skipped on web: ${e.toString()}',
+          );
         }
       });
     } else {

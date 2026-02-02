@@ -19,12 +19,7 @@ enum TransactionType {
   reversal, // Reversal entry type
 }
 
-enum PaymentStatus {
-  paid,
-  partial,
-  unpaid,
-  cancelled,
-}
+enum PaymentStatus { paid, partial, unpaid, cancelled }
 
 /// TransactionModel - Core accounting transaction record.
 ///
@@ -183,8 +178,9 @@ class TransactionModel {
       'version': version,
       'isReversed': isReversed,
       'reversedByTxnId': reversedByTxnId,
-      'reversalDate':
-          reversalDate != null ? Timestamp.fromDate(reversalDate!) : null,
+      'reversalDate': reversalDate != null
+          ? Timestamp.fromDate(reversalDate!)
+          : null,
       'reversesOriginalTxnId': reversesOriginalTxnId,
       'serverCreatedAt': serverCreatedAt != null
           ? Timestamp.fromDate(serverCreatedAt!)

@@ -42,7 +42,7 @@ class _PatientRegistrationScreenState
     'AB+',
     'AB-',
     'O+',
-    'O-'
+    'O-',
   ];
   final List<String> _genders = ['Male', 'Female', 'Other'];
 
@@ -57,9 +57,9 @@ class _PatientRegistrationScreenState
         }
       } else if (_currentStep == 1) {
         if (_ageController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter age')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Please enter age')));
           return;
         }
       }
@@ -103,8 +103,9 @@ class _PatientRegistrationScreenState
       if (_phoneController.text.isNotEmpty) {
         final custRepo = sl<CustomersRepository>();
         // Check existing
-        final existing =
-            await custRepo.getByPhone(_phoneController.text.trim());
+        final existing = await custRepo.getByPhone(
+          _phoneController.text.trim(),
+        );
         if (existing.isSuccess && existing.data != null) {
           linkedCustomerId = existing.data!.id;
         } else {
@@ -158,9 +159,9 @@ class _PatientRegistrationScreenState
         Navigator.pop(context);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving patient: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error saving patient: $e')));
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -175,10 +176,7 @@ class _PatientRegistrationScreenState
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              FuturisticColors.backgroundDark,
-              Color(0xFF0F172A),
-            ],
+            colors: [FuturisticColors.backgroundDark, Color(0xFF0F172A)],
           ),
         ),
         child: SafeArea(
@@ -186,8 +184,10 @@ class _PatientRegistrationScreenState
             children: [
               // Header
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -227,11 +227,7 @@ class _PatientRegistrationScreenState
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    _buildStep1(),
-                    _buildStep2(),
-                    _buildStep3(),
-                  ],
+                  children: [_buildStep1(), _buildStep2(), _buildStep3()],
                 ),
               ),
 
@@ -256,7 +252,9 @@ class _PatientRegistrationScreenState
                       style: ElevatedButton.styleFrom(
                         backgroundColor: FuturisticColors.neonBlue,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -266,7 +264,9 @@ class _PatientRegistrationScreenState
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
-                                  color: Colors.white, strokeWidth: 2),
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
                             )
                           : Text(
                               _currentStep == 2
@@ -298,15 +298,16 @@ class _PatientRegistrationScreenState
             ? FuturisticColors.neonBlue
             : Colors.white.withOpacity(0.1),
         shape: BoxShape.circle,
-        border:
-            isActive ? null : Border.all(color: Colors.white.withOpacity(0.2)),
+        border: isActive
+            ? null
+            : Border.all(color: Colors.white.withOpacity(0.2)),
         boxShadow: isActive
             ? [
                 BoxShadow(
                   color: FuturisticColors.neonBlue.withOpacity(0.5),
                   blurRadius: 10,
                   spreadRadius: 2,
-                )
+                ),
               ]
             : [],
       ),
@@ -342,8 +343,10 @@ class _PatientRegistrationScreenState
         children: [
           Text('Basic Information', style: _headerStyle),
           const SizedBox(height: 8),
-          Text('Enter patient\'s primary contact details.',
-              style: _subHeaderStyle),
+          Text(
+            'Enter patient\'s primary contact details.',
+            style: _subHeaderStyle,
+          ),
           const SizedBox(height: 32),
           _buildTextField(
             controller: _nameController,
@@ -413,8 +416,10 @@ class _PatientRegistrationScreenState
         children: [
           Text('Medical Profile', style: _headerStyle),
           const SizedBox(height: 8),
-          Text('Known allergies and chronic conditions.',
-              style: _subHeaderStyle),
+          Text(
+            'Known allergies and chronic conditions.',
+            style: _subHeaderStyle,
+          ),
           const SizedBox(height: 32),
           _buildTextField(
             controller: _allergiesController,
@@ -432,11 +437,14 @@ class _PatientRegistrationScreenState
           const SizedBox(height: 20),
           const Divider(color: Colors.white24),
           const SizedBox(height: 20),
-          Text('Emergency Contact',
-              style: GoogleFonts.outfit(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            'Emergency Contact',
+            style: GoogleFonts.outfit(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 16),
           _buildTextField(
             controller: _emergencyNameController,
@@ -500,11 +508,12 @@ class _PatientRegistrationScreenState
       child: DropdownButtonFormField<String>(
         value: value,
         items: items
-            .map((e) => DropdownMenuItem(
-                  value: e,
-                  child:
-                      Text(e, style: GoogleFonts.outfit(color: Colors.white)),
-                ))
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(e, style: GoogleFonts.outfit(color: Colors.white)),
+              ),
+            )
             .toList(),
         onChanged: onChanged,
         dropdownColor: const Color(0xFF1E293B),

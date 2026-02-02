@@ -87,19 +87,23 @@ extension ResponsiveContext on BuildContext {
 class ResponsiveLayout extends StatelessWidget {
   /// Builder for mobile layout (< 600px)
   final Widget Function(BuildContext context, BoxConstraints constraints)?
-      mobileBuilder;
+  mobileBuilder;
 
   /// Builder for tablet layout (600-1100px)
   final Widget Function(BuildContext context, BoxConstraints constraints)?
-      tabletBuilder;
+  tabletBuilder;
 
   /// Builder for desktop layout (> 1100px)
   final Widget Function(BuildContext context, BoxConstraints constraints)?
-      desktopBuilder;
+  desktopBuilder;
 
   /// Fallback builder if specific builders are not provided
-  final Widget Function(BuildContext context, BoxConstraints constraints,
-      ScreenSize screenSize)? builder;
+  final Widget Function(
+    BuildContext context,
+    BoxConstraints constraints,
+    ScreenSize screenSize,
+  )?
+  builder;
 
   /// Simple child (if you don't need different layouts per screen size)
   final Widget? child;
@@ -132,13 +136,13 @@ class ResponsiveLayout extends StatelessWidget {
     this.maxWidth = Breakpoints.maxContentWidth,
     this.backgroundColor,
   }) : assert(
-          mobileBuilder != null ||
-              tabletBuilder != null ||
-              desktopBuilder != null ||
-              builder != null ||
-              child != null,
-          'At least one builder or child must be provided',
-        );
+         mobileBuilder != null ||
+             tabletBuilder != null ||
+             desktopBuilder != null ||
+             builder != null ||
+             child != null,
+         'At least one builder or child must be provided',
+       );
 
   @override
   Widget build(BuildContext context) {
@@ -154,9 +158,7 @@ class ResponsiveLayout extends StatelessWidget {
           content = SingleChildScrollView(
             physics: scrollPhysics ?? const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: content,
             ),
           );
@@ -174,10 +176,7 @@ class ResponsiveLayout extends StatelessWidget {
 
         // Apply background color if provided
         if (backgroundColor != null) {
-          content = ColoredBox(
-            color: backgroundColor!,
-            child: content,
-          );
+          content = ColoredBox(color: backgroundColor!, child: content);
         }
 
         return content;
@@ -259,7 +258,8 @@ class ResponsiveScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       extendBodyBehindAppBar: extendBodyBehindAppBar,
-      appBar: appBar ??
+      appBar:
+          appBar ??
           (title != null || titleWidget != null
               ? AppBar(
                   title: titleWidget ?? Text(title!),
@@ -371,18 +371,21 @@ class ResponsiveRowColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = context.isMobile;
-    final items =
-        reverseOnMobile && isMobile ? children.reversed.toList() : children;
+    final items = reverseOnMobile && isMobile
+        ? children.reversed.toList()
+        : children;
 
     // Add spacing between children
     final spacedChildren = <Widget>[];
     for (int i = 0; i < items.length; i++) {
       spacedChildren.add(items[i]);
       if (i < items.length - 1) {
-        spacedChildren.add(SizedBox(
-          width: isMobile ? 0 : spacing,
-          height: isMobile ? spacing : 0,
-        ));
+        spacedChildren.add(
+          SizedBox(
+            width: isMobile ? 0 : spacing,
+            height: isMobile ? spacing : 0,
+          ),
+        );
       }
     }
 
@@ -448,11 +451,12 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
 
     Widget button = ElevatedButton(
       onPressed: widget.onPressed,
-      style: widget.style ??
+      style:
+          widget.style ??
           ElevatedButton.styleFrom(
             backgroundColor: _isHovered && hasHover
                 ? (widget.hoverColor ??
-                    widget.backgroundColor?.withOpacity(0.9))
+                      widget.backgroundColor?.withOpacity(0.9))
                 : widget.backgroundColor,
             foregroundColor: widget.foregroundColor,
             elevation: _isHovered && hasHover

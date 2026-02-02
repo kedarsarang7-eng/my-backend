@@ -88,8 +88,10 @@ class MyLinkedShopsScreen extends ConsumerWidget {
             children: [
               Icon(Icons.login, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
-              Text('Please login to view linked shops',
-                  style: TextStyle(color: Colors.grey[600])),
+              Text(
+                'Please login to view linked shops',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
             ],
           ),
         ),
@@ -134,8 +136,10 @@ class MyLinkedShopsScreen extends ConsumerWidget {
                   children: [
                     Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
                     const SizedBox(height: 16),
-                    Text('Error loading shops: ${snapshot.error}',
-                        textAlign: TextAlign.center),
+                    Text(
+                      'Error loading shops: ${snapshot.error}',
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
@@ -159,9 +163,11 @@ class MyLinkedShopsScreen extends ConsumerWidget {
                             : Colors.grey[100],
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.store_mall_directory,
-                          size: 64,
-                          color: isDark ? Colors.white38 : Colors.grey[400]),
+                      child: Icon(
+                        Icons.store_mall_directory,
+                        size: 64,
+                        color: isDark ? Colors.white38 : Colors.grey[400],
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Text(
@@ -189,9 +195,12 @@ class MyLinkedShopsScreen extends ConsumerWidget {
                         backgroundColor: const Color(0xFF6366F1),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 14),
+                          horizontal: 24,
+                          vertical: 14,
+                        ),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ],
@@ -266,8 +275,9 @@ class MyLinkedShopsScreen extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    color:
-                                        isDark ? Colors.white : Colors.black87,
+                                    color: isDark
+                                        ? Colors.white
+                                        : Colors.black87,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -299,8 +309,8 @@ class MyLinkedShopsScreen extends ConsumerWidget {
                                   color: hasDues
                                       ? Colors.red
                                       : (isDark
-                                          ? Colors.green[400]
-                                          : Colors.green),
+                                            ? Colors.green[400]
+                                            : Colors.green),
                                 ),
                               ),
                               Text(
@@ -310,8 +320,8 @@ class MyLinkedShopsScreen extends ConsumerWidget {
                                   color: hasDues
                                       ? Colors.red[300]
                                       : (isDark
-                                          ? Colors.green[400]
-                                          : Colors.green[600]),
+                                            ? Colors.green[400]
+                                            : Colors.green[600]),
                                 ),
                               ),
                             ],

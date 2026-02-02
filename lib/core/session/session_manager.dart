@@ -45,7 +45,7 @@ class UserSession {
   final String? photoUrl;
   final UserRole role;
   final String?
-      ownerId; // For owners, same as odId. For customers, their linked owner
+  ownerId; // For owners, same as odId. For customers, their linked owner
   final BusinessType? businessType; // Single Source of Truth for Business Type
   final DateTime? lastLoginAt;
   final Map<String, dynamic>? metadata;
@@ -101,10 +101,7 @@ class UserSession {
     );
   }
 
-  static const empty = UserSession(
-    odId: '',
-    role: UserRole.unknown,
-  );
+  static const empty = UserSession(odId: '', role: UserRole.unknown);
 }
 
 /// Session Manager - Singleton for auth state
@@ -120,8 +117,8 @@ class SessionManager extends ChangeNotifier {
   SessionManager({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  })  : _auth = auth,
-        _firestore = firestore {
+  }) : _auth = auth,
+       _firestore = firestore {
     _initAppMode(); // Load app mode first
     _initAuthListener();
   }
@@ -139,7 +136,8 @@ class SessionManager extends ChangeNotifier {
           lockedVendorId: vendorId,
         );
         debugPrint(
-            '[SessionManager] App locked to Customer Mode for vendor: $vendorId');
+          '[SessionManager] App locked to Customer Mode for vendor: $vendorId',
+        );
       }
     } catch (e) {
       debugPrint('[SessionManager] Error loading app mode: $e');
@@ -216,7 +214,8 @@ class SessionManager extends ChangeNotifier {
       }
 
       debugPrint(
-          '[SessionManager] Enforced Customer Mode for vendor: $vendorId');
+        '[SessionManager] Enforced Customer Mode for vendor: $vendorId',
+      );
     } catch (e) {
       debugPrint('[SessionManager] Failed to set customer mode: $e');
       rethrow;
@@ -291,8 +290,10 @@ class SessionManager extends ChangeNotifier {
 
       // 1. FIRST: Check users collection (single source of truth for role)
       try {
-        final userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
+        final userDoc = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .get();
         if (userDoc.exists && userDoc.data()?['role'] != null) {
           final data = userDoc.data()!;
           final roleStr = data['role'] as String;
@@ -329,8 +330,10 @@ class SessionManager extends ChangeNotifier {
       // 2. Try Owners Collection (if not found in users)
       if (!sessionFound) {
         try {
-          final ownerDoc =
-              await _firestore.collection('owners').doc(user.uid).get();
+          final ownerDoc = await _firestore
+              .collection('owners')
+              .doc(user.uid)
+              .get();
           if (ownerDoc.exists) {
             final data = ownerDoc.data()!;
             _currentSession = UserSession(
@@ -359,8 +362,10 @@ class SessionManager extends ChangeNotifier {
       // 3. Try Customers Collection (if still not found)
       if (!sessionFound) {
         try {
-          final customerDoc =
-              await _firestore.collection('customers').doc(user.uid).get();
+          final customerDoc = await _firestore
+              .collection('customers')
+              .doc(user.uid)
+              .get();
           if (customerDoc.exists) {
             final data = customerDoc.data()!;
             _currentSession = UserSession(
@@ -379,7 +384,8 @@ class SessionManager extends ChangeNotifier {
             // Sync to users collection for future
             await _ensureUserDocument(user.uid, 'customer');
             debugPrint(
-                '[SessionManager] Role from customers collection: customer');
+              '[SessionManager] Role from customers collection: customer',
+            );
           }
         } catch (e) {
           debugPrint('[SessionManager] customers collection error: $e');
@@ -409,8 +415,8 @@ class SessionManager extends ChangeNotifier {
           role = cachedRole == 'customer'
               ? UserRole.customer
               : cachedRole == 'patient'
-                  ? UserRole.patient
-                  : UserRole.owner;
+              ? UserRole.patient
+              : UserRole.owner;
           linkedOwnerId = role == UserRole.owner ? user.uid : null;
           debugPrint('[SessionManager] Using cached role: $role');
         } else {
@@ -439,7 +445,8 @@ class SessionManager extends ChangeNotifier {
 
       _isInitialized = true;
       debugPrint(
-          '[SessionManager] Session loaded: ${_currentSession.role} - ${_currentSession.odId}');
+        '[SessionManager] Session loaded: ${_currentSession.role} - ${_currentSession.odId}',
+      );
     } catch (e) {
       debugPrint('[SessionManager] Critical error: $e');
 
@@ -453,8 +460,8 @@ class SessionManager extends ChangeNotifier {
           final role = cachedRole == 'customer'
               ? UserRole.customer
               : cachedRole == 'patient'
-                  ? UserRole.patient
-                  : UserRole.owner;
+              ? UserRole.patient
+              : UserRole.owner;
           _currentSession = UserSession(
             odId: user.uid,
             email: user.email,
@@ -472,8 +479,9 @@ class SessionManager extends ChangeNotifier {
       // Last resort - use intent if available
       try {
         await authIntent.initialize();
-        final role =
-            authIntent.isCustomerIntent ? UserRole.customer : UserRole.owner;
+        final role = authIntent.isCustomerIntent
+            ? UserRole.customer
+            : UserRole.owner;
         _currentSession = UserSession(
           odId: user.uid,
           email: user.email,

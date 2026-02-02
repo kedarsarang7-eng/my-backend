@@ -22,7 +22,9 @@ class _SecurityUpgradePromptState extends State<SecurityUpgradePrompt>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
     _scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
     _controller.forward();
     _checkBiometrics();
@@ -43,9 +45,9 @@ class _SecurityUpgradePromptState extends State<SecurityUpgradePrompt>
     final success = await biometricService.enableBiometrics();
     if (success && mounted) {
       widget.onDismiss();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Biometric Login Enabled!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Biometric Login Enabled!')));
     }
   }
 
@@ -56,9 +58,9 @@ class _SecurityUpgradePromptState extends State<SecurityUpgradePrompt>
         builder: (context) => PinSetupScreen(
           onSuccess: () {
             widget.onDismiss();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('PIN Login Enabled!')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('PIN Login Enabled!')));
           },
         ),
       ),
@@ -83,7 +85,7 @@ class _SecurityUpgradePromptState extends State<SecurityUpgradePrompt>
                   color: Colors.black.withOpacity(0.2),
                   blurRadius: 20,
                   spreadRadius: 5,
-                )
+                ),
               ],
             ),
             child: Column(
@@ -95,24 +97,22 @@ class _SecurityUpgradePromptState extends State<SecurityUpgradePrompt>
                     color: Colors.blue.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.shield_outlined,
-                      size: 40, color: Colors.blue),
+                  child: const Icon(
+                    Icons.shield_outlined,
+                    size: 40,
+                    color: Colors.blue,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 const Text(
                   'Login Faster next time?',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 const Text(
                   'Enable secure access to get into your account instantly.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 32),
                 if (_canUseBiometric)
@@ -132,8 +132,10 @@ class _SecurityUpgradePromptState extends State<SecurityUpgradePrompt>
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: widget.onDismiss,
-                  child: const Text('Maybe Later',
-                      style: TextStyle(color: Colors.grey)),
+                  child: const Text(
+                    'Maybe Later',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ],
             ),

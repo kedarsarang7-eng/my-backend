@@ -1,10 +1,5 @@
 /// e-Invoice Status
-enum EInvoiceStatus {
-  pending,
-  generated,
-  cancelled,
-  failed,
-}
+enum EInvoiceStatus { pending, generated, cancelled, failed }
 
 /// e-Invoice Model
 /// Represents a GST e-invoice with IRN from the GST portal

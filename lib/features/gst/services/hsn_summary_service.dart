@@ -6,7 +6,7 @@ class HsnSummaryService {
   final GstRepository _gstRepo;
 
   HsnSummaryService({GstRepository? gstRepo})
-      : _gstRepo = gstRepo ?? GstRepository();
+    : _gstRepo = gstRepo ?? GstRepository();
 
   /// Generate HSN summary report for a period
   Future<HsnSummaryReport> generateReport({
@@ -90,7 +90,8 @@ class HsnSummaryReport {
 
     // Header
     buffer.writeln(
-        'HSN Code,Description,UQC,Quantity,Taxable Value,CGST,SGST,IGST,Cess,Total Tax');
+      'HSN Code,Description,UQC,Quantity,Taxable Value,CGST,SGST,IGST,Cess,Total Tax',
+    );
 
     // Items
     for (final item in items) {

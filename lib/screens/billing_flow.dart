@@ -107,11 +107,14 @@ class _BillingFlowState extends State<BillingFlow> {
 
   void _showSnack(String msg, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      backgroundColor:
-          isError ? FuturisticColors.error : FuturisticColors.success,
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: isError
+            ? FuturisticColors.error
+            : FuturisticColors.success,
+      ),
+    );
   }
 
   @override
@@ -120,7 +123,8 @@ class _BillingFlowState extends State<BillingFlow> {
 
     if (ownerId == null) {
       return const Scaffold(
-          body: Center(child: Text("Please login to access POS")));
+        body: Center(child: Text("Please login to access POS")),
+      );
     }
 
     return Scaffold(
@@ -131,8 +135,10 @@ class _BillingFlowState extends State<BillingFlow> {
             title: 'Point of Sale',
             searchField: _buildSearchField(),
             actions: [
-              Text('Station: DESKTOP-01',
-                  style: TextStyle(color: FuturisticColors.textSecondary)),
+              Text(
+                'Station: DESKTOP-01',
+                style: TextStyle(color: FuturisticColors.textSecondary),
+              ),
             ],
           ),
           Expanded(
@@ -145,7 +151,8 @@ class _BillingFlowState extends State<BillingFlow> {
                   child: Container(
                     decoration: const BoxDecoration(
                       border: Border(
-                          right: BorderSide(color: FuturisticColors.border)),
+                        right: BorderSide(color: FuturisticColors.border),
+                      ),
                     ),
                     child: Column(
                       children: [
@@ -171,34 +178,44 @@ class _BillingFlowState extends State<BillingFlow> {
                           },
                           columns: [
                             SmartTableColumn(
-                                title: 'Item',
-                                flex: 3,
-                                valueMapper: (i) => i.itemName),
+                              title: 'Item',
+                              flex: 3,
+                              valueMapper: (i) => i.itemName,
+                            ),
                             SmartTableColumn(
-                                title: 'Qty',
-                                flex: 1,
-                                valueMapper: (i) => '${i.qty} ${i.unit}'),
+                              title: 'Qty',
+                              flex: 1,
+                              valueMapper: (i) => '${i.qty} ${i.unit}',
+                            ),
                             SmartTableColumn(
-                                title: 'Price',
-                                flex: 1,
-                                valueMapper: (i) => '₹${i.price}'),
+                              title: 'Price',
+                              flex: 1,
+                              valueMapper: (i) => '₹${i.price}',
+                            ),
                             SmartTableColumn(
-                                title: 'Total',
-                                flex: 1,
-                                builder: (i) => Text(
-                                    '₹${i.total.toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: FuturisticColors.primary))),
+                              title: 'Total',
+                              flex: 1,
+                              builder: (i) => Text(
+                                '₹${i.total.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: FuturisticColors.primary,
+                                ),
+                              ),
+                            ),
                             SmartTableColumn(
-                                title: '',
-                                flex: 1,
-                                builder: (i) => IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: FuturisticColors.error,
-                                        size: 18),
-                                    onPressed: () =>
-                                        setState(() => items.remove(i)))),
+                              title: '',
+                              flex: 1,
+                              builder: (i) => IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: FuturisticColors.error,
+                                  size: 18,
+                                ),
+                                onPressed: () =>
+                                    setState(() => items.remove(i)),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -223,13 +240,16 @@ class _BillingFlowState extends State<BillingFlow> {
       decoration: InputDecoration(
         hintText: 'Search Product (Barcode / Name)...',
         hintStyle: const TextStyle(color: FuturisticColors.textSecondary),
-        prefixIcon:
-            const Icon(Icons.qr_code_scanner, color: FuturisticColors.primary),
+        prefixIcon: const Icon(
+          Icons.qr_code_scanner,
+          color: FuturisticColors.primary,
+        ),
         filled: true,
         fillColor: FuturisticColors.surfaceHighlight,
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }
@@ -244,26 +264,33 @@ class _BillingFlowState extends State<BillingFlow> {
 
         final query = searchController.text.toLowerCase();
         final filtered = snap.data!
-            .where((p) =>
-                p.name.toLowerCase().contains(query) ||
-                (p.barcode?.contains(query) ?? false))
+            .where(
+              (p) =>
+                  p.name.toLowerCase().contains(query) ||
+                  (p.barcode?.contains(query) ?? false),
+            )
             .take(50) // Limit results for performance
             .toList();
 
         return ListView.separated(
           padding: const EdgeInsets.all(12),
           itemCount: filtered.length,
-          separatorBuilder: (_, __) => const Divider(height: 1),
+          separatorBuilder: (_, _) => const Divider(height: 1),
           itemBuilder: (context, i) {
             final p = filtered[i];
             return ListTile(
               dense: true,
-              title: Text(p.name,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              title: Text(
+                p.name,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
               subtitle: Text(
-                  'Stock: ${p.stockQuantity} ${p.unit} | ₹${p.sellingPrice}'),
-              trailing: const Icon(Icons.add_circle_outline,
-                  color: FuturisticColors.primary),
+                'Stock: ${p.stockQuantity} ${p.unit} | ₹${p.sellingPrice}',
+              ),
+              trailing: const Icon(
+                Icons.add_circle_outline,
+                color: FuturisticColors.primary,
+              ),
               onTap: () {
                 setState(() => selectedProduct = p);
                 Future.delayed(const Duration(milliseconds: 100), () {
@@ -284,9 +311,10 @@ class _BillingFlowState extends State<BillingFlow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Adding: ${selectedProduct!.name}',
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(
+            'Adding: ${selectedProduct!.name}',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -309,7 +337,7 @@ class _BillingFlowState extends State<BillingFlow> {
                 label: 'Add',
                 icon: Icons.check,
                 onPressed: addItem,
-              )
+              ),
             ],
           ),
         ],
@@ -329,14 +357,18 @@ class _BillingFlowState extends State<BillingFlow> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Total Items: ${items.length}',
-                  style:
-                      const TextStyle(color: FuturisticColors.textSecondary)),
-              Text('₹${subtotal.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: FuturisticColors.success)),
+              Text(
+                'Total Items: ${items.length}',
+                style: const TextStyle(color: FuturisticColors.textSecondary),
+              ),
+              Text(
+                '₹${subtotal.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: FuturisticColors.success,
+                ),
+              ),
             ],
           ),
           const Spacer(),

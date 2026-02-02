@@ -101,7 +101,11 @@ class BillTemplateConfig {
     templateName: 'Pharmacy Invoice',
     columns: [
       BillColumn(
-          id: 'medicine', label: 'Medicine Name', flex: 2.5, alignment: 'left'),
+        id: 'medicine',
+        label: 'Medicine Name',
+        flex: 2.5,
+        alignment: 'left',
+      ),
       BillColumn(id: 'batch', label: 'Batch', flex: 1, alignment: 'center'),
       BillColumn(id: 'expiry', label: 'Exp', flex: 1, alignment: 'center'),
       BillColumn(id: 'qty', label: 'Qty', flex: 0.8, alignment: 'center'),
@@ -153,9 +157,17 @@ class BillTemplateConfig {
     columns: [
       BillColumn(id: 'product', label: 'Product', flex: 2, alignment: 'left'),
       BillColumn(
-          id: 'serial', label: 'IMEI/Serial', flex: 1.5, alignment: 'center'),
+        id: 'serial',
+        label: 'IMEI/Serial',
+        flex: 1.5,
+        alignment: 'center',
+      ),
       BillColumn(
-          id: 'warranty', label: 'Warranty', flex: 1, alignment: 'center'),
+        id: 'warranty',
+        label: 'Warranty',
+        flex: 1,
+        alignment: 'center',
+      ),
       BillColumn(id: 'qty', label: 'Qty', flex: 0.6, alignment: 'center'),
       BillColumn(id: 'price', label: 'Price', flex: 1.2, alignment: 'right'),
       BillColumn(id: 'total', label: 'Total', flex: 1.2, alignment: 'right'),
@@ -186,7 +198,11 @@ class BillTemplateConfig {
     columns: [
       BillColumn(id: 'service', label: 'Service', flex: 2.5, alignment: 'left'),
       BillColumn(
-          id: 'duration', label: 'Duration', flex: 1, alignment: 'center'),
+        id: 'duration',
+        label: 'Duration',
+        flex: 1,
+        alignment: 'center',
+      ),
       BillColumn(id: 'rate', label: 'Rate', flex: 1.2, alignment: 'right'),
       BillColumn(id: 'notes', label: 'Notes', flex: 1.5, alignment: 'left'),
       BillColumn(id: 'total', label: 'Amount', flex: 1.2, alignment: 'right'),
@@ -256,17 +272,11 @@ class DynamicBillItem {
   final String id;
   final Map<String, dynamic> fields;
 
-  DynamicBillItem({
-    required this.id,
-    required this.fields,
-  });
+  DynamicBillItem({required this.id, required this.fields});
 
   dynamic getValue(String columnId) => fields[columnId];
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        ...fields,
-      };
+  Map<String, dynamic> toMap() => {'id': id, ...fields};
 
   factory DynamicBillItem.fromMap(Map<String, dynamic> map) {
     return DynamicBillItem(
@@ -373,8 +383,9 @@ class AdaptiveBillTable extends StatelessWidget {
                   color: col.id == 'total'
                       ? template.accentColor
                       : Colors.grey.shade800,
-                  fontWeight:
-                      col.id == 'total' ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: col.id == 'total'
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
                 textAlign: col.textAlign,
               ),
@@ -389,8 +400,14 @@ class AdaptiveBillTable extends StatelessWidget {
     if (value == null) return '-';
 
     // Format currency columns
-    if (['rate', 'price', 'mrp', 'total', 'discount', 'amount']
-        .contains(columnId)) {
+    if ([
+      'rate',
+      'price',
+      'mrp',
+      'total',
+      'discount',
+      'amount',
+    ].contains(columnId)) {
       if (value is num) {
         return '₹${value.toStringAsFixed(2)}';
       }
@@ -485,7 +502,10 @@ class AdaptiveBillForm extends StatelessWidget {
   }
 
   Widget _buildFormField(
-      BillColumn col, BuildContext context, BusinessTypeConfig config) {
+    BillColumn col,
+    BuildContext context,
+    BusinessTypeConfig config,
+  ) {
     // Skip automatically calculated fields
     if (['total', 'amount'].contains(col.id)) {
       return const SizedBox.shrink();
@@ -507,8 +527,10 @@ class AdaptiveBillForm extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
         keyboardType: _getKeyboardType(col.id),
       ),
@@ -527,10 +549,7 @@ class AdaptiveBillForm extends StatelessWidget {
 class BillTemplatePreview extends StatelessWidget {
   final BusinessType businessType;
 
-  const BillTemplatePreview({
-    super.key,
-    required this.businessType,
-  });
+  const BillTemplatePreview({super.key, required this.businessType});
 
   @override
   Widget build(BuildContext context) {
@@ -590,13 +609,15 @@ class BillTemplatePreview extends StatelessWidget {
                 children: [
                   Text(
                     'Table No: 5',
-                    style: AppTypography.bodyMedium
-                        .copyWith(fontWeight: FontWeight.w600),
+                    style: AppTypography.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Text(
                     'Order #1234',
-                    style: AppTypography.bodySmall
-                        .copyWith(color: Colors.grey.shade600),
+                    style: AppTypography.bodySmall.copyWith(
+                      color: Colors.grey.shade600,
+                    ),
                   ),
                 ],
               ),
@@ -640,8 +661,12 @@ class BillTemplatePreview extends StatelessWidget {
     );
   }
 
-  Widget _buildTotalRow(String label, String value,
-      {bool isBold = false, Color? color}) {
+  Widget _buildTotalRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? color,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -679,7 +704,7 @@ class BillTemplatePreview extends StatelessWidget {
               'qty': 2,
               'rate': 250.0,
               'discount': 25.0,
-              'total': 475.0
+              'total': 475.0,
             },
           ),
           DynamicBillItem(
@@ -689,7 +714,7 @@ class BillTemplatePreview extends StatelessWidget {
               'qty': 3,
               'rate': 125.0,
               'discount': 0.0,
-              'total': 375.0
+              'total': 375.0,
             },
           ),
         ];
@@ -704,7 +729,7 @@ class BillTemplatePreview extends StatelessWidget {
               'expiry': '12/25',
               'qty': 10,
               'mrp': 15.0,
-              'total': 150.0
+              'total': 150.0,
             },
           ),
           DynamicBillItem(
@@ -715,7 +740,7 @@ class BillTemplatePreview extends StatelessWidget {
               'expiry': '06/26',
               'qty': 1,
               'mrp': 700.0,
-              'total': 700.0
+              'total': 700.0,
             },
           ),
         ];
@@ -728,7 +753,7 @@ class BillTemplatePreview extends StatelessWidget {
               'item': 'Butter Chicken',
               'qty': 2,
               'price': 320.0,
-              'total': 640.0
+              'total': 640.0,
             },
           ),
           DynamicBillItem(
@@ -737,7 +762,7 @@ class BillTemplatePreview extends StatelessWidget {
               'item': 'Garlic Naan',
               'qty': 4,
               'price': 35.0,
-              'total': 140.0
+              'total': 140.0,
             },
           ),
           DynamicBillItem(
@@ -746,7 +771,7 @@ class BillTemplatePreview extends StatelessWidget {
               'item': 'Cold Drink',
               'qty': 2,
               'price': 35.0,
-              'total': 70.0
+              'total': 70.0,
             },
           ),
         ];
@@ -762,7 +787,7 @@ class BillTemplatePreview extends StatelessWidget {
               'qty': 1,
               'price': 1200.0,
               'discount': 120.0,
-              'total': 1080.0
+              'total': 1080.0,
             },
           ),
         ];
@@ -777,7 +802,7 @@ class BillTemplatePreview extends StatelessWidget {
               'warranty': '1 Year',
               'qty': 1,
               'price': 15000.0,
-              'total': 15000.0
+              'total': 15000.0,
             },
           ),
         ];
@@ -792,7 +817,7 @@ class BillTemplatePreview extends StatelessWidget {
               'qty': 10,
               'unit': 'Bag',
               'rate': 450.0,
-              'total': 4500.0
+              'total': 4500.0,
             },
           ),
         ];
@@ -809,7 +834,7 @@ class BillTemplatePreview extends StatelessWidget {
               'duration': '2 Hrs',
               'rate': 500.0,
               'notes': 'Gas filling included',
-              'total': 1000.0
+              'total': 1000.0,
             },
           ),
         ];
@@ -825,7 +850,7 @@ class BillTemplatePreview extends StatelessWidget {
               'warranty': '1 Year',
               'qty': 1,
               'price': 79900.0,
-              'total': 79900.0
+              'total': 79900.0,
             },
           ),
         ];
@@ -838,7 +863,7 @@ class BillTemplatePreview extends StatelessWidget {
               'item': 'Sample Product',
               'qty': 1,
               'rate': 500.0,
-              'total': 500.0
+              'total': 500.0,
             },
           ),
         ];

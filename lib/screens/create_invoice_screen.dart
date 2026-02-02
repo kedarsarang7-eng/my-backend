@@ -49,12 +49,15 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
     _ownerNameController = TextEditingController();
     _ownerPhoneController = TextEditingController();
     _ownerAddressController = TextEditingController();
-    _customerNameController =
-        TextEditingController(text: widget.customerName ?? '');
-    _customerPhoneController =
-        TextEditingController(text: widget.customerPhone ?? '');
-    _customerAddressController =
-        TextEditingController(text: widget.customerAddress ?? '');
+    _customerNameController = TextEditingController(
+      text: widget.customerName ?? '',
+    );
+    _customerPhoneController = TextEditingController(
+      text: widget.customerPhone ?? '',
+    );
+    _customerAddressController = TextEditingController(
+      text: widget.customerAddress ?? '',
+    );
     _discountController = TextEditingController(text: '0');
     _taxController = TextEditingController(text: '0');
     _notesController = TextEditingController();
@@ -78,10 +81,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text('Create Invoice'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Create Invoice'), elevation: 0),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -94,18 +94,27 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
             _buildTextField(_ownerPhoneController, 'Phone', Icons.phone),
             const SizedBox(height: 12),
             _buildTextField(
-                _ownerAddressController, 'Address', Icons.location_on),
+              _ownerAddressController,
+              'Address',
+              Icons.location_on,
+            ),
             const SizedBox(height: 24),
 
             // Customer section
             _buildSectionTitle('Customer Details'),
             _buildTextField(
-                _customerNameController, 'Customer Name', Icons.person),
+              _customerNameController,
+              'Customer Name',
+              Icons.person,
+            ),
             const SizedBox(height: 12),
             _buildTextField(_customerPhoneController, 'Phone', Icons.phone),
             const SizedBox(height: 12),
             _buildTextField(
-                _customerAddressController, 'Address', Icons.location_on),
+              _customerAddressController,
+              'Address',
+              Icons.location_on,
+            ),
             const SizedBox(height: 24),
 
             // Items section
@@ -153,11 +162,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
 
             // Notes
             _buildSectionTitle('Notes'),
-            _buildTextField(
-              _notesController,
-              'Notes',
-              Icons.note,
-            ),
+            _buildTextField(_notesController, 'Notes', Icons.note),
             const SizedBox(height: 16),
 
             // Save button
@@ -175,8 +180,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   ? const CircularProgressIndicator(color: Colors.white)
                   : const Text(
                       'Save Invoice',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
             ),
           ],
@@ -190,10 +197,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -208,9 +212,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         filled: true,
         fillColor: Colors.white,
       ),
@@ -356,12 +358,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       builder: (context) => _ItemDialog(
         onSave: (name, quantity, price) {
           setState(() {
-            _items.add(BillItem(
-              productId: '', // Ad-hoc item
-              productName: name,
-              qty: quantity,
-              price: price,
-            ));
+            _items.add(
+              BillItem(
+                productId: '', // Ad-hoc item
+                productName: name,
+                qty: quantity,
+                price: price,
+              ),
+            );
           });
           Navigator.pop(context);
         },
@@ -427,9 +431,9 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) {

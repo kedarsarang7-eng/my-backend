@@ -215,7 +215,7 @@ class BusinessTypeConfig {
   final String addItemLabel; // "Add Item" / "Add Dish" / "Add Medicine"
   final String priceLabel; // "Rate" / "MRP" / "Labor"
   final List<String>
-      modules; // "inventory", "prescriptions", "sales", "returns", "kot", "tables"
+  modules; // "inventory", "prescriptions", "sales", "returns", "kot", "tables"
 
   const BusinessTypeConfig({
     required this.type,
@@ -257,11 +257,7 @@ class BusinessTypeRegistry {
         ItemField.unit,
         ItemField.price,
       ],
-      optionalFields: [
-        ItemField.discount,
-        ItemField.gst,
-        ItemField.brand,
-      ],
+      optionalFields: [ItemField.discount, ItemField.gst, ItemField.brand],
       defaultGstRate: 0.0, // Optional GST
       gstEditable: true,
       unitOptions: [
@@ -269,7 +265,7 @@ class BusinessTypeRegistry {
         UnitType.kg,
         UnitType.gm,
         UnitType.ltr,
-        UnitType.nos
+        UnitType.nos,
       ],
       itemLabel: 'Item',
       addItemLabel: 'Add Item',
@@ -282,16 +278,8 @@ class BusinessTypeRegistry {
     // =========================================================
     BusinessType.restaurant: BusinessTypeConfig(
       type: BusinessType.restaurant,
-      requiredFields: [
-        ItemField.itemName,
-        ItemField.quantity,
-        ItemField.price,
-      ],
-      optionalFields: [
-        ItemField.isHalf,
-        ItemField.tableNo,
-        ItemField.isParcel,
-      ],
+      requiredFields: [ItemField.itemName, ItemField.quantity, ItemField.price],
+      optionalFields: [ItemField.isHalf, ItemField.tableNo, ItemField.isParcel],
       defaultGstRate: 5.0, // Fixed 5% for restaurants (no ITC)
       gstEditable: false,
       unitOptions: [UnitType.pcs, UnitType.nos],
@@ -314,10 +302,7 @@ class BusinessTypeRegistry {
         ItemField.expiryDate,
         ItemField.drugSchedule,
       ],
-      optionalFields: [
-        ItemField.doctorName,
-        ItemField.hsnCode,
-      ],
+      optionalFields: [ItemField.doctorName, ItemField.hsnCode],
       defaultGstRate: 12.0, // Common for medicines (varies by item)
       gstEditable: false, // GST is per-item based on schedule
       unitOptions: [
@@ -325,7 +310,7 @@ class BusinessTypeRegistry {
         UnitType.strip,
         UnitType.ml,
         UnitType.gm,
-        UnitType.box
+        UnitType.box,
       ],
       itemLabel: 'Medicine',
       addItemLabel: 'Add Medicine',
@@ -336,7 +321,7 @@ class BusinessTypeRegistry {
         'sales',
         'returns',
         'suppliers',
-        'reports'
+        'reports',
       ],
     ),
 
@@ -393,7 +378,7 @@ class BusinessTypeRegistry {
         UnitType.ft,
         UnitType.mtr,
         UnitType.box,
-        UnitType.nos
+        UnitType.nos,
       ],
       itemLabel: 'Item',
       addItemLabel: 'Add Item',
@@ -488,15 +473,8 @@ class BusinessTypeRegistry {
     // =========================================================
     BusinessType.service: BusinessTypeConfig(
       type: BusinessType.service,
-      requiredFields: [
-        ItemField.itemName,
-        ItemField.laborCharge,
-      ],
-      optionalFields: [
-        ItemField.partsCharge,
-        ItemField.notes,
-        ItemField.gst,
-      ],
+      requiredFields: [ItemField.itemName, ItemField.laborCharge],
+      optionalFields: [ItemField.partsCharge, ItemField.notes, ItemField.gst],
       defaultGstRate: 18.0, // Services at 18%
       gstEditable: true,
       unitOptions: [UnitType.pcs, UnitType.hr, UnitType.nos],
@@ -511,11 +489,7 @@ class BusinessTypeRegistry {
     // =========================================================
     BusinessType.petrolPump: BusinessTypeConfig(
       type: BusinessType.petrolPump,
-      requiredFields: [
-        ItemField.itemName,
-        ItemField.quantity,
-        ItemField.price,
-      ],
+      requiredFields: [ItemField.itemName, ItemField.quantity, ItemField.price],
       optionalFields: [
         ItemField.nozzleId,
         ItemField.fuelType,
@@ -566,11 +540,7 @@ class BusinessTypeRegistry {
     // =========================================================
     BusinessType.wholesale: BusinessTypeConfig(
       type: BusinessType.wholesale,
-      requiredFields: [
-        ItemField.itemName,
-        ItemField.quantity,
-        ItemField.price,
-      ],
+      requiredFields: [ItemField.itemName, ItemField.quantity, ItemField.price],
       optionalFields: [
         ItemField.unit,
         ItemField.discount,
@@ -594,16 +564,8 @@ class BusinessTypeRegistry {
     // =========================================================
     BusinessType.other: BusinessTypeConfig(
       type: BusinessType.other,
-      requiredFields: [
-        ItemField.itemName,
-        ItemField.quantity,
-        ItemField.price,
-      ],
-      optionalFields: [
-        ItemField.unit,
-        ItemField.discount,
-        ItemField.gst,
-      ],
+      requiredFields: [ItemField.itemName, ItemField.quantity, ItemField.price],
+      optionalFields: [ItemField.unit, ItemField.discount, ItemField.gst],
       defaultGstRate: 0.0,
       gstEditable: true,
       unitOptions: [UnitType.pcs, UnitType.kg, UnitType.ltr],
@@ -618,11 +580,7 @@ class BusinessTypeRegistry {
     // =========================================================
     BusinessType.clinic: BusinessTypeConfig(
       type: BusinessType.clinic,
-      requiredFields: [
-        ItemField.itemName,
-        ItemField.quantity,
-        ItemField.price,
-      ],
+      requiredFields: [ItemField.itemName, ItemField.quantity, ItemField.price],
       optionalFields: [
         ItemField.doctorName,
         ItemField.batchNo,
@@ -640,9 +598,9 @@ class BusinessTypeRegistry {
         'patients',
         'prescriptions',
         'inventory',
-        'reports'
+        'reports',
       ],
-    )
+    ),
   };
 
   /// Get configuration for a business type

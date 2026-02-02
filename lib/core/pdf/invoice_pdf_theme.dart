@@ -254,20 +254,10 @@ class InvoicePdfTheme {
 }
 
 /// Invoice status for visual indicators
-enum InvoiceStatus {
-  paid,
-  unpaid,
-  partial,
-}
+enum InvoiceStatus { paid, unpaid, partial }
 
 /// Payment mode for display
-enum PaymentMode {
-  cash,
-  upi,
-  card,
-  credit,
-  mixed,
-}
+enum PaymentMode { cash, upi, card, credit, mixed }
 
 /// Extension to get display text and colors for status
 extension InvoiceStatusExtension on InvoiceStatus {

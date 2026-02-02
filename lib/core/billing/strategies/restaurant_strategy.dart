@@ -38,49 +38,85 @@ class RestaurantStrategy extends BaseBusinessStrategy {
             Expanded(child: _buildTableNoField(item, onUpdate, isDark)),
             const SizedBox(width: 8),
             Expanded(
-                child: _buildParcelToggle(item, onUpdate, isDark, accentColor)),
+              child: _buildParcelToggle(item, onUpdate, isDark, accentColor),
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildHalfFullToggle(BillItem item, Function(BillItem) onUpdate,
-      bool isDark, Color accentColor) {
+  Widget _buildHalfFullToggle(
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+    Color accentColor,
+  ) {
     final isHalf = item.isHalf ?? false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _toggleChip('Half', isHalf, () {
-          onUpdate(item.copyWith(isHalf: true));
-        }, isDark, accentColor),
+        _toggleChip(
+          'Half',
+          isHalf,
+          () {
+            onUpdate(item.copyWith(isHalf: true));
+          },
+          isDark,
+          accentColor,
+        ),
         const SizedBox(width: 4),
-        _toggleChip('Full', !isHalf, () {
-          onUpdate(item.copyWith(isHalf: false));
-        }, isDark, accentColor),
+        _toggleChip(
+          'Full',
+          !isHalf,
+          () {
+            onUpdate(item.copyWith(isHalf: false));
+          },
+          isDark,
+          accentColor,
+        ),
       ],
     );
   }
 
-  Widget _buildParcelToggle(BillItem item, Function(BillItem) onUpdate,
-      bool isDark, Color accentColor) {
+  Widget _buildParcelToggle(
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+    Color accentColor,
+  ) {
     final isParcel = item.isParcel ?? false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _toggleChip('Dine-In', !isParcel, () {
-          onUpdate(item.copyWith(isParcel: false));
-        }, isDark, accentColor),
+        _toggleChip(
+          'Dine-In',
+          !isParcel,
+          () {
+            onUpdate(item.copyWith(isParcel: false));
+          },
+          isDark,
+          accentColor,
+        ),
         const SizedBox(width: 4),
-        _toggleChip('Parcel', isParcel, () {
-          onUpdate(item.copyWith(isParcel: true));
-        }, isDark, accentColor),
+        _toggleChip(
+          'Parcel',
+          isParcel,
+          () {
+            onUpdate(item.copyWith(isParcel: true));
+          },
+          isDark,
+          accentColor,
+        ),
       ],
     );
   }
 
   Widget _buildTableNoField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Table',
       value: item.tableNo ?? '',
@@ -91,8 +127,13 @@ class RestaurantStrategy extends BaseBusinessStrategy {
     );
   }
 
-  Widget _toggleChip(String label, bool selected, VoidCallback onTap,
-      bool isDark, Color accentColor) {
+  Widget _toggleChip(
+    String label,
+    bool selected,
+    VoidCallback onTap,
+    bool isDark,
+    Color accentColor,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -101,8 +142,8 @@ class RestaurantStrategy extends BaseBusinessStrategy {
           color: selected
               ? accentColor
               : (isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.grey.shade100),
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.grey.shade100),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
@@ -137,8 +178,9 @@ class RestaurantStrategy extends BaseBusinessStrategy {
               prefix: 'T-',
               keyboardType: TextInputType.text,
               onChanged: (val) {
-                onUpdate(bill.copyWith(
-                    tableNumber: val.trim().isEmpty ? null : val));
+                onUpdate(
+                  bill.copyWith(tableNumber: val.trim().isEmpty ? null : val),
+                );
               },
               isDark: isDark,
             ),
@@ -151,7 +193,8 @@ class RestaurantStrategy extends BaseBusinessStrategy {
               keyboardType: TextInputType.text,
               onChanged: (val) {
                 onUpdate(
-                    bill.copyWith(waiterId: val.trim().isEmpty ? null : val));
+                  bill.copyWith(waiterId: val.trim().isEmpty ? null : val),
+                );
               },
               isDark: isDark,
             ),

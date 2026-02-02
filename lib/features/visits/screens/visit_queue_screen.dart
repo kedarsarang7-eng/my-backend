@@ -73,10 +73,7 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              FuturisticColors.backgroundDark,
-              const Color(0xFF0F172A),
-            ],
+            colors: [FuturisticColors.backgroundDark, const Color(0xFF0F172A)],
           ),
         ),
         child: visitsAsync.when(
@@ -84,10 +81,12 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
             final waiting = visits
                 .where((v) => v.status == 'checked_in' || v.status == 'waiting')
                 .toList();
-            final inProgress =
-                visits.where((v) => v.status == 'in_progress').toList();
-            final completed =
-                visits.where((v) => v.status == 'completed').toList();
+            final inProgress = visits
+                .where((v) => v.status == 'in_progress')
+                .toList();
+            final completed = visits
+                .where((v) => v.status == 'completed')
+                .toList();
 
             return TabBarView(
               controller: _tabController,
@@ -95,16 +94,22 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
                 _buildList(waiting, 'No patients waiting', Colors.orange),
                 _buildList(inProgress, 'No active consultations', Colors.blue),
                 _buildList(
-                    completed, 'No completed visits today', Colors.green),
+                  completed,
+                  'No completed visits today',
+                  Colors.green,
+                ),
               ],
             );
           },
           loading: () => const Center(
-              child:
-                  CircularProgressIndicator(color: FuturisticColors.neonBlue)),
+            child: CircularProgressIndicator(color: FuturisticColors.neonBlue),
+          ),
           error: (err, stack) => Center(
-              child: Text('Error: $err',
-                  style: const TextStyle(color: Colors.red))),
+            child: Text(
+              'Error: $err',
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -121,13 +126,18 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.assignment_ind_outlined,
-                size: 64, color: Colors.white.withOpacity(0.2)),
+            Icon(
+              Icons.assignment_ind_outlined,
+              size: 64,
+              color: Colors.white.withOpacity(0.2),
+            ),
             const SizedBox(height: 16),
             Text(
               emptyMsg,
               style: GoogleFonts.outfit(
-                  color: Colors.white.withOpacity(0.4), fontSize: 16),
+                color: Colors.white.withOpacity(0.4),
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -159,16 +169,17 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            )
-          ]),
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -178,7 +189,8 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (_) => ConsultationScreen(visitId: visit.id)),
+                builder: (_) => ConsultationScreen(visitId: visit.id),
+              ),
             );
           },
           child: Padding(
@@ -187,8 +199,10 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
               children: [
                 // Time / Token
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: accentColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -238,8 +252,11 @@ class _VisitQueueScreenState extends ConsumerState<VisitQueueScreen>
                 ),
 
                 // Action
-                Icon(Icons.arrow_forward_ios_rounded,
-                    size: 16, color: Colors.white.withOpacity(0.3)),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16,
+                  color: Colors.white.withOpacity(0.3),
+                ),
               ],
             ),
           ),
@@ -266,9 +283,10 @@ class _PatientNameWidget extends ConsumerWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox(
-              width: 100,
-              height: 16,
-              child: LinearProgressIndicator(minHeight: 2));
+            width: 100,
+            height: 16,
+            child: LinearProgressIndicator(minHeight: 2),
+          );
         }
         final patient = snapshot.data?.data;
         return Text(

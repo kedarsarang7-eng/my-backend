@@ -64,9 +64,10 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
     final now = DateTime.now();
     return _batches.where((batch) {
       final productName = _productNames[batch.productId] ?? '';
-      final matchesSearch = batch.batchNumber
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
+      final matchesSearch =
+          batch.batchNumber.toLowerCase().contains(
+            _searchQuery.toLowerCase(),
+          ) ||
           productName.toLowerCase().contains(_searchQuery.toLowerCase());
 
       if (_showExpiredOnly) {
@@ -102,9 +103,10 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
               color: isDark ? const Color(0xFF1E293B) : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.grey[200]!),
+                color: isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.grey[200]!,
+              ),
             ),
             child: Column(
               children: [
@@ -114,15 +116,17 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
                       child: TextField(
                         onChanged: (val) => setState(() => _searchQuery = val),
                         style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87),
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Search batch number or product...',
                           hintStyle: TextStyle(
-                              color:
-                                  isDark ? Colors.white38 : Colors.grey[400]),
-                          prefixIcon: Icon(Icons.search,
-                              color:
-                                  isDark ? Colors.white38 : Colors.grey[400]),
+                            color: isDark ? Colors.white38 : Colors.grey[400],
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: isDark ? Colors.white38 : Colors.grey[400],
+                          ),
                           filled: true,
                           fillColor: isDark
                               ? const Color(0xFF0F172A)
@@ -132,7 +136,9 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
                             borderSide: BorderSide.none,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -142,8 +148,9 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
                       selected: _showExpiredOnly,
                       onSelected: (val) =>
                           setState(() => _showExpiredOnly = val),
-                      backgroundColor:
-                          isDark ? Colors.black26 : Colors.grey[100],
+                      backgroundColor: isDark
+                          ? Colors.black26
+                          : Colors.grey[100],
                       selectedColor: const Color(0xFFEF4444).withOpacity(0.2),
                       labelStyle: TextStyle(
                         color: _showExpiredOnly
@@ -173,8 +180,11 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.layers_clear,
-                size: 64, color: isDark ? Colors.white24 : Colors.grey[300]),
+            Icon(
+              Icons.layers_clear,
+              size: 64,
+              color: isDark ? Colors.white24 : Colors.grey[300],
+            ),
             const SizedBox(height: 16),
             Text(
               'No batches found',
@@ -202,8 +212,9 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
     final productName = _productNames[batch.productId] ?? 'Unknown Product';
     final isExpired =
         batch.expiryDate != null && batch.expiryDate!.isBefore(DateTime.now());
-    final expiryColor =
-        isExpired ? const Color(0xFFEF4444) : const Color(0xFF10B981);
+    final expiryColor = isExpired
+        ? const Color(0xFFEF4444)
+        : const Color(0xFF10B981);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -256,7 +267,9 @@ class _BatchTrackingScreenState extends ConsumerState<BatchTrackingScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: isDark ? Colors.black26 : Colors.grey[200],
                           borderRadius: BorderRadius.circular(4),

@@ -22,8 +22,16 @@ class BillItem extends Equatable {
   });
 
   @override
-  List<Object> get props =>
-      [productId, name, quantity, rate, amount, unit, discount, taxAmount];
+  List<Object> get props => [
+    productId,
+    name,
+    quantity,
+    rate,
+    amount,
+    unit,
+    discount,
+    taxAmount,
+  ];
 
   BillItem copyWith({
     String? productId,

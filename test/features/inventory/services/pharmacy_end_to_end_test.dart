@@ -45,23 +45,26 @@ void main() {
     await db.close();
   });
 
-  test('E2E Pharmacy Flow: Purchase -> Migration -> FEFO Sale -> Stock Update',
-      () async {
+  test('E2E Pharmacy Flow: Purchase -> Migration -> FEFO Sale -> Stock Update', () async {
     const userId = 'user-e2e';
 
     // =================================================================
     // STEP 1: SETUP PRODUCT (Legacy Stock)
     // =================================================================
     final productId = const Uuid().v4();
-    await db.into(db.products).insert(ProductsCompanion(
-          id: Value(productId),
-          userId: Value(userId),
-          name: Value('Dolo 650'),
-          stockQuantity: Value(10), // Legacy stock
-          sellingPrice: Value(100),
-          createdAt: Value(DateTime.now()),
-          updatedAt: Value(DateTime.now()),
-        ));
+    await db
+        .into(db.products)
+        .insert(
+          ProductsCompanion(
+            id: Value(productId),
+            userId: Value(userId),
+            name: Value('Dolo 650'),
+            stockQuantity: Value(10), // Legacy stock
+            sellingPrice: Value(100),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     // =================================================================
     // STEP 2: RUN MIGRATION
@@ -85,24 +88,28 @@ void main() {
     // =================================================================
     // Simulate a purchase adding a new batch with expiration
     final newBatchId = const Uuid().v4();
-    await batchRepo.createBatch(ProductBatchesCompanion(
-      id: Value(newBatchId),
-      productId: Value(productId),
-      userId: Value(userId),
-      batchNumber: Value('BATCH-2026'),
-      expiryDate:
-          Value(DateTime.now().add(const Duration(days: 365))), // Future expiry
-      stockQuantity: Value(20),
-      openingQuantity: Value(20),
-      createdAt: Value(DateTime.now()),
-      updatedAt: Value(DateTime.now()),
-    ));
+    await batchRepo.createBatch(
+      ProductBatchesCompanion(
+        id: Value(newBatchId),
+        productId: Value(productId),
+        userId: Value(userId),
+        batchNumber: Value('BATCH-2026'),
+        expiryDate: Value(
+          DateTime.now().add(const Duration(days: 365)),
+        ), // Future expiry
+        stockQuantity: Value(20),
+        openingQuantity: Value(20),
+        createdAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
 
     // =================================================================
     // STEP 4: FEFO ALLOCATION (Simulate Bill Creation)
     // =================================================================
-    batchAllocationService =
-        BatchAllocationService(productBatchRepository: batchRepo);
+    batchAllocationService = BatchAllocationService(
+      productBatchRepository: batchRepo,
+    );
 
     // Scenario: User buys 15 items.
     // Legacy (10, Null Expiry - Wait, FEFO logic puts NULL expiry last usually? Or first?)
@@ -138,8 +145,11 @@ void main() {
     // Item 1: 10 units from Legacy Batch (Null expiry)
     // Item 2: 5 units from New Batch (BATCH-2026)
 
-    expect(allocatedBill.items.length, 2,
-        reason: 'Should split into Legacy + New');
+    expect(
+      allocatedBill.items.length,
+      2,
+      reason: 'Should split into Legacy + New',
+    );
 
     final item1 = allocatedBill.items[0];
     expect(item1.batchNo, 'LEGACY_OPENING');

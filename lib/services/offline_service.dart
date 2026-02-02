@@ -29,8 +29,10 @@ class OfflineService {
       // Start retry timer if there are queued items
       _startRetryTimer();
     } catch (e) {
-      developer.log('Error initializing OfflineService: $e',
-          name: 'OfflineService');
+      developer.log(
+        'Error initializing OfflineService: $e',
+        name: 'OfflineService',
+      );
     }
   }
 
@@ -45,8 +47,10 @@ class OfflineService {
       data['_lastRetryAt'] = DateTime.now().toIso8601String();
 
       await box.add(data);
-      developer.log('Queued write: ${data['operation']}',
-          name: 'OfflineService');
+      developer.log(
+        'Queued write: ${data['operation']}',
+        name: 'OfflineService',
+      );
 
       // Start retry timer
       _startRetryTimer();
@@ -91,7 +95,8 @@ class OfflineService {
 
         // Calculate backoff delay (exponential: 5s, 10s, 15s)
         final backoffSeconds = retryDelaySeconds * (retries + 1);
-        final isReadyToRetry = lastRetryAt == null ||
+        final isReadyToRetry =
+            lastRetryAt == null ||
             now.difference(lastRetryAt).inSeconds >= backoffSeconds;
 
         if (isReadyToRetry) {
@@ -101,8 +106,10 @@ class OfflineService {
 
       return readyItems;
     } catch (e) {
-      developer.log('Error getting queued items for retry: $e',
-          name: 'OfflineService');
+      developer.log(
+        'Error getting queued items for retry: $e',
+        name: 'OfflineService',
+      );
       return [];
     }
   }
@@ -114,8 +121,10 @@ class OfflineService {
       final box = Hive.box(queuedBox);
       if (index >= 0 && index < box.length) {
         await box.deleteAt(index);
-        developer.log('Removed item at index $index from queue',
-            name: 'OfflineService');
+        developer.log(
+          'Removed item at index $index from queue',
+          name: 'OfflineService',
+        );
       }
     } catch (e) {
       developer.log('Error removing from queue: $e', name: 'OfflineService');
@@ -138,8 +147,10 @@ class OfflineService {
         );
       }
     } catch (e) {
-      developer.log('Error incrementing retry count: $e',
-          name: 'OfflineService');
+      developer.log(
+        'Error incrementing retry count: $e',
+        name: 'OfflineService',
+      );
     }
   }
 
@@ -169,14 +180,17 @@ class OfflineService {
       return;
     }
 
-    _retryTimer =
-        Timer.periodic(Duration(seconds: retryDelaySeconds), (timer) async {
+    _retryTimer = Timer.periodic(Duration(seconds: retryDelaySeconds), (
+      timer,
+    ) async {
       final queuedItems = getQueued();
       if (queuedItems.isEmpty) {
         timer.cancel();
         _retryTimer = null;
-        developer.log('Retry timer stopped: queue is empty',
-            name: 'OfflineService');
+        developer.log(
+          'Retry timer stopped: queue is empty',
+          name: 'OfflineService',
+        );
         return;
       }
 
@@ -208,10 +222,7 @@ class OfflineService {
         // The actual sync is handled by SyncManager which monitors connectivity
         _notifyRetryReady();
       } catch (e) {
-        developer.log(
-          'Error triggering sync: $e',
-          name: 'OfflineService',
-        );
+        developer.log('Error triggering sync: $e', name: 'OfflineService');
       }
     });
 

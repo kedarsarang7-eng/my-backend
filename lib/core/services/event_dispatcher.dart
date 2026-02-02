@@ -151,15 +151,11 @@ class EventDispatcher {
     required double amount,
     required String userId,
   }) {
-    dispatch(
-      BusinessEvent.invoiceCreated,
-      {
-        'billId': billId,
-        'customerId': customerId,
-        'amount': amount,
-      },
-      userId: userId,
-    );
+    dispatch(BusinessEvent.invoiceCreated, {
+      'billId': billId,
+      'customerId': customerId,
+      'amount': amount,
+    }, userId: userId);
   }
 
   /// Dispatch payment received event
@@ -171,17 +167,13 @@ class EventDispatcher {
     required String paymentMode,
     required String userId,
   }) {
-    dispatch(
-      BusinessEvent.paymentReceived,
-      {
-        'receiptId': receiptId,
-        'billId': billId,
-        'customerId': customerId,
-        'amount': amount,
-        'paymentMode': paymentMode,
-      },
-      userId: userId,
-    );
+    dispatch(BusinessEvent.paymentReceived, {
+      'receiptId': receiptId,
+      'billId': billId,
+      'customerId': customerId,
+      'amount': amount,
+      'paymentMode': paymentMode,
+    }, userId: userId);
   }
 
   /// Dispatch stock changed event
@@ -192,16 +184,12 @@ class EventDispatcher {
     required String reason,
     required String userId,
   }) {
-    dispatch(
-      BusinessEvent.stockChanged,
-      {
-        'productId': productId,
-        'oldQty': oldQty,
-        'newQty': newQty,
-        'reason': reason,
-      },
-      userId: userId,
-    );
+    dispatch(BusinessEvent.stockChanged, {
+      'productId': productId,
+      'oldQty': oldQty,
+      'newQty': newQty,
+      'reason': reason,
+    }, userId: userId);
   }
 
   /// Dispatch low stock alert event
@@ -212,16 +200,12 @@ class EventDispatcher {
     required double lowStockLimit,
     required String userId,
   }) {
-    dispatch(
-      BusinessEvent.stockLow,
-      {
-        'productId': productId,
-        'productName': productName,
-        'currentQty': currentQty,
-        'lowStockLimit': lowStockLimit,
-      },
-      userId: userId,
-    );
+    dispatch(BusinessEvent.stockLow, {
+      'productId': productId,
+      'productName': productName,
+      'currentQty': currentQty,
+      'lowStockLimit': lowStockLimit,
+    }, userId: userId);
   }
 
   /// Dispatch return processed event
@@ -233,17 +217,13 @@ class EventDispatcher {
     required List<Map<String, dynamic>> items,
     required String userId,
   }) {
-    dispatch(
-      BusinessEvent.returnProcessed,
-      {
-        'returnId': returnId,
-        'billId': billId,
-        'customerId': customerId,
-        'amount': amount,
-        'items': items,
-      },
-      userId: userId,
-    );
+    dispatch(BusinessEvent.returnProcessed, {
+      'returnId': returnId,
+      'billId': billId,
+      'customerId': customerId,
+      'amount': amount,
+      'items': items,
+    }, userId: userId);
   }
 
   /// Dispatch purchase order created event
@@ -253,15 +233,11 @@ class EventDispatcher {
     required double amount,
     required String userId,
   }) {
-    dispatch(
-      BusinessEvent.purchaseOrderCreated,
-      {
-        'purchaseId': purchaseId,
-        'vendorId': vendorId,
-        'amount': amount,
-      },
-      userId: userId,
-    );
+    dispatch(BusinessEvent.purchaseOrderCreated, {
+      'purchaseId': purchaseId,
+      'vendorId': vendorId,
+      'amount': amount,
+    }, userId: userId);
   }
 
   /// Dispose resources

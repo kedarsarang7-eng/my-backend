@@ -65,13 +65,13 @@ class Business {
 
   /// Empty business for initialization
   factory Business.empty(String ownerId) => Business(
-        id: '',
-        ownerId: ownerId,
-        name: '',
-        financialYearStart: DateTime(DateTime.now().year, 4, 1), // April 1
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+    id: '',
+    ownerId: ownerId,
+    name: '',
+    financialYearStart: DateTime(DateTime.now().year, 4, 1), // April 1
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 
   /// Create from Firestore document
   factory Business.fromFirestore(DocumentSnapshot doc) {
@@ -94,7 +94,8 @@ class Business {
       phone: map['phone'] ?? '',
       email: map['email'],
       currency: map['currency'] ?? 'INR',
-      financialYearStart: _parseDate(map['financialYearStart']) ??
+      financialYearStart:
+          _parseDate(map['financialYearStart']) ??
           DateTime(DateTime.now().year, 4, 1),
       businessType: map['businessType'] ?? 'grocery',
       isActive: map['isActive'] ?? true,
@@ -204,8 +205,9 @@ class Business {
   bool get isGstinValid {
     if (gstin == null || gstin!.isEmpty) return true;
     final regex = RegExp(
-        r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
-        caseSensitive: false);
+      r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
+      caseSensitive: false,
+    );
     return regex.hasMatch(gstin!.toUpperCase());
   }
 
@@ -225,13 +227,19 @@ class Business {
     if (now.month >= fyMonth || (now.month == fyMonth && now.day >= fyDay)) {
       // Current FY started this calendar year
       start = DateTime(now.year, fyMonth, fyDay);
-      end = DateTime(now.year + 1, fyMonth, fyDay)
-          .subtract(const Duration(days: 1));
+      end = DateTime(
+        now.year + 1,
+        fyMonth,
+        fyDay,
+      ).subtract(const Duration(days: 1));
     } else {
       // Current FY started last calendar year
       start = DateTime(now.year - 1, fyMonth, fyDay);
-      end =
-          DateTime(now.year, fyMonth, fyDay).subtract(const Duration(days: 1));
+      end = DateTime(
+        now.year,
+        fyMonth,
+        fyDay,
+      ).subtract(const Duration(days: 1));
     }
 
     return FinancialYearRange(start: start, end: end);

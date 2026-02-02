@@ -52,12 +52,15 @@ class OcrRouter {
     debugPrint('[OcrRouter] Processing for business type: $businessType');
 
     // 1. Always perform generic OCR first
-    final genericResult =
-        await _defaultOcrService.recognizeTextAutoDetect(imagePath);
+    final genericResult = await _defaultOcrService.recognizeTextAutoDetect(
+      imagePath,
+    );
 
     // 2. Run Heuristic Parser for all types (baseline extraction)
-    final parsedMap =
-        HeuristicParser.parse(genericResult.rawText, businessType);
+    final parsedMap = HeuristicParser.parse(
+      genericResult.rawText,
+      businessType,
+    );
 
     // 3. For businesses tracking batches (Pharmacy/Wholesale), run strict medicine parser
     MedicineOcrResult? medicineResult;

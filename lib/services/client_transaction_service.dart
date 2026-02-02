@@ -78,7 +78,7 @@ class ClientTransactionService {
 
       transaction.update(customerRef, {
         'balance': newBal,
-        'lastTransactionDate': FieldValue.serverTimestamp()
+        'lastTransactionDate': FieldValue.serverTimestamp(),
       });
 
       // 5. Writes
@@ -92,7 +92,7 @@ class ClientTransactionService {
         'amount': bill.grandTotal,
         'balanceAfter': newBal, // Approximation if multiple parallel txns
         'description': 'Invoice #${bill.invoiceNumber}',
-        'createdAt': FieldValue.serverTimestamp()
+        'createdAt': FieldValue.serverTimestamp(),
       });
 
       // If there was an instant payment in this bill object
@@ -105,7 +105,7 @@ class ClientTransactionService {
           'amount': bill.paidAmount,
           'linkedSaleIds': [saleRef.id],
           'paymentMode': 'CASH', // Default or from Bill
-          'createdAt': FieldValue.serverTimestamp()
+          'createdAt': FieldValue.serverTimestamp(),
         });
 
         // Note: We already netted the balance above (newBal = old + pending).
@@ -118,7 +118,7 @@ class ClientTransactionService {
           'amount': bill.paidAmount,
           'balanceAfter': newBal, // Same balance state
           'description': 'Instant Payment for #${bill.invoiceNumber}',
-          'createdAt': FieldValue.serverTimestamp()
+          'createdAt': FieldValue.serverTimestamp(),
         });
       }
     });
@@ -140,13 +140,13 @@ class ClientTransactionService {
 
       transaction.update(customerRef, {
         'balance': newBal,
-        'lastTransactionDate': FieldValue.serverTimestamp()
+        'lastTransactionDate': FieldValue.serverTimestamp(),
       });
 
       transaction.set(payRef, {
         ...payment.toMap(),
         'id': payRef.id,
-        'createdAt': FieldValue.serverTimestamp()
+        'createdAt': FieldValue.serverTimestamp(),
       });
 
       transaction.set(ledgerRef, {
@@ -156,7 +156,7 @@ class ClientTransactionService {
         'amount': payment.amount,
         'balanceAfter': newBal,
         'description': 'Payment Received (${payment.method})',
-        'createdAt': FieldValue.serverTimestamp()
+        'createdAt': FieldValue.serverTimestamp(),
       });
 
       // Note: Auto-clearing invoice status ('linkedSaleIds') is complex in Client Txn

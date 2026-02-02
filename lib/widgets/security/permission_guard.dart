@@ -80,23 +80,20 @@ class PermissionGuard extends StatelessWidget {
   Widget _buildDisabledChild(BuildContext context) {
     // Wrap in IgnorePointer and reduce opacity
     return GestureDetector(
-      onTap: onUnauthorizedAttempt ??
+      onTap:
+          onUnauthorizedAttempt ??
           () {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content:
-                    Text('You don\'t have permission for: ${permission.name}'),
+                content: Text(
+                  'You don\'t have permission for: ${permission.name}',
+                ),
                 backgroundColor: Colors.red.shade700,
                 behavior: SnackBarBehavior.floating,
               ),
             );
           },
-      child: IgnorePointer(
-        child: Opacity(
-          opacity: 0.4,
-          child: child,
-        ),
-      ),
+      child: IgnorePointer(child: Opacity(opacity: 0.4, child: child)),
     );
   }
 }
@@ -201,8 +198,9 @@ class MultiPermissionGuard extends StatelessWidget {
 
   bool get hasPermission {
     if (requireAll) {
-      return permissions
-          .every((p) => RolePermissions.hasPermission(userRole, p));
+      return permissions.every(
+        (p) => RolePermissions.hasPermission(userRole, p),
+      );
     } else {
       return permissions.any((p) => RolePermissions.hasPermission(userRole, p));
     }

@@ -65,8 +65,10 @@ class EnhancedInvoicePdfService {
 
     // Calculate totals
     double subtotal = items.fold(0, (sum, item) => sum + item.subtotal);
-    double totalItemDiscount =
-        items.fold(0, (sum, item) => sum + item.discount);
+    double totalItemDiscount = items.fold(
+      0,
+      (sum, item) => sum + item.discount,
+    );
     double totalDiscount = totalItemDiscount + (additionalDiscount ?? 0);
     double totalCgst = items.fold(0, (sum, item) => sum + (item.cgst ?? 0));
     double totalSgst = items.fold(0, (sum, item) => sum + (item.sgst ?? 0));
@@ -86,23 +88,22 @@ class EnhancedInvoicePdfService {
 
     // Convert items to row data
     final List<ItemRowData> itemRows = items
-        .map((item) => ItemRowData(
-              name: item.name,
-              quantity: _formatQuantity(item.quantity),
-              unit: item.unit,
-              rate: item.unitPrice,
-              taxPercent: item.taxPercent,
-              discount: item.discount,
-              amount: item.total,
-            ))
+        .map(
+          (item) => ItemRowData(
+            name: item.name,
+            quantity: _formatQuantity(item.quantity),
+            unit: item.unit,
+            rate: item.unitPrice,
+            taxPercent: item.taxPercent,
+            discount: item.discount,
+            amount: item.total,
+          ),
+        )
         .toList();
 
     // Create PDF document
     final pdf = pw.Document(
-      theme: pw.ThemeData.withFont(
-        base: baseFont,
-        bold: baseBoldFont,
-      ),
+      theme: pw.ThemeData.withFont(base: baseFont, bold: baseBoldFont),
     );
 
     // Use MultiPage for automatic page handling
@@ -231,10 +232,7 @@ class EnhancedInvoicePdfService {
                 ),
               )
             else
-              widgets.buildItemsTable(
-                items: itemRows,
-                showTax: config.showTax,
-              ),
+              widgets.buildItemsTable(items: itemRows, showTax: config.showTax),
             pw.SizedBox(height: 16),
 
             // ===== TOTALS SECTION =====
@@ -272,9 +270,7 @@ class EnhancedInvoicePdfService {
             pw.SizedBox(height: 12),
 
             // ===== FOOTER =====
-            widgets.buildFooter(
-              returnPolicy: config.returnPolicy,
-            ),
+            widgets.buildFooter(returnPolicy: config.returnPolicy),
           ];
         },
       ),

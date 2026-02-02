@@ -40,12 +40,12 @@ class QrCodeData {
   });
 
   Map<String, dynamic> toJson() => {
-        'type': type,
-        'vendorId': vendorId,
-        'tableId': tableId,
-        'tableNumber': tableNumber,
-        'version': version,
-      };
+    'type': type,
+    'vendorId': vendorId,
+    'tableId': tableId,
+    'tableNumber': tableNumber,
+    'version': version,
+  };
 
   String toEncodedString() => jsonEncode(toJson());
 
@@ -85,12 +85,11 @@ class QrCodeService {
     final id = _uuid.v4();
     final now = DateTime.now();
 
-    final qrData = QrCodeData(
-      type: qrType,
-      vendorId: vendorId,
-    );
+    final qrData = QrCodeData(type: qrType, vendorId: vendorId);
 
-    await _db.into(_db.restaurantQrCodes).insert(
+    await _db
+        .into(_db.restaurantQrCodes)
+        .insert(
           RestaurantQrCodesCompanion.insert(
             id: id,
             vendorId: vendorId,
@@ -106,7 +105,10 @@ class QrCodeService {
 
   /// Generate QR data string only (no DB save)
   String generateTableQrData(
-      String vendorId, String tableId, String tableNumber) {
+    String vendorId,
+    String tableId,
+    String tableNumber,
+  ) {
     return QrCodeData(
       type: qrType,
       vendorId: vendorId,
@@ -131,7 +133,9 @@ class QrCodeService {
       tableNumber: tableNumber,
     );
 
-    await _db.into(_db.restaurantQrCodes).insert(
+    await _db
+        .into(_db.restaurantQrCodes)
+        .insert(
           RestaurantQrCodesCompanion.insert(
             id: id,
             vendorId: vendorId,
@@ -168,33 +172,39 @@ class QrCodeService {
 
   /// Get QR code by table ID
   Future<String?> getTableQrCode(String tableId) async {
-    final entity = await (_db.select(_db.restaurantQrCodes)
-          ..where((t) => t.tableId.equals(tableId) & t.isActive.equals(true)))
-        .getSingleOrNull();
+    final entity =
+        await (_db.select(_db.restaurantQrCodes)..where(
+              (t) => t.tableId.equals(tableId) & t.isActive.equals(true),
+            ))
+            .getSingleOrNull();
 
     return entity?.qrData;
   }
 
   /// Get restaurant QR code
   Future<String?> getRestaurantQrCode(String vendorId) async {
-    final entity = await (_db.select(_db.restaurantQrCodes)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.qrType.equals(QrCodeType.restaurant.value) &
-              t.isActive.equals(true)))
-        .getSingleOrNull();
+    final entity =
+        await (_db.select(_db.restaurantQrCodes)..where(
+              (t) =>
+                  t.vendorId.equals(vendorId) &
+                  t.qrType.equals(QrCodeType.restaurant.value) &
+                  t.isActive.equals(true),
+            ))
+            .getSingleOrNull();
 
     return entity?.qrData;
   }
 
   /// Deactivate QR code
   Future<void> deactivateQrCode(String qrCodeId) async {
-    await (_db.update(_db.restaurantQrCodes)
-          ..where((t) => t.id.equals(qrCodeId)))
-        .write(RestaurantQrCodesCompanion(
-      isActive: const Value(false),
-      updatedAt: Value(DateTime.now()),
-    ));
+    await (_db.update(
+      _db.restaurantQrCodes,
+    )..where((t) => t.id.equals(qrCodeId))).write(
+      RestaurantQrCodesCompanion(
+        isActive: const Value(false),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 
   /// Get all QR codes for vendor

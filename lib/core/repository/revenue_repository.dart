@@ -52,9 +52,10 @@ class RevenueRepository {
       // VALIDATION: Receipt must be linked to bill OR marked as advance
       if ((billId == null || billId.isEmpty) && !isAdvancePayment) {
         throw Exception(
-            'Receipt must be linked to a bill OR marked as advance payment. '
-            'Orphan receipts could cause ledger mismatches. '
-            'Set isAdvancePayment=true for advance receipts.');
+          'Receipt must be linked to a bill OR marked as advance payment. '
+          'Orphan receipts could cause ledger mismatches. '
+          'Set isAdvancePayment=true for advance receipts.',
+        );
       }
 
       final id = _uuid.v4();
@@ -122,23 +123,27 @@ class RevenueRepository {
   }
 
   Stream<List<Receipt>> watchReceipts(String userId) {
-    return (db.select(db.receipts)..where((t) => t.userId.equals(userId)))
-        .watch()
-        .map((rows) => rows
-            .map((r) => Receipt(
-                  id: r.id,
-                  ownerId: r.userId,
-                  customerId: r.customerId ?? '',
-                  customerName: r.customerName ?? '',
-                  amount: r.amount,
-                  paymentMode: r.paymentMode ?? 'Cash',
-                  notes: r.notes ?? '',
-                  date: r.date,
-                  createdAt: r.createdAt,
-                  isAdvancePayment: r.isAdvancePayment,
-                  billId: r.billId,
-                ))
-            .toList());
+    return (db.select(
+      db.receipts,
+    )..where((t) => t.userId.equals(userId))).watch().map(
+      (rows) => rows
+          .map(
+            (r) => Receipt(
+              id: r.id,
+              ownerId: r.userId,
+              customerId: r.customerId ?? '',
+              customerName: r.customerName ?? '',
+              amount: r.amount,
+              paymentMode: r.paymentMode ?? 'Cash',
+              notes: r.notes ?? '',
+              date: r.date,
+              createdAt: r.createdAt,
+              isAdvancePayment: r.isAdvancePayment,
+              billId: r.billId,
+            ),
+          )
+          .toList(),
+    );
   }
 
   /// Get total collections (receipts) for a given user and date range
@@ -148,12 +153,14 @@ class RevenueRepository {
     required DateTime to,
   }) async {
     return await errorHandler.runSafe<double>(() async {
-      final receipts = await (db.select(db.receipts)
-            ..where((t) =>
-                t.userId.equals(userId) &
-                t.date.isBiggerOrEqualValue(from) &
-                t.date.isSmallerOrEqualValue(to)))
-          .get();
+      final receipts =
+          await (db.select(db.receipts)..where(
+                (t) =>
+                    t.userId.equals(userId) &
+                    t.date.isBiggerOrEqualValue(from) &
+                    t.date.isSmallerOrEqualValue(to),
+              ))
+              .get();
 
       double total = 0;
       for (final r in receipts) {
@@ -232,35 +239,40 @@ class RevenueRepository {
   }
 
   Stream<List<ProformaInvoice>> watchProformas(String userId) {
-    return (db.select(db.proformas)..where((t) => t.userId.equals(userId)))
-        .watch()
-        .map((rows) => rows
-            .map((r) => ProformaInvoice(
-                  id: r.id,
-                  ownerId: r.userId,
-                  customerId: r.customerId ?? '',
-                  customerName: r.customerName ?? '',
-                  proformaNumber: r.proformaNumber ?? '',
-                  items: r.itemsJson != null
-                      ? (jsonDecode(r.itemsJson!) as List)
-                          .map((i) => ProformaItem.fromMap(i))
-                          .toList()
-                      : [],
-                  subtotal: r.subtotal,
-                  taxAmount: r.taxAmount,
-                  discountAmount: r.discountAmount,
-                  totalAmount: r.totalAmount,
-                  validUntil: r.validUntil ??
-                      DateTime.now().add(const Duration(days: 30)),
-                  status: ProformaStatus.values.firstWhere(
-                      (e) => e.name.toUpperCase() == r.status,
-                      orElse: () => ProformaStatus.draft),
-                  terms: r.terms ?? '',
-                  notes: r.notes ?? '',
-                  date: r.date,
-                  createdAt: r.createdAt,
-                ))
-            .toList());
+    return (db.select(
+      db.proformas,
+    )..where((t) => t.userId.equals(userId))).watch().map(
+      (rows) => rows
+          .map(
+            (r) => ProformaInvoice(
+              id: r.id,
+              ownerId: r.userId,
+              customerId: r.customerId ?? '',
+              customerName: r.customerName ?? '',
+              proformaNumber: r.proformaNumber ?? '',
+              items: r.itemsJson != null
+                  ? (jsonDecode(r.itemsJson!) as List)
+                        .map((i) => ProformaItem.fromMap(i))
+                        .toList()
+                  : [],
+              subtotal: r.subtotal,
+              taxAmount: r.taxAmount,
+              discountAmount: r.discountAmount,
+              totalAmount: r.totalAmount,
+              validUntil:
+                  r.validUntil ?? DateTime.now().add(const Duration(days: 30)),
+              status: ProformaStatus.values.firstWhere(
+                (e) => e.name.toUpperCase() == r.status,
+                orElse: () => ProformaStatus.draft,
+              ),
+              terms: r.terms ?? '',
+              notes: r.notes ?? '',
+              date: r.date,
+              createdAt: r.createdAt,
+            ),
+          )
+          .toList(),
+    );
   }
 
   // ==================== BOOKINGS ====================
@@ -329,33 +341,38 @@ class RevenueRepository {
   }
 
   Stream<List<BookingOrder>> watchBookings(String userId) {
-    return (db.select(db.bookings)..where((t) => t.userId.equals(userId)))
-        .watch()
-        .map((rows) => rows
-            .map((r) => BookingOrder(
-                  id: r.id,
-                  ownerId: r.userId,
-                  customerId: r.customerId ?? '',
-                  customerName: r.customerName ?? '',
-                  bookingNumber: r.bookingNumber ?? '',
-                  items: r.itemsJson != null
-                      ? (jsonDecode(r.itemsJson!) as List)
-                          .map((i) => BookingItem.fromMap(i))
-                          .toList()
-                      : [],
-                  totalAmount: r.totalAmount,
-                  advanceAmount: r.advanceAmount,
-                  balanceAmount: r.balanceAmount,
-                  deliveryDate: r.deliveryDate ?? DateTime.now(),
-                  deliveryAddress: r.deliveryAddress ?? '',
-                  status: BookingStatus.values.firstWhere(
-                      (e) => e.name.toUpperCase() == r.status,
-                      orElse: () => BookingStatus.pending),
-                  notes: r.notes ?? '',
-                  date: r.date,
-                  createdAt: r.createdAt,
-                ))
-            .toList());
+    return (db.select(
+      db.bookings,
+    )..where((t) => t.userId.equals(userId))).watch().map(
+      (rows) => rows
+          .map(
+            (r) => BookingOrder(
+              id: r.id,
+              ownerId: r.userId,
+              customerId: r.customerId ?? '',
+              customerName: r.customerName ?? '',
+              bookingNumber: r.bookingNumber ?? '',
+              items: r.itemsJson != null
+                  ? (jsonDecode(r.itemsJson!) as List)
+                        .map((i) => BookingItem.fromMap(i))
+                        .toList()
+                  : [],
+              totalAmount: r.totalAmount,
+              advanceAmount: r.advanceAmount,
+              balanceAmount: r.balanceAmount,
+              deliveryDate: r.deliveryDate ?? DateTime.now(),
+              deliveryAddress: r.deliveryAddress ?? '',
+              status: BookingStatus.values.firstWhere(
+                (e) => e.name.toUpperCase() == r.status,
+                orElse: () => BookingStatus.pending,
+              ),
+              notes: r.notes ?? '',
+              date: r.date,
+              createdAt: r.createdAt,
+            ),
+          )
+          .toList(),
+    );
   }
 
   /// Update booking status with AUTO-CONVERSION to Invoice
@@ -382,9 +399,9 @@ class RevenueRepository {
       // AUTO-CONVERSION: When marked as delivered, create invoice
       if (status == BookingStatus.delivered && autoConvertOnDelivery) {
         // Get the booking details
-        final booking = await (db.select(db.bookings)
-              ..where((t) => t.id.equals(bookingId)))
-            .getSingleOrNull();
+        final booking = await (db.select(
+          db.bookings,
+        )..where((t) => t.id.equals(bookingId))).getSingleOrNull();
 
         if (booking != null && booking.convertedBillId == null) {
           // Create Bill from booking
@@ -392,7 +409,9 @@ class RevenueRepository {
 
           final invoiceNumber = 'INV-${now.millisecondsSinceEpoch}';
 
-          await db.into(db.bills).insert(
+          await db
+              .into(db.bills)
+              .insert(
                 BillsCompanion.insert(
                   id: billId,
                   userId: userId,
@@ -403,9 +422,11 @@ class RevenueRepository {
                   subtotal: Value(booking.totalAmount),
                   grandTotal: Value(booking.totalAmount),
                   paidAmount: Value(booking.advanceAmount), // Already paid
-                  status: Value(booking.advanceAmount >= booking.totalAmount
-                      ? 'Paid'
-                      : 'Partial'),
+                  status: Value(
+                    booking.advanceAmount >= booking.totalAmount
+                        ? 'Paid'
+                        : 'Partial',
+                  ),
                   paymentMode: const Value('Cash'),
                   source: const Value('BOOKING_CONVERSION'),
                   itemsJson: booking.itemsJson ?? '[]',
@@ -415,12 +436,15 @@ class RevenueRepository {
               );
 
           // Update booking as CONVERTED with bill reference
-          await (db.update(db.bookings)..where((t) => t.id.equals(bookingId)))
-              .write(BookingsCompanion(
-            status: const Value('CONVERTED'),
-            convertedBillId: Value(billId),
-            isSynced: const Value(false),
-          ));
+          await (db.update(
+            db.bookings,
+          )..where((t) => t.id.equals(bookingId))).write(
+            BookingsCompanion(
+              status: const Value('CONVERTED'),
+              convertedBillId: Value(billId),
+              isSynced: const Value(false),
+            ),
+          );
 
           // Queue booking sync
           await syncManager.enqueue(
@@ -461,17 +485,21 @@ class RevenueRepository {
           );
 
           debugPrint(
-              '[BOOKING→INVOICE] Auto-converted booking $bookingId to bill $billId');
+            '[BOOKING→INVOICE] Auto-converted booking $bookingId to bill $billId',
+          );
           return; // Exit early - conversion done
         }
       }
 
       // Standard status update (no auto-conversion)
-      await (db.update(db.bookings)..where((t) => t.id.equals(bookingId)))
-          .write(BookingsCompanion(
-        status: Value(status.name.toUpperCase()),
-        isSynced: const Value(false),
-      ));
+      await (db.update(
+        db.bookings,
+      )..where((t) => t.id.equals(bookingId))).write(
+        BookingsCompanion(
+          status: Value(status.name.toUpperCase()),
+          isSynced: const Value(false),
+        ),
+      );
 
       await syncManager.enqueue(
         SyncQueueItem.create(
@@ -490,11 +518,12 @@ class RevenueRepository {
 
   /// Get a single booking by ID
   Future<RepositoryResult<BookingOrder?>> getBookingById(
-      String bookingId) async {
+    String bookingId,
+  ) async {
     return await errorHandler.runSafe<BookingOrder?>(() async {
-      final row = await (db.select(db.bookings)
-            ..where((t) => t.id.equals(bookingId)))
-          .getSingleOrNull();
+      final row = await (db.select(
+        db.bookings,
+      )..where((t) => t.id.equals(bookingId))).getSingleOrNull();
 
       if (row == null) return null;
 
@@ -506,8 +535,8 @@ class RevenueRepository {
         bookingNumber: row.bookingNumber ?? '',
         items: row.itemsJson != null
             ? (jsonDecode(row.itemsJson!) as List)
-                .map((i) => BookingItem.fromMap(i))
-                .toList()
+                  .map((i) => BookingItem.fromMap(i))
+                  .toList()
             : [],
         totalAmount: row.totalAmount,
         advanceAmount: row.advanceAmount,
@@ -515,8 +544,9 @@ class RevenueRepository {
         deliveryDate: row.deliveryDate ?? DateTime.now(),
         deliveryAddress: row.deliveryAddress ?? '',
         status: BookingStatus.values.firstWhere(
-            (e) => e.name.toUpperCase() == row.status,
-            orElse: () => BookingStatus.pending),
+          (e) => e.name.toUpperCase() == row.status,
+          orElse: () => BookingStatus.pending,
+        ),
         notes: row.notes ?? '',
         date: row.date,
         createdAt: row.createdAt,
@@ -526,11 +556,12 @@ class RevenueRepository {
 
   /// Get a single proforma by ID
   Future<RepositoryResult<ProformaInvoice?>> getProformaById(
-      String proformaId) async {
+    String proformaId,
+  ) async {
     return await errorHandler.runSafe<ProformaInvoice?>(() async {
-      final row = await (db.select(db.proformas)
-            ..where((t) => t.id.equals(proformaId)))
-          .getSingleOrNull();
+      final row = await (db.select(
+        db.proformas,
+      )..where((t) => t.id.equals(proformaId))).getSingleOrNull();
 
       if (row == null) return null;
 
@@ -542,8 +573,8 @@ class RevenueRepository {
         proformaNumber: row.proformaNumber ?? '',
         items: row.itemsJson != null
             ? (jsonDecode(row.itemsJson!) as List)
-                .map((i) => ProformaItem.fromMap(i))
-                .toList()
+                  .map((i) => ProformaItem.fromMap(i))
+                  .toList()
             : [],
         subtotal: row.subtotal,
         taxAmount: row.taxAmount,
@@ -552,8 +583,9 @@ class RevenueRepository {
         validUntil:
             row.validUntil ?? DateTime.now().add(const Duration(days: 30)),
         status: ProformaStatus.values.firstWhere(
-            (e) => e.name.toUpperCase() == row.status,
-            orElse: () => ProformaStatus.draft),
+          (e) => e.name.toUpperCase() == row.status,
+          orElse: () => ProformaStatus.draft,
+        ),
         terms: row.terms ?? '',
         notes: row.notes ?? '',
         date: row.date,
@@ -571,11 +603,14 @@ class RevenueRepository {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
 
-      await (db.update(db.proformas)..where((t) => t.id.equals(proformaId)))
-          .write(ProformasCompanion(
-        status: const Value('CONVERTED'),
-        isSynced: const Value(false),
-      ));
+      await (db.update(
+        db.proformas,
+      )..where((t) => t.id.equals(proformaId))).write(
+        ProformasCompanion(
+          status: const Value('CONVERTED'),
+          isSynced: const Value(false),
+        ),
+      );
 
       await syncManager.enqueue(
         SyncQueueItem.create(
@@ -622,8 +657,7 @@ class RevenueRepository {
       final creditNoteNumber = 'CN-${now.millisecondsSinceEpoch}';
 
       // Execute all updates in a transaction for atomicity
-      final collectedSyncOps =
-          await db.transaction<List<SyncQueueItem>>(() async {
+      final collectedSyncOps = await db.transaction<List<SyncQueueItem>>(() async {
         final syncOps = <SyncQueueItem>[];
 
         // 1. Create Return Inward Record
@@ -670,7 +704,8 @@ class RevenueRepository {
                 );
               } catch (e) {
                 debugPrint(
-                    '[RETURN_INWARD] Stock restoration failed for $productId: $e');
+                  '[RETURN_INWARD] Stock restoration failed for $productId: $e',
+                );
                 // Continue with other items - don't fail entire return
               }
             }
@@ -679,38 +714,44 @@ class RevenueRepository {
 
         // 3. CUSTOMER LEDGER UPDATE - Reduce receivable
         if (customerId.isNotEmpty) {
-          final customer = await (db.select(db.customers)
-                ..where((t) => t.id.equals(customerId)))
-              .getSingleOrNull();
+          final customer = await (db.select(
+            db.customers,
+          )..where((t) => t.id.equals(customerId))).getSingleOrNull();
 
           if (customer != null) {
             // Reduce totalBilled and totalDues by return amount
             final newTotalBilled = (customer.totalBilled - totalReturnAmount)
                 .clamp(0.0, double.infinity);
-            final newTotalDues = (customer.totalDues - totalReturnAmount)
-                .clamp(0.0, double.infinity);
+            final newTotalDues = (customer.totalDues - totalReturnAmount).clamp(
+              0.0,
+              double.infinity,
+            );
 
-            await (db.update(db.customers)
-                  ..where((t) => t.id.equals(customerId)))
-                .write(CustomersCompanion(
-              totalBilled: Value(newTotalBilled),
-              totalDues: Value(newTotalDues),
-              updatedAt: Value(now),
-              isSynced: const Value(false),
-            ));
+            await (db.update(
+              db.customers,
+            )..where((t) => t.id.equals(customerId))).write(
+              CustomersCompanion(
+                totalBilled: Value(newTotalBilled),
+                totalDues: Value(newTotalDues),
+                updatedAt: Value(now),
+                isSynced: const Value(false),
+              ),
+            );
 
             // Queue customer sync
-            syncOps.add(SyncQueueItem.create(
-              userId: userId,
-              operationType: SyncOperationType.update,
-              targetCollection: 'customers',
-              documentId: customerId,
-              payload: {
-                'totalBilled': newTotalBilled,
-                'totalDues': newTotalDues,
-                'updatedAt': now.toIso8601String(),
-              },
-            ));
+            syncOps.add(
+              SyncQueueItem.create(
+                userId: userId,
+                operationType: SyncOperationType.update,
+                targetCollection: 'customers',
+                documentId: customerId,
+                payload: {
+                  'totalBilled': newTotalBilled,
+                  'totalDues': newTotalDues,
+                  'updatedAt': now.toIso8601String(),
+                },
+              ),
+            );
           }
         }
 
@@ -855,63 +896,71 @@ class RevenueRepository {
   }
 
   Stream<List<ReturnInward>> watchReturns(String userId) {
-    return (db.select(db.returnInwards)..where((t) => t.userId.equals(userId)))
-        .watch()
-        .map((rows) => rows
-            .map((r) => ReturnInward(
-                  id: r.id,
-                  ownerId: r.userId,
-                  customerId: r.customerId ?? '',
-                  customerName: '', // Will be matched by UI or joined if needed
-                  billId: r.billId ?? '',
-                  billNumber: r.billNumber ?? '',
-                  items: r.itemsJson != null
-                      ? (jsonDecode(r.itemsJson!) as List)
-                          .map((i) => ReturnItem.fromMap(i))
-                          .toList()
-                      : [],
-                  totalReturnAmount: r.totalReturnAmount,
-                  reason: r.reason ?? '',
-                  creditNoteNumber: r.creditNoteNumber ?? '',
-                  status: ReturnStatus.values.firstWhere(
-                    (e) => e.name.toUpperCase() == r.status,
-                    orElse: () => ReturnStatus.pending,
-                  ),
-                  date: r.date,
-                  createdAt: r.createdAt,
-                ))
-            .toList());
+    return (db.select(
+      db.returnInwards,
+    )..where((t) => t.userId.equals(userId))).watch().map(
+      (rows) => rows
+          .map(
+            (r) => ReturnInward(
+              id: r.id,
+              ownerId: r.userId,
+              customerId: r.customerId ?? '',
+              customerName: '', // Will be matched by UI or joined if needed
+              billId: r.billId ?? '',
+              billNumber: r.billNumber ?? '',
+              items: r.itemsJson != null
+                  ? (jsonDecode(r.itemsJson!) as List)
+                        .map((i) => ReturnItem.fromMap(i))
+                        .toList()
+                  : [],
+              totalReturnAmount: r.totalReturnAmount,
+              reason: r.reason ?? '',
+              creditNoteNumber: r.creditNoteNumber ?? '',
+              status: ReturnStatus.values.firstWhere(
+                (e) => e.name.toUpperCase() == r.status,
+                orElse: () => ReturnStatus.pending,
+              ),
+              date: r.date,
+              createdAt: r.createdAt,
+            ),
+          )
+          .toList(),
+    );
   }
 
   Stream<List<DispatchNote>> watchDispatches(String userId) {
-    return (db.select(db.dispatches)..where((t) => t.userId.equals(userId)))
-        .watch()
-        .map((rows) => rows
-            .map((r) => DispatchNote(
-                  id: r.id,
-                  ownerId: r.userId,
-                  customerId: r.customerId ?? '',
-                  customerName: '', // Will be matched by UI or joined if needed
-                  billId: r.billId ?? '',
-                  billNumber: r.billNumber ?? '',
-                  dispatchNumber: r.dispatchNumber ?? '',
-                  items: r.itemsJson != null
-                      ? (jsonDecode(r.itemsJson!) as List)
-                          .map((i) => DispatchItem.fromMap(i))
-                          .toList()
-                      : [],
-                  vehicleNumber: r.vehicleNumber ?? '',
-                  driverName: r.driverName ?? '',
-                  driverPhone: r.driverPhone ?? '',
-                  deliveryAddress: r.deliveryAddress ?? '',
-                  status: DispatchStatus.values.firstWhere(
-                    (e) => e.name.toUpperCase() == r.status,
-                    orElse: () => DispatchStatus.pending,
-                  ),
-                  notes: r.notes ?? '',
-                  date: r.date,
-                  createdAt: r.createdAt,
-                ))
-            .toList());
+    return (db.select(
+      db.dispatches,
+    )..where((t) => t.userId.equals(userId))).watch().map(
+      (rows) => rows
+          .map(
+            (r) => DispatchNote(
+              id: r.id,
+              ownerId: r.userId,
+              customerId: r.customerId ?? '',
+              customerName: '', // Will be matched by UI or joined if needed
+              billId: r.billId ?? '',
+              billNumber: r.billNumber ?? '',
+              dispatchNumber: r.dispatchNumber ?? '',
+              items: r.itemsJson != null
+                  ? (jsonDecode(r.itemsJson!) as List)
+                        .map((i) => DispatchItem.fromMap(i))
+                        .toList()
+                  : [],
+              vehicleNumber: r.vehicleNumber ?? '',
+              driverName: r.driverName ?? '',
+              driverPhone: r.driverPhone ?? '',
+              deliveryAddress: r.deliveryAddress ?? '',
+              status: DispatchStatus.values.firstWhere(
+                (e) => e.name.toUpperCase() == r.status,
+                orElse: () => DispatchStatus.pending,
+              ),
+              notes: r.notes ?? '',
+              date: r.date,
+              createdAt: r.createdAt,
+            ),
+          )
+          .toList(),
+    );
   }
 }

@@ -68,10 +68,7 @@ class PharmacyFormFactory extends ProductFormFactory {
   }) {
     // We will implement the actual widget in a separate file to keep this clean
     // For now, returning a placeholder callback mechanism
-    return _PharmacyFields(
-      initialProduct: product,
-      onChanged: onDataChanged,
-    );
+    return _PharmacyFields(initialProduct: product, onChanged: onDataChanged);
   }
 
   @override
@@ -139,10 +136,7 @@ class ServiceFormFactory extends ProductFormFactory {
     dynamic product,
     required Function(Map<String, dynamic> data) onDataChanged,
   }) {
-    return _ServiceFields(
-      initialProduct: product,
-      onChanged: onDataChanged,
-    );
+    return _ServiceFields(initialProduct: product, onChanged: onDataChanged);
   }
 
   @override
@@ -199,9 +193,14 @@ class _PharmacyFieldsState extends State<_PharmacyFields> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        const Text('Pharmacy Details',
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue)),
+        const Text(
+          'Pharmacy Details',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: _batchCtrl,
@@ -255,15 +254,18 @@ class _ElectronicsFields extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        const Text('Electronics Tracking',
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange)),
+        const Text(
+          'Electronics Tracking',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.orange,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           onChanged: (val) => onChanged({
-            'imeis': [val]
+            'imeis': [val],
           }), // Simplified for single add
           decoration: const InputDecoration(
             labelText: 'IMEI / Serial Number (Optional)',

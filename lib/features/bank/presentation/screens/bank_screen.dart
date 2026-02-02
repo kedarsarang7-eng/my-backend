@@ -63,28 +63,27 @@ class _BankScreenState extends ConsumerState<BankScreen> {
                   ),
                 )
               : accounts.isEmpty
-                  ? EmptyStateWidget(
-                      icon: Icons.account_balance_wallet_outlined,
-                      title: 'No Accounts Linked',
-                      description:
-                          'Add your primary business account to start tracking cash flow.',
-                      buttonLabel: 'Add First Account',
-                      onButtonPressed: () => _showAddBankDialog(context),
-                    )
-                  : GridView.builder(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 1.6, // Credit card ratio
-                        crossAxisSpacing: 24,
-                        mainAxisSpacing: 24,
-                      ),
-                      itemCount: accounts.length,
-                      itemBuilder: (context, index) {
-                        return _buildBankCard(context, accounts[index]);
-                      },
-                    ),
+              ? EmptyStateWidget(
+                  icon: Icons.account_balance_wallet_outlined,
+                  title: 'No Accounts Linked',
+                  description:
+                      'Add your primary business account to start tracking cash flow.',
+                  buttonLabel: 'Add First Account',
+                  onButtonPressed: () => _showAddBankDialog(context),
+                )
+              : GridView.builder(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.6, // Credit card ratio
+                    crossAxisSpacing: 24,
+                    mainAxisSpacing: 24,
+                  ),
+                  itemCount: accounts.length,
+                  itemBuilder: (context, index) {
+                    return _buildBankCard(context, accounts[index]);
+                  },
+                ),
         );
       },
     );
@@ -221,8 +220,9 @@ class _BankScreenState extends ConsumerState<BankScreen> {
                           "Available Balance",
                           style: TextStyle(
                             fontSize: 11,
-                            color:
-                                FuturisticColors.textSecondary.withOpacity(0.8),
+                            color: FuturisticColors.textSecondary.withOpacity(
+                              0.8,
+                            ),
                             letterSpacing: 1.0,
                           ),
                         ),
@@ -254,10 +254,13 @@ class _BankScreenState extends ConsumerState<BankScreen> {
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color:
-                                FuturisticColors.premiumBlue.withOpacity(0.15),
+                            color: FuturisticColors.premiumBlue.withOpacity(
+                              0.15,
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -345,8 +348,10 @@ class _BankScreenState extends ConsumerState<BankScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close,
-                        color: FuturisticColors.textSecondary),
+                    icon: Icon(
+                      Icons.close,
+                      color: FuturisticColors.textSecondary,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],

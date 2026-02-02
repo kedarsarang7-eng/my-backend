@@ -353,9 +353,7 @@ class _ExchangeListScreenState extends State<ExchangeListScreen>
           const SizedBox(height: 8),
           Text(
             'Tap + to create a new exchange',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.black45,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.black45),
           ),
         ],
       ),
@@ -632,10 +630,7 @@ class _ExchangeListScreenState extends State<ExchangeListScreen>
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text(
           'New Exchange',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -644,9 +639,7 @@ class _ExchangeListScreenState extends State<ExchangeListScreen>
   void _createNewExchange() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const CreateExchangeScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const CreateExchangeScreen()),
     ).then((_) => _loadStats());
   }
 

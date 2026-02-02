@@ -54,18 +54,22 @@ class CalibrationReminderService {
   }) async {
     final nextDue = calibrationDate.add(Duration(days: intervalDays));
 
-    await (_db.update(_db.dispensers)..where((d) => d.id.equals(dispenserId)))
-        .write(DispensersCompanion(
-      lastCalibrationDate: Value(calibrationDate),
-      nextCalibrationDate: Value(nextDue),
-      calibrationIntervalDays: Value(intervalDays),
-      calibrationCertificateNumber: Value(certificateNumber),
-      updatedAt: Value(DateTime.now()),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.dispensers,
+    )..where((d) => d.id.equals(dispenserId))).write(
+      DispensersCompanion(
+        lastCalibrationDate: Value(calibrationDate),
+        nextCalibrationDate: Value(nextDue),
+        calibrationIntervalDays: Value(intervalDays),
+        calibrationCertificateNumber: Value(certificateNumber),
+        updatedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
 
     debugPrint(
-        'CalibrationReminderService: Updated calibration for dispenser $dispenserId, next due: $nextDue');
+      'CalibrationReminderService: Updated calibration for dispenser $dispenserId, next due: $nextDue',
+    );
   }
 
   /// Set initial calibration for a new dispenser
@@ -91,9 +95,9 @@ class CalibrationReminderService {
     final sevenDaysFromNow = now.add(const Duration(days: 7));
     final thirtyDaysFromNow = now.add(const Duration(days: 30));
 
-    final allDispensers = await (_db.select(_db.dispensers)
-          ..where((d) => d.ownerId.equals(ownerId) & d.isActive.equals(true)))
-        .get();
+    final allDispensers = await (_db.select(
+      _db.dispensers,
+    )..where((d) => d.ownerId.equals(ownerId) & d.isActive.equals(true))).get();
 
     int overdue = 0;
     int dueWithin7Days = 0;
@@ -135,7 +139,8 @@ class CalibrationReminderService {
     return (_db.select(_db.dispensers)
           ..where((d) => d.ownerId.equals(ownerId) & d.isActive.equals(true))
           ..where(
-              (d) => d.nextCalibrationDate.isSmallerOrEqualValue(cutoffDate)))
+            (d) => d.nextCalibrationDate.isSmallerOrEqualValue(cutoffDate),
+          ))
         .watch();
   }
 }

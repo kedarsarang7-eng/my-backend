@@ -10,11 +10,7 @@ class StockBadge extends StatelessWidget {
   final StockStatus status;
   final double? stockQty;
 
-  const StockBadge({
-    required this.status,
-    this.stockQty,
-    super.key,
-  });
+  const StockBadge({required this.status, this.stockQty, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +27,9 @@ class StockBadge extends StatelessWidget {
         icon = Icons.block;
         break;
       case StockStatus.lowStock:
-        label =
-            stockQty != null ? 'Only ${stockQty!.toInt()} left' : 'LOW STOCK';
+        label = stockQty != null
+            ? 'Only ${stockQty!.toInt()} left'
+            : 'LOW STOCK';
         bgColor = const Color(0x30FFAB00);
         textColor = const Color(0xFFFFAB00);
         icon = Icons.warning_amber_rounded;
@@ -270,7 +267,8 @@ class _VendorCatalogScreenState extends State<VendorCatalogScreen> {
     if (_searchQuery.isNotEmpty) {
       filtered = filtered
           .where(
-              (p) => p.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+            (p) => p.name.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
           .toList();
     }
 
@@ -278,8 +276,9 @@ class _VendorCatalogScreenState extends State<VendorCatalogScreen> {
     if (_stockFilter == 'inStock') {
       filtered = filtered.where((p) => p.isAvailable).toList();
     } else if (_stockFilter == 'lowStock') {
-      filtered =
-          filtered.where((p) => p.stockStatus == StockStatus.lowStock).toList();
+      filtered = filtered
+          .where((p) => p.stockStatus == StockStatus.lowStock)
+          .toList();
     }
 
     setState(() => _filteredItems = filtered);
@@ -384,14 +383,19 @@ class _VendorCatalogScreenState extends State<VendorCatalogScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline,
-                        color: Colors.orange[300], size: 18),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.orange[300],
+                      size: 18,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Stock may change before vendor confirmation.',
-                        style:
-                            TextStyle(color: Colors.orange[200], fontSize: 12),
+                        style: TextStyle(
+                          color: Colors.orange[200],
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ],
@@ -459,12 +463,14 @@ class _VendorCatalogScreenState extends State<VendorCatalogScreen> {
         requestedQty: items[index].requestedQty + qty,
       );
     } else {
-      items.add(CustomerItemRequestItem(
-        productId: item.itemId,
-        productName: item.name,
-        requestedQty: qty,
-        unit: item.unit,
-      ));
+      items.add(
+        CustomerItemRequestItem(
+          productId: item.itemId,
+          productName: item.name,
+          requestedQty: qty,
+          unit: item.unit,
+        ),
+      );
     }
 
     // Save draft
@@ -584,40 +590,40 @@ class _VendorCatalogScreenState extends State<VendorCatalogScreen> {
                     child: CircularProgressIndicator(color: Colors.cyan),
                   )
                 : _filteredItems.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.inventory_2_outlined,
-                              size: 64,
-                              color: Colors.white.withOpacity(0.2),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No products found',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.inventory_2_outlined,
+                          size: 64,
+                          color: Colors.white.withOpacity(0.2),
                         ),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: _refreshSnapshot,
-                        color: Colors.cyan,
-                        child: ListView.builder(
-                          itemCount: _filteredItems.length,
-                          itemBuilder: (ctx, i) {
-                            final item = _filteredItems[i];
-                            return SnapshotProductCard(
-                              item: item,
-                              onAdd: () => _showAddToListDialog(item),
-                            );
-                          },
+                        const SizedBox(height: 16),
+                        Text(
+                          'No products found',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _refreshSnapshot,
+                    color: Colors.cyan,
+                    child: ListView.builder(
+                      itemCount: _filteredItems.length,
+                      itemBuilder: (ctx, i) {
+                        final item = _filteredItems[i];
+                        return SnapshotProductCard(
+                          item: item,
+                          onAdd: () => _showAddToListDialog(item),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

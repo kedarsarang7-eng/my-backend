@@ -39,7 +39,10 @@ class ElectronicsStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildSerialField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'IMEI/Serial',
       value: item.serialNo ?? '',
@@ -51,7 +54,10 @@ class ElectronicsStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildWarrantyField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Warranty (Months)',
       value: item.warrantyMonths?.toString() ?? '',

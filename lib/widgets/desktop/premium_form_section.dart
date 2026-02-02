@@ -39,10 +39,7 @@ class PremiumFormSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: FuturisticColors.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: color.withOpacity(0.1), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +122,8 @@ class PremiumFormSection extends StatelessWidget {
           final child = entry.value;
           return Padding(
             padding: EdgeInsets.only(
-                bottom: index < children.length - 1 ? rowSpacing : 0),
+              bottom: index < children.length - 1 ? rowSpacing : 0,
+            ),
             child: child,
           );
         }).toList(),
@@ -147,10 +145,12 @@ class PremiumFormSection extends StatelessWidget {
           rowChildren.add(SizedBox(width: columnSpacing));
         }
       }
-      rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: rowChildren,
-      ));
+      rows.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: rowChildren,
+        ),
+      );
       if (i + columns < children.length) {
         rows.add(SizedBox(height: rowSpacing));
       }
@@ -236,10 +236,7 @@ class _PremiumTextFieldState extends State<PremiumTextField> {
             onChanged: widget.onChanged,
             onTap: widget.onTap,
             readOnly: widget.readOnly,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.white),
             decoration: InputDecoration(
               hintText: widget.hint,
               hintStyle: TextStyle(
@@ -393,10 +390,7 @@ class _PremiumDropdownFieldState<T> extends State<PremiumDropdownField<T>> {
                           : null,
                       isExpanded: true,
                       dropdownColor: FuturisticColors.surface,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
                       icon: Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: FuturisticColors.textSecondary,

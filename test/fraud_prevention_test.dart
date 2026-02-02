@@ -82,11 +82,23 @@ void main() {
 
       // 1. Create Chain A -> B -> C
       await auditRepo.logAction(
-          userId: userId, targetTableName: 't', recordId: '1', action: 'A');
+        userId: userId,
+        targetTableName: 't',
+        recordId: '1',
+        action: 'A',
+      );
       await auditRepo.logAction(
-          userId: userId, targetTableName: 't', recordId: '1', action: 'B');
+        userId: userId,
+        targetTableName: 't',
+        recordId: '1',
+        action: 'B',
+      );
       await auditRepo.logAction(
-          userId: userId, targetTableName: 't', recordId: '1', action: 'C');
+        userId: userId,
+        targetTableName: 't',
+        recordId: '1',
+        action: 'C',
+      );
 
       // 2. Initial verify
       expect((await auditRepo.verifyChain(userId)).data, isTrue);
@@ -113,29 +125,34 @@ void main() {
 
       // 1. Create PAID Bill information
       final bill = Bill(
-          id: billId,
-          ownerId: userId,
-          customerId: 'cust_1',
-          date: DateTime.now(),
-          items: [],
-          grandTotal: 100,
-          paidAmount: 100, // Fully Paid
-          status: 'Paid');
+        id: billId,
+        ownerId: userId,
+        customerId: 'cust_1',
+        date: DateTime.now(),
+        items: [],
+        grandTotal: 100,
+        paidAmount: 100, // Fully Paid
+        status: 'Paid',
+      );
 
       // Manual DB Insert
-      await database.into(database.bills).insert(BillsCompanion.insert(
-            id: billId,
-            userId: userId,
-            invoiceNumber: 'INV-1',
-            billDate: DateTime.now(),
-            grandTotal: const Value(100),
-            paidAmount: const Value(100),
-            status: const Value('Paid'),
-            itemsJson: '[]',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            printCount: const Value(0),
-          ));
+      await database
+          .into(database.bills)
+          .insert(
+            BillsCompanion.insert(
+              id: billId,
+              userId: userId,
+              invoiceNumber: 'INV-1',
+              billDate: DateTime.now(),
+              grandTotal: const Value(100),
+              paidAmount: const Value(100),
+              status: const Value('Paid'),
+              itemsJson: '[]',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+              printCount: const Value(0),
+            ),
+          );
 
       // 2. Try to Update
       // We need to pass a Bill object.
@@ -155,55 +172,69 @@ void main() {
       final billId = 'bill_2';
 
       // 1. Create PAID Bill
-      await database.into(database.bills).insert(BillsCompanion.insert(
-            id: billId,
-            userId: userId,
-            invoiceNumber: 'INV-2',
-            billDate: DateTime.now(),
-            grandTotal: const Value(100),
-            paidAmount: const Value(100),
-            status: const Value('Paid'),
-            itemsJson: '[]',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ));
+      await database
+          .into(database.bills)
+          .insert(
+            BillsCompanion.insert(
+              id: billId,
+              userId: userId,
+              invoiceNumber: 'INV-2',
+              billDate: DateTime.now(),
+              grandTotal: const Value(100),
+              paidAmount: const Value(100),
+              status: const Value('Paid'),
+              itemsJson: '[]',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       final bill = Bill(
-          id: billId,
-          ownerId: userId,
-          customerId: 'cust_1',
-          date: DateTime.now(),
-          items: [
-            BillItem(
-                productId: 'p1',
-                productName: 'Item',
-                qty: 1,
-                price: 100,
-                cgst: 0,
-                sgst: 0,
-                igst: 0)
-          ],
-          grandTotal: 100,
-          subtotal: 100,
-          paidAmount: 100,
-          status: 'Paid');
+        id: billId,
+        ownerId: userId,
+        customerId: 'cust_1',
+        date: DateTime.now(),
+        items: [
+          BillItem(
+            productId: 'p1',
+            productName: 'Item',
+            qty: 1,
+            price: 100,
+            cgst: 0,
+            sgst: 0,
+            igst: 0,
+          ),
+        ],
+        grandTotal: 100,
+        subtotal: 100,
+        paidAmount: 100,
+        status: 'Paid',
+      );
 
       // Update with an item that costs 50
-      final newBill =
-          bill.copyWith(grandTotal: 50, subtotal: 50, paidAmount: 50, items: [
-        BillItem(
+      final newBill = bill.copyWith(
+        grandTotal: 50,
+        subtotal: 50,
+        paidAmount: 50,
+        items: [
+          BillItem(
             productId: 'p1',
             productName: 'Item',
             qty: 1,
             price: 50,
             cgst: 0,
             sgst: 0,
-            igst: 0)
-      ]);
+            igst: 0,
+          ),
+        ],
+      );
 
       // 2. Update WITH Auth
-      await billsRepo.updateBill(newBill,
-          approverId: 'manager_1', editReason: 'Customer refund');
+      await billsRepo.updateBill(
+        newBill,
+        approverId: 'manager_1',
+        editReason: 'Customer refund',
+      );
 
       // 3. Verify Update Happened
       final storedBill = await billsRepo.getById(billId);

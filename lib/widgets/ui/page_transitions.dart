@@ -19,27 +19,27 @@ class FadeSlidePageRoute<T> extends PageRouteBuilder<T> {
     Duration duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeOutCubic,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: curve,
-            );
+         pageBuilder: (context, animation, secondaryAnimation) => page,
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           final curvedAnimation = CurvedAnimation(
+             parent: animation,
+             curve: curve,
+           );
 
-            return FadeTransition(
-              opacity: curvedAnimation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.1, 0),
-                  end: Offset.zero,
-                ).animate(curvedAnimation),
-                child: child,
-              ),
-            );
-          },
-          transitionDuration: duration,
-          reverseTransitionDuration: duration,
-        );
+           return FadeTransition(
+             opacity: curvedAnimation,
+             child: SlideTransition(
+               position: Tween<Offset>(
+                 begin: const Offset(0.1, 0),
+                 end: Offset.zero,
+               ).animate(curvedAnimation),
+               child: child,
+             ),
+           );
+         },
+         transitionDuration: duration,
+         reverseTransitionDuration: duration,
+       );
 }
 
 /// Scale transition for modals and dialogs
@@ -50,57 +50,49 @@ class ScalePageRoute<T> extends PageRouteBuilder<T> {
     required this.page,
     Duration duration = const Duration(milliseconds: 250),
   }) : super(
-          opaque: false,
-          barrierDismissible: true,
-          barrierColor: Colors.black54,
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final curved = CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOutBack,
-            );
+         opaque: false,
+         barrierDismissible: true,
+         barrierColor: Colors.black54,
+         pageBuilder: (context, animation, secondaryAnimation) => page,
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           final curved = CurvedAnimation(
+             parent: animation,
+             curve: Curves.easeOutBack,
+           );
 
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.9, end: 1.0).animate(curved),
-              child: FadeTransition(
-                opacity: curved,
-                child: child,
-              ),
-            );
-          },
-          transitionDuration: duration,
-        );
+           return ScaleTransition(
+             scale: Tween<double>(begin: 0.9, end: 1.0).animate(curved),
+             child: FadeTransition(opacity: curved, child: child),
+           );
+         },
+         transitionDuration: duration,
+       );
 }
 
 /// Navigation helper with modern transitions
 class FuturisticNavigator {
   /// Push with fade+slide transition
   static Future<T?> push<T>(BuildContext context, Widget page) {
-    return Navigator.of(context).push(
-      FadeSlidePageRoute<T>(page: page),
-    );
+    return Navigator.of(context).push(FadeSlidePageRoute<T>(page: page));
   }
 
   /// Push replacement with fade+slide transition
   static Future<T?> pushReplacement<T, TO>(BuildContext context, Widget page) {
-    return Navigator.of(context).pushReplacement(
-      FadeSlidePageRoute<T>(page: page),
-    );
+    return Navigator.of(
+      context,
+    ).pushReplacement(FadeSlidePageRoute<T>(page: page));
   }
 
   /// Show modal with scale transition
   static Future<T?> showModal<T>(BuildContext context, Widget page) {
-    return Navigator.of(context).push(
-      ScalePageRoute<T>(page: page),
-    );
+    return Navigator.of(context).push(ScalePageRoute<T>(page: page));
   }
 
   /// Push and remove all with fade transition
   static Future<T?> pushAndRemoveAll<T>(BuildContext context, Widget page) {
-    return Navigator.of(context).pushAndRemoveUntil(
-      FadeSlidePageRoute<T>(page: page),
-      (route) => false,
-    );
+    return Navigator.of(
+      context,
+    ).pushAndRemoveUntil(FadeSlidePageRoute<T>(page: page), (route) => false);
   }
 }
 
@@ -158,11 +150,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
               begin: Alignment(_animation.value - 1, 0),
               end: Alignment(_animation.value, 0),
               colors: isDark
-                  ? [
-                      Colors.white10,
-                      Colors.white24,
-                      Colors.white10,
-                    ]
+                  ? [Colors.white10, Colors.white24, Colors.white10]
                   : [
                       Colors.grey.shade200,
                       Colors.grey.shade100,

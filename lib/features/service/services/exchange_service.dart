@@ -14,8 +14,8 @@ class ExchangeService {
   final IMEISerialRepository _imeiSerialRepository;
 
   ExchangeService(AppDatabase db)
-      : _exchangeRepository = ExchangeRepository(db),
-        _imeiSerialRepository = IMEISerialRepository(db);
+    : _exchangeRepository = ExchangeRepository(db),
+      _imeiSerialRepository = IMEISerialRepository(db);
 
   /// Create a new exchange
   Future<Exchange> createExchange({
@@ -125,22 +125,24 @@ class ExchangeService {
       if (existingIMEI == null) {
         // Create new IMEI record for acquired device
         final now = DateTime.now();
-        await _imeiSerialRepository.createIMEISerial(IMEISerial(
-          id: '',
-          userId: userId,
-          productId: '',
-          imeiOrSerial: exchange.oldImeiSerial!,
-          type: IMEISerialType.serial,
-          status: IMEISerialStatus.inStock, // Now we own it
-          purchasePrice: exchange.exchangeValue,
-          purchaseDate: now,
-          productName: exchange.oldDeviceName,
-          brand: exchange.oldDeviceBrand,
-          model: exchange.oldDeviceModel,
-          notes: 'Acquired via exchange ${exchange.exchangeNumber}',
-          createdAt: now,
-          updatedAt: now,
-        ));
+        await _imeiSerialRepository.createIMEISerial(
+          IMEISerial(
+            id: '',
+            userId: userId,
+            productId: '',
+            imeiOrSerial: exchange.oldImeiSerial!,
+            type: IMEISerialType.serial,
+            status: IMEISerialStatus.inStock, // Now we own it
+            purchasePrice: exchange.exchangeValue,
+            purchaseDate: now,
+            productName: exchange.oldDeviceName,
+            brand: exchange.oldDeviceBrand,
+            model: exchange.oldDeviceModel,
+            notes: 'Acquired via exchange ${exchange.exchangeNumber}',
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
       }
     }
   }

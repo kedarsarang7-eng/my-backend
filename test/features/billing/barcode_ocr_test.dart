@@ -42,8 +42,10 @@ void main() {
       final result = HeuristicParser.parse(sampleText, 'grocery');
       expect(result['detectedPrice'], 150.0);
       // Heuristic picks first significant line, which is Store Name here. Acceptable for V1.
-      expect(result['detectedName'],
-          anyOf(contains('Colgate'), contains('SUPER MARKET')));
+      expect(
+        result['detectedName'],
+        anyOf(contains('Colgate'), contains('SUPER MARKET')),
+      );
     });
 
     test('Pharmacy extraction (Batch/Expiry)', () {

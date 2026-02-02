@@ -130,7 +130,10 @@ class SakuraPainter extends CustomPainter {
       // Draw a simple petal shape (oval)
       canvas.drawOval(
         Rect.fromCenter(
-            center: Offset.zero, width: petal.size, height: petal.size * 0.6),
+          center: Offset.zero,
+          width: petal.size,
+          height: petal.size * 0.6,
+        ),
         paint,
       );
 

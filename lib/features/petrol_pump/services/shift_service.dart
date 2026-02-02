@@ -88,17 +88,18 @@ class ShiftService {
     // Sync Queue: Shift Open
     print('DEBUG: Enqueue Shift Sync');
     await _enqueueSync(
-        operationType: SyncOperationType.create,
-        targetCollection: 'shifts',
-        documentId: newShiftId,
-        payload: {
-          'shiftId': newShiftId,
-          'shiftName': name,
-          'startTime': startTime.toIso8601String(),
-          'assignedEmployeeIds': jsonEncode(employeeIds),
-          'ownerId': _ownerId,
-          'status': ShiftStatus.open.name,
-        });
+      operationType: SyncOperationType.create,
+      targetCollection: 'shifts',
+      documentId: newShiftId,
+      payload: {
+        'shiftId': newShiftId,
+        'shiftName': name,
+        'startTime': startTime.toIso8601String(),
+        'assignedEmployeeIds': jsonEncode(employeeIds),
+        'ownerId': _ownerId,
+        'status': ShiftStatus.open.name,
+      },
+    );
 
     // 3. Reset all nozzles for new shift (carry over closing reading to opening)
     print('DEBUG: Resetting Nozzles');
@@ -131,31 +132,37 @@ class ShiftService {
 
   /// Assign a nozzle to a staff member for the current open shift
   Future<void> assignNozzleToStaff(
-      String shiftId, String staffId, String nozzleId) async {
+    String shiftId,
+    String staffId,
+    String nozzleId,
+  ) async {
     final allocationId = _generateId();
 
     // Revoke previous assignment for this nozzle in this shift if any
-    await (_db.update(_db.staffNozzleAssignments)
-          ..where((t) =>
+    await (_db.update(_db.staffNozzleAssignments)..where(
+          (t) =>
               t.shiftId.equals(shiftId) &
               t.nozzleId.equals(nozzleId) &
-              t.revokedAt.isNull()))
-        .write(StaffNozzleAssignmentsCompanion(
-      revokedAt: Value(DateTime.now()),
-    ));
+              t.revokedAt.isNull(),
+        ))
+        .write(
+          StaffNozzleAssignmentsCompanion(revokedAt: Value(DateTime.now())),
+        );
 
     // Create new assignment
     await _db
         .into(_db.staffNozzleAssignments)
-        .insert(StaffNozzleAssignmentsCompanion(
-          id: Value(allocationId),
-          shiftId: Value(shiftId),
-          staffId: Value(staffId),
-          nozzleId: Value(nozzleId),
-          assignedAt: Value(DateTime.now()),
-          assignedBy: Value(_ownerId),
-          createdAt: Value(DateTime.now()),
-        ));
+        .insert(
+          StaffNozzleAssignmentsCompanion(
+            id: Value(allocationId),
+            shiftId: Value(shiftId),
+            staffId: Value(staffId),
+            nozzleId: Value(nozzleId),
+            assignedAt: Value(DateTime.now()),
+            assignedBy: Value(_ownerId),
+            createdAt: Value(DateTime.now()),
+          ),
+        );
 
     // Audit
     await _auditRepo.logAction(
@@ -222,44 +229,48 @@ class ShiftService {
     final endTime = DateTime.now();
 
     // 5. Update shift with cash declaration
-    await (_db.update(_db.shifts)..where((t) => t.shiftId.equals(shiftId)))
-        .write(ShiftsCompanion(
-      endTime: Value(endTime),
-      status: Value(ShiftStatus.closed.name),
-      totalSaleAmount: Value(reconciliation.totalSalesAmount),
-      totalLitresSold: Value(reconciliation.billedLitres),
-      cashCollected: Value(reconciliation.cashAmount),
-      cashDeclared: Value(cashDeclared),
-      cashVariance: Value(cashVariance),
-      closedBy: Value(closedBy),
-      notes: Value(notes),
-      reconciliationJson: Value(jsonEncode(reconciliation.toMap())),
-      wasForced: Value(forceClose),
-      updatedAt: Value(endTime),
-      isSynced: const Value(false),
-    ));
+    await (_db.update(
+      _db.shifts,
+    )..where((t) => t.shiftId.equals(shiftId))).write(
+      ShiftsCompanion(
+        endTime: Value(endTime),
+        status: Value(ShiftStatus.closed.name),
+        totalSaleAmount: Value(reconciliation.totalSalesAmount),
+        totalLitresSold: Value(reconciliation.billedLitres),
+        cashCollected: Value(reconciliation.cashAmount),
+        cashDeclared: Value(cashDeclared),
+        cashVariance: Value(cashVariance),
+        closedBy: Value(closedBy),
+        notes: Value(notes),
+        reconciliationJson: Value(jsonEncode(reconciliation.toMap())),
+        wasForced: Value(forceClose),
+        updatedAt: Value(endTime),
+        isSynced: const Value(false),
+      ),
+    );
 
     // 5a. Create Staff Settlements
     await createStaffSettlements(shiftId);
 
     // Sync Queue: Shift Close
     await _enqueueSync(
-        operationType: SyncOperationType.update,
-        targetCollection: 'shifts',
-        documentId: shiftId,
-        payload: {
-          'endTime': endTime.toIso8601String(),
-          'status': ShiftStatus.closed.name,
-          'totalSaleAmount': reconciliation.totalSalesAmount,
-          'totalLitresSold': reconciliation.billedLitres,
-          'cashCollected': reconciliation.cashAmount,
-          'cashDeclared': cashDeclared,
-          'cashVariance': cashVariance,
-          'closedBy': closedBy,
-          'notes': notes,
-          'reconciliationJson': jsonEncode(reconciliation.toMap()),
-          'wasForced': forceClose,
-        });
+      operationType: SyncOperationType.update,
+      targetCollection: 'shifts',
+      documentId: shiftId,
+      payload: {
+        'endTime': endTime.toIso8601String(),
+        'status': ShiftStatus.closed.name,
+        'totalSaleAmount': reconciliation.totalSalesAmount,
+        'totalLitresSold': reconciliation.billedLitres,
+        'cashCollected': reconciliation.cashAmount,
+        'cashDeclared': cashDeclared,
+        'cashVariance': cashVariance,
+        'closedBy': closedBy,
+        'notes': notes,
+        'reconciliationJson': jsonEncode(reconciliation.toMap()),
+        'wasForced': forceClose,
+      },
+    );
 
     // 6. Audit log: Shift closed
     try {
@@ -281,8 +292,9 @@ class ShiftService {
     required String documentId,
     required Map<String, dynamic> payload,
   }) async {
-    final safeDocId =
-        documentId.length >= 4 ? documentId.substring(0, 4) : documentId;
+    final safeDocId = documentId.length >= 4
+        ? documentId.substring(0, 4)
+        : documentId;
     final opId = '${_generateId()}_$safeDocId';
 
     final syncItem = SyncQueueCompanion(
@@ -305,9 +317,9 @@ class ShiftService {
   /// Calculate shift sales from nozzle readings and bills
   Future<ShiftReconciliation> calculateShiftSales(String shiftId) async {
     // 1. Get all nozzles linked to this shift
-    final nozzlesList = await (_db.select(_db.nozzles)
-          ..where((t) => t.linkedShiftId.equals(shiftId)))
-        .get();
+    final nozzlesList = await (_db.select(
+      _db.nozzles,
+    )..where((t) => t.linkedShiftId.equals(shiftId))).get();
 
     double totalNozzleLitres = 0;
     final nozzleBreakdown = <NozzleReconciliation>[];
@@ -320,21 +332,23 @@ class ShiftService {
           nozzleEntity.closingReading - nozzleEntity.openingReading;
       totalNozzleLitres += litresSold;
 
-      nozzleBreakdown.add(NozzleReconciliation(
-        nozzleId: nozzleEntity.nozzleId,
-        fuelTypeName: nozzleEntity.fuelTypeName,
-        openingReading: nozzleEntity.openingReading,
-        closingReading: nozzleEntity.closingReading,
-        litresSold: litresSold,
-        billedLitres: 0, // Simplified: Not tracking per-nozzle billing yet
-        variance: 0,
-      ));
+      nozzleBreakdown.add(
+        NozzleReconciliation(
+          nozzleId: nozzleEntity.nozzleId,
+          fuelTypeName: nozzleEntity.fuelTypeName,
+          openingReading: nozzleEntity.openingReading,
+          closingReading: nozzleEntity.closingReading,
+          litresSold: litresSold,
+          billedLitres: 0, // Simplified: Not tracking per-nozzle billing yet
+          variance: 0,
+        ),
+      );
     }
 
     // 2. Get all bills for this shift
-    final billsList = await (_db.select(_db.bills)
-          ..where((t) => t.shiftId.equals(shiftId)))
-        .get();
+    final billsList = await (_db.select(
+      _db.bills,
+    )..where((t) => t.shiftId.equals(shiftId))).get();
 
     double totalBilledLitres = 0;
     double cashAmount = 0;
@@ -382,7 +396,8 @@ class ShiftService {
     final warnings = <String>[];
     if (varianceLitres.abs() > ShiftReconciliation.toleranceLitres) {
       warnings.add(
-          'Variance of ${varianceLitres.toStringAsFixed(2)}L detected. Investigation required.');
+        'Variance of ${varianceLitres.toStringAsFixed(2)}L detected. Investigation required.',
+      );
     }
     if (totalNozzleLitres == 0 && totalBilledLitres == 0) {
       warnings.add('No sales recorded in this shift.');
@@ -409,23 +424,24 @@ class ShiftService {
     // (Future implementation)
 
     // 2. Get all bills
-    final bills = await (_db.select(_db.bills)
-          ..where((t) => t.shiftId.equals(shiftId)))
-        .get();
+    final bills = await (_db.select(
+      _db.bills,
+    )..where((t) => t.shiftId.equals(shiftId))).get();
 
     final summaryMap = <String, StaffSalesSummary>{}; // staffId -> Summary
 
     // Helper to get or create summary
     StaffSalesSummary getSummary(String staffId) {
       return summaryMap.putIfAbsent(
-          staffId,
-          () => StaffSalesSummary(
-                staffId: staffId,
-                totalLitres: 0,
-                totalAmount: 0,
-                cashCollected: 0,
-                digitalCollected: 0,
-              ));
+        staffId,
+        () => StaffSalesSummary(
+          staffId: staffId,
+          totalLitres: 0,
+          totalAmount: 0,
+          cashCollected: 0,
+          digitalCollected: 0,
+        ),
+      );
     }
 
     // 3. Attribute Bills
@@ -473,17 +489,20 @@ class ShiftService {
       final settlementId = _generateId();
       await _db
           .into(_db.staffCashSettlements)
-          .insert(StaffCashSettlementsCompanion(
-            id: Value(settlementId),
-            shiftId: Value(shiftId),
-            staffId: Value(sales.staffId),
-            expectedCash: Value(sales.cashCollected),
-            actualCash: Value(0.0), // To be filled by user
-            difference:
-                Value(-sales.cashCollected), // Initial shortage = full amount
-            status: Value('PENDING'),
-            settledAt: Value(DateTime.now()),
-          ));
+          .insert(
+            StaffCashSettlementsCompanion(
+              id: Value(settlementId),
+              shiftId: Value(shiftId),
+              staffId: Value(sales.staffId),
+              expectedCash: Value(sales.cashCollected),
+              actualCash: Value(0.0), // To be filled by user
+              difference: Value(
+                -sales.cashCollected,
+              ), // Initial shortage = full amount
+              status: Value('PENDING'),
+              settledAt: Value(DateTime.now()),
+            ),
+          );
     }
   }
 
@@ -498,26 +517,29 @@ class ShiftService {
           ? nozzle.closingReading
           : nozzle.openingReading;
 
-      await (_db.update(_db.nozzles)
-            ..where((t) => t.nozzleId.equals(nozzle.nozzleId)))
-          .write(NozzlesCompanion(
-        openingReading: Value(newOpening),
-        closingReading: Value(newOpening), // Reset for new sales
-        linkedShiftId: Value(shiftId),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.nozzles,
+      )..where((t) => t.nozzleId.equals(nozzle.nozzleId))).write(
+        NozzlesCompanion(
+          openingReading: Value(newOpening),
+          closingReading: Value(newOpening), // Reset for new sales
+          linkedShiftId: Value(shiftId),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
 
       // Sync Queue: Nozzle Reset
       await _enqueueSync(
-          operationType: SyncOperationType.update,
-          targetCollection: 'nozzles',
-          documentId: nozzle.nozzleId,
-          payload: {
-            'openingReading': newOpening,
-            'closingReading': newOpening,
-            'linkedShiftId': shiftId,
-          });
+        operationType: SyncOperationType.update,
+        targetCollection: 'nozzles',
+        documentId: nozzle.nozzleId,
+        payload: {
+          'openingReading': newOpening,
+          'closingReading': newOpening,
+          'linkedShiftId': shiftId,
+        },
+      );
     }
   }
 
@@ -526,7 +548,7 @@ class ShiftService {
     return (_db.select(_db.shifts)
           ..orderBy([
             (t) =>
-                OrderingTerm(expression: t.startTime, mode: OrderingMode.desc)
+                OrderingTerm(expression: t.startTime, mode: OrderingMode.desc),
           ])
           ..limit(limit))
         .watch()
@@ -535,23 +557,31 @@ class ShiftService {
 
   /// Get shifts for a specific date range (for DSR report)
   Future<List<Shift>> getShiftsForDateRange(
-      DateTime start, DateTime end) async {
-    final entities = await (_db.select(_db.shifts)
-          ..where((t) =>
-              t.startTime.isBiggerOrEqualValue(start) &
-              t.startTime.isSmallerThanValue(end))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.startTime, mode: OrderingMode.asc)
-          ]))
-        .get();
+    DateTime start,
+    DateTime end,
+  ) async {
+    final entities =
+        await (_db.select(_db.shifts)
+              ..where(
+                (t) =>
+                    t.startTime.isBiggerOrEqualValue(start) &
+                    t.startTime.isSmallerThanValue(end),
+              )
+              ..orderBy([
+                (t) => OrderingTerm(
+                  expression: t.startTime,
+                  mode: OrderingMode.asc,
+                ),
+              ]))
+            .get();
     return entities.map(_mapToDomain).toList();
   }
 
   /// Get shift by ID
   Future<Shift?> getShiftById(String shiftId) async {
-    final entity = await (_db.select(_db.shifts)
-          ..where((t) => t.shiftId.equals(shiftId)))
-        .getSingleOrNull();
+    final entity = await (_db.select(
+      _db.shifts,
+    )..where((t) => t.shiftId.equals(shiftId))).getSingleOrNull();
 
     if (entity == null) return null;
     return _mapToDomain(entity);

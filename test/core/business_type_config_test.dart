@@ -119,8 +119,10 @@ void main() {
 
     test('isRequired should return false for optional fields', () {
       final config = BusinessTypeRegistry.getConfig(BusinessType.pharmacy);
-      expect(config.isRequired(ItemField.doctorName),
-          false); // optional for pharmacy
+      expect(
+        config.isRequired(ItemField.doctorName),
+        false,
+      ); // optional for pharmacy
     });
   });
 }

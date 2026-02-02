@@ -112,11 +112,7 @@ class CacheManager {
       _memoryCache.remove(_memoryCache.keys.first);
     }
 
-    _memoryCache[key] = CacheEntry(
-      value,
-      DateTime.now().add(ttl),
-      tag: tag,
-    );
+    _memoryCache[key] = CacheEntry(value, DateTime.now().add(ttl), tag: tag);
   }
 
   /// Remove specific key
@@ -244,12 +240,19 @@ class TypedCache<T> {
   T? get(String key) => CacheManager.get<T>('${prefix}_$key');
 
   void set(String key, T value, {Duration? ttl}) {
-    CacheManager.set('${prefix}_$key', value,
-        ttl: ttl ?? defaultTtl, tag: prefix);
+    CacheManager.set(
+      '${prefix}_$key',
+      value,
+      ttl: ttl ?? defaultTtl,
+      tag: prefix,
+    );
   }
 
-  Future<T> getOrCompute(String key, Future<T> Function() compute,
-      {Duration? ttl}) {
+  Future<T> getOrCompute(
+    String key,
+    Future<T> Function() compute, {
+    Duration? ttl,
+  }) {
     return CacheManager.getOrCompute<T>(
       '${prefix}_$key',
       compute,

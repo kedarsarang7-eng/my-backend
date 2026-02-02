@@ -138,11 +138,15 @@ class DesktopTheme {
             }
             if (states.contains(WidgetState.hovered)) {
               return const BorderSide(
-                  color: FuturisticColors.accent1, width: 2);
+                color: FuturisticColors.accent1,
+                width: 2,
+              );
             }
             if (states.contains(WidgetState.pressed)) {
               return const BorderSide(
-                  color: FuturisticColors.primary, width: 2);
+                color: FuturisticColors.primary,
+                width: 2,
+              );
             }
             return BorderSide(color: Colors.white.withOpacity(0.3), width: 1.5);
           }),
@@ -299,8 +303,9 @@ class DesktopTheme {
         shadowColor: FuturisticColors.premiumBlue.withOpacity(0.15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side:
-              BorderSide(color: FuturisticColors.premiumBlue.withOpacity(0.2)),
+          side: BorderSide(
+            color: FuturisticColors.premiumBlue.withOpacity(0.2),
+          ),
         ),
         margin: const EdgeInsets.all(8),
       ),
@@ -397,8 +402,10 @@ class DesktopTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: FuturisticColors.surface,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
@@ -409,13 +416,17 @@ class DesktopTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              const BorderSide(color: FuturisticColors.primary, width: 2),
+          borderSide: const BorderSide(
+            color: FuturisticColors.primary,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              const BorderSide(color: FuturisticColors.error, width: 1.5),
+          borderSide: const BorderSide(
+            color: FuturisticColors.error,
+            width: 1.5,
+          ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

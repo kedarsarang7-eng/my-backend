@@ -29,9 +29,9 @@ class PeriodLockService {
     FirebaseFirestore? firestore,
     required OwnerPinService pinService,
     required AuditRepository auditRepository,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _pinService = pinService,
-        _auditRepository = auditRepository;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _pinService = pinService,
+       _auditRepository = auditRepository;
 
   /// Check if a date falls within a locked period
   Future<bool> isDateLocked({
@@ -95,11 +95,11 @@ class PeriodLockService {
         .collection('accounting_periods')
         .doc(periodId)
         .update({
-      'isLocked': true,
-      'lockedAt': Timestamp.fromDate(now),
-      'lockedBy': lockedBy,
-      'lockReason': reason ?? 'Manual lock',
-    });
+          'isLocked': true,
+          'lockedAt': Timestamp.fromDate(now),
+          'lockedBy': lockedBy,
+          'lockReason': reason ?? 'Manual lock',
+        });
 
     // Clear cache
     _lockCache.remove(businessId);
@@ -140,11 +140,11 @@ class PeriodLockService {
         .collection('accounting_periods')
         .doc(periodId)
         .update({
-      'isLocked': false,
-      'unlockedAt': Timestamp.fromDate(DateTime.now()),
-      'unlockedBy': unlockedBy,
-      'unlockReason': reason,
-    });
+          'isLocked': false,
+          'unlockedAt': Timestamp.fromDate(DateTime.now()),
+          'unlockedBy': unlockedBy,
+          'unlockReason': reason,
+        });
 
     // Clear cache
     _lockCache.remove(businessId);
@@ -175,17 +175,22 @@ class PeriodLockService {
         .collection('businesses')
         .doc(businessId)
         .collection('accounting_periods')
-        .where('startDate',
-            isLessThanOrEqualTo: Timestamp.fromDate(previousMonth))
-        .where('endDate',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(previousMonthEnd))
+        .where(
+          'startDate',
+          isLessThanOrEqualTo: Timestamp.fromDate(previousMonth),
+        )
+        .where(
+          'endDate',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(previousMonthEnd),
+        )
         .where('isLocked', isEqualTo: false)
         .limit(1)
         .get();
 
     if (query.docs.isEmpty) {
       debugPrint(
-          'PeriodLockService: No unlocked period found for previous month');
+        'PeriodLockService: No unlocked period found for previous month',
+      );
       return;
     }
 
@@ -215,7 +220,8 @@ class PeriodLockService {
 
   /// Get periods for a business (cached)
   Future<List<AccountingPeriod>> _getPeriodsForBusiness(
-      String businessId) async {
+    String businessId,
+  ) async {
     if (_lockCache.containsKey(businessId)) {
       return _lockCache[businessId]!;
     }
@@ -273,11 +279,7 @@ class PeriodLockStatus {
   final AccountingPeriod? period;
   final String? reason;
 
-  PeriodLockStatus({
-    required this.isLocked,
-    this.period,
-    this.reason,
-  });
+  PeriodLockStatus({required this.isLocked, this.period, this.reason});
 }
 
 /// Exception for period lock operations

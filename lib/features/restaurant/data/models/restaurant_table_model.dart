@@ -86,18 +86,18 @@ class RestaurantTable extends Equatable {
 
   /// Convert to Firestore map
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'vendorId': vendorId,
-        'tableNumber': tableNumber,
-        'capacity': capacity,
-        'status': status.value,
-        'section': section,
-        'qrCodeId': qrCodeId,
-        'isActive': isActive,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        if (deletedAt != null) 'deletedAt': deletedAt!.toIso8601String(),
-      };
+    'id': id,
+    'vendorId': vendorId,
+    'tableNumber': tableNumber,
+    'capacity': capacity,
+    'status': status.value,
+    'section': section,
+    'qrCodeId': qrCodeId,
+    'isActive': isActive,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    if (deletedAt != null) 'deletedAt': deletedAt!.toIso8601String(),
+  };
 
   RestaurantTable copyWith({
     String? id,

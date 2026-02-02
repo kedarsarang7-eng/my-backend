@@ -26,9 +26,7 @@ class ActionToolbar extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.dividerColor,
-        ),
+        border: Border.all(color: theme.dividerColor),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -42,11 +40,7 @@ class ActionToolbar extends StatelessWidget {
           if (title != null) ...[
             title!,
             const SizedBox(width: 16),
-            Container(
-              height: 24,
-              width: 1,
-              color: theme.dividerColor,
-            ),
+            Container(height: 24, width: 1, color: theme.dividerColor),
             const SizedBox(width: 16),
           ],
           if (searchBar != null) ...[
@@ -83,10 +77,12 @@ class ActionToolbar extends StatelessWidget {
               if (actions.isNotEmpty) ...[
                 if (onRefresh != null || onFilter != null || onExport != null)
                   const SizedBox(width: 12),
-                ...actions.map((action) => Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: action,
-                    )),
+                ...actions.map(
+                  (action) => Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: action,
+                  ),
+                ),
               ],
             ],
           ),
@@ -115,11 +111,7 @@ class ActionToolbar extends StatelessWidget {
               border: Border.all(color: theme.dividerColor.withOpacity(0.5)),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              icon,
-              size: 20,
-              color: theme.iconTheme.color,
-            ),
+            child: Icon(icon, size: 20, color: theme.iconTheme.color),
           ),
         ),
       ),

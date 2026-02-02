@@ -43,17 +43,17 @@ class Transaction {
       );
 
   Map<String, dynamic> toMap() => {
-        'type': type,
-        'category': category,
-        'description': description,
-        'amount': amount,
-        'date': date.toIso8601String(),
-        'relatedCustomerId': relatedCustomerId,
-        'relatedVegetableId': relatedVegetableId,
-        'paymentMethod': paymentMethod,
-        'status': status,
-        'notes': notes,
-      };
+    'type': type,
+    'category': category,
+    'description': description,
+    'amount': amount,
+    'date': date.toIso8601String(),
+    'relatedCustomerId': relatedCustomerId,
+    'relatedVegetableId': relatedVegetableId,
+    'paymentMethod': paymentMethod,
+    'status': status,
+    'notes': notes,
+  };
 }
 
 // Summary class for financial reporting
@@ -86,9 +86,11 @@ class FinancialSummary {
     DateTime end,
   ) {
     final filtered = transactions
-        .where((t) =>
-            t.date.isAfter(start) &&
-            t.date.isBefore(end.add(const Duration(days: 1))))
+        .where(
+          (t) =>
+              t.date.isAfter(start) &&
+              t.date.isBefore(end.add(const Duration(days: 1))),
+        )
         .toList();
 
     double totalSales = 0, totalPurchases = 0, totalExpenses = 0;

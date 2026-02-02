@@ -55,10 +55,7 @@ class PharmacyComplianceException implements Exception {
     return PharmacyComplianceException(
       code: 'MISSING_BATCH_NUMBER',
       message: 'Batch number is mandatory for: $productName',
-      details: {
-        'productName': productName,
-        'severity': 'BLOCKING',
-      },
+      details: {'productName': productName, 'severity': 'BLOCKING'},
     );
   }
 
@@ -69,10 +66,7 @@ class PharmacyComplianceException implements Exception {
     return PharmacyComplianceException(
       code: 'MISSING_EXPIRY_DATE',
       message: 'Expiry date is mandatory for: $productName',
-      details: {
-        'productName': productName,
-        'severity': 'BLOCKING',
-      },
+      details: {'productName': productName, 'severity': 'BLOCKING'},
     );
   }
 

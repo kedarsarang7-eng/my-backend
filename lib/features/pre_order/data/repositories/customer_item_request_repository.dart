@@ -14,21 +14,24 @@ class CustomerItemRequestRepository {
   CustomerItemRequestRepository({
     required AppDatabase db,
     required SyncManager syncManager,
-  })  : _db = db,
-        _syncManager = syncManager;
+  }) : _db = db,
+       _syncManager = syncManager;
 
   /// Create a new request (Offline-First)
   Future<void> createRequest(CustomerItemRequest request) async {
     try {
       // 1. Insert into Local Database
-      await _db.into(_db.customerItemRequests).insert(
+      await _db
+          .into(_db.customerItemRequests)
+          .insert(
             CustomerItemRequestsCompanion.insert(
               id: request.id,
               customerId: request.customerId,
               vendorId: request.vendorId,
               status: Value(request.status.name),
-              itemsJson:
-                  jsonEncode(request.items.map((e) => e.toMap()).toList()),
+              itemsJson: jsonEncode(
+                request.items.map((e) => e.toMap()).toList(),
+              ),
               note: Value(request.note),
               createdAt: request.createdAt,
               updatedAt: request.updatedAt,
@@ -37,18 +40,23 @@ class CustomerItemRequestRepository {
           );
 
       // 2. Queue for Sync
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: request.customerId,
-        operationType: SyncOperationType.create,
-        targetCollection: 'customer_item_requests',
-        documentId: request.id,
-        payload: request.toMap(),
-        priority: 1,
-        ownerId: request.vendorId,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: request.customerId,
+          operationType: SyncOperationType.create,
+          targetCollection: 'customer_item_requests',
+          documentId: request.id,
+          payload: request.toMap(),
+          priority: 1,
+          ownerId: request.vendorId,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to create request');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to create request',
+      );
       rethrow;
     }
   }
@@ -60,42 +68,51 @@ class CustomerItemRequestRepository {
       request.updatedAt = now;
 
       // 1. Update Local Database
-      await (_db.update(_db.customerItemRequests)
-            ..where((t) => t.id.equals(request.id)))
-          .write(CustomerItemRequestsCompanion(
-        status: Value(request.status.name),
-        itemsJson:
-            Value(jsonEncode(request.items.map((e) => e.toMap()).toList())),
-        note: Value(request.note),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.customerItemRequests,
+      )..where((t) => t.id.equals(request.id))).write(
+        CustomerItemRequestsCompanion(
+          status: Value(request.status.name),
+          itemsJson: Value(
+            jsonEncode(request.items.map((e) => e.toMap()).toList()),
+          ),
+          note: Value(request.note),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       // 2. Queue for Sync
-      await _syncManager.enqueue(SyncQueueItem.create(
-        userId: request.customerId,
-        operationType: SyncOperationType.update,
-        targetCollection: 'customer_item_requests',
-        documentId: request.id,
-        payload: request.toMap(),
-        priority: 1,
-        ownerId: request.vendorId,
-      ));
+      await _syncManager.enqueue(
+        SyncQueueItem.create(
+          userId: request.customerId,
+          operationType: SyncOperationType.update,
+          targetCollection: 'customer_item_requests',
+          documentId: request.id,
+          payload: request.toMap(),
+          priority: 1,
+          ownerId: request.vendorId,
+        ),
+      );
     } catch (e, stack) {
-      ErrorHandler.handle(e,
-          stackTrace: stack, userMessage: 'Failed to update request');
+      ErrorHandler.handle(
+        e,
+        stackTrace: stack,
+        userMessage: 'Failed to update request',
+      );
       rethrow;
     }
   }
 
   /// Watch requests for a specific customer (Reactive)
   Stream<List<CustomerItemRequest>> watchRequestsForCustomer(
-      String customerId) {
+    String customerId,
+  ) {
     return (_db.select(_db.customerItemRequests)
           ..where((t) => t.customerId.equals(customerId))
           ..orderBy([
             (t) =>
-                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
           ]))
         .watch()
         .map((rows) => rows.map((row) => _mapToModel(row)).toList());
@@ -107,7 +124,7 @@ class CustomerItemRequestRepository {
           ..where((t) => t.vendorId.equals(vendorId))
           ..orderBy([
             (t) =>
-                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
           ]))
         .watch()
         .map((rows) => rows.map((row) => _mapToModel(row)).toList());

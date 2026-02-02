@@ -178,8 +178,9 @@ class Supplier {
   bool get isGstinValid {
     if (gstin == null || gstin!.isEmpty) return true;
     final regex = RegExp(
-        r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
-        caseSensitive: false);
+      r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
+      caseSensitive: false,
+    );
     return regex.hasMatch(gstin!.toUpperCase());
   }
 

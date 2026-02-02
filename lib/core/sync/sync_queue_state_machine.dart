@@ -145,8 +145,8 @@ class SyncQueueItem {
     // Compute hash
     final payloadString = jsonEncode(payload);
     // Simple hash for now (in prod use actual SHA256)
-    final payloadHash =
-        payloadString.hashCode.toString(); // Placeholder for SHA-256
+    final payloadHash = payloadString.hashCode
+        .toString(); // Placeholder for SHA-256
 
     return SyncQueueItem(
       operationId: generateOperationId(
@@ -240,8 +240,9 @@ class SyncQueueItem {
   factory SyncQueueItem.fromMap(Map<String, dynamic> map) {
     return SyncQueueItem(
       operationId: map['operationId'] as String,
-      operationType:
-          SyncOperationType.fromString(map['operationType'] as String),
+      operationType: SyncOperationType.fromString(
+        map['operationType'] as String,
+      ),
       targetCollection: map['targetCollection'] as String,
       documentId: map['documentId'] as String,
       payload: map['payload'] is String
@@ -309,13 +310,13 @@ class SyncStateTransition {
     SyncStatus.inProgress: [
       SyncStatus.synced,
       SyncStatus.failed,
-      SyncStatus.retry
+      SyncStatus.retry,
     ],
     SyncStatus.failed: [SyncStatus.retry, SyncStatus.deadLetter],
     SyncStatus.retry: [
       SyncStatus.pending,
       SyncStatus.inProgress,
-      SyncStatus.deadLetter
+      SyncStatus.deadLetter,
     ],
     SyncStatus.synced: [], // Terminal state
     SyncStatus.deadLetter: [SyncStatus.pending], // Can be manually retried
@@ -368,11 +369,9 @@ class MultiStepOperation {
 
   /// Create sync queue items for all pending steps
   List<SyncQueueItem> createSyncQueueItems() {
-    return steps
-        .asMap()
-        .entries
-        .where((e) => !e.value.isCompleted)
-        .map((entry) {
+    return steps.asMap().entries.where((e) => !e.value.isCompleted).map((
+      entry,
+    ) {
       final index = entry.key;
       final step = entry.value;
       return SyncQueueItem.create(
@@ -457,10 +456,7 @@ class MultiStepOperationFactory {
           operationType: SyncOperationType.create,
           targetCollection: 'ocr_jobs',
           documentId: billId,
-          payload: {
-            'billId': billId,
-            'status': 'pending',
-          },
+          payload: {'billId': billId, 'status': 'pending'},
           priority: 2,
         ),
         OperationStep(
@@ -468,11 +464,7 @@ class MultiStepOperationFactory {
           operationType: SyncOperationType.create,
           targetCollection: 'bills',
           documentId: billId,
-          payload: {
-            'id': billId,
-            'status': 'DRAFT',
-            'source': 'SCAN',
-          },
+          payload: {'id': billId, 'status': 'DRAFT', 'source': 'SCAN'},
           priority: 3,
         ),
       ],
@@ -508,10 +500,7 @@ class MultiStepOperationFactory {
           operationType: SyncOperationType.create,
           targetCollection: 'stt_jobs',
           documentId: billId,
-          payload: {
-            'billId': billId,
-            'status': 'pending',
-          },
+          payload: {'billId': billId, 'status': 'pending'},
           priority: 2,
         ),
         OperationStep(
@@ -519,11 +508,7 @@ class MultiStepOperationFactory {
           operationType: SyncOperationType.create,
           targetCollection: 'bills',
           documentId: billId,
-          payload: {
-            'id': billId,
-            'status': 'DRAFT',
-            'source': 'VOICE',
-          },
+          payload: {'id': billId, 'status': 'DRAFT', 'source': 'VOICE'},
           priority: 3,
         ),
       ],

@@ -42,15 +42,15 @@ class UdharPerson {
   });
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'userId': userId,
-        'name': name,
-        'phone': phone,
-        'note': note,
-        'balance': balance,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'name': name,
+    'phone': phone,
+    'note': note,
+    'balance': balance,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 /// Udhar Transaction Model
@@ -82,15 +82,15 @@ class UdharTransaction {
   });
 
   Map<String, dynamic> toFirestoreMap() => {
-        'id': id,
-        'personId': personId,
-        'amount': amount,
-        'type': type,
-        'reason': reason,
-        'date': date.toIso8601String(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'personId': personId,
+    'amount': amount,
+    'type': type,
+    'reason': reason,
+    'date': date.toIso8601String(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 /// Udhar Repository
@@ -148,7 +148,9 @@ class UdharRepository {
         updatedAt: now,
       );
 
-      await database.into(database.udharPeople).insert(
+      await database
+          .into(database.udharPeople)
+          .insert(
             UdharPeopleCompanion.insert(
               id: id,
               userId: userId,
@@ -161,8 +163,13 @@ class UdharRepository {
           );
 
       // Queue Sync (Path: users/{userId}/udhar_people/{id})
-      await _queueSync(userId, SyncOperationType.create, 'udhar_people', id,
-          person.toFirestoreMap());
+      await _queueSync(
+        userId,
+        SyncOperationType.create,
+        'udhar_people',
+        id,
+        person.toFirestoreMap(),
+      );
 
       return person;
     }, 'createPerson');
@@ -174,15 +181,22 @@ class UdharRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       final now = DateTime.now();
-      await (database.update(database.udharPeople)
-            ..where((t) => t.id.equals(personId)))
-          .write(UdharPeopleCompanion(
-        deletedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (database.update(
+        database.udharPeople,
+      )..where((t) => t.id.equals(personId))).write(
+        UdharPeopleCompanion(
+          deletedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       await _queueSync(
-          userId, SyncOperationType.delete, 'udhar_people', personId, {});
+        userId,
+        SyncOperationType.delete,
+        'udhar_people',
+        personId,
+        {},
+      );
     }, 'deletePerson');
   }
 
@@ -223,7 +237,9 @@ class UdharRepository {
       );
 
       // 1. Insert Transaction
-      await database.into(database.udharTransactions).insert(
+      await database
+          .into(database.udharTransactions)
+          .insert(
             UdharTransactionsCompanion.insert(
               id: id,
               personId: personId,
@@ -247,25 +263,36 @@ class UdharRepository {
       // We need to fetch current balance first or recalculate
       // Ideally recalculate from all transactions to be safe, but increments are faster.
       // Let's use custom SQL or just fetch-update for now.
-      final person = await (database.select(database.udharPeople)
-            ..where((t) => t.id.equals(personId)))
-          .getSingle();
+      final person = await (database.select(
+        database.udharPeople,
+      )..where((t) => t.id.equals(personId))).getSingle();
       final newBalance = person.balance + delta;
 
-      await (database.update(database.udharPeople)
-            ..where((t) => t.id.equals(personId)))
-          .write(UdharPeopleCompanion(
-              balance: Value(newBalance), updatedAt: Value(now)));
+      await (database.update(
+        database.udharPeople,
+      )..where((t) => t.id.equals(personId))).write(
+        UdharPeopleCompanion(balance: Value(newBalance), updatedAt: Value(now)),
+      );
 
       // 3. Queue Sync
       // We sync transaction as top-level 'udhar_transactions' or subcollection?
       // Keeping it simple: Top level 'udhar_transactions' with personId pointer.
-      await _queueSync(userId, SyncOperationType.create, 'udhar_transactions',
-          id, tx.toFirestoreMap());
+      await _queueSync(
+        userId,
+        SyncOperationType.create,
+        'udhar_transactions',
+        id,
+        tx.toFirestoreMap(),
+      );
 
       // Sync Person update too
-      await _queueSync(userId, SyncOperationType.update, 'udhar_people',
-          personId, {'balance': newBalance});
+      await _queueSync(
+        userId,
+        SyncOperationType.update,
+        'udhar_people',
+        personId,
+        {'balance': newBalance},
+      );
 
       return tx;
     }, 'addTransaction');
@@ -278,9 +305,9 @@ class UdharRepository {
   }) async {
     return await errorHandler.runSafe<void>(() async {
       // 1. Get TX to reverse balance
-      final tx = await (database.select(database.udharTransactions)
-            ..where((t) => t.id.equals(txId)))
-          .getSingle();
+      final tx = await (database.select(
+        database.udharTransactions,
+      )..where((t) => t.id.equals(txId))).getSingle();
       double delta = tx.type == 'given' ? -tx.amount : tx.amount; // Reverse
 
       // 2. Soft Delete TX
@@ -289,21 +316,35 @@ class UdharRepository {
           .write(UdharTransactionsCompanion(deletedAt: Value(DateTime.now())));
 
       // 3. Update Balance
-      final person = await (database.select(database.udharPeople)
-            ..where((t) => t.id.equals(personId)))
-          .getSingle();
+      final person = await (database.select(
+        database.udharPeople,
+      )..where((t) => t.id.equals(personId))).getSingle();
       final newBalance = person.balance + delta;
 
-      await (database.update(database.udharPeople)
-            ..where((t) => t.id.equals(personId)))
-          .write(UdharPeopleCompanion(
-              balance: Value(newBalance), updatedAt: Value(DateTime.now())));
+      await (database.update(
+        database.udharPeople,
+      )..where((t) => t.id.equals(personId))).write(
+        UdharPeopleCompanion(
+          balance: Value(newBalance),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
 
       // 4. Queue Sync
       await _queueSync(
-          userId, SyncOperationType.delete, 'udhar_transactions', txId, {});
-      await _queueSync(userId, SyncOperationType.update, 'udhar_people',
-          personId, {'balance': newBalance});
+        userId,
+        SyncOperationType.delete,
+        'udhar_transactions',
+        txId,
+        {},
+      );
+      await _queueSync(
+        userId,
+        SyncOperationType.update,
+        'udhar_people',
+        personId,
+        {'balance': newBalance},
+      );
     }, 'deleteTransaction');
   }
 
@@ -347,8 +388,13 @@ class UdharRepository {
         (1000 + (DateTime.now().microsecond % 9000)).toString();
   }
 
-  Future<void> _queueSync(String userId, SyncOperationType type,
-      String collection, String docId, Map<String, dynamic> payload) async {
+  Future<void> _queueSync(
+    String userId,
+    SyncOperationType type,
+    String collection,
+    String docId,
+    Map<String, dynamic> payload,
+  ) async {
     final item = SyncQueueItem.create(
       userId: userId,
       operationType: type,

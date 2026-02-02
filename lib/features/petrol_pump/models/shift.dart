@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Shift status enum
-enum ShiftStatus {
-  open,
-  closed,
-}
+enum ShiftStatus { open, closed }
 
 /// Extension for display properties
 extension ShiftStatusExtension on ShiftStatus {
@@ -61,11 +58,11 @@ class PaymentBreakup {
   }
 
   Map<String, dynamic> toMap() => {
-        'cash': cash,
-        'upi': upi,
-        'card': card,
-        'credit': credit,
-      };
+    'cash': cash,
+    'upi': upi,
+    'card': card,
+    'credit': credit,
+  };
 
   factory PaymentBreakup.fromMap(Map<String, dynamic>? map) {
     if (map == null) return const PaymentBreakup();
@@ -111,8 +108,8 @@ class Shift {
     DateTime? updatedAt,
     this.closedBy,
     this.notes,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Check if shift can be closed
   bool get canClose => status.isOpen;
@@ -185,21 +182,21 @@ class Shift {
   }
 
   Map<String, dynamic> toMap() => {
-        'shiftId': shiftId,
-        'shiftName': shiftName,
-        'startTime': startTime.toIso8601String(),
-        'endTime': endTime?.toIso8601String(),
-        'assignedEmployeeIds': assignedEmployeeIds,
-        'totalSaleAmount': totalSaleAmount,
-        'totalLitresSold': totalLitresSold,
-        'paymentBreakup': paymentBreakup.toMap(),
-        'status': status.name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'closedBy': closedBy,
-        'notes': notes,
-      };
+    'shiftId': shiftId,
+    'shiftName': shiftName,
+    'startTime': startTime.toIso8601String(),
+    'endTime': endTime?.toIso8601String(),
+    'assignedEmployeeIds': assignedEmployeeIds,
+    'totalSaleAmount': totalSaleAmount,
+    'totalLitresSold': totalLitresSold,
+    'paymentBreakup': paymentBreakup.toMap(),
+    'status': status.name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'closedBy': closedBy,
+    'notes': notes,
+  };
 
   factory Shift.fromMap(String id, Map<String, dynamic> map) {
     return Shift(
@@ -207,14 +204,16 @@ class Shift {
       shiftName: map['shiftName'] as String? ?? 'Shift',
       startTime: _parseDateTime(map['startTime']),
       endTime: map['endTime'] != null ? _parseDateTime(map['endTime']) : null,
-      assignedEmployeeIds: (map['assignedEmployeeIds'] as List<dynamic>?)
+      assignedEmployeeIds:
+          (map['assignedEmployeeIds'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
       totalSaleAmount: (map['totalSaleAmount'] as num?)?.toDouble() ?? 0.0,
       totalLitresSold: (map['totalLitresSold'] as num?)?.toDouble() ?? 0.0,
       paymentBreakup: PaymentBreakup.fromMap(
-          map['paymentBreakup'] as Map<String, dynamic>?),
+        map['paymentBreakup'] as Map<String, dynamic>?,
+      ),
       status: ShiftStatus.values.firstWhere(
         (e) => e.name == map['status'],
         orElse: () => ShiftStatus.open,

@@ -60,23 +60,22 @@ class TranslationResult extends Equatable {
     required String sourceLanguage,
     required String targetLanguage,
     required String error,
-  }) =>
-      TranslationResult(
-        originalText: originalText,
-        translatedText: originalText, // Fallback to original
-        sourceLanguage: sourceLanguage,
-        targetLanguage: targetLanguage,
-        success: false,
-        error: error,
-      );
+  }) => TranslationResult(
+    originalText: originalText,
+    translatedText: originalText, // Fallback to original
+    sourceLanguage: sourceLanguage,
+    targetLanguage: targetLanguage,
+    success: false,
+    error: error,
+  );
 
   @override
   List<Object?> get props => [
-        originalText,
-        translatedText,
-        sourceLanguage,
-        targetLanguage,
-        success,
-        error,
-      ];
+    originalText,
+    translatedText,
+    sourceLanguage,
+    targetLanguage,
+    success,
+    error,
+  ];
 }

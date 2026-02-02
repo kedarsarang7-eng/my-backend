@@ -60,8 +60,11 @@ class PerspectiveTransformer {
 
           // Bilinear interpolation of source position
           final top = _lerp(denormalizedCorners[0], denormalizedCorners[1], u);
-          final bottom =
-              _lerp(denormalizedCorners[3], denormalizedCorners[2], u);
+          final bottom = _lerp(
+            denormalizedCorners[3],
+            denormalizedCorners[2],
+            u,
+          );
           final srcPoint = _lerp(top, bottom, v);
 
           final srcX = srcPoint.dx.round().clamp(0, srcImage.width - 1);
@@ -79,10 +82,7 @@ class PerspectiveTransformer {
   }
 
   static Offset _lerp(Offset a, Offset b, double t) {
-    return Offset(
-      a.dx + (b.dx - a.dx) * t,
-      a.dy + (b.dy - a.dy) * t,
-    );
+    return Offset(a.dx + (b.dx - a.dx) * t, a.dy + (b.dy - a.dy) * t);
   }
 
   /// Auto-detect document corners using edge detection

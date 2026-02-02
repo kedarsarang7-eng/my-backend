@@ -12,11 +12,11 @@ class PushRequest {
   });
 
   Map<String, dynamic> toJson() => {
-        'business_id': businessId,
-        'customers': customers.map((e) => e.toJson()).toList(),
-        'products': products.map((e) => e.toJson()).toList(),
-        'bills': bills.map((e) => e.toJson()).toList(),
-      };
+    'business_id': businessId,
+    'customers': customers.map((e) => e.toJson()).toList(),
+    'products': products.map((e) => e.toJson()).toList(),
+    'bills': bills.map((e) => e.toJson()).toList(),
+  };
 }
 
 class PullRequest {
@@ -26,9 +26,9 @@ class PullRequest {
   PullRequest({required this.businessId, required this.lastSyncTimestamp});
 
   Map<String, dynamic> toJson() => {
-        'business_id': businessId,
-        'last_sync_timestamp': lastSyncTimestamp.toIso8601String(),
-      };
+    'business_id': businessId,
+    'last_sync_timestamp': lastSyncTimestamp.toIso8601String(),
+  };
 }
 
 class PullResponse {
@@ -47,17 +47,19 @@ class PullResponse {
   factory PullResponse.fromJson(Map<String, dynamic> json) {
     return PullResponse(
       serverTimestamp: DateTime.parse(json['server_timestamp']),
-      customers: (json['customers'] as List?)
+      customers:
+          (json['customers'] as List?)
               ?.map((e) => CustomerSync.fromJson(e))
               .toList() ??
           [],
-      products: (json['products'] as List?)
+      products:
+          (json['products'] as List?)
               ?.map((e) => ProductSync.fromJson(e))
               .toList() ??
           [],
       bills:
           (json['bills'] as List?)?.map((e) => BillSync.fromJson(e)).toList() ??
-              [],
+          [],
     );
   }
 }
@@ -84,14 +86,14 @@ class CustomerSync {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'updated_at': updatedAt.toIso8601String(),
-        'is_deleted': isDeleted,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'balance': balance,
-      };
+    'id': id,
+    'updated_at': updatedAt.toIso8601String(),
+    'is_deleted': isDeleted,
+    'name': name,
+    'phone': phone,
+    'email': email,
+    'balance': balance,
+  };
 
   factory CustomerSync.fromJson(Map<String, dynamic> json) {
     return CustomerSync(
@@ -126,14 +128,14 @@ class ProductSync {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'updated_at': updatedAt.toIso8601String(),
-        'is_deleted': isDeleted,
-        'name': name,
-        'price': price,
-        'sku': sku,
-        'stock_qty': stockQty,
-      };
+    'id': id,
+    'updated_at': updatedAt.toIso8601String(),
+    'is_deleted': isDeleted,
+    'name': name,
+    'price': price,
+    'sku': sku,
+    'stock_qty': stockQty,
+  };
 
   factory ProductSync.fromJson(Map<String, dynamic> json) {
     return ProductSync(
@@ -170,15 +172,15 @@ class BillSync {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'updated_at': updatedAt.toIso8601String(),
-        'is_deleted': isDeleted,
-        'invoice_number': invoiceNumber,
-        'bill_date': billDate.toIso8601String(),
-        'total_amount': totalAmount,
-        'status': status,
-        'items': items.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'updated_at': updatedAt.toIso8601String(),
+    'is_deleted': isDeleted,
+    'invoice_number': invoiceNumber,
+    'bill_date': billDate.toIso8601String(),
+    'total_amount': totalAmount,
+    'status': status,
+    'items': items.map((e) => e.toJson()).toList(),
+  };
 
   factory BillSync.fromJson(Map<String, dynamic> json) {
     return BillSync(
@@ -189,7 +191,8 @@ class BillSync {
       billDate: DateTime.parse(json['bill_date']),
       totalAmount: (json['total_amount'] as num).toDouble(),
       status: json['status'],
-      items: (json['items'] as List?)
+      items:
+          (json['items'] as List?)
               ?.map((e) => BillItemSync.fromJson(e))
               .toList() ??
           [],
@@ -219,15 +222,15 @@ class BillItemSync {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'updated_at': updatedAt.toIso8601String(),
-        'is_deleted': isDeleted,
-        'bill_id': billId,
-        'product_id': productId,
-        'qty': qty,
-        'price': price,
-        'total': total,
-      };
+    'id': id,
+    'updated_at': updatedAt.toIso8601String(),
+    'is_deleted': isDeleted,
+    'bill_id': billId,
+    'product_id': productId,
+    'qty': qty,
+    'price': price,
+    'total': total,
+  };
 
   factory BillItemSync.fromJson(Map<String, dynamic> json) {
     return BillItemSync(

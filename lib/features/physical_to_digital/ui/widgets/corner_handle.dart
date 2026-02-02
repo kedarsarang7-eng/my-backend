@@ -41,9 +41,7 @@ class _CornerHandleState extends State<CornerHandle> {
           HapticFeedback.selectionClick();
         },
         onPanUpdate: (details) {
-          widget.onPositionChanged(
-            widget.position + details.delta,
-          );
+          widget.onPositionChanged(widget.position + details.delta);
         },
         onPanEnd: (_) {
           setState(() => _isDragging = false);
@@ -58,10 +56,7 @@ class _CornerHandleState extends State<CornerHandle> {
             color: _isDragging
                 ? handleColor.withOpacity(0.3)
                 : handleColor.withOpacity(0.2),
-            border: Border.all(
-              color: handleColor,
-              width: _isDragging ? 3 : 2,
-            ),
+            border: Border.all(color: handleColor, width: _isDragging ? 3 : 2),
             boxShadow: [
               BoxShadow(
                 color: handleColor.withOpacity(_isDragging ? 0.6 : 0.3),

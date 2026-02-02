@@ -31,7 +31,10 @@ class _OwnerBillPaidToggleWidgetState extends State<OwnerBillPaidToggleWidget> {
   SessionManager get _session => sl<SessionManager>();
 
   Future<void> _updateBillStatus(
-      String billId, double billAmount, bool isPaid) async {
+    String billId,
+    double billAmount,
+    bool isPaid,
+  ) async {
     try {
       final status = isPaid ? 'Paid' : 'Pending';
       final paidAmount = isPaid ? billAmount : 0.0;
@@ -39,12 +42,12 @@ class _OwnerBillPaidToggleWidgetState extends State<OwnerBillPaidToggleWidget> {
       // Default to Cash if marking as paid toggled, or use logic safely
       // Legacy code didn't specify, we assume Cash for manual toggle or just update total
       final result = await _billsRepo.updateBillStatus(
-          billId: billId,
-          status: status,
-          paidAmount: paidAmount,
-          cashPaid:
-              isPaid ? paidAmount : 0.0, // Assuming cash for manual toggle
-          onlinePaid: 0.0);
+        billId: billId,
+        status: status,
+        paidAmount: paidAmount,
+        cashPaid: isPaid ? paidAmount : 0.0, // Assuming cash for manual toggle
+        onlinePaid: 0.0,
+      );
 
       if (result.success) {
         widget.onStatusChanged();
@@ -79,8 +82,11 @@ class _OwnerBillPaidToggleWidgetState extends State<OwnerBillPaidToggleWidget> {
   }
 
   void handleOperationError(
-      BuildContext context, Object error, StackTrace? stackTrace,
-      {String? customMessage}) {
+    BuildContext context,
+    Object error,
+    StackTrace? stackTrace, {
+    String? customMessage,
+  }) {
     developer.log(
       customMessage ?? 'Operation failed',
       error: error,
@@ -104,8 +110,10 @@ class _OwnerBillPaidToggleWidgetState extends State<OwnerBillPaidToggleWidget> {
     }
 
     return StreamBuilder<List<Bill>>(
-      stream:
-          _billsRepo.watchAll(userId: userId, customerId: widget.customerId),
+      stream: _billsRepo.watchAll(
+        userId: userId,
+        customerId: widget.customerId,
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -313,10 +321,7 @@ class PendingAmountSummary extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     'Average: ₹${(totalPending / pendingCount).toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
               ],

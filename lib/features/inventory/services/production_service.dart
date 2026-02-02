@@ -20,46 +20,54 @@ class ProductionService {
     String unit = 'pcs',
     double costAllocationPercent = 100.0,
   }) async {
-    final existing = await (_db.select(_db.billOfMaterials)
-          ..where((t) =>
-              t.finishedGoodId.equals(finishedGoodId) &
-              t.rawMaterialId.equals(rawMaterialId)))
-        .getSingleOrNull();
+    final existing =
+        await (_db.select(_db.billOfMaterials)..where(
+              (t) =>
+                  t.finishedGoodId.equals(finishedGoodId) &
+                  t.rawMaterialId.equals(rawMaterialId),
+            ))
+            .getSingleOrNull();
 
     final now = DateTime.now();
 
     if (existing != null) {
-      await (_db.update(_db.billOfMaterials)
-            ..where((t) => t.id.equals(existing.id)))
-          .write(BillOfMaterialsCompanion(
-        quantityRequired: Value(quantityRequired),
-        unit: Value(unit),
-        costAllocationPercent: Value(costAllocationPercent),
-        updatedAt: Value(now),
-      ));
+      await (_db.update(
+        _db.billOfMaterials,
+      )..where((t) => t.id.equals(existing.id))).write(
+        BillOfMaterialsCompanion(
+          quantityRequired: Value(quantityRequired),
+          unit: Value(unit),
+          costAllocationPercent: Value(costAllocationPercent),
+          updatedAt: Value(now),
+        ),
+      );
       return existing.id;
     } else {
       final id = const Uuid().v4();
-      await _db.into(_db.billOfMaterials).insert(BillOfMaterialsCompanion(
-            id: Value(id),
-            userId: Value(userId),
-            finishedGoodId: Value(finishedGoodId),
-            rawMaterialId: Value(rawMaterialId),
-            quantityRequired: Value(quantityRequired),
-            unit: Value(unit),
-            costAllocationPercent: Value(costAllocationPercent),
-            createdAt: Value(now),
-            updatedAt: Value(now),
-          ));
+      await _db
+          .into(_db.billOfMaterials)
+          .insert(
+            BillOfMaterialsCompanion(
+              id: Value(id),
+              userId: Value(userId),
+              finishedGoodId: Value(finishedGoodId),
+              rawMaterialId: Value(rawMaterialId),
+              quantityRequired: Value(quantityRequired),
+              unit: Value(unit),
+              costAllocationPercent: Value(costAllocationPercent),
+              createdAt: Value(now),
+              updatedAt: Value(now),
+            ),
+          );
       return id;
     }
   }
 
   /// Get the Recipe (BOM) for a Finished Good
   Future<List<BillOfMaterialEntity>> getRecipe(String finishedGoodId) {
-    return (_db.select(_db.billOfMaterials)
-          ..where((t) => t.finishedGoodId.equals(finishedGoodId)))
-        .get();
+    return (_db.select(
+      _db.billOfMaterials,
+    )..where((t) => t.finishedGoodId.equals(finishedGoodId))).get();
   }
 
   /// Execute Production Run
@@ -83,7 +91,8 @@ class ProductionService {
       final recipe = await getRecipe(finishedGoodId);
       if (recipe.isEmpty) {
         throw Exception(
-            'No Bill of Materials (Recipe) found for this product.');
+          'No Bill of Materials (Recipe) found for this product.',
+        );
       }
 
       // 2. Validate Stock Availability & Calculate Cost
@@ -94,9 +103,9 @@ class ProductionService {
         final requiredQty = item.quantityRequired * quantityToProduce;
 
         // Fetch RM Product to check stock and cost
-        final rmProduct = await (_db.select(_db.products)
-              ..where((t) => t.id.equals(item.rawMaterialId)))
-            .getSingle();
+        final rmProduct = await (_db.select(
+          _db.products,
+        )..where((t) => t.id.equals(item.rawMaterialId))).getSingle();
 
         if (rmProduct.stockQuantity < requiredQty) {
           // Check if negative stock is allowed?
@@ -156,19 +165,23 @@ class ProductionService {
 
       // 5. Log Production Entry
       final id = const Uuid().v4();
-      await _db.into(_db.productionEntries).insert(ProductionEntriesCompanion(
-            id: Value(id),
-            userId: Value(userId),
-            finishedGoodId: Value(finishedGoodId),
-            quantityProduced: Value(quantityToProduce),
-            productionDate: Value(DateTime.now()),
-            batchNumber: Value(batchNumber),
-            notes: Value(notes),
-            totalCost: Value(totalCost),
-            laborCost: const Value(0.0),
-            rawMaterialsJson: Value(jsonEncode(rawMaterialsSnapshot)),
-            createdAt: Value(DateTime.now()),
-          ));
+      await _db
+          .into(_db.productionEntries)
+          .insert(
+            ProductionEntriesCompanion(
+              id: Value(id),
+              userId: Value(userId),
+              finishedGoodId: Value(finishedGoodId),
+              quantityProduced: Value(quantityToProduce),
+              productionDate: Value(DateTime.now()),
+              batchNumber: Value(batchNumber),
+              notes: Value(notes),
+              totalCost: Value(totalCost),
+              laborCost: const Value(0.0),
+              rawMaterialsJson: Value(jsonEncode(rawMaterialsSnapshot)),
+              createdAt: Value(DateTime.now()),
+            ),
+          );
 
       return id;
     });

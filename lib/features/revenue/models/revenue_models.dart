@@ -141,7 +141,8 @@ class ReturnInward {
       customerName: map['customerName'] ?? '',
       billId: map['billId'] ?? '',
       billNumber: map['billNumber'] ?? '',
-      items: (map['items'] as List<dynamic>?)
+      items:
+          (map['items'] as List<dynamic>?)
               ?.map((e) => ReturnItem.fromMap(e))
               .toList() ??
           [],
@@ -260,7 +261,8 @@ class ProformaInvoice {
       customerId: map['customerId'] ?? '',
       customerName: map['customerName'] ?? '',
       proformaNumber: map['proformaNumber'] ?? '',
-      items: (map['items'] as List<dynamic>?)
+      items:
+          (map['items'] as List<dynamic>?)
               ?.map((e) => ProformaItem.fromMap(e))
               .toList() ??
           [],
@@ -401,7 +403,8 @@ class BookingOrder {
       customerName: map['customerName'] ?? '',
       customerPhone: map['customerPhone'] ?? '',
       bookingNumber: map['bookingNumber'] ?? '',
-      items: (map['items'] as List<dynamic>?)
+      items:
+          (map['items'] as List<dynamic>?)
               ?.map((e) => BookingItem.fromMap(e))
               .toList() ??
           [],
@@ -489,7 +492,7 @@ enum BookingStatus {
   ready,
   delivered,
   cancelled,
-  converted
+  converted,
 }
 
 /// Dispatch Note Model - Delivery tracking for goods
@@ -545,7 +548,8 @@ class DispatchNote {
       customerId: map['customerId'] ?? '',
       customerName: map['customerName'] ?? '',
       dispatchNumber: map['dispatchNumber'] ?? '',
-      items: (map['items'] as List<dynamic>?)
+      items:
+          (map['items'] as List<dynamic>?)
               ?.map((e) => DispatchItem.fromMap(e))
               .toList() ??
           [],
@@ -557,8 +561,9 @@ class DispatchNote {
         (e) => e.name == map['status'],
         orElse: () => DispatchStatus.pending,
       ),
-      deliveredAt:
-          map['deliveredAt'] != null ? _parseDate(map['deliveredAt']) : null,
+      deliveredAt: map['deliveredAt'] != null
+          ? _parseDate(map['deliveredAt'])
+          : null,
       receiverName: map['receiverName'],
       receiverSignature: map['receiverSignature'],
       notes: map['notes'] ?? '',

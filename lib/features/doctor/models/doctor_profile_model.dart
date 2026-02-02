@@ -33,15 +33,15 @@ class DoctorProfileModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'vendorId': vendorId,
-        'specialization': specialization,
-        'licenseNumber': licenseNumber,
-        'qualification': qualification,
-        'clinicName': clinicName,
-        'consultationFee': consultationFee,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'vendorId': vendorId,
+    'specialization': specialization,
+    'licenseNumber': licenseNumber,
+    'qualification': qualification,
+    'clinicName': clinicName,
+    'consultationFee': consultationFee,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
   DoctorProfileModel copyWith({
     String? id,

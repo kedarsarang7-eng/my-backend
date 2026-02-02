@@ -32,12 +32,12 @@ class VendorStats {
   });
 
   factory VendorStats.empty() => const VendorStats(
-        totalInvoiceValue: 0,
-        paidAmount: 0,
-        unpaidAmount: 0,
-        todayPurchase: 0,
-        activeOrders: 0,
-      );
+    totalInvoiceValue: 0,
+    paidAmount: 0,
+    unpaidAmount: 0,
+    todayPurchase: 0,
+    activeOrders: 0,
+  );
 }
 
 /// Handles all Firestore operations related to Stats & Analytics
@@ -63,12 +63,12 @@ class FirestoreStatsService {
         .where('date', isGreaterThanOrEqualTo: startOfDay)
         .snapshots()
         .map((snap) {
-      double total = 0;
-      for (var doc in snap.docs) {
-        total += parseDouble(doc.data()['grandTotal']);
-      }
-      return total;
-    });
+          double total = 0;
+          for (var doc in snap.docs) {
+            total += parseDouble(doc.data()['grandTotal']);
+          }
+          return total;
+        });
 
     // Purchases Stream (Vendor Invoices today)
     final purchasesStream = _db
@@ -78,12 +78,12 @@ class FirestoreStatsService {
         .where('date', isGreaterThanOrEqualTo: startOfDay)
         .snapshots()
         .map((snap) {
-      double total = 0;
-      for (var doc in snap.docs) {
-        total += parseDouble(doc.data()['grandTotal']);
-      }
-      return total;
-    });
+          double total = 0;
+          for (var doc in snap.docs) {
+            total += parseDouble(doc.data()['grandTotal']);
+          }
+          return total;
+        });
 
     // Expenses Stream (Expenses today)
     final expensesStream = _db
@@ -92,12 +92,12 @@ class FirestoreStatsService {
         .where('date', isGreaterThanOrEqualTo: startOfDay)
         .snapshots()
         .map((snap) {
-      double total = 0;
-      for (var doc in snap.docs) {
-        total += parseDouble(doc.data()['amount']);
-      }
-      return total;
-    });
+          double total = 0;
+          for (var doc in snap.docs) {
+            total += parseDouble(doc.data()['amount']);
+          }
+          return total;
+        });
 
     // Pending Stream (Total Customer Dues)
     final pendingStream = _db
@@ -106,12 +106,12 @@ class FirestoreStatsService {
         .collection('customers')
         .snapshots()
         .map((snap) {
-      double total = 0;
-      for (var doc in snap.docs) {
-        total += parseDouble(doc.data()['totalDues']);
-      }
-      return total;
-    });
+          double total = 0;
+          for (var doc in snap.docs) {
+            total += parseDouble(doc.data()['totalDues']);
+          }
+          return total;
+        });
 
     // Low Stock Stream
     final stockStream = _db
@@ -133,14 +133,16 @@ class FirestoreStatsService {
 
     void emit() {
       if (!controller.isClosed) {
-        controller.add(DailyStats(
-          todaySales: sales,
-          todaySpend: purchases + expenses,
-          totalPending: pending,
-          lowStockCount: lowStock,
-          paidThisMonth: 0, // Not synced yet
-          overdueAmount: 0, // Not synced yet
-        ));
+        controller.add(
+          DailyStats(
+            todaySales: sales,
+            todaySpend: purchases + expenses,
+            totalPending: pending,
+            lowStockCount: lowStock,
+            paidThisMonth: 0, // Not synced yet
+            overdueAmount: 0, // Not synced yet
+          ),
+        );
       }
     }
 
@@ -193,39 +195,39 @@ class FirestoreStatsService {
         .where('ownerId', isEqualTo: ownerId)
         .snapshots()
         .map((snap) {
-      double totalVal = 0;
-      double paid = 0;
-      double unpaid = 0;
-      double todayPurch = 0;
-      int active = 0;
+          double totalVal = 0;
+          double paid = 0;
+          double unpaid = 0;
+          double todayPurch = 0;
+          int active = 0;
 
-      for (var doc in snap.docs) {
-        final data = doc.data();
-        final gTotal = parseDouble(data['grandTotal']);
-        final pAmnt = parseDouble(data['paidAmount']);
-        final dateStr = data['date'] as String;
+          for (var doc in snap.docs) {
+            final data = doc.data();
+            final gTotal = parseDouble(data['grandTotal']);
+            final pAmnt = parseDouble(data['paidAmount']);
+            final dateStr = data['date'] as String;
 
-        totalVal += gTotal;
-        paid += pAmnt;
+            totalVal += gTotal;
+            paid += pAmnt;
 
-        double pendingAmount = (gTotal - pAmnt).clamp(0, double.infinity);
-        unpaid += pendingAmount;
+            double pendingAmount = (gTotal - pAmnt).clamp(0, double.infinity);
+            unpaid += pendingAmount;
 
-        if (pendingAmount > 0) active++;
+            if (pendingAmount > 0) active++;
 
-        if (dateStr.compareTo(startOfDay) >= 0) {
-          todayPurch += gTotal;
-        }
-      }
+            if (dateStr.compareTo(startOfDay) >= 0) {
+              todayPurch += gTotal;
+            }
+          }
 
-      return VendorStats(
-        totalInvoiceValue: totalVal,
-        paidAmount: paid,
-        unpaidAmount: unpaid,
-        todayPurchase: todayPurch,
-        activeOrders: active,
-      );
-    });
+          return VendorStats(
+            totalInvoiceValue: totalVal,
+            paidAmount: paid,
+            unpaidAmount: unpaid,
+            todayPurchase: todayPurch,
+            activeOrders: active,
+          );
+        });
   }
 
   /// Get total customer dues
@@ -258,8 +260,10 @@ class FirestoreStatsService {
         .doc(ownerId)
         .collection('stock')
         .snapshots()
-        .map((snap) =>
-            snap.docs.map((d) => StockItem.fromMap(d.id, d.data())).toList());
+        .map(
+          (snap) =>
+              snap.docs.map((d) => StockItem.fromMap(d.id, d.data())).toList(),
+        );
   }
 
   /// Get low stock count
@@ -289,8 +293,10 @@ class FirestoreStatsService {
         .where('ownerId', isEqualTo: ownerId)
         .orderBy('date', descending: true)
         .snapshots()
-        .map((snap) =>
-            snap.docs.map((d) => Expense.fromMap(d.id, d.data())).toList());
+        .map(
+          (snap) =>
+              snap.docs.map((d) => Expense.fromMap(d.id, d.data())).toList(),
+        );
   }
 
   // ============================================================================
@@ -306,8 +312,10 @@ class FirestoreStatsService {
         .where('ownerId', isEqualTo: ownerId)
         .orderBy('date', descending: true)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => PurchaseBill.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((d) => PurchaseBill.fromMap(d.id, d.data()))
+              .toList(),
+        );
   }
 }

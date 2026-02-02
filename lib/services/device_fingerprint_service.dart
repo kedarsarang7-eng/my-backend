@@ -36,13 +36,13 @@ class DeviceFingerprint {
   });
 
   Map<String, dynamic> toJson() => {
-        'fingerprint': fingerprint,
-        'platform': platform,
-        'deviceName': deviceName,
-        'deviceModel': deviceModel,
-        'osVersion': osVersion,
-        'rawComponents': rawComponents,
-      };
+    'fingerprint': fingerprint,
+    'platform': platform,
+    'deviceName': deviceName,
+    'deviceModel': deviceModel,
+    'osVersion': osVersion,
+    'rawComponents': rawComponents,
+  };
 }
 
 /// Cross-platform device fingerprint generator
@@ -109,11 +109,11 @@ class DeviceFingerprintService {
 
     // Try to get CPU ID via command
     try {
-      final cpuResult = await Process.run(
-        'wmic',
-        ['cpu', 'get', 'processorid'],
-        runInShell: true,
-      );
+      final cpuResult = await Process.run('wmic', [
+        'cpu',
+        'get',
+        'processorid',
+      ], runInShell: true);
       final cpuId = cpuResult.stdout
           .toString()
           .split('\n')
@@ -129,11 +129,11 @@ class DeviceFingerprintService {
 
     // Try to get disk serial
     try {
-      final diskResult = await Process.run(
-        'wmic',
-        ['diskdrive', 'get', 'serialnumber'],
-        runInShell: true,
-      );
+      final diskResult = await Process.run('wmic', [
+        'diskdrive',
+        'get',
+        'serialnumber',
+      ], runInShell: true);
       final diskSerial = diskResult.stdout
           .toString()
           .split('\n')
@@ -148,8 +148,9 @@ class DeviceFingerprintService {
     }
 
     // Generate fingerprint hash
-    final fingerprintData =
-        components.entries.map((e) => '${e.key}:${e.value}').join('|');
+    final fingerprintData = components.entries
+        .map((e) => '${e.key}:${e.value}')
+        .join('|');
     final fingerprint = _hashString(fingerprintData);
 
     return DeviceFingerprint(
@@ -179,14 +180,13 @@ class DeviceFingerprintService {
 
     // Serial number (if available)
     try {
-      final serialResult = await Process.run(
-        'system_profiler',
-        ['SPHardwareDataType'],
-        runInShell: true,
-      );
+      final serialResult = await Process.run('system_profiler', [
+        'SPHardwareDataType',
+      ], runInShell: true);
       final output = serialResult.stdout.toString();
-      final serialMatch =
-          RegExp(r'Serial Number.*:\s*(\S+)').firstMatch(output);
+      final serialMatch = RegExp(
+        r'Serial Number.*:\s*(\S+)',
+      ).firstMatch(output);
       if (serialMatch != null) {
         components['serialNumber'] = serialMatch.group(1) ?? '';
       }
@@ -194,8 +194,9 @@ class DeviceFingerprintService {
       // Serial not available
     }
 
-    final fingerprintData =
-        components.entries.map((e) => '${e.key}:${e.value}').join('|');
+    final fingerprintData = components.entries
+        .map((e) => '${e.key}:${e.value}')
+        .join('|');
     final fingerprint = _hashString(fingerprintData);
 
     return DeviceFingerprint(
@@ -219,11 +220,9 @@ class DeviceFingerprintService {
 
     // Board serial
     try {
-      final serialResult = await Process.run(
-        'cat',
-        ['/sys/class/dmi/id/board_serial'],
-        runInShell: true,
-      );
+      final serialResult = await Process.run('cat', [
+        '/sys/class/dmi/id/board_serial',
+      ], runInShell: true);
       final serial = serialResult.stdout.toString().trim();
       if (serial.isNotEmpty && !serial.contains('Permission')) {
         components['boardSerial'] = serial;
@@ -234,11 +233,9 @@ class DeviceFingerprintService {
 
     // Product UUID
     try {
-      final uuidResult = await Process.run(
-        'cat',
-        ['/sys/class/dmi/id/product_uuid'],
-        runInShell: true,
-      );
+      final uuidResult = await Process.run('cat', [
+        '/sys/class/dmi/id/product_uuid',
+      ], runInShell: true);
       final uuid = uuidResult.stdout.toString().trim();
       if (uuid.isNotEmpty && !uuid.contains('Permission')) {
         components['productUuid'] = uuid;
@@ -247,8 +244,9 @@ class DeviceFingerprintService {
       // Product UUID not available
     }
 
-    final fingerprintData =
-        components.entries.map((e) => '${e.key}:${e.value}').join('|');
+    final fingerprintData = components.entries
+        .map((e) => '${e.key}:${e.value}')
+        .join('|');
     final fingerprint = _hashString(fingerprintData);
 
     return DeviceFingerprint(
@@ -281,8 +279,9 @@ class DeviceFingerprintService {
     // Board
     components['board'] = androidInfo.board;
 
-    final fingerprintData =
-        components.entries.map((e) => '${e.key}:${e.value}').join('|');
+    final fingerprintData = components.entries
+        .map((e) => '${e.key}:${e.value}')
+        .join('|');
     final fingerprint = _hashString(fingerprintData);
 
     return DeviceFingerprint(
@@ -312,8 +311,9 @@ class DeviceFingerprintService {
     // System name
     components['systemName'] = iosInfo.systemName;
 
-    final fingerprintData =
-        components.entries.map((e) => '${e.key}:${e.value}').join('|');
+    final fingerprintData = components.entries
+        .map((e) => '${e.key}:${e.value}')
+        .join('|');
     final fingerprint = _hashString(fingerprintData);
 
     return DeviceFingerprint(
@@ -336,8 +336,9 @@ class DeviceFingerprintService {
       'localHostname': Platform.localHostname,
     };
 
-    final fingerprintData =
-        components.entries.map((e) => '${e.key}:${e.value}').join('|');
+    final fingerprintData = components.entries
+        .map((e) => '${e.key}:${e.value}')
+        .join('|');
     final fingerprint = _hashString(fingerprintData);
 
     return DeviceFingerprint(

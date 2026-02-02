@@ -102,7 +102,7 @@ class GlassBottomSheet extends StatelessWidget {
                               color: FuturisticColors.primary.withOpacity(0.3),
                               blurRadius: 12,
                               offset: const Offset(0, 4),
-                            )
+                            ),
                           ],
                         ),
                         child: Icon(icon, color: Colors.white, size: 24),

@@ -44,7 +44,8 @@ class _StaffListScreenState extends State<StaffListScreen> {
 
     try {
       final staff = await _service.getAllStaff(
-          activeOnly: true); // Service allows explicit activeOnly param
+        activeOnly: true,
+      ); // Service allows explicit activeOnly param
       setState(() {
         _staff = staff;
         _isLoading = false;
@@ -59,7 +60,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
     return _staff.where((s) {
       final matchesSearch =
           s.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              s.phone.contains(_searchQuery);
+          s.phone.contains(_searchQuery);
       final matchesRole = _filterRole == 'all' || s.role.name == _filterRole;
       return matchesSearch && matchesRole;
     }).toList();
@@ -71,8 +72,9 @@ class _StaffListScreenState extends State<StaffListScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF5F5F5),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('Staff Management'),
         backgroundColor: Colors.transparent,
@@ -84,7 +86,8 @@ class _StaffListScreenState extends State<StaffListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => const StaffAttendanceScreen()),
+                  builder: (_) => const StaffAttendanceScreen(),
+                ),
               );
             },
             tooltip: 'Attendance',
@@ -150,16 +153,16 @@ class _StaffListScreenState extends State<StaffListScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredStaff.isEmpty
-                    ? _buildEmptyState(isDark)
-                    : RefreshIndicator(
-                        onRefresh: _loadStaff,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _filteredStaff.length,
-                          itemBuilder: (_, i) =>
-                              _buildStaffCard(_filteredStaff[i], isDark),
-                        ),
-                      ),
+                ? _buildEmptyState(isDark)
+                : RefreshIndicator(
+                    onRefresh: _loadStaff,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: _filteredStaff.length,
+                      itemBuilder: (_, i) =>
+                          _buildStaffCard(_filteredStaff[i], isDark),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -189,13 +192,17 @@ class _StaffListScreenState extends State<StaffListScreen> {
         ),
         child: Row(
           children: [
-            Icon(Icons.filter_list,
-                size: 20, color: isDark ? Colors.white70 : Colors.grey[700]),
+            Icon(
+              Icons.filter_list,
+              size: 20,
+              color: isDark ? Colors.white70 : Colors.grey[700],
+            ),
             const SizedBox(width: 4),
             Text(
               _filterRole == 'all' ? 'All' : _filterRole,
-              style:
-                  TextStyle(color: isDark ? Colors.white70 : Colors.grey[700]),
+              style: TextStyle(
+                color: isDark ? Colors.white70 : Colors.grey[700],
+              ),
             ),
           ],
         ),
@@ -248,7 +255,12 @@ class _StaffListScreenState extends State<StaffListScreen> {
   }
 
   Widget _buildStatCard(
-      String label, String value, IconData icon, Color color, bool isDark) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    bool isDark,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -456,8 +468,10 @@ class _StaffListScreenState extends State<StaffListScreen> {
                           children: [
                             Icon(Icons.person_off, size: 18, color: Colors.red),
                             SizedBox(width: 8),
-                            Text('Deactivate',
-                                style: TextStyle(color: Colors.red)),
+                            Text(
+                              'Deactivate',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ],
                         ),
                       ),
@@ -493,9 +507,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
           const SizedBox(height: 8),
           Text(
             'Add your first team member to get started',
-            style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.grey,
-            ),
+            style: TextStyle(color: isDark ? Colors.white38 : Colors.grey),
           ),
         ],
       ),

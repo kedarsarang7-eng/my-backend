@@ -1,10 +1,6 @@
 import 'package:dukanx/services/role_management_service.dart';
 
-enum ActionType {
-  navigate,
-  function,
-  modal,
-}
+enum ActionType { navigate, function, modal }
 
 class ShortcutDefinition {
   final String id;

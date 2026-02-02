@@ -28,9 +28,9 @@ class RestaurantBillRepository {
     AppDatabase? db,
     ErrorHandler? errorHandler,
     BillsRepository? billsRepository,
-  })  : _db = db ?? AppDatabase.instance,
-        _errorHandler = errorHandler ?? ErrorHandler.instance,
-        _billsRepository = billsRepository ?? sl<BillsRepository>();
+  }) : _db = db ?? AppDatabase.instance,
+       _errorHandler = errorHandler ?? ErrorHandler.instance,
+       _billsRepository = billsRepository ?? sl<BillsRepository>();
 
   // ============================================================================
   // BILL GENERATION
@@ -67,12 +67,15 @@ class RestaurantBillRepository {
         TaxBreakdownItem(name: 'SGST', rate: sgstRate, amount: sgst),
         if (serviceCharge > 0)
           TaxBreakdownItem(
-              name: 'Service Charge',
-              rate: serviceChargeRate,
-              amount: serviceCharge),
+            name: 'Service Charge',
+            rate: serviceChargeRate,
+            amount: serviceCharge,
+          ),
       ];
 
-      await _db.into(_db.restaurantBills).insert(
+      await _db
+          .into(_db.restaurantBills)
+          .insert(
             RestaurantBillsCompanion.insert(
               id: id,
               vendorId: vendorId,
@@ -87,7 +90,8 @@ class RestaurantBillRepository {
               discountAmount: Value(discount),
               grandTotal: grandTotal,
               taxBreakdownJson: Value(
-                  jsonEncode(taxBreakdown.map((e) => e.toJson()).toList())),
+                jsonEncode(taxBreakdown.map((e) => e.toJson()).toList()),
+              ),
               paymentStatus: Value(BillPaymentStatus.generated.value),
               generatedAt: now,
               createdAt: now,
@@ -95,9 +99,9 @@ class RestaurantBillRepository {
             ),
           );
 
-      final entity = await (_db.select(_db.restaurantBills)
-            ..where((t) => t.id.equals(id)))
-          .getSingle();
+      final entity = await (_db.select(
+        _db.restaurantBills,
+      )..where((t) => t.id.equals(id))).getSingle();
 
       final restaurantBill = RestaurantBill.fromEntity(entity);
 
@@ -106,9 +110,9 @@ class RestaurantBillRepository {
       // ============================================================
       try {
         // 1. Fetch the Order to get Items
-        final orderEntity = await (_db.select(_db.foodOrders)
-              ..where((t) => t.id.equals(orderId)))
-            .getSingle();
+        final orderEntity = await (_db.select(
+          _db.foodOrders,
+        )..where((t) => t.id.equals(orderId))).getSingle();
         final order = FoodOrder.fromEntity(orderEntity);
 
         // 2. Map Items to BillItem
@@ -136,8 +140,9 @@ class RestaurantBillRepository {
           discountApplied: discount,
           grandTotal: grandTotal,
           paidAmount: 0, // Initially unpaid
-          customerName:
-              customerId == 'GUEST' ? 'Guest' : (customerId), // Placeholder
+          customerName: customerId == 'GUEST'
+              ? 'Guest'
+              : (customerId), // Placeholder
           customerId: customerId,
           businessType: BusinessType.restaurant.name,
           status: 'Unpaid',
@@ -171,13 +176,15 @@ class RestaurantBillRepository {
     final startOfMonth = DateTime(now.year, now.month, 1);
     final endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
 
-    final count = await (_db.select(_db.restaurantBills)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.generatedAt.isBiggerOrEqualValue(startOfMonth) &
-              t.generatedAt.isSmallerOrEqualValue(endOfMonth)))
-        .get()
-        .then((list) => list.length);
+    final count =
+        await (_db.select(_db.restaurantBills)..where(
+              (t) =>
+                  t.vendorId.equals(vendorId) &
+                  t.generatedAt.isBiggerOrEqualValue(startOfMonth) &
+                  t.generatedAt.isSmallerOrEqualValue(endOfMonth),
+            ))
+            .get()
+            .then((list) => list.length);
 
     return '$prefix-${(count + 1).toString().padLeft(4, '0')}';
   }
@@ -189,9 +196,9 @@ class RestaurantBillRepository {
   /// Get bill by ID
   Future<RepositoryResult<RestaurantBill?>> getBillById(String id) async {
     return await _errorHandler.runSafe<RestaurantBill?>(() async {
-      final entity = await (_db.select(_db.restaurantBills)
-            ..where((t) => t.id.equals(id)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.restaurantBills,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
 
       return entity != null ? RestaurantBill.fromEntity(entity) : null;
     }, 'getBillById');
@@ -199,11 +206,12 @@ class RestaurantBillRepository {
 
   /// Get bill by order ID
   Future<RepositoryResult<RestaurantBill?>> getBillByOrder(
-      String orderId) async {
+    String orderId,
+  ) async {
     return await _errorHandler.runSafe<RestaurantBill?>(() async {
-      final entity = await (_db.select(_db.restaurantBills)
-            ..where((t) => t.orderId.equals(orderId)))
-          .getSingleOrNull();
+      final entity = await (_db.select(
+        _db.restaurantBills,
+      )..where((t) => t.orderId.equals(orderId))).getSingleOrNull();
 
       return entity != null ? RestaurantBill.fromEntity(entity) : null;
     }, 'getBillByOrder');
@@ -232,9 +240,9 @@ class RestaurantBillRepository {
         query = query..where((t) => t.paymentStatus.equals(status.value));
       }
 
-      final entities = await (query
-            ..orderBy([(t) => OrderingTerm.desc(t.generatedAt)]))
-          .get();
+      final entities =
+          await (query..orderBy([(t) => OrderingTerm.desc(t.generatedAt)]))
+              .get();
 
       return entities.map((e) => RestaurantBill.fromEntity(e)).toList();
     }, 'getVendorBills');
@@ -242,17 +250,21 @@ class RestaurantBillRepository {
 
   /// Get pending bills (not paid)
   Future<RepositoryResult<List<RestaurantBill>>> getPendingBills(
-      String vendorId) async {
+    String vendorId,
+  ) async {
     return await _errorHandler.runSafe<List<RestaurantBill>>(() async {
-      final entities = await (_db.select(_db.restaurantBills)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.paymentStatus.isIn([
-                  BillPaymentStatus.pending.value,
-                  BillPaymentStatus.generated.value,
-                ]))
-            ..orderBy([(t) => OrderingTerm.asc(t.generatedAt)]))
-          .get();
+      final entities =
+          await (_db.select(_db.restaurantBills)
+                ..where(
+                  (t) =>
+                      t.vendorId.equals(vendorId) &
+                      t.paymentStatus.isIn([
+                        BillPaymentStatus.pending.value,
+                        BillPaymentStatus.generated.value,
+                      ]),
+                )
+                ..orderBy([(t) => OrderingTerm.asc(t.generatedAt)]))
+              .get();
 
       return entities.map((e) => RestaurantBill.fromEntity(e)).toList();
     }, 'getPendingBills');
@@ -271,20 +283,23 @@ class RestaurantBillRepository {
       final now = DateTime.now();
 
       // 1. Update Restaurant Bill
-      await (_db.update(_db.restaurantBills)..where((t) => t.id.equals(billId)))
-          .write(RestaurantBillsCompanion(
-        paymentStatus: Value(BillPaymentStatus.paid.value),
-        paymentMode: Value(paymentMode),
-        paidAt: Value(now),
-        updatedAt: Value(now),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.restaurantBills,
+      )..where((t) => t.id.equals(billId))).write(
+        RestaurantBillsCompanion(
+          paymentStatus: Value(BillPaymentStatus.paid.value),
+          paymentMode: Value(paymentMode),
+          paidAt: Value(now),
+          updatedAt: Value(now),
+          isSynced: const Value(false),
+        ),
+      );
 
       // 2. Sync Payment to Core Bill
       try {
-        final bill = await (_db.select(_db.restaurantBills)
-              ..where((t) => t.id.equals(billId)))
-            .getSingle();
+        final bill = await (_db.select(
+          _db.restaurantBills,
+        )..where((t) => t.id.equals(billId))).getSingle();
 
         await _billsRepository.recordPayment(
           userId: bill.vendorId,
@@ -301,12 +316,15 @@ class RestaurantBillRepository {
   /// Cancel a bill
   Future<RepositoryResult<void>> cancelBill(String billId) async {
     return await _errorHandler.runSafe<void>(() async {
-      await (_db.update(_db.restaurantBills)..where((t) => t.id.equals(billId)))
-          .write(RestaurantBillsCompanion(
-        paymentStatus: Value(BillPaymentStatus.cancelled.value),
-        updatedAt: Value(DateTime.now()),
-        isSynced: const Value(false),
-      ));
+      await (_db.update(
+        _db.restaurantBills,
+      )..where((t) => t.id.equals(billId))).write(
+        RestaurantBillsCompanion(
+          paymentStatus: Value(BillPaymentStatus.cancelled.value),
+          updatedAt: Value(DateTime.now()),
+          isSynced: const Value(false),
+        ),
+      );
     }, 'cancelBill');
   }
 
@@ -319,12 +337,14 @@ class RestaurantBillRepository {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
 
-    final bills = await (_db.select(_db.restaurantBills)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.generatedAt.isBiggerOrEqualValue(startOfDay) &
-              t.paymentStatus.equals(BillPaymentStatus.paid.value)))
-        .get();
+    final bills =
+        await (_db.select(_db.restaurantBills)..where(
+              (t) =>
+                  t.vendorId.equals(vendorId) &
+                  t.generatedAt.isBiggerOrEqualValue(startOfDay) &
+                  t.paymentStatus.equals(BillPaymentStatus.paid.value),
+            ))
+            .get();
 
     return bills.fold<double>(0, (sum, bill) => sum + bill.grandTotal);
   }
@@ -334,11 +354,13 @@ class RestaurantBillRepository {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
 
-    final bills = await (_db.select(_db.restaurantBills)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.generatedAt.isBiggerOrEqualValue(startOfDay)))
-        .get();
+    final bills =
+        await (_db.select(_db.restaurantBills)..where(
+              (t) =>
+                  t.vendorId.equals(vendorId) &
+                  t.generatedAt.isBiggerOrEqualValue(startOfDay),
+            ))
+            .get();
 
     return bills.length;
   }
@@ -349,31 +371,37 @@ class RestaurantBillRepository {
     DateTime startDate,
     DateTime endDate,
   ) async {
-    final bills = await (_db.select(_db.restaurantBills)
-          ..where((t) =>
-              t.vendorId.equals(vendorId) &
-              t.generatedAt.isBiggerOrEqualValue(startDate) &
-              t.generatedAt.isSmallerOrEqualValue(endDate) &
-              t.paymentStatus.equals(BillPaymentStatus.paid.value)))
-        .get();
+    final bills =
+        await (_db.select(_db.restaurantBills)..where(
+              (t) =>
+                  t.vendorId.equals(vendorId) &
+                  t.generatedAt.isBiggerOrEqualValue(startDate) &
+                  t.generatedAt.isSmallerOrEqualValue(endDate) &
+                  t.paymentStatus.equals(BillPaymentStatus.paid.value),
+            ))
+            .get();
 
     return bills.fold<double>(0, (sum, bill) => sum + bill.grandTotal);
   }
 
   /// Get revenue for a specific date (returns RepositoryResult)
   Future<RepositoryResult<double>> getDailyRevenue(
-      String vendorId, DateTime date) async {
+    String vendorId,
+    DateTime date,
+  ) async {
     return await _errorHandler.runSafe<double>(() async {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
 
-      final bills = await (_db.select(_db.restaurantBills)
-            ..where((t) =>
-                t.vendorId.equals(vendorId) &
-                t.generatedAt.isBiggerOrEqualValue(startOfDay) &
-                t.generatedAt.isSmallerThanValue(endOfDay) &
-                t.paymentStatus.equals(BillPaymentStatus.paid.value)))
-          .get();
+      final bills =
+          await (_db.select(_db.restaurantBills)..where(
+                (t) =>
+                    t.vendorId.equals(vendorId) &
+                    t.generatedAt.isBiggerOrEqualValue(startOfDay) &
+                    t.generatedAt.isSmallerThanValue(endOfDay) &
+                    t.paymentStatus.equals(BillPaymentStatus.paid.value),
+              ))
+              .get();
 
       return bills.fold<double>(0, (sum, bill) => sum + bill.grandTotal);
     }, 'getDailyRevenue');
@@ -385,10 +413,11 @@ class RestaurantBillRepository {
 
   /// Get unsynced bills
   Future<List<RestaurantBill>> getUnsyncedBills(String vendorId) async {
-    final entities = await (_db.select(_db.restaurantBills)
-          ..where(
-              (t) => t.vendorId.equals(vendorId) & t.isSynced.equals(false)))
-        .get();
+    final entities =
+        await (_db.select(_db.restaurantBills)..where(
+              (t) => t.vendorId.equals(vendorId) & t.isSynced.equals(false),
+            ))
+            .get();
 
     return entities.map((e) => RestaurantBill.fromEntity(e)).toList();
   }

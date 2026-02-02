@@ -16,11 +16,9 @@ class Gstr1ExportService {
   final AppDatabase _db;
   late final CreditNoteRepository _creditNoteRepo;
 
-  Gstr1ExportService({
-    GstRepository? gstRepo,
-    AppDatabase? db,
-  })  : _gstRepo = gstRepo ?? GstRepository(),
-        _db = db ?? sl<AppDatabase>() {
+  Gstr1ExportService({GstRepository? gstRepo, AppDatabase? db})
+    : _gstRepo = gstRepo ?? GstRepository(),
+      _db = db ?? sl<AppDatabase>() {
     _creditNoteRepo = CreditNoteRepository(_db);
   }
 
@@ -60,12 +58,15 @@ class Gstr1ExportService {
     );
 
     // Categorize invoices
-    final b2bInvoices =
-        invoices.where((i) => i.invoiceType == GstInvoiceType.b2b).toList();
-    final b2clInvoices =
-        invoices.where((i) => i.invoiceType == GstInvoiceType.b2cl).toList();
-    final b2csInvoices =
-        invoices.where((i) => i.invoiceType == GstInvoiceType.b2cs).toList();
+    final b2bInvoices = invoices
+        .where((i) => i.invoiceType == GstInvoiceType.b2b)
+        .toList();
+    final b2clInvoices = invoices
+        .where((i) => i.invoiceType == GstInvoiceType.b2cl)
+        .toList();
+    final b2csInvoices = invoices
+        .where((i) => i.invoiceType == GstInvoiceType.b2cs)
+        .toList();
 
     // Categorize credit notes (B2B -> CDNR, B2C -> CDNUR)
     final cdnrNotes = creditNotes.where((cn) => cn.isB2B).toList();
@@ -110,14 +111,17 @@ class Gstr1ExportService {
         totalSgst: invoices.fold(0.0, (sum, i) => sum + i.sgstAmount),
         totalIgst: invoices.fold(0.0, (sum, i) => sum + i.igstAmount),
         totalCess: invoices.fold(0.0, (sum, i) => sum + i.cessAmount),
-        creditNoteTaxReversed:
-            creditNotes.fold(0.0, (sum, cn) => sum + cn.totalGst),
+        creditNoteTaxReversed: creditNotes.fold(
+          0.0,
+          (sum, cn) => sum + cn.totalGst,
+        ),
       ),
     );
   }
 
   Future<Map<String, BillEntity>> _getBillsForInvoices(
-      List<GstInvoiceDetailModel> invoices) async {
+    List<GstInvoiceDetailModel> invoices,
+  ) async {
     final billIds = invoices.map((i) => i.billId).toSet().toList();
     final billsMap = <String, BillEntity>{};
 
@@ -131,9 +135,13 @@ class Gstr1ExportService {
   }
 
   Future<Map<String, CustomerEntity>> _getCustomersForBills(
-      List<BillEntity> bills) async {
-    final customerIds =
-        bills.map((b) => b.customerId).whereType<String>().toSet().toList();
+    List<BillEntity> bills,
+  ) async {
+    final customerIds = bills
+        .map((b) => b.customerId)
+        .whereType<String>()
+        .toSet()
+        .toList();
     final customersMap = <String, CustomerEntity>{};
 
     for (final custId in customerIds) {
@@ -170,7 +178,8 @@ class Gstr1ExportService {
       // If no valid GSTIN found, skip or handle error (B2B must have GSTIN)
       if (customerGstin == null || customerGstin.isEmpty) {
         debugPrint(
-            'GstrExport: Warning - B2B invoice ${bill.invoiceNumber} has no customer GSTIN');
+          'GstrExport: Warning - B2B invoice ${bill.invoiceNumber} has no customer GSTIN',
+        );
         continue; // Skip this invoice for B2B section, maybe it should be B2C?
       }
 
@@ -204,8 +213,8 @@ class Gstr1ExportService {
                   "samt": inv.sgstAmount,
                   "iamt": inv.igstAmount,
                   "csamt": inv.cessAmount,
-                }
-              }
+                },
+              },
             ],
           };
         }).toList(),
@@ -245,8 +254,8 @@ class Gstr1ExportService {
                   "rt": inv.igstRate,
                   "iamt": inv.igstAmount,
                   "csamt": inv.cessAmount,
-                }
-              }
+                },
+              },
             ],
           };
         }).toList(),
@@ -262,8 +271,9 @@ class Gstr1ExportService {
     final aggregated = <String, _B2CSAggregate>{};
 
     for (final inv in invoices) {
-      final rate =
-          inv.igstRate > 0 ? inv.igstRate : (inv.cgstRate + inv.sgstRate);
+      final rate = inv.igstRate > 0
+          ? inv.igstRate
+          : (inv.cgstRate + inv.sgstRate);
       final key = '${inv.supplyType.name}_${inv.placeOfSupply}_$rate';
 
       if (!aggregated.containsKey(key)) {
@@ -337,9 +347,11 @@ class Gstr1ExportService {
 
   /// Build nil rated / exempt section
   Map<String, dynamic> _buildNilRatedSection(
-      List<GstInvoiceDetailModel> invoices) {
-    final nilInvoices =
-        invoices.where((i) => i.invoiceType == GstInvoiceType.nil).toList();
+    List<GstInvoiceDetailModel> invoices,
+  ) {
+    final nilInvoices = invoices
+        .where((i) => i.invoiceType == GstInvoiceType.nil)
+        .toList();
     if (nilInvoices.isEmpty) return {};
 
     final interValue = nilInvoices
@@ -395,9 +407,9 @@ class Gstr1ExportService {
               "totnum": invoices.length,
               "cancel": 0,
               "net_issue": invoices.length,
-            }
+            },
           ],
-        }
+        },
       ],
     };
   }
@@ -449,8 +461,8 @@ class Gstr1ExportService {
                   "samt": cn.totalSgst,
                   "iamt": cn.totalIgst,
                   "csamt": 0, // Cess - not tracked separately yet
-                }
-              }
+                },
+              },
             ],
           };
         }).toList(),
@@ -487,8 +499,8 @@ class Gstr1ExportService {
               "samt": cn.totalSgst,
               "iamt": cn.totalIgst,
               "csamt": 0,
-            }
-          }
+            },
+          },
         ],
       };
     }).toList();
@@ -528,16 +540,14 @@ class Gstr1ExportResult {
   final Gstr1Summary? summary;
   final String? errorMessage;
 
-  Gstr1ExportResult.success({
-    required this.json,
-    required this.summary,
-  })  : success = true,
-        errorMessage = null;
+  Gstr1ExportResult.success({required this.json, required this.summary})
+    : success = true,
+      errorMessage = null;
 
   Gstr1ExportResult.error(this.errorMessage)
-      : success = false,
-        json = null,
-        summary = null;
+    : success = false,
+      json = null,
+      summary = null;
 }
 
 /// GSTR-1 Summary for display

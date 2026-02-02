@@ -34,7 +34,10 @@ class ServiceStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildLaborField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Labor Charge',
       value: (item.laborCharge ?? 0).toStringAsFixed(0),
@@ -49,7 +52,10 @@ class ServiceStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildPartsField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Parts Charge',
       value: (item.partsCharge ?? 0).toStringAsFixed(0),
@@ -64,7 +70,10 @@ class ServiceStrategy extends BaseBusinessStrategy {
   }
 
   Widget _buildNotesField(
-      BillItem item, Function(BillItem) onUpdate, bool isDark) {
+    BillItem item,
+    Function(BillItem) onUpdate,
+    bool isDark,
+  ) {
     return compactTextField(
       label: 'Notes',
       value: item.notes ?? '',

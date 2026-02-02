@@ -18,16 +18,20 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.grey[50],
       appBar: AppBar(
-        title: Text('Select Business Type',
-            style: TextStyle(
-                color: isDark ? Colors.white : const Color(0xFF1E293B),
-                fontSize: 18,
-                fontWeight: FontWeight.w700)),
+        title: Text(
+          'Select Business Type',
+          style: TextStyle(
+            color: isDark ? Colors.white : const Color(0xFF1E293B),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(
-            color: isDark ? Colors.white : const Color(0xFF1E293B)),
+          color: isDark ? Colors.white : const Color(0xFF1E293B),
+        ),
       ),
       body: Column(
         children: [
@@ -37,9 +41,10 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
               'Choose the category that best fits your business to customize your billing experience.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 13,
-                  height: 1.5,
-                  color: isDark ? Colors.white60 : Colors.grey[600]),
+                fontSize: 13,
+                height: 1.5,
+                color: isDark ? Colors.white60 : Colors.grey[600],
+              ),
             ),
           ),
           Expanded(
@@ -52,7 +57,13 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
               children: BusinessType.values.map((type) {
                 final isSelected = businessState.type == type;
                 return _buildCompactCard(
-                    type, isSelected, context, isDark, palette, ref);
+                  type,
+                  isSelected,
+                  context,
+                  isDark,
+                  palette,
+                  ref,
+                );
               }).toList(),
             ),
           ),
@@ -70,14 +81,18 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     elevation: 0,
                   ),
-                  child: const Text('Continue',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5)),
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -87,12 +102,13 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
   }
 
   Widget _buildCompactCard(
-      BusinessType type,
-      bool isSelected,
-      BuildContext context,
-      bool isDark,
-      AppColorPalette palette,
-      WidgetRef ref) {
+    BusinessType type,
+    bool isSelected,
+    BuildContext context,
+    bool isDark,
+    AppColorPalette palette,
+    WidgetRef ref,
+  ) {
     IconData icon;
     String label;
     String description;
@@ -204,18 +220,12 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
                             activeColor.withOpacity(0.2),
                             activeColor.withOpacity(0.08),
                           ]
-                        : [
-                            Colors.white,
-                            activeColor.withOpacity(0.12),
-                          ],
+                        : [Colors.white, activeColor.withOpacity(0.12)],
                   )
                 : null,
             color: isSelected ? null : cardBg,
             borderRadius: BorderRadius.circular(isSelected ? 20 : 16),
-            border: Border.all(
-              color: borderColor,
-              width: isSelected ? 2.5 : 1,
-            ),
+            border: Border.all(color: borderColor, width: isSelected ? 2.5 : 1),
             boxShadow: [
               if (isSelected)
                 BoxShadow(
@@ -270,27 +280,26 @@ class BusinessTypeSelectionScreen extends ConsumerWidget {
                     AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
                       style: TextStyle(
-                        fontWeight:
-                            isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         fontSize: isSelected ? 14.5 : 14,
                         color: isSelected
                             ? (isDark
-                                ? Colors.white
-                                : activeColor.withOpacity(0.9))
+                                  ? Colors.white
+                                  : activeColor.withOpacity(0.9))
                             : (isDark ? Colors.white : const Color(0xFF1E293B)),
                       ),
-                      child: Text(
-                        label,
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text(label, textAlign: TextAlign.center),
                     ),
                     const SizedBox(height: 4),
                     AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight:
-                            isSelected ? FontWeight.w500 : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.w500
+                            : FontWeight.normal,
                         color: isSelected
                             ? (isDark ? Colors.white70 : Colors.grey[700])
                             : (isDark ? Colors.white54 : Colors.grey[500]),
