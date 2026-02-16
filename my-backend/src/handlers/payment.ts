@@ -15,21 +15,27 @@ const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL;
 
 const snsClient = new SNSClient({ region: process.env.AWS_REGION });
 
-// --- Initialize Firebase Admin ---
-if (!admin.apps.length) {
-    try {
-        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
+// --- Initialize Firebase Admin (graceful — server starts even without Firebase) ---
+let firebaseDb: admin.database.Database | null = null;
+
+try {
+    const raw = process.env.FIREBASE_SERVICE_ACCOUNT || '{}';
+    const serviceAccount = JSON.parse(raw);
+    if (serviceAccount.project_id && !admin.apps.length) {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             databaseURL: FIREBASE_DB_URL
         });
+        firebaseDb = admin.database();
         logger.info("Firebase Admin Initialized");
-    } catch (e) {
-        logger.error("Failed to initialize Firebase Admin", { error: (e as Error).message });
+    } else if (!admin.apps.length) {
+        logger.warn("Firebase skipped — FIREBASE_SERVICE_ACCOUNT has no project_id");
+    } else {
+        firebaseDb = admin.database();
     }
+} catch (e) {
+    logger.warn("Firebase skipped — invalid config", { error: (e as Error).message });
 }
-
-const db = admin.database();
 
 // --- Feature A: Initiate Payment (Dynamic QR) ---
 export const initiatePayment = authorizedHandler([], async (event, _context, auth) => {
@@ -120,15 +126,19 @@ export const paymentWebhook: APIGatewayProxyHandler = async (event) => {
 
             const { tenant_id, liters, customer_id } = updateRes.rows[0];
 
-            // 3. Update Firebase
-            const saleRef = db.ref(`tenants/${tenant_id}/today_sales/${merchantTransactionId}`);
-            await saleRef.set({
-                amount: amount / 100,
-                liters: parseFloat(liters),
-                fuel_type: 'petrol',
-                timestamp: admin.database.ServerValue.TIMESTAMP,
-                status: 'COMPLETED'
-            });
+            // 3. Update Firebase (skip if Firebase not configured)
+            if (firebaseDb) {
+                const saleRef = firebaseDb.ref(`tenants/${tenant_id}/today_sales/${merchantTransactionId}`);
+                await saleRef.set({
+                    amount: amount / 100,
+                    liters: parseFloat(liters),
+                    fuel_type: 'petrol',
+                    timestamp: admin.database.ServerValue.TIMESTAMP,
+                    status: 'COMPLETED'
+                });
+            } else {
+                logger.warn('Firebase not configured — skipping real-time sync');
+            }
 
             // 4. Send SNS Push Notification (Feature Added)
             if (customer_id) {
