@@ -7,10 +7,12 @@ import { logger } from '../utils/logger';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const REDIS_PREFIX = process.env.REDIS_PREFIX || 'sls:';
+const REDIS_ENABLED = process.env.REDIS_ENABLED === 'true';
 
-let redisClient: RedisClientType;
+let redisClient: RedisClientType | null = null;
 
-export async function getRedisClient(): Promise<RedisClientType> {
+export async function getRedisClient(): Promise<RedisClientType | null> {
+    if (!REDIS_ENABLED) return null;
     if (!redisClient) {
         redisClient = createClient({ url: REDIS_URL });
 
@@ -40,6 +42,7 @@ export function slsKey(key: string): string {
  */
 export async function cacheLicenseValidation(keyHash: string, data: object, ttlSeconds = 300): Promise<void> {
     const client = await getRedisClient();
+    if (!client) return;
     await client.setEx(slsKey(`license:${keyHash}`), ttlSeconds, JSON.stringify(data));
 }
 
@@ -48,6 +51,7 @@ export async function cacheLicenseValidation(keyHash: string, data: object, ttlS
  */
 export async function getCachedValidation(keyHash: string): Promise<object | null> {
     const client = await getRedisClient();
+    if (!client) return null;
     const cached = await client.get(slsKey(`license:${keyHash}`));
     return cached ? JSON.parse(cached) : null;
 }
@@ -57,6 +61,7 @@ export async function getCachedValidation(keyHash: string): Promise<object | nul
  */
 export async function invalidateLicenseCache(keyHash: string): Promise<void> {
     const client = await getRedisClient();
+    if (!client) return;
     await client.del(slsKey(`license:${keyHash}`));
 }
 
@@ -70,6 +75,7 @@ export async function checkRateLimit(
     windowMs: number
 ): Promise<{ allowed: boolean; remaining: number; resetIn: number }> {
     const client = await getRedisClient();
+    if (!client) return { allowed: true, remaining: maxRequests, resetIn: windowMs };
     const key = slsKey(`rate:${identifier}`);
     const now = Date.now();
     const windowStart = now - windowMs;
@@ -94,6 +100,7 @@ export async function checkRateLimit(
  */
 export async function storeNonce(nonce: string, ttlSeconds = 60): Promise<boolean> {
     const client = await getRedisClient();
+    if (!client) return true;
     const key = slsKey(`nonce:${nonce}`);
     // SET NX = only set if not exists. Returns true if set (nonce is fresh)
     const result = await client.set(key, '1', { NX: true, EX: ttlSeconds });
@@ -105,11 +112,13 @@ export async function storeNonce(nonce: string, ttlSeconds = 60): Promise<boolea
  */
 export async function updateActiveUserCount(count: number): Promise<void> {
     const client = await getRedisClient();
+    if (!client) return;
     await client.setEx(slsKey('analytics:active_users'), 60, count.toString());
 }
 
 export async function getActiveUserCount(): Promise<number> {
     const client = await getRedisClient();
+    if (!client) return 0;
     const count = await client.get(slsKey('analytics:active_users'));
     return count ? parseInt(count, 10) : 0;
 }

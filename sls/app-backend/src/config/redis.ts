@@ -7,10 +7,12 @@ import { logger } from '../utils/logger';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const REDIS_PREFIX = process.env.REDIS_PREFIX || 'app:';
+const REDIS_ENABLED = process.env.REDIS_ENABLED === 'true';
 
-let redisClient: RedisClientType;
+let redisClient: RedisClientType | null = null;
 
-export async function getRedisClient(): Promise<RedisClientType> {
+export async function getRedisClient(): Promise<RedisClientType | null> {
+    if (!REDIS_ENABLED) return null;
     if (!redisClient) {
         redisClient = createClient({ url: REDIS_URL });
 
@@ -44,6 +46,7 @@ export async function checkRateLimit(
     windowMs: number
 ): Promise<{ allowed: boolean; remaining: number; resetIn: number }> {
     const client = await getRedisClient();
+    if (!client) return { allowed: true, remaining: maxRequests, resetIn: windowMs };
     const key = appKey(`rate:${identifier}`);
     const now = Date.now();
     const windowStart = now - windowMs;
