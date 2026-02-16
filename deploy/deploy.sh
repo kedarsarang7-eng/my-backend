@@ -17,7 +17,7 @@ set -euo pipefail
 
 # ── Configuration ────────────────────────────────────────────────────────────
 APP_DIR="/home/ec2-user/dukanx"
-REPO_URL="https://github.com/kedarsarang9-jpg/my-backend.git"
+REPO_URL="https://github.com/kedarsarang7-eng/my-backend.git"
 BRANCH="main"
 
 # Colors for output

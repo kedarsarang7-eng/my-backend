@@ -139,7 +139,7 @@ sudo dnf install -y git     # Amazon Linux 2023
 # sudo apt-get install -y git  # Ubuntu
 
 # Clone your repo
-git clone https://github.com/kedarsarang9-jpg/my-backend.git /home/ec2-user/dukanx
+git clone https://github.com/kedarsarang7-eng/my-backend.git /home/ec2-user/dukanx
 cd /home/ec2-user/dukanx
 
 # Run the setup script (installs Node 22, PM2, Nginx, PostgreSQL, Certbot)
