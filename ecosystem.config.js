@@ -69,5 +69,32 @@ module.exports = {
             max_restarts: 10,
             min_uptime: '10s',
         },
+
+        // ── My Backend (Port 8000) — Lambda handlers via Express adapter ──
+        {
+            name: 'my-backend',
+            cwd: './my-backend',
+            script: 'dist/server.js',
+            instances: 1,
+            exec_mode: 'fork',
+            autorestart: true,
+            watch: false,
+            max_memory_restart: '300M',
+            env: {
+                NODE_ENV: 'production',
+                MY_BACKEND_PORT: 8000,
+            },
+            // Logging
+            log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+            error_file: '/var/log/pm2/my-backend-error.log',
+            out_file: '/var/log/pm2/my-backend-out.log',
+            merge_logs: true,
+            // Graceful shutdown
+            kill_timeout: 5000,
+            listen_timeout: 10000,
+            // Health check
+            max_restarts: 10,
+            min_uptime: '10s',
+        },
     ],
 };
